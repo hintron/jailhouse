@@ -12,11 +12,12 @@
 
 include $(INMATES_LIB)/Makefile.lib
 
-INMATES := tiny-demo.bin apic-demo.bin ioapic-demo.bin 32-bit-demo.bin \
+INMATES := tiny-demo.bin apic-demo.bin bazooka-demo.bin ioapic-demo.bin 32-bit-demo.bin \
 	pci-demo.bin e1000-demo.bin ivshmem-demo.bin smp-demo.bin
 
 tiny-demo-y	:= tiny-demo.o
 apic-demo-y	:= apic-demo.o
+bazooka-demo-y	:= bazooka-demo.o
 ioapic-demo-y	:= ioapic-demo.o
 pci-demo-y	:= pci-demo.o
 e1000-demo-y	:= e1000-demo.o

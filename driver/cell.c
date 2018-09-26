@@ -156,6 +156,7 @@ int jailhouse_cmd_cell_create(struct jailhouse_cell_create __user *arg)
 	unsigned int cpu;
 	int err = 0;
 
+	printk("MGH: driver/cell.c#jailhouse_cmd_cell_create()");
 	if (copy_from_user(&cell_params, arg, sizeof(cell_params)))
 		return -EFAULT;
 
@@ -307,6 +308,8 @@ static int load_image(struct cell *cell,
 	void *image_mem;
 	int err = 0;
 
+	printk("MGH: Inside load_image");
+	printk("MGH: copy_from_user()");
 	if (copy_from_user(&image, uimage, sizeof(image)))
 		return -EFAULT;
 
@@ -314,6 +317,7 @@ static int load_image(struct cell *cell,
 		return 0;
 
 	mem = cell->memory_regions;
+	printk("MGH: for loop");
 	for (regions = cell->num_memory_regions; regions > 0; regions--) {
 		image_offset = image.target_address - mem->virt_start;
 		if (image.target_address >= mem->virt_start &&
@@ -329,9 +333,12 @@ static int load_image(struct cell *cell,
 		return -EINVAL;
 
 	phys_start = (mem->phys_start + image_offset) & PAGE_MASK;
+	printk("MGH: offset_in_page()");
 	page_offs = offset_in_page(image_offset);
+	printk("MGH: jailhouse_ioremap()");
 	image_mem = jailhouse_ioremap(phys_start, 0,
 				      PAGE_ALIGN(image.size + page_offs));
+
 	if (!image_mem) {
 		pr_err("jailhouse: Unable to map cell RAM at %08llx "
 		       "for image loading\n",
@@ -339,6 +346,7 @@ static int load_image(struct cell *cell,
 		return -EBUSY;
 	}
 
+	printk("MGH: copy_from_user()");
 	if (copy_from_user(image_mem + page_offs,
 			   (void __user *)(unsigned long)image.source_address,
 			   image.size))
@@ -347,6 +355,7 @@ static int load_image(struct cell *cell,
 	 * ARMv7 and ARMv8 require to clean D-cache and invalidate I-cache for
 	 * memory containing new instructions. On x86 this is a NOP.
 	 */
+	printk("MGH: flush_icache_range()");
 	flush_icache_range((unsigned long)(image_mem + page_offs),
 			   (unsigned long)(image_mem + page_offs) + image.size);
 #ifdef CONFIG_ARM
@@ -357,6 +366,7 @@ static int load_image(struct cell *cell,
 	__cpuc_flush_dcache_area(image_mem + page_offs, image.size);
 #endif
 
+	printk("MGH: vunmap()");
 	vunmap(image_mem);
 
 	return err;
@@ -370,24 +380,30 @@ int jailhouse_cmd_cell_load(struct jailhouse_cell_load __user *arg)
 	unsigned int n;
 	int err;
 
+	printk("MGH: driver/cell.c#jailhouse_cmd_cell_load()");
+	printk("MGH: copy_from_user()");
 	if (copy_from_user(&cell_load, arg, sizeof(cell_load)))
 		return -EFAULT;
 
+	printk("MGH: cell_management_prologue()");
 	err = cell_management_prologue(&cell_load.cell_id, &cell);
 	if (err)
 		return err;
 
+	printk("MGH: jailhouse_call_arg1()");
 	err = jailhouse_call_arg1(JAILHOUSE_HC_CELL_SET_LOADABLE, cell->id);
 	if (err)
 		goto unlock_out;
 
 	for (n = cell_load.num_preload_images; n > 0; n--, image++) {
+		printk("MGH: load_image()");
 		err = load_image(cell, image);
 		if (err)
 			break;
 	}
 
 unlock_out:
+	printk("MGH: unlock_out()");
 	mutex_unlock(&jailhouse_lock);
 
 	return err;
@@ -399,6 +415,7 @@ int jailhouse_cmd_cell_start(const char __user *arg)
 	struct cell *cell;
 	int err;
 
+	printk("MGH: driver/cell.c#jailhouse_cmd_cell_start()");
 	if (copy_from_user(&cell_id, arg, sizeof(cell_id)))
 		return -EFAULT;
 
