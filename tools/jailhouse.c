@@ -102,6 +102,7 @@ static void call_extension_script(const char *cmd, int argc, char *argv[])
 		snprintf(script, sizeof(script), "jailhouse-%s-%s",
 			 cmd, ext->subcmd);
 		execvp(script, &argv[2]);
+		printf("MGH: Config create failed! Is VT-d enabled in the bios?\n");
 
 		perror("execvp");
 		exit(1);
