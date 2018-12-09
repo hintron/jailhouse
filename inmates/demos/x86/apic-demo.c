@@ -110,9 +110,6 @@ void inmate_main(void)
 	bool cache_pollution;
 	char *mem;
 
-	printk("**************************\n");
-	printk("MGH: Got to inmate_main()!\n");
-	printk("**************************\n");
 	comm_region->cell_state = JAILHOUSE_CELL_RUNNING_LOCKED;
 
 	cache_pollution = cmdline_parse_bool("pollute-cache", false);
