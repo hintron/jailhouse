@@ -5,9 +5,12 @@
 
 #include <inmate.h>
 
+
+#define MGH_MSG_INTERVAL 1000000
+
 // #define POLLUTE_CACHE_SIZE	(512 * 1024)
 
-#define APIC_TIMER_VECTOR	32
+// #define APIC_TIMER_VECTOR	32
 
 // static unsigned long expected_time;
 // static unsigned long min = -1, max;
@@ -61,13 +64,16 @@ void inmate_main(void)
 {
 	// bool allow_terminate = false;
 	bool terminate = false;
+	int i = 0;
 	// unsigned long tsc_freq;
 	// bool cache_pollution;
 	// char *mem;
 
 	comm_region->cell_state = JAILHOUSE_CELL_RUNNING_LOCKED;
 
-	printk("MGH: Got into inmate_main()!");
+	printk("**************************\n");
+	printk("MGH: Got into inmate_main()!\n");
+	printk("**************************\n");
 
 	// cache_pollution = cmdline_parse_bool("pollute-cache", false);
 	// if (cache_pollution) {
@@ -83,9 +89,13 @@ void inmate_main(void)
 	// printk("MGH: Before init_apic");
 	// init_apic();
 
-	printk("MGH: Before while loop");
+	printk("MGH: Before while loop\n");
 	while (!terminate) {
-		// asm volatile("hlt");
+		if (i > MGH_MSG_INTERVAL)
+			printk("MGH: Start of loop\n");
+		asm volatile("hlt");
+		if (i > MGH_MSG_INTERVAL)
+			printk("MGH: After hlt\n");
 
 		// if (cache_pollution)
 		// 	pollute_cache(mem);
@@ -99,15 +109,20 @@ void inmate_main(void)
 			// 			JAILHOUSE_MSG_REQUEST_DENIED);
 			// 	allow_terminate = true;
 			// } else
-			printk("MGH: Shutting down bazooka-demo cell");
+			printk("MGH: Shutting down bazooka-demo cell\n");
 			terminate = true;
 			break;
 		default:
-			printk("MGH: Sending reply from bazooka-demo cell");
+			if (i > MGH_MSG_INTERVAL)
+				printk("MGH: Sending reply\n");
 			jailhouse_send_reply_from_cell(comm_region,
 					JAILHOUSE_MSG_UNKNOWN);
 			break;
 		}
+		if (i > MGH_MSG_INTERVAL)
+			i = 0;
+		else
+			i++;
 	}
 
 	printk("MGH: Stopped APIC demo\n");
