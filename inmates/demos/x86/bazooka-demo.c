@@ -66,7 +66,7 @@ void inmate_main(void)
 	int i = 0;
 	int count = 1;
 	bool cache_pollution;
-	bool mgh_param;
+	bool verbose;
 	long long interval;
 
 	// bool allow_terminate = false;
@@ -82,7 +82,7 @@ void inmate_main(void)
 	printk("CPU ID: %u\n", cpu_id());
 
 	cache_pollution = cmdline_parse_bool("pollute-cache", false);
-	mgh_param = cmdline_parse_bool("mgh-param", false);
+	verbose = cmdline_parse_bool("verbose", false);
 	interval = cmdline_parse_int("print-interval", PRINT_INTERVAL_DEFAULT);
 
 	if (cache_pollution) {
@@ -90,8 +90,8 @@ void inmate_main(void)
 		printk("Cache pollution enabled (doesn't do anything)\n");
 	}
 
-	if (mgh_param) {
-		printk("MGH param enabled (doesn't do anything)\n");
+	if (verbose) {
+		printk("MGH param 'enabled (doesn't do anything)\n");
 	}
 	printk("Print interval: %lld (0x%llx)\n", interval, interval);
 	printk("**************************\n");
@@ -107,7 +107,7 @@ void inmate_main(void)
 
 	printk("MGH: Before while loop\n");
 	while (!terminate) {
-		if (i > interval)
+		if (verbose && i > interval)
 			printk("MGH:(%d) Start of loop\n", count);
 		/*
 		 * Halt the CPU until the next external interrupt is fired.
@@ -132,12 +132,12 @@ void inmate_main(void)
 			// 			JAILHOUSE_MSG_REQUEST_DENIED);
 			// 	allow_terminate = true;
 			// } else
-			printk("MGH:(%d:i=%d)"
+			printk("MGH:(%d:i=%d) "
 			       "Shutting down bazooka-demo cell\n", count, i);
 			terminate = true;
 			break;
 		default:
-			if (i > interval)
+			if (verbose && i > interval)
 				printk("MGH:(%d) Sending reply\n", count);
 			jailhouse_send_reply_from_cell(comm_region,
 					JAILHOUSE_MSG_UNKNOWN);
@@ -151,6 +151,6 @@ void inmate_main(void)
 			i++;
 	}
 
-	printk("MGH: Stopped APIC demo\n");
+	printk("MGH: Stopped Bazooka cell demo\n");
 	comm_region->cell_state = JAILHOUSE_CELL_SHUT_DOWN;
 }
