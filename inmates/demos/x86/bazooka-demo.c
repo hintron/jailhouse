@@ -6,7 +6,7 @@
 #include <inmate.h>
 
 
-#define PRINT_INTERVAL_DEFAULT 1000000
+#define PRINT_INTERVAL_DEFAULT 100000000
 
 // #define POLLUTE_CACHE_SIZE	(512 * 1024)
 
@@ -91,7 +91,7 @@ void inmate_main(void)
 	}
 
 	if (verbose) {
-		printk("MGH param 'enabled (doesn't do anything)\n");
+		printk("Verbose mode enabled\n");
 	}
 	printk("Print interval: %lld (0x%llx)\n", interval, interval);
 	printk("**************************\n");
