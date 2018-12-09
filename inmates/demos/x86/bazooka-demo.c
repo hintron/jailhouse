@@ -64,6 +64,7 @@ void inmate_main(void)
 {
 	bool terminate = false;
 	int i = 0;
+	int count = 1;
 	bool cache_pollution;
 	bool mgh_param;
 	long long interval;
@@ -107,7 +108,7 @@ void inmate_main(void)
 	printk("MGH: Before while loop\n");
 	while (!terminate) {
 		if (i > interval)
-			printk("MGH: Start of loop\n");
+			printk("MGH:(%d) Start of loop\n", count);
 		/*
 		 * Halt the CPU until the next external interrupt is fired.
 		 * The HLT instruction is executed by the operating system when
@@ -131,18 +132,21 @@ void inmate_main(void)
 			// 			JAILHOUSE_MSG_REQUEST_DENIED);
 			// 	allow_terminate = true;
 			// } else
-			printk("MGH: Shutting down bazooka-demo cell\n");
+			printk("MGH:(%d:i=%d)"
+			       "Shutting down bazooka-demo cell\n", count, i);
 			terminate = true;
 			break;
 		default:
 			if (i > interval)
-				printk("MGH: Sending reply\n");
+				printk("MGH:(%d) Sending reply\n", count);
 			jailhouse_send_reply_from_cell(comm_region,
 					JAILHOUSE_MSG_UNKNOWN);
 			break;
 		}
-		if (i > interval)
+		if (i > interval) {
 			i = 0;
+			count++;
+		}
 		else
 			i++;
 	}
