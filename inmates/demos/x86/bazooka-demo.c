@@ -6,7 +6,7 @@
 #include <inmate.h>
 
 
-#define MGH_MSG_INTERVAL 10000
+#define PRINT_INTERVAL_DEFAULT 1000000
 
 // #define POLLUTE_CACHE_SIZE	(512 * 1024)
 
@@ -66,6 +66,7 @@ void inmate_main(void)
 	int i = 0;
 	bool cache_pollution;
 	bool mgh_param;
+	long long interval;
 
 	// bool allow_terminate = false;
 	// unsigned long tsc_freq;
@@ -81,6 +82,7 @@ void inmate_main(void)
 
 	cache_pollution = cmdline_parse_bool("pollute-cache", false);
 	mgh_param = cmdline_parse_bool("mgh-param", false);
+	interval = cmdline_parse_int("print-interval", PRINT_INTERVAL_DEFAULT);
 
 	if (cache_pollution) {
 	// 	mem = alloc(PAGE_SIZE, PAGE_SIZE);
@@ -90,6 +92,7 @@ void inmate_main(void)
 	if (mgh_param) {
 		printk("MGH param enabled (doesn't do anything)\n");
 	}
+	printk("Print interval: %lld (0x%llx)\n", interval, interval);
 	printk("**************************\n");
 
 
@@ -103,7 +106,7 @@ void inmate_main(void)
 
 	printk("MGH: Before while loop\n");
 	while (!terminate) {
-		if (i > MGH_MSG_INTERVAL)
+		if (i > interval)
 			printk("MGH: Start of loop\n");
 		/*
 		 * Halt the CPU until the next external interrupt is fired.
@@ -113,8 +116,8 @@ void inmate_main(void)
 		 */
 		// TODO: If no interrupt is configured, then infinite stall!
 		// asm volatile("hlt");
-		if (i > MGH_MSG_INTERVAL)
-			printk("MGH: After hlt: some interrupt received!\n");
+		// if (i > interval)
+		// 	printk("MGH: After hlt: some interrupt received!\n");
 
 		// if (cache_pollution)
 		// 	pollute_cache(mem);
@@ -132,13 +135,13 @@ void inmate_main(void)
 			terminate = true;
 			break;
 		default:
-			if (i > MGH_MSG_INTERVAL)
+			if (i > interval)
 				printk("MGH: Sending reply\n");
 			jailhouse_send_reply_from_cell(comm_region,
 					JAILHOUSE_MSG_UNKNOWN);
 			break;
 		}
-		if (i > MGH_MSG_INTERVAL)
+		if (i > interval)
 			i = 0;
 		else
 			i++;
