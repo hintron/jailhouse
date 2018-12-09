@@ -111,7 +111,8 @@ void inmate_main(void)
 		 * there is no immediate work to be done, and the system enters
 		 * its idle state.
 		 */
-		asm volatile("hlt");
+		// TODO: If no interrupt is configured, then infinite stall!
+		// asm volatile("hlt");
 		if (i > MGH_MSG_INTERVAL)
 			printk("MGH: After hlt: some interrupt received!\n");
 
