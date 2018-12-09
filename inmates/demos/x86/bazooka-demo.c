@@ -6,7 +6,7 @@
 #include <inmate.h>
 
 
-#define MGH_MSG_INTERVAL 1000000
+#define MGH_MSG_INTERVAL 10000
 
 // #define POLLUTE_CACHE_SIZE	(512 * 1024)
 
@@ -62,24 +62,36 @@
 
 void inmate_main(void)
 {
-	// bool allow_terminate = false;
 	bool terminate = false;
 	int i = 0;
+	bool cache_pollution;
+	bool mgh_param;
+
+	// bool allow_terminate = false;
 	// unsigned long tsc_freq;
-	// bool cache_pollution;
 	// char *mem;
 
 	comm_region->cell_state = JAILHOUSE_CELL_RUNNING_LOCKED;
 
 	printk("**************************\n");
-	printk("MGH: Got into inmate_main()!\n");
+	printk("MGH: Cell stats\n");
+	printk("**************************\n");
+	printk("Input Command-line string: %s\n", cmdline);
+	printk("CPU ID: %u\n", cpu_id());
+
+	cache_pollution = cmdline_parse_bool("pollute-cache", false);
+	mgh_param = cmdline_parse_bool("mgh-param", false);
+
+	if (cache_pollution) {
+	// 	mem = alloc(PAGE_SIZE, PAGE_SIZE);
+		printk("Cache pollution enabled (doesn't do anything)\n");
+	}
+
+	if (mgh_param) {
+		printk("MGH param enabled (doesn't do anything)\n");
+	}
 	printk("**************************\n");
 
-	// cache_pollution = cmdline_parse_bool("pollute-cache", false);
-	// if (cache_pollution) {
-	// 	mem = alloc(PAGE_SIZE, PAGE_SIZE);
-	// 	printk("Cache pollution enabled\n");
-	// }
 
 	// printk("MGH: Before tsc_init");
 	// tsc_freq = tsc_init();
@@ -93,9 +105,15 @@ void inmate_main(void)
 	while (!terminate) {
 		if (i > MGH_MSG_INTERVAL)
 			printk("MGH: Start of loop\n");
+		/*
+		 * Halt the CPU until the next external interrupt is fired.
+		 * The HLT instruction is executed by the operating system when
+		 * there is no immediate work to be done, and the system enters
+		 * its idle state.
+		 */
 		asm volatile("hlt");
 		if (i > MGH_MSG_INTERVAL)
-			printk("MGH: After hlt\n");
+			printk("MGH: After hlt: some interrupt received!\n");
 
 		// if (cache_pollution)
 		// 	pollute_cache(mem);
