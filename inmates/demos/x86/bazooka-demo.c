@@ -83,7 +83,7 @@ void inmate_main(void)
 
 	cache_pollution = cmdline_parse_bool("pollute-cache", false);
 	verbose = cmdline_parse_bool("verbose", false);
-	interval = cmdline_parse_int("print-interval", PRINT_INTERVAL_DEFAULT);
+	interval = cmdline_parse_int("interval", PRINT_INTERVAL_DEFAULT);
 
 	if (cache_pollution) {
 	// 	mem = alloc(PAGE_SIZE, PAGE_SIZE);
