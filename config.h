@@ -1,6 +1,8 @@
 /*
  * MGH: Set debugging options!
- * Copy this to include/jailhouse/ and then build
+ *
+ * Copy this to include/jailhouse/config.h. Then, build.
+ *
  * From https://github.com/siemens/jailhouse/blob/master/Documentation/hypervisor-configuration.md
  */
 
@@ -11,4 +13,4 @@
  * Set instruction pointer to 0 if cell CPU has caused an access violation.
  * Linux inmates will dump a stack trace in this case.
  */
-#define CONFIG_CRASH_CELL_ON_PANIC 1
+// #define CONFIG_CRASH_CELL_ON_PANIC 1
