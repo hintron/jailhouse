@@ -102,8 +102,8 @@ static int get_ivpos(struct ivshmem_dev_data *d)
 
 static void send_irq(struct ivshmem_dev_data *d)
 {
-	printk("IVSHMEM: %02x:%02x.%x sending IRQ\n",
-	       d->bdf >> 8, (d->bdf >> 3) & 0x1f, d->bdf & 0x3);
+	printk("IVSHMEM: %02x:%02x.%x sending IRQ; Shared: %s\n",
+	       d->bdf >> 8, (d->bdf >> 3) & 0x1f, d->bdf & 0x3, (char *)d->shmem);
 	mmio_write32(d->registers + 3, 1);
 }
 
