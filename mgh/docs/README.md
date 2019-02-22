@@ -6,7 +6,7 @@ are copied here locally for convenience.
 ## Contents:
 
 * Jailhouse Inter-cell Communication
-    [Here](Documentation/inter-cell-communication.txt)
+    [Here](../../Documentation/inter-cell-communication.txt)
 
 * Jailhouse paper
     https://arxiv.org/pdf/1705.06932.pdf
