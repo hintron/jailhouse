@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.6)
 project(nahanni)
 
+add_executable(mgh mgh)
 add_executable(uio_send uio_send)
 add_executable(uio_read uio_read)
 add_executable(sum_sema sum_sema)

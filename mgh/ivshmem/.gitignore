@@ -14,6 +14,7 @@ libivshmem.a
 sum_sema
 uio_read
 uio_send
+mgh
 *.class
 *.so
 *.o
