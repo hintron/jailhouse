@@ -97,6 +97,9 @@ static void map_shmem_and_bars(struct ivshmem_dev_data *d)
 
 static int get_ivpos(struct ivshmem_dev_data *d)
 {
+	// Read from the ivpos register
+	// IVPosition Register: if the device is not configured for interrupts,
+	// this is zero. Else, it is the device's ID (between 0 and 65535).
 	return mmio_read32(d->registers + 2);
 }
 
@@ -104,6 +107,7 @@ static void send_irq(struct ivshmem_dev_data *d)
 {
 	printk("IVSHMEM: %02x:%02x.%x sending IRQ; Shared: %s\n",
 	       d->bdf >> 8, (d->bdf >> 3) & 0x1f, d->bdf & 0x3, (char *)d->shmem);
+	// Write to the doorbell register (3 * u32 = 12 bytes)
 	mmio_write32(d->registers + 3, 1);
 }
 
@@ -155,6 +159,7 @@ void inmate_main(void)
 		goto out;
 	}
 
+	// Enable interrupts
 	asm volatile("sti");
 	while (1) {
 		for (i = 0; i < ndevices; i++) {
