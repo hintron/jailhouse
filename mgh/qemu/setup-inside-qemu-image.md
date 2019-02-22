@@ -62,9 +62,42 @@ Set up correct timezone:
     adduser hintron
     usermod -aG sudo hintron
 
+This will disable logging in as root.
+To change the password:
+
+    passwd
+
+To switch to user root:
+
+    sudo su root
+
+Copy select contents of root home dir to user. Don't forget ssh keys, if already
+set up!
+
+Switch back:
+
+    exit
+
+Recursively `chown` the files as the user:
+
+    sudo chown -R hintron: ~
+
+
 See https://www.digitalocean.com/community/tutorials/how-to-create-a-sudo-user-on-ubuntu-quickstart
 
 TODO: Copy and chmod root ~ to user ~.
+
+
+## `sudo: unable to resolve host demo`
+
+Edit or create /etc/hosts:
+
+    sudo vim /etc/hosts
+
+Make sure this is there:
+
+    127.0.0.1   localhost
+    127.0.1.1   demo
 
 ## Install Linux headers from Jailhouse Image output
 
