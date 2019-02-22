@@ -6,7 +6,11 @@ Before running the QEMU image, resize it:
 
     qemu-img resize demo-image-qemuamd64-jailhouse-demo-qemuamd64.ext4.img +10G
 
-Start the QEMU image (`./start-qemu-x86.sh`) and then finish the resize process:
+Start the QEMU image:
+
+   ./start-qemu-x86.sh
+
+Then finish the resize process:
 
     resize2fs /dev/sda
 
@@ -34,7 +38,7 @@ implemented in QEMU (I just remembered dealing with that a while back).
 
 Install useful packages:
 
-    apt install vim git tmux curl wget
+    apt install vim git tmux curl wget sudo
 
 Install packages to enable git clone:
 
@@ -52,6 +56,15 @@ Set up correct timezone:
 
     sudo dpkg-reconfigure tzdata
 
+
+## Setting up non-root user
+
+    adduser hintron
+    usermod -aG sudo hintron
+
+See https://www.digitalocean.com/community/tutorials/how-to-create-a-sudo-user-on-ubuntu-quickstart
+
+TODO: Copy and chmod root ~ to user ~.
 
 ## Install Linux headers from Jailhouse Image output
 
