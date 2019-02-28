@@ -10,94 +10,81 @@
 #include "ivshmem.h"
 
 enum ivshmem_registers {
-    IntrMask = 0,
-    IntrStatus = 4,
-    IVPosition = 8,
-    Doorbell = 12,
-    lstate = 16,
-    rstate = 20
+    intrmask = 0 / (unsigned int),
+    intrstatus = 4 / (unsigned int),
+    ivposition = 8 / (unsigned int),
+    doorbell = 12 / (unsigned int),
+    lstate = 16 / (unsigned int),
+    rstate = 20 / (unsigned int)
 };
 
-int main(int argc, char ** argv){
+int main(int argc, char ** argv) {
+    void *memptr = NULL;
+    void *configptr = NULL;
+    unsigned int *mem_array = NULL;
+    unsigned int *config_array = NULL;
+    unsigned int temp = NULL;
+    int i = 0;
+    int fd1 = 0;
+    int fd2 = 0;
+    char file_1 = "/dev/uio0";
+    char file_2 = "/sys/class/uio/uio0/device/resource0";
 
-    void * memptr, *configptr;
-    char *char_array, *config_array;
-    unsigned int * map_array;
-    int i, fd, fdc;
-    int count;
-    int msg, cmd, dest;
-    char temp;
-
-    if (argc != 5) {
-        printf("USAGE: uio_ioctl <filename> <count> <cmd> <dest>\n");
+    if (argc > 2) {
+        printf("USAGE: mgh [filename=/dev/uio0]\n");
         exit(-1);
     }
+    if (argc > 1) {
+        file_1 = argv[1]
+    }
 
-    fd=open(argv[1], O_RDWR);
-    printf("[UIO] opening file %s\n", argv[1]);
-    printf("MGH: fd = %d\n", fd);
-    count = atol(argv[2]);
-    cmd = (unsigned short) atoi(argv[3]);
-    dest = (unsigned short) atoi(argv[4]);
+    printf("opening file %s\n", file_1);
+    fd1 = open(file_1, O_RDWR);
+    printf("MGH: fd1 = %d\n", fd1);
+    printf("opening file %s\n", file_2);
+    fd2 = open(file_2, O_RDWR);
+    printf("MGH: fd2 = %d\n", fd2);
 
-    printf("[UIO] count is %d\n", count);
-
-    //if ((memptr = mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0)) == (void *) -1){
-    if ((memptr = mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 4096)) == (void *) -1){
+    //if ((memptr = mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_SHARED, fd1, 0)) == (void *) -1){
+    if ((memptr = mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_SHARED, fd1, 4096)) == (void *) -1){
         printf("mmap failed (%p)\n", memptr);
         printf("MGH: ERR %d: %s\n", errno, strerror(errno));
-	close (fd);
-        exit (-1);
+        close(fd1);
+        exit(-1);
     }
     printf("mmap succeeded! Address:%p\n", memptr);
 
-    map_array = (unsigned int *)memptr;
-    char_array = (char *)memptr;
+    mem_array = (unsigned int *)memptr;
 
-    fdc = open("/sys/class/uio/uio0/device/resource0", O_RDWR);
-    if ((configptr = mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_SHARED, fdc, 0)) == (void *) -1){
+    printf("MGH: Swap and increment shmem\n");
+    temp = ++mem_array[0];
+    mem_array[0] = mem_array[1];
+    mem_array[1] = temp;
+
+    if ((configptr = mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_SHARED, fd2, 0)) == (void *) -1){
         printf("mmap failed (%p)\n", configptr);
         printf("MGH: ERR %d: %s\n", errno, strerror(errno));
-	close (fdc);
-        exit (-1);
+        close(fd2);
+        exit(-1);
     }
-
 
     printf("mmap succeeded! Address:%p\n", configptr);
     config_array = (char *)configptr;
 
-    // TODO: This only reads a byte, but it's four bytes. Be careful
     printf("MGH: lstate: %d\n", config_array[lstate]);
     printf("MGH: rstate: %d\n", config_array[rstate]);
     printf("MGH: writing to lstate...\n");
     config_array[lstate]++;
     printf("MGH: lstate: %d\n", config_array[lstate]);
-    printf("MGH: Doorbell: %d\n", config_array[Doorbell]);
+
+    printf("MGH: doorbell: %d\n", config_array[doorbell]);
     printf("MGH: writing to doorbell...\n");
-    config_array[Doorbell]++;
-    printf("MGH: Doorbell: %d\n", config_array[Doorbell]);
+    config_array[doorbell] = 1;
+    printf("MGH: doorbell: %d\n", config_array[doorbell]);
 
-    //msg = ((dest & 0xffff) << 16) + (cmd & 0xffff);
-//  //  msg = cmd;
-    //printf("[UIO] writing %u\n", msg);
-
-    //for (i = 0; i < count; i++) {
-    //    printf("[UIO] ping #%d\n", i);
-    //    map_array[Doorbell/sizeof(int)] = msg;
-    //    sleep(1);
-    //}
-
-
-    for (i = 0; i < count; i++) {
-        printf("MGH: Set shmem %d\n", i);
-        temp = ++char_array[0];
-        char_array[0] = char_array[1];
-        char_array[1] = temp;
-        sleep(1);
-    }
-
+    close(fd1);
+    close(fd2);
     munmap(memptr, 4096);
-    close(fd);
-
-    printf("[UIO] Exiting...\n");
+    munmap(configptr, 4096);
+    exit(0)
 }
