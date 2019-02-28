@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
         exit(-1);
     }
     printf("mmap succeeded! Address:%p\n", configptr);
-    config_array = (char *)configptr;
+    config_array = (unsigned int *)configptr;
 
     printf("MGH: lstate: %d\n", config_array[lstate]);
     printf("MGH: rstate: %d\n", config_array[rstate]);
