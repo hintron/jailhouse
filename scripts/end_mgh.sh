@@ -1,1 +1,1 @@
-./tools/jailhouse disable
+./tools/jailhouse cell destroy mgh-demo
