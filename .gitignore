@@ -31,3 +31,4 @@ ci/*.tar.xz
 *.pyc
 *.sublime-project
 *.sublime-workspace
+*ur-safe

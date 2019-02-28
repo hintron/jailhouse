@@ -38,7 +38,7 @@ implemented in QEMU (I just remembered dealing with that a while back).
 
 Install useful packages:
 
-    apt install vim git tmux curl wget sudo
+    apt install vim git tmux curl wget sudo ncdu
 
 Install packages to enable git clone:
 
