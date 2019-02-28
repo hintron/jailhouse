@@ -38,12 +38,12 @@ int main(int argc, char **argv) {
 
     // Get the shared memory at +4096 offset of /dev/uio0
     if ((memptr = mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_SHARED, fd1, 4096)) == (void *) -1){
-        printf("mmap failed (%p)\n", memptr);
+        printf("memptr mmap failed (%p)\n", memptr);
         printf("MGH: ERR %d: %s\n", errno, strerror(errno));
         close(fd1);
         exit(-1);
     }
-    printf("mmap succeeded! Address:%p\n", memptr);
+    printf("memptr mmap succeeded! Address:%p\n", memptr);
     mem_array = (unsigned int *)memptr;
 
     printf("MGH: Swap and increment shmem\n");
@@ -52,12 +52,12 @@ int main(int argc, char **argv) {
     mem_array[1] = temp;
 
     if ((configptr = mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_SHARED, fd2, 0)) == (void *) -1){
-        printf("mmap failed (%p)\n", configptr);
+        printf("configptr mmap failed (%p)\n", configptr);
         printf("MGH: ERR %d: %s\n", errno, strerror(errno));
         close(fd2);
         exit(-1);
     }
-    printf("mmap succeeded! Address:%p\n", configptr);
+    printf("configptr mmap succeeded! Address:%p\n", configptr);
     config_array = (unsigned int *)configptr;
 
     printf("MGH: lstate: %d\n", config_array[lstate]);
@@ -68,7 +68,12 @@ int main(int argc, char **argv) {
 
     printf("MGH: doorbell: %d\n", config_array[doorbell]);
     printf("MGH: writing to doorbell...\n");
+    config_array[doorbell] = 0;
     config_array[doorbell] = 1;
+    config_array[doorbell] = 2;
+    config_array[doorbell] = 3;
+    config_array[doorbell] = 4;
+    config_array[doorbell] = 0x100;
     printf("MGH: doorbell: %d\n", config_array[doorbell]);
 
     close(fd1);
