@@ -10,7 +10,7 @@ add_executable(getident getident)
 add_library(ivshmem ivshmem)
 
 set(CMAKE_C_FLAGS_DEBUG "-DDEBUG")
-set(CMAKE_C_FLAGS "-std=c99 -g -Wall -D_BSD_SOURCE")
+set(CMAKE_C_FLAGS "-std=c99 -g -Wall -D_DEFAULT_SOURCE")
 
 target_link_libraries(getident ivshmem rt crypto)
 target_link_libraries(sum_sema ivshmem rt crypto)

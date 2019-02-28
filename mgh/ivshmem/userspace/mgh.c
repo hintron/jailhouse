@@ -10,33 +10,24 @@
 #include "ivshmem.h"
 
 enum ivshmem_registers {
-    intrmask = 0 / (unsigned int),
-    intrstatus = 4 / (unsigned int),
-    ivposition = 8 / (unsigned int),
-    doorbell = 12 / (unsigned int),
-    lstate = 16 / (unsigned int),
-    rstate = 20 / (unsigned int)
+    intrmask = 0 / sizeof(int),
+    intrstatus = 4 / sizeof(int),
+    ivposition = 8 / sizeof(int),
+    doorbell = 12 / sizeof(int),
+    lstate = 16 / sizeof(int),
+    rstate = 20 / sizeof(int)
 };
 
-int main(int argc, char ** argv) {
+int main(int argc, char **argv) {
     void *memptr = NULL;
     void *configptr = NULL;
     unsigned int *mem_array = NULL;
     unsigned int *config_array = NULL;
-    unsigned int temp = NULL;
-    int i = 0;
+    unsigned int temp = 0;
     int fd1 = 0;
     int fd2 = 0;
-    char file_1 = "/dev/uio0";
-    char file_2 = "/sys/class/uio/uio0/device/resource0";
-
-    if (argc > 2) {
-        printf("USAGE: mgh [filename=/dev/uio0]\n");
-        exit(-1);
-    }
-    if (argc > 1) {
-        file_1 = argv[1]
-    }
+    char *file_1 = "/dev/uio0";
+    char *file_2 = "/sys/class/uio/uio0/device/resource0";
 
     printf("opening file %s\n", file_1);
     fd1 = open(file_1, O_RDWR);
@@ -45,7 +36,7 @@ int main(int argc, char ** argv) {
     fd2 = open(file_2, O_RDWR);
     printf("MGH: fd2 = %d\n", fd2);
 
-    //if ((memptr = mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_SHARED, fd1, 0)) == (void *) -1){
+    // Get the shared memory at +4096 offset of /dev/uio0
     if ((memptr = mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_SHARED, fd1, 4096)) == (void *) -1){
         printf("mmap failed (%p)\n", memptr);
         printf("MGH: ERR %d: %s\n", errno, strerror(errno));
@@ -53,7 +44,6 @@ int main(int argc, char ** argv) {
         exit(-1);
     }
     printf("mmap succeeded! Address:%p\n", memptr);
-
     mem_array = (unsigned int *)memptr;
 
     printf("MGH: Swap and increment shmem\n");
@@ -67,7 +57,6 @@ int main(int argc, char ** argv) {
         close(fd2);
         exit(-1);
     }
-
     printf("mmap succeeded! Address:%p\n", configptr);
     config_array = (char *)configptr;
 
