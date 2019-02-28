@@ -75,5 +75,5 @@ int main(int argc, char **argv) {
     close(fd2);
     munmap(memptr, 4096);
     munmap(configptr, 4096);
-    exit(0)
+    exit(0);
 }
