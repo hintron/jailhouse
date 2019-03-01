@@ -14,7 +14,6 @@
 .cache.mk
 Module.symvers
 modules.order
-driver/jailhouse.ko
 include/jailhouse/config.h
 hypervisor/hypervisor.lds
 inmates/lib/arm/inmate.lds
@@ -32,3 +31,11 @@ ci/*.tar.xz
 *.sublime-project
 *.sublime-workspace
 *ur-safe
+*.ko
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+build/
+*.class
+*.so
+.*.sw*
