@@ -11,13 +11,16 @@ It assumes that these devices exist:
 
 To build:
 
-    mkdir build
-    cd build
-    cmake ..
+    meson build
+    ninja -C build
+
+To install:
+
+    sudo ninja install -C build
 
 To run:
 
-    ./uio-userspace
+    sudo uio-userspace
 
 You will see that this program will modify shared memory, and that the inmate
 will print this to the console.
