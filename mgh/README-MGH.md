@@ -20,24 +20,24 @@ run on actual hardware to get good performance results.
 
 #### QEMU Demo
 
-[_configs/x86/qemu-mgh.c_](configs/x86/qemu-mgh.c) is the root cell's resource
+[_configs/x86/qemu-mgh.c_](../configs/x86/qemu-mgh.c) is the root cell's resource
 configuration of the virtual QEMU system. This file tells Jailhouse what
 resources are available on the system for Jailhouse to partition. It creates a
 file called _qemu-mgh.cell_ that is used by the `jailhouse cell create` command
 to actually instantiate the root cell. It's based off of
-[_configs/x86/qemu-x86.c_](configs/x86/qemu-x86.c).
+[_configs/x86/qemu-x86.c_](../configs/x86/qemu-x86.c).
 
-[_configs/x86/mgh-demo.c_](configs/x86/mgh-demo.c) is the real-time cell's
+[_configs/x86/mgh-demo.c_](../configs/x86/mgh-demo.c) is the real-time cell's
 resource configuration. It's simply a subset of _qemu-mgh.c_. It creates a file
 called _mgh-demo.cell_ that is used by the `jailhouse cell create` command to
 instantiate/partition the real-time cell (inmate). It's based off of
-[_configs/x86/ivshmem-demo.c_](configs/x86/ivshmem-demo.c).
+[_configs/x86/ivshmem-demo.c_](../configs/x86/ivshmem-demo.c).
 
-[_inmates/demos/x86/mgh-demo.c_](inmates/demos/x86/mgh-demo.c) is the main code
+[_inmates/demos/x86/mgh-demo.c_](../inmates/demos/x86/mgh-demo.c) is the main code
 of the real-time inmate cell. This will generate mgh-demo.bin and is the
 "program" loaded into the inmate via the `jailhouse cell load` command.
 It has access to any resources specified in _mgh-demo.cell_. It's based off of
-[_inmates/demos/x86/ivshmem-demo.c_](inmates/demos/x86/ivshmem-demo.c).
+[_inmates/demos/x86/ivshmem-demo.c_](../inmates/demos/x86/ivshmem-demo.c).
 
 The root cell and inmate communicate over the Jailhouse ivshmem virtual PCI
 device. The root Linux Jailhouse cell will use the uio-kernel-module and
