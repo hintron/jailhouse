@@ -139,7 +139,7 @@ int main(int argc, char **argv) {
     }
     printf("Vendor: %x\n", vendor);
 
-    err = pread(config_fd, &device, 2, 0);
+    err = pread(config_fd, &device, 2, 2);
     if (err == -1) {
         printf("MGH: Error reading PCI device: (%d) %s\n", errno, strerror(errno));
         exit(-1);
