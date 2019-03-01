@@ -86,7 +86,7 @@ int main(int argc, char **argv) {
     PAGESIZE = sysconf(_SC_PAGESIZE);
 
     // Open the files
-    uio0_fd = open(UIO_FILE, O_RDONLY);
+    uio0_fd = open(UIO_FILE, O_RDWR);
     res0_fd = open(RES_0_FILE, O_RDWR);
     // You can't mmap this config file. You can only [p]read/[p]write it
     config_fd = open(CONFIG_FILE, O_RDWR);
