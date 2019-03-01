@@ -1,9 +1,8 @@
 cmake_minimum_required(VERSION 2.6)
-project(mgh)
+project(nehanni)
 
-add_executable(mgh mgh)
-add_executable(uio_send uio_send)
 add_executable(uio_read uio_read)
+add_executable(uio_send uio_send)
 add_executable(sum_sema sum_sema)
 add_executable(dump_sema dump_sema)
 add_executable(getident getident)

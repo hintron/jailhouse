@@ -7,7 +7,6 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <errno.h>
-#include "ivshmem.h"
 
 enum ivshmem_registers {
     intrmask = 0 / sizeof(int),

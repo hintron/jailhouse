@@ -1,6 +1,12 @@
 ivshmem for jailhouse
 ---------------------
 
+This is the readme (more or less) from
+https://github.com/henning-schild-work/ivshmem-guest-code, specifically from the
+"jailhouse" branch.
+
+See https://github.com/henning-schild-work/ivshmem-guest-code/blob/jailhouse/README.jailhouse
+
 UIO kernel module
 -----------------
 compile:
