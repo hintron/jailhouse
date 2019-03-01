@@ -146,30 +146,28 @@ int main(int argc, char **argv) {
     }
     printf("device: %x\n", device);
 
-    // See uio-howto.rst
-    /* Read and cache command value */
-    err = pread(config_fd, &command_high, 1, 5);
-    if (err == -1) {
-        printf("MGH: command config read ERR %d: %s\n", errno, strerror(errno));
-        exit(-1);
-    }
-    printf("MGH: command_high: %x\n", command_high);
-    command_high &= ~0x4;
-    printf("MGH: command_high &= ~0x4: %x\n", command_high);
-
-
-
     // Wait for interrupts to come in from the real-time inmate
     while (1) {
         int buf = 0;
 
+        // See uio-howto.rst
+        /* Read and cache command value */
+        err = pread(config_fd, &command_high, 1, 5);
+        if (err == -1) {
+            printf("MGH: command config read ERR %d: %s\n", errno, strerror(errno));
+            exit(-1);
+        }
+        printf("MGH: command_high: %x\n", command_high);
+        command_high &= ~0x4;
+        printf("MGH: command_high &= ~0x4: %x\n", command_high);
+
         // Is this needed? See uio-howto.rst
-        // /* Re-enable interrupts. */
-        // err = pwrite(config_fd, &command_high, 1, 5);
-        // if (err == -1) {
-        //     perror("config write:");
-        //     break;
-        // }
+        /* Re-enable interrupts. */
+        err = pwrite(config_fd, &command_high, 1, 5);
+        if (err == -1) {
+            perror("config write:");
+            break;
+        }
 
         // Wait for next interrupt from inmate
         // 4 is the only valid read count for /dev/uioX
@@ -189,7 +187,7 @@ int main(int argc, char **argv) {
         shmem[1] = temp;
 
         printf("MGH: intrmask: %d\n", registers[intrmask]);
-        // This seems to crash
+        // This seems to crash things
         // printf("MGH: intrstatus: %d\n", registers[intrstatus]);
         /*
          * There is no good way for software to find out whether the device is
@@ -207,7 +205,7 @@ int main(int argc, char **argv) {
         // printf("MGH: lstate: %d\n", registers[lstate]);
 
         // Try different things on different interrupts, to see what breaks
-        switch(i) {
+        switch(i % 10) {
             default:
             // fall through
             case 0:
@@ -224,6 +222,9 @@ int main(int argc, char **argv) {
                 break;
             case 4:
                 write_to_doorbell(registers, 2, 16);
+                break;
+            case 5:
+                registers[lstate] = registers[lstate] + 1;
                 break;
         }
         i++;
