@@ -1,3 +1,12 @@
+[Back to README-MGH.md](../README-MGH.md)
+
+# Docs
+
+[setup-build-linux.md](setup-build-linux.md).
+[setup-generate-image-files.md](setup-generate-image-files.md).
+[setup-host.md](setup-host.md).
+[setup-inside-qemu-image.md](setup-inside-qemu-image.md).
+
 # QEMU Quickstart
 
 To get Jailhouse running on x86 in QEMU, you need 4 things:
