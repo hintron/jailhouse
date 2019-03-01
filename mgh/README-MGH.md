@@ -1,7 +1,7 @@
 README - Hintron Fork of Jailhouse
 ====================================
 
-[Checkout the TODO list here](mgh/TODO.md).
+[Checkout the TODO list here](TODO.md).
 
 ## Overview
 
