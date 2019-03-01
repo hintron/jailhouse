@@ -45,11 +45,6 @@ int main(int argc, char **argv) {
     printf("memptr mmap succeeded! Address:%p\n", memptr);
     mem_array = (unsigned int *)memptr;
 
-    printf("MGH: Swap and increment shmem\n");
-    temp = ++mem_array[0];
-    mem_array[0] = mem_array[1];
-    mem_array[1] = temp;
-
     if ((configptr = mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_SHARED, fd2, 0)) == (void *) -1){
         printf("configptr mmap failed (%p)\n", configptr);
         printf("MGH: ERR %d: %s\n", errno, strerror(errno));
@@ -59,21 +54,38 @@ int main(int argc, char **argv) {
     printf("configptr mmap succeeded! Address:%p\n", configptr);
     config_array = (unsigned int *)configptr;
 
-    printf("MGH: lstate: %d\n", config_array[lstate]);
-    printf("MGH: rstate: %d\n", config_array[rstate]);
-    printf("MGH: writing to lstate...\n");
-    config_array[lstate]++;
-    printf("MGH: lstate: %d\n", config_array[lstate]);
+    // Wait for interrupts to come in from the real-time inmate
+    while (1) {
+        int buf = 0;
+        int rv = read(fd1, &buf, sizeof(buf));
+        if (rv == -1) {
+            printf("MGH: Error reading fd=%d\n", fd1);
+            continue;
+        }
 
-    printf("MGH: doorbell: %d\n", config_array[doorbell]);
-    printf("MGH: writing to doorbell...\n");
-    config_array[doorbell] = 0;
-    config_array[doorbell] = 1;
-    config_array[doorbell] = 2;
-    config_array[doorbell] = 3;
-    config_array[doorbell] = 4;
-    config_array[doorbell] = 0x100;
-    printf("MGH: doorbell: %d\n", config_array[doorbell]);
+        printf("MGH: Received interrupt! buf is %d\n", buf);
+
+        printf("MGH: Swap and increment shmem\n");
+        temp = ++mem_array[0];
+        mem_array[0] = mem_array[1];
+        mem_array[1] = temp;
+
+        printf("MGH: lstate: %d\n", config_array[lstate]);
+        printf("MGH: rstate: %d\n", config_array[rstate]);
+        printf("MGH: writing to lstate...\n");
+        config_array[lstate]++;
+        printf("MGH: lstate: %d\n", config_array[lstate]);
+
+        printf("MGH: doorbell: %d\n", config_array[doorbell]);
+        printf("MGH: writing to doorbell...\n");
+        config_array[doorbell] = 0;
+        config_array[doorbell] = 1;
+        config_array[doorbell] = 2;
+        config_array[doorbell] = 3;
+        config_array[doorbell] = 4;
+        config_array[doorbell] = 0x100;
+        printf("MGH: doorbell: %d\n", config_array[doorbell]);
+    }
 
     close(fd1);
     close(fd2);
