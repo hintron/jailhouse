@@ -1,7 +1,10 @@
 README - Hintron Fork of Jailhouse
 ====================================
 
-[Checkout the TODO list here](TODO.md).
+## TODO List
+
+[Checkout the TODO list here](TODO.md)
+
 
 ## Overview
 
@@ -13,6 +16,7 @@ the Linux VM is processing an intensive workload.
 
 Development will be done with QEMU, for convenience, with the goal to eventually
 run on actual hardware to get good performance results.
+
 
 ## Components
 
