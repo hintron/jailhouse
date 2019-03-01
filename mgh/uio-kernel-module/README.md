@@ -7,7 +7,12 @@ To build:
 
     make
 
-To install:
+To autoload on next boot:
+
+    make install
+
+To install ad-hoc, without boot:
 
     modprobe uio
     insmod uio_kernel_module/uio_ivshmem.ko
+

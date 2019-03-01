@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Make this script callable from anywhere
+# https://stackoverflow.com/questions/6659689/referring-to-a-file-relative-to-executing-script
+cd "${BASH_SOURCE%/*}" || exit
+
 QEMU=link/qemu
 IMAGE_FILE=link/img
 INITRD_FILE=link/initrd
