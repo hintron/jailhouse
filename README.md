@@ -1,6 +1,6 @@
 Hintron Fork
 =============
-Checkout my [fork-specific readme here](mgh/README-HINTRON.md) for instructions
+Checkout my [fork-specific readme here](mgh/README-MGH.md) for instructions
 on how to get my Jailhouse-based project up and running.
 
 JAILHOUSE
