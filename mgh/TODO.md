@@ -13,7 +13,9 @@
 
 
 
-# Completed Tasks (see git blame for more info)
+# Completed Tasks
+
+(see git blame for more info)
 
 
 
