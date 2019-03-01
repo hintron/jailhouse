@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <sys/mman.h>
 #include <sys/types.h>
 #include <fcntl.h>
@@ -7,6 +8,10 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <errno.h>
+
+static const char *UIO_FILE = "/dev/uio0";
+static const char *RES_0_FILE = "/sys/class/uio/uio0/device/resource0";
+static const char *CONFIG_FILE = "/sys/class/uio/uio0/device/config";
 
 enum ivshmem_registers {
     intrmask = 0 / sizeof(int),
@@ -61,58 +66,123 @@ int main(int argc, char **argv) {
     unsigned int *registers = NULL;
     unsigned int temp = 0;
     unsigned int i = 0;
+    long PAGESIZE = 0;
+    int uio0_fd = 0;
+    int res0_fd = 0;
+    int config_fd = 0;
+    int err = 0;
+    unsigned char command_high = 0;
+    uint16_t vendor = 0;
+    uint16_t device = 0;
+
+    if (argc != 1) {
+        printf("uio-userspace v0.1\n");
+        printf("Usage:\n");
+        printf("    uio-userspace [help]\n");
+        exit(0);
+    }
 
     // Get the page size of the system (usually 4096)
-    long PAGESIZE = sysconf(_SC_PAGESIZE);
+    PAGESIZE = sysconf(_SC_PAGESIZE);
 
     // Open the files
-    int uio0_fd = open("/dev/uio0", O_RDONLY);
-    int res0_fd = open("/sys/class/uio/uio0/device/resource0", O_RDWR);
+    uio0_fd = open(UIO_FILE, O_RDONLY);
+    res0_fd = open(RES_0_FILE, O_RDWR);
     // You can't mmap this config file. You can only [p]read/[p]write it
-    int config_fd = open("/sys/class/uio/uio0/device/config", O_RDWR);
+    config_fd = open(CONFIG_FILE, O_RDWR);
 
     printf("MGH: uio0_fd = %d\n", uio0_fd);
     printf("MGH: res0_fd = %d\n", res0_fd);
     printf("MGH: config_fd = %d\n", config_fd);
 
-    // Check to make sure
+    if (uio0_fd == -1) {
+        printf("open(%s) failed\n", UIO_FILE);
+        printf("MGH: ERR %d: %s\n", errno, strerror(errno));
+        exit(-1);
+    }
+    if (res0_fd == -1) {
+        printf("open(%s) failed\n", RES_0_FILE);
+        printf("MGH: ERR %d: %s\n", errno, strerror(errno));
+        exit(-1);
+    }
+    if (uio0_fd == -1) {
+        printf("open(%s) failed\n", CONFIG_FILE);
+        printf("MGH: ERR %d: %s\n", errno, strerror(errno));
+        exit(-1);
+    }
 
-
-    // Get the registers offset
     registers = (unsigned int *) mmap(NULL, PAGESIZE, PROT_READ|PROT_WRITE, MAP_SHARED, res0_fd, PAGESIZE*0);
     if (registers == (void *) -1) {
         printf("registers mmap failed (%p)\n", registers);
         printf("MGH: ERR %d: %s\n", errno, strerror(errno));
-        close(res0_fd);
         exit(-1);
     }
     // TODO: Check to see if this still fails
     // if ((registers = mmap(NULL, PAGESIZE, PROT_READ|PROT_WRITE, MAP_SHARED, uio0_fd, PAGESIZE*0)) == (void *) -1){
     printf("registers mmap succeeded! Address:%p\n", registers);
 
-
     // Get the shared memory at +PAGESIZE offset of /dev/uio0
     shmem = (unsigned int *) mmap(NULL, PAGESIZE, PROT_READ|PROT_WRITE, MAP_SHARED, uio0_fd, PAGESIZE*1);
     if (shmem == (void *) -1) {
         printf("shmem mmap failed (%p)\n", shmem);
         printf("MGH: ERR %d: %s\n", errno, strerror(errno));
-        close(uio0_fd);
         exit(-1);
     }
     printf("shmem mmap succeeded! Address:%p\n", shmem);
 
+
+    // Sanity check: read device and vendor id
+    err = pread(config_fd, &vendor, 2, 0);
+    if (err == -1) {
+        printf("MGH: Error reading PCI vendor: (%d) %s\n", errno, strerror(errno));
+        exit(-1);
+    }
+    printf("Vendor: %x\n", vendor);
+
+    err = pread(config_fd, &device, 2, 0);
+    if (err == -1) {
+        printf("MGH: Error reading PCI device: (%d) %s\n", errno, strerror(errno));
+        exit(-1);
+    }
+    printf("device: %x\n", device);
+
+    // See uio-howto.rst
+    /* Read and cache command value */
+    err = pread(config_fd, &command_high, 1, 5);
+    if (err == -1) {
+        printf("MGH: command config read ERR %d: %s\n", errno, strerror(errno));
+        exit(-1);
+    }
+    printf("MGH: command_high: %x\n", command_high);
+    command_high &= ~0x4;
+    printf("MGH: command_high &= ~0x4: %x\n", command_high);
+
+
+
     // Wait for interrupts to come in from the real-time inmate
     while (1) {
         int buf = 0;
+
+        // Is this needed? See uio-howto.rst
+        // /* Re-enable interrupts. */
+        // err = pwrite(config_fd, &command_high, 1, 5);
+        // if (err == -1) {
+        //     perror("config write:");
+        //     break;
+        // }
+
+        // Wait for next interrupt from inmate
         // 4 is the only valid read count for /dev/uioX
-        int rv = read(uio0_fd, &buf, 4);
-        if (rv == -1) {
-            printf("MGH: Error reading fd=%d\n", uio0_fd);
+        err = read(uio0_fd, &buf, 4);
+        if (err == -1) {
+            printf("MGH: Error reading %s: (%d) %s\n", UIO_FILE, errno, strerror(errno));
             continue;
+        }
+        if (err != 4) {
+            printf("MGH: Error: did not read in 4 bytes!\n");
         }
 
         printf("MGH: Received interrupt! buf is %d\n", buf);
-
         printf("MGH: Swap and increment shmem\n");
         temp = ++shmem[0];
         shmem[0] = shmem[1];
@@ -120,12 +190,12 @@ int main(int argc, char **argv) {
 
         printf("MGH: intrmask: %d\n", registers[intrmask]);
         printf("MGH: intrstatus: %d\n", registers[intrstatus]);
-        printf("MGH: ivposition: %d\n", registers[ivposition]);
         /*
          * There is no good way for software to find out whether the device is
          * configured for interrupts. A positive IVPosition means interrupts,
          * but zero could mean either.
          */
+        printf("MGH: ivposition: %d\n", registers[ivposition]);
         if (registers[ivposition] > 0) {
             printf("MGH: interrupts are configured!\n");
         }
@@ -158,10 +228,11 @@ int main(int argc, char **argv) {
         i++;
     }
 
-    close(uio0_fd);
-    close(res0_fd);
-    close(config_fd);
-    munmap(shmem, 4096);
-    munmap(registers, 4096);
+    // This doesn't matter if we are exiting (only for valgrind)
+    // close(uio0_fd);
+    // close(res0_fd);
+    // close(config_fd);
+    // munmap(shmem, 4096);
+    // munmap(registers, 4096);
     exit(0);
 }
