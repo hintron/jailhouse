@@ -189,7 +189,8 @@ int main(int argc, char **argv) {
         shmem[1] = temp;
 
         printf("MGH: intrmask: %d\n", registers[intrmask]);
-        printf("MGH: intrstatus: %d\n", registers[intrstatus]);
+        // This seems to crash
+        // printf("MGH: intrstatus: %d\n", registers[intrstatus]);
         /*
          * There is no good way for software to find out whether the device is
          * configured for interrupts. A positive IVPosition means interrupts,
