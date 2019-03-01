@@ -2,10 +2,10 @@
 
 # Docs
 
-* [setup-build-linux.md](setup-build-linux.md).
-* [setup-generate-image-files.md](setup-generate-image-files.md).
-* [setup-host.md](setup-host.md).
-* [setup-inside-qemu-image.md](setup-inside-qemu-image.md).
+* [setup-build-linux.md](docs/setup-build-linux.md).
+* [setup-generate-image-files.md](docs/setup-generate-image-files.md).
+* [setup-host.md](docs/setup-host.md).
+* [setup-inside-qemu-image.md](docs/setup-inside-qemu-image.md).
 
 # QEMU Quickstart
 
