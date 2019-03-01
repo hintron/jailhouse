@@ -45,13 +45,13 @@ uio-userspace code to talk to the inmate over this virtual PCI device from
 Linux. The inmate will use the Jailhouse API directly to talk to the root cell
 through the virtual PCI device.
 
-#### Bazooka
+#### Bazooka Demo
 
 bazooka-demo is an inmate demo based on apic-demo for my x86-64 Intel Kubuntu
 18.04 "bazooka" machine. The root config is ?, and is generated from the x86
 hardware generator. It's a work in progress.
 
-#### Other Systems
+#### Demos on Other Systems
 The QEMU Jailhouse cells will need to be ported to work on each non-QEMU system.
 
 
@@ -64,6 +64,9 @@ kernel module framework.
 Code is forked from https://github.com/henning-schild-work/ivshmem-guest-code,
 specifically from the "jailhouse" branch.
 
+See [uio-userspace/README.md](uio-userspace/README.md) for how to build and
+install.
+
 
 ### UIO Userspace Programs
 
@@ -73,14 +76,17 @@ to interact with the UIO Kernel Module
 Code is forked from https://github.com/henning-schild-work/ivshmem-guest-code,
 specifically from the "jailhouse" branch.
 
+See [uio-userspace/README.md](uio-userspace/README.md) for how to build and run.
 
 ### QEMU
 
 mgh/qemu contains helper scripts and documentation to create and run
 Jailhouse-enabled QEMU images on any machine.
 
-Images are created through jailhouse-images.
+Images are created via
+[jailhouse-images](https://github.com/siemens/jailhouse-images).
 
+See [qemu/README.md](qemu/README.md) for more information.
 
 ### Scripts
 
@@ -91,3 +97,5 @@ Jailhouse-enabled QEMU image.
 ### Docs
 
 mgh/docs contains additional external documents and resources.
+
+See [docs/README.md](docs/README.md) for a listing of these resources.
