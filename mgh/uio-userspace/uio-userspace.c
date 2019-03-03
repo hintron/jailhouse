@@ -112,14 +112,14 @@ int main(int argc, char **argv) {
         exit(-1);
     }
 
-    registers = (unsigned int *) mmap(NULL, PAGESIZE, PROT_READ|PROT_WRITE, MAP_SHARED, res0_fd, PAGESIZE*0);
+    // TODO: Check to see if this still fails
+    if ((registers = mmap(NULL, PAGESIZE, PROT_READ|PROT_WRITE, MAP_SHARED, uio0_fd, PAGESIZE*0)) == (void *) -1){
+    // registers = (unsigned int *) mmap(NULL, PAGESIZE, PROT_READ|PROT_WRITE, MAP_SHARED, res0_fd, PAGESIZE*0);
     if (registers == (void *) -1) {
         printf("registers mmap failed (%p)\n", registers);
         printf("MGH: ERR %d: %s\n", errno, strerror(errno));
         exit(-1);
     }
-    // TODO: Check to see if this still fails
-    // if ((registers = mmap(NULL, PAGESIZE, PROT_READ|PROT_WRITE, MAP_SHARED, uio0_fd, PAGESIZE*0)) == (void *) -1){
     printf("registers mmap succeeded! Address:%p\n", registers);
 
     // Get the shared memory at +PAGESIZE offset of /dev/uio0
