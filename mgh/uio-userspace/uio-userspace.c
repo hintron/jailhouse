@@ -113,7 +113,7 @@ int main(int argc, char **argv) {
     }
 
     // TODO: Check to see if this still fails
-    if ((registers = mmap(NULL, PAGESIZE, PROT_READ|PROT_WRITE, MAP_SHARED, uio0_fd, PAGESIZE*0)) == (void *) -1){
+    if ((registers = (unsigned int *) mmap(NULL, PAGESIZE, PROT_READ|PROT_WRITE, MAP_SHARED, uio0_fd, PAGESIZE*0)) == (void *) -1){
     // registers = (unsigned int *) mmap(NULL, PAGESIZE, PROT_READ|PROT_WRITE, MAP_SHARED, res0_fd, PAGESIZE*0);
     if (registers == (void *) -1) {
         printf("registers mmap failed (%p)\n", registers);
