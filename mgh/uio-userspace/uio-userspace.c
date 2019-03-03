@@ -66,6 +66,7 @@ int main(int argc, char **argv) {
     unsigned int *registers = NULL;
     unsigned int temp = 0;
     unsigned int i = 0;
+    unsigned int j = 0;
     long PAGESIZE = 0;
     int uio0_fd = 0;
     int res0_fd = 0;
@@ -204,30 +205,15 @@ int main(int argc, char **argv) {
         // printf("MGH: writing to lstate...\n");
         // printf("MGH: lstate: %d\n", registers[lstate]);
 
-        // Try different things on different interrupts, to see what breaks
-        switch(i % 10) {
-            default:
-            // fall through
-            case 0:
-                write_to_doorbell(registers, 1, 16);
-                break;
-            case 1:
-                write_to_doorbell(registers, 1, 1);
-                break;
-            case 2:
-                write_to_doorbell(registers, 1, 2);
-                break;
-            case 3:
-                write_to_doorbell(registers, 2, 1);
-                break;
-            case 4:
-                write_to_doorbell(registers, 2, 16);
-                break;
-            case 5:
-                registers[lstate] = registers[lstate] + 1;
-                break;
+        // Try all the different commands to see what happens
+        for (i = 0; i < 32; ++i) {
+            for (j = 0; j < 32; ++j) {
+                write_to_doorbell(registers, i, j);
+            }
         }
-        i++;
+
+        // Try writing to the doorbell register
+        registers[lstate] = 1;
     }
 
     // This doesn't matter if we are exiting (only for valgrind)

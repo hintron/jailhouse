@@ -311,8 +311,7 @@ struct {
 			.num_msix_vectors = 1,
 			.shmem_region = 15,
 			.shmem_protocol = JAILHOUSE_SHMEM_PROTO_UNDEFINED,
-			// MGH: Try iommu=1 to see if
-			.iommu = 1,
+			// MGH: .iommu=1 seems to break it when userspace
 		},
 	},
 
