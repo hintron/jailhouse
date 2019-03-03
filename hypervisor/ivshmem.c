@@ -273,7 +273,7 @@ enum pci_access ivshmem_pci_cfg_write(struct pci_device *device,
 
 	value |= ive->cspace[row] & ~mask;
 
-	printk("Write ivshmem cfg: %u, %x, %u", row, mask, value);
+	printk("Write ivshmem cfg: %u, %x, %u\n", row, mask, value);
 	switch (row) {
 	case PCI_CFG_COMMAND / 4:
 		if (ivshmem_write_command(ive, value))
