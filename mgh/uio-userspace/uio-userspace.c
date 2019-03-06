@@ -80,6 +80,8 @@ int main(int argc, char **argv) {
         printf("uio-userspace v0.1\n");
         printf("Usage:\n");
         printf("    uio-userspace [help]\n");
+        printf("    \n");
+        printf("    This program will try to interact with a Jailhouse inmate over a virtual PCI ivshmem device through shared memory.\n");
         exit(0);
     }
 
@@ -112,11 +114,17 @@ int main(int argc, char **argv) {
         exit(-1);
     }
 
-    // TODO: Check to see if this still fails
+    printf("Trying to mmap registers from %s\n", UIO_FILE);
     registers = (unsigned int *) mmap(NULL, PAGESIZE, PROT_READ|PROT_WRITE, MAP_SHARED, uio0_fd, PAGESIZE*0);
-    // registers = (unsigned int *) mmap(NULL, PAGESIZE, PROT_READ|PROT_WRITE, MAP_SHARED, res0_fd, PAGESIZE*0);
     if (registers == (void *) -1) {
-        printf("registers mmap failed (%p)\n", registers);
+        printf("registers mmap failed for %s (%p)\n", UIO_FILE, registers);
+        printf("MGH: ERR %d: %s\n", errno, strerror(errno));
+    }
+    printf("Trying to mmap registers from %s\n", RES_0_FILE);
+    // Try again, but this time use the resource 0 version
+    registers = (unsigned int *) mmap(NULL, PAGESIZE, PROT_READ|PROT_WRITE, MAP_SHARED, res0_fd, PAGESIZE*0);
+    if (registers == (void *) -1) {
+        printf("registers mmap failed for %s (%p)\n", RES_0_FILE, registers);
         printf("MGH: ERR %d: %s\n", errno, strerror(errno));
         exit(-1);
     }
