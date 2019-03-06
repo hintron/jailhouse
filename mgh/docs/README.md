@@ -35,11 +35,19 @@ A simple tutorial on how to write a linux kernel module.
 See http://derekmolloy.ie/writing-a-linux-kernel-module-part-1-introduction/
 
 
+#### Linux PCI Driver Overview - pci.txt
+
+This explains the sysfs API for PCI devices/drivers.
+
+https://www.kernel.org/doc/Documentation/PCI/pci.txt
+Also included [here](pci.txt) for convenience.
+
 #### Linux PCI - sysfs-pci.txt
 
 This explains the sysfs API for PCI devices/drivers.
 
 See https://www.kernel.org/doc/Documentation/filesystems/sysfs-pci.txt
+Also included [here](sysfs-pci.txt) for convenience.
 
 
 #### Linux UIO - uio-howto.rst
@@ -48,6 +56,7 @@ This explains how the Linux UIO kernel module system works, and what things
 can be done with _/dev/uio0_.
 
 See https://www.kernel.org/doc/Documentation/driver-api/uio-howto.rst
+Also included [here](uio-howto.rst) for convenience.
 
 
 #### QEMU ivshmem-spec.txt
@@ -55,12 +64,14 @@ The ivshmem virtual PCI device spec from QEMU. Jailhouse's is slightly
 different.
 
 See https://github.com/qemu/qemu/blob/master/docs/specs/ivshmem-spec.txt
+Also included [here](ivshmem-spec.txt) for convenience.
 
 
 #### README.jailhouse
 The readme of the ivshmem-guest-code project, on the jailhouse branch
 
 See https://github.com/henning-schild-work/ivshmem-guest-code/blob/jailhouse/README.jailhouse
+Also included [here](README.jailhouse) for convenience.
 
 
 #### device_spec.txt
@@ -70,3 +81,4 @@ of QEMU's ivshmem-spec.txt. This if from the jailhouse branch of
 ivshmem-guest-code.
 
 See https://github.com/henning-schild-work/ivshmem-guest-code/blob/jailhouse/device_spec.txt
+Also included [here](device_spec.txt) for convenience.
