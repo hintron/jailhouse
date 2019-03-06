@@ -37,12 +37,16 @@ static irqreturn_t ivshmem_handler(int irq, struct uio_info *dev_info)
 
 	ivshmem_info = dev_info->priv;
 
-	if (ivshmem_info->dev->msix_enabled)
+	if (ivshmem_info->dev->msix_enabled) {
+		printk("uio_ivshmem: msix_enabled == 1. Returning IRQ_HANDLED");
 		return IRQ_HANDLED;
+	}
 
 	/* jailhouse does not implement IntrStatus */
-	if (ivshmem_info->jailhouse_mode)
+	if (ivshmem_info->jailhouse_mode) {
+		printk("uio_ivshmem: Jailhouse mode. Returning IRQ_HANDLED");
 		return IRQ_HANDLED;
+	}
 
 	plx_intscr = dev_info->mem[0].internal_addr + IntrStatus;
 	val = readl(plx_intscr);
@@ -84,6 +88,9 @@ static int ivshmem_pci_probe(struct pci_dev *dev,
 	info->mem[0].internal_addr = pci_ioremap_bar(dev, 0);
 	if (!info->mem[0].internal_addr)
 		goto out_release;
+
+	printk("uio_ivshmem: mem0 internal_addr: %p", info->mem[0].internal_addr);
+
 
 	if (1 > pci_alloc_irq_vectors(dev, 1, 1,
 				      PCI_IRQ_LEGACY | PCI_IRQ_MSIX))
@@ -136,8 +143,10 @@ static int ivshmem_pci_probe(struct pci_dev *dev,
 	if (uio_register_device(&dev->dev, info))
 		goto out_unmap;
 
-	if (!dev->msix_enabled)
+	if (!dev->msix_enabled) {
 		writel(0xffffffff, info->mem[0].internal_addr + IntrMask);
+		printk("uio_ivshmem: dev->msix_enabled is 0! ");
+	}
 
 	pci_set_drvdata(dev, ivshmem_info);
 
