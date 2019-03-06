@@ -207,6 +207,7 @@ static int ivshmem_write_command(struct ivshmem_endpoint *ive, u16 val)
 	struct pci_device *device = ive->device;
 	int err;
 
+	printk("ivshmem_write_command: cmd: %hu; val: %u\n", *cmd, val);
 	if ((val & PCI_CMD_MASTER) != (*cmd & PCI_CMD_MASTER)) {
 		*cmd = (*cmd & ~PCI_CMD_MASTER) | (val & PCI_CMD_MASTER);
 		err = arch_ivshmem_update_msix(device);
@@ -243,6 +244,7 @@ static int ivshmem_write_msix_control(struct ivshmem_endpoint *ive, u32 val)
 		.raw = ive->cspace[IVSHMEM_CFG_MSIX_CAP/4]
 	};
 
+	printk("ivshmem_write_msix_control: val: %u\n", val);
 	newval.enable = p->enable;
 	newval.fmask = p->fmask;
 	if (ive->cspace[IVSHMEM_CFG_MSIX_CAP/4] != newval.raw) {
