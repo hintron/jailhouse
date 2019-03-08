@@ -4,23 +4,27 @@
 # https://stackoverflow.com/questions/6659689/referring-to-a-file-relative-to-executing-script
 cd "${BASH_SOURCE%/*}" || exit
 
-QEMU=link/qemu
-IMAGE_FILE=link/img
-INITRD_FILE=link/initrd
-KERNEL_FILE=link/kernel
+# Set defaults for these vars that can be overwritten by env vars
+if [ -z "$QEMU" ]; then
+	QEMU="/home/hintron/bin/qemu-system-x86_64"
+fi
+if [ -z "$IMAGE_FILE" ]; then
+	IMAGE_FILE="images/demo-image-qemuamd64-jailhouse-demo-qemuamd64.ext4.img"
+fi
+if [ -z "$INITRD_FILE" ]; then
+	INITRD_FILE="images/temp2/initrd.img-4.14.73"
+fi
+if [ -z "$KERNEL_FILE" ]; then
+	KERNEL_FILE="images/temp2/vmlinuz-4.14.73"
+fi
+if [ -z "$SUDO" ]; then
+	SUDO="sudo"
+fi
 
-# IMAGE_FILE=images/img
-# IMAGE_FILE=images/backup
-# INITRD_FILE=images/initrd
-# KERNEL_FILE=images/kernel
-# INITRD_FILE=images/initrd96
-# KERNEL_FILE=images/kernel96
-# INITRD_FILE=images/initrd73kall
-# KERNEL_FILE=images/kernel73kall
-# INITRD_FILE=images/initrd-uio
-# KERNEL_FILE=images/kernel-uio
-
-SUDO="sudo"
+echo "$QEMU"
+echo "$IMAGE_FILE"
+echo "$INITRD_FILE"
+echo "$KERNEL_FILE"
 
 QEMU_EXTRA_ARGS=" \
 	-cpu kvm64,-kvm_pv_eoi,-kvm_steal_time,-kvm_asyncpf,-kvmclock,+vmx,+arat \
