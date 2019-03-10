@@ -122,7 +122,7 @@ static char _get_hex_from_lower_nibble(char in)
 	if (in <= 9) {
 		out = in + '0';
 	} else if (in > 9 && in <= 15) {
-		out = in + 'A' - 10;
+		out = in + 'a' - 10;
 	} else {
 		printk("%s: invalid argument: %d\n", __func__, in);
 	}
@@ -146,8 +146,8 @@ static void calculate_sha3(void)
 	}
 	printk("sha3 of \"\":\n");
 	for (i = 0; i < MD_LENGTH; ++i) {
-		printk("%c", _get_hex_from_lower_nibble(output[i]));
 		printk("%c", _get_hex_from_upper_nibble(output[i]));
+		printk("%c", _get_hex_from_lower_nibble(output[i]));
 	}
 	printk("\n");
 }
