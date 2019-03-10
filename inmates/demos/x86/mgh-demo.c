@@ -114,19 +114,24 @@ static void send_irq(struct ivshmem_dev_data *d)
 	mmio_write32(d->registers + 3, 1);
 }
 
-static char _get_hex_from_char(char in)
+static char _get_hex_from_lower_nibble(char in)
 {
-	// Init with bogux value
+	// Init with bogus value
 	char out = 'G';
+	in = in & 0x0F;
 	if (in <= 9) {
 		out = in + '0';
 	} else if (in > 9 && in <= 15) {
 		out = in + 'A' - 10;
-	}
-	else {
+	} else {
 		printk("%s: invalid argument: %d\n", __func__, in);
 	}
 	return out;
+}
+
+static char _get_hex_from_upper_nibble(char in)
+{
+	return _get_hex_from_lower_nibble(in >> 4);
 }
 
 static void calculate_sha3(void)
@@ -141,11 +146,8 @@ static void calculate_sha3(void)
 	}
 	printk("sha3 of \"\":\n");
 	for (i = 0; i < MD_LENGTH; ++i) {
-		printk("%c", output[i]);
-	}
-	printk("\n");
-	for (i = 0; i < MD_LENGTH; ++i) {
-		printk("%c", _get_hex_from_char(output[i]));
+		printk("%c", _get_hex_from_lower_nibble(output[i]));
+		printk("%c", _get_hex_from_upper_nibble(output[i]));
 	}
 	printk("\n");
 }
