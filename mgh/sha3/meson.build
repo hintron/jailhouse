@@ -1,7 +1,7 @@
-project('sha3-test', 'c')
+project('mgh-sha3-512', 'c')
 
 src = [
-    'sha3.c',
+    'sha3_mgh.c',
     'main.c',
 ]
 
