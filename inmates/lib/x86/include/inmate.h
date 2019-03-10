@@ -254,6 +254,8 @@ int pci_find_device(u16 vendor, u16 device, u16 start_bdf);
 int pci_find_cap(u16 bdf, u16 cap);
 void pci_msi_set_vector(u16 bdf, unsigned int vector);
 void pci_msix_set_vector(u16 bdf, unsigned int vector, u32 index);
+// MGH: Add sha3_mgh
+int sha3_mgh(const void *, int, void *, int);
 
 extern volatile u32 smp_num_cpus;
 extern u8 smp_cpu_ids[SMP_MAX_CPUS];

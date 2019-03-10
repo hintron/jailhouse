@@ -7,8 +7,9 @@ The aim for this simple SHA3 library is to be used in the mgh-demo inmate. Due
 to mgh-demo running on bare metal (no OS), the code needs to be lean and not
 rely on external code (or even libc!).
 
-TODO: Add these files in to mgh_demo.c.
-For mgh-demo to access `sha3_mgh.c`, the `include/`...
+sha3-mgh.c needs to be in the hypervisor code in order to be automatically
+built and added into the inmate library.
+
 
 # Build instructions
 

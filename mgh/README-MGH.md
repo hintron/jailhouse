@@ -49,6 +49,7 @@ uio-userspace code to talk to the inmate over this virtual PCI device from
 Linux. The inmate will use the Jailhouse API directly to talk to the root cell
 through the virtual PCI device.
 
+
 #### Bazooka Demo
 
 bazooka-demo is an inmate demo based on apic-demo for my x86-64 Intel Kubuntu
@@ -82,6 +83,7 @@ specifically from the "jailhouse" branch.
 
 See [uio-userspace/README.md](uio-userspace/README.md) for how to build and run.
 
+
 ### QEMU
 
 mgh/qemu contains helper scripts and documentation to create and run
@@ -92,10 +94,18 @@ Images are created via
 
 See [qemu/README.md](qemu/README.md) for more information.
 
+
 ### Scripts
 
 mgh/scripts contains helper scripts to get this project running *inside* a
 Jailhouse-enabled QEMU image.
+
+
+### SHA 3
+
+mgh/sha3 contains a simple SHA 3 implementation to be used by mgh-demo.c.
+
+See [mgh/README.md](mgh/README.md) for more information.
 
 
 ### Docs

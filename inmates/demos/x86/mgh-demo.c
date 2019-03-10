@@ -28,6 +28,9 @@ static char str[32] = "Hello From MGH      ";
 static int ndevices;
 static int irq_counter;
 
+// # of bytes for the sha3-512 message digest output
+#define MD_LENGTH (512/8)
+
 struct ivshmem_dev_data {
 	u16 bdf;
 	u32 *registers;
@@ -111,6 +114,23 @@ static void send_irq(struct ivshmem_dev_data *d)
 	mmio_write32(d->registers + 3, 1);
 }
 
+static void calculate_sha3(void)
+{
+	char *input = "";
+	char output[MD_LENGTH] = {0};
+	int i;
+
+	if (!sha3_mgh(input, strlen(input), &output, MD_LENGTH)) {
+		printk("sha3 failed for string `%s`\n", input);
+		return;
+	}
+	printk("sha3 of \"\":\n");
+	for (i = 0; i < MD_LENGTH; ++i) {
+		printk("%02hhx", output[i]);
+	}
+	printk("\n");
+}
+
 static void irq_handler(void)
 {
 	printk("MGH DEMO: got interrupt ... %d\n", irq_counter++);
@@ -168,6 +188,7 @@ void inmate_main(void)
 			shmem = d->shmem;
 			shmem[19]++;
 			send_irq(d);
+			calculate_sha3();
 		}
 	}
 out:
