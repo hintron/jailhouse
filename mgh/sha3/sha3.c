@@ -27,8 +27,8 @@
 
 // TODO: Replace this with what's needed from the outside world
 // There is a lib.c and types.h from Jailhouse that could help
-// #include <stddef.h>
-// #include <stdint.h>
+#include <stddef.h>
+#include <stdint.h>
 
 #define KECCAKF_ROUNDS 24
 #define ROTL64(x, y) (((x) << (y)) | ((x) >> (64 - (y))))
@@ -42,9 +42,9 @@ typedef struct {
     int pt, rsiz, mdlen;                    // these don't overflow
 } sha3_ctx_t;
 
-// #define shake128_init(c) sha3_init(c, 16)
-// #define shake256_init(c) sha3_init(c, 32)
-// #define shake_update sha3_update
+// #define shake128_init(c) _sha3_init(c, 16)
+// #define shake256_init(c) _sha3_init(c, 32)
+// #define shake_update _sha3_update
 
 
 
@@ -142,7 +142,7 @@ void sha3_keccakf(uint64_t st[25])
 
 // Initialize the context for SHA3
 
-int sha3_init(sha3_ctx_t *c, int mdlen)
+static void _sha3_init(sha3_ctx_t *c, int mdlen)
 {
     int i;
 
@@ -151,13 +151,11 @@ int sha3_init(sha3_ctx_t *c, int mdlen)
     c->mdlen = mdlen;
     c->rsiz = 200 - 2 * mdlen;
     c->pt = 0;
-
-    return 1;
 }
 
 // update state with more data
 
-int sha3_update(sha3_ctx_t *c, const void *data, size_t len)
+static void _sha3_update(sha3_ctx_t *c, const void *data, int len)
 {
     size_t i;
     int j;
@@ -171,13 +169,11 @@ int sha3_update(sha3_ctx_t *c, const void *data, size_t len)
         }
     }
     c->pt = j;
-
-    return 1;
 }
 
 // finalize and output a hash
 
-int sha3_final(void *md, sha3_ctx_t *c)
+static void _sha3_final(void *md, sha3_ctx_t *c)
 {
     int i;
 
@@ -188,69 +184,93 @@ int sha3_final(void *md, sha3_ctx_t *c)
     for (i = 0; i < c->mdlen; i++) {
         ((uint8_t *) md)[i] = c->st.b[i];
     }
-
-    return 1;
 }
 
 // compute a SHA-3 hash (md) of given byte length from "in"
 
-void *sha3(const void *in, size_t inlen, void *md, int mdlen)
+/**
+ * Comput the SHA-3 HASH
+ * @param  in    (IN) The input
+ * @param  inlen (IN) The number of bytes to read from the input
+ * @param  md    (OUT) A preallocated string of size mdlen to store the output
+ *               message digest (hash)
+ * @param  mdlen (IN) The length of the message digest (224, 256, 384, 512, custom)
+ * @return       1 if successful, 0 if not
+ */
+int sha3(const void *in, int inlen, void *md, int mdlen)
 {
     sha3_ctx_t sha3;
 
-    sha3_init(&sha3, mdlen);
-    sha3_update(&sha3, in, inlen);
-    sha3_final(md, &sha3);
+    if (!md || !in || !mdlen) {
+        return 0;
+    }
 
-    return md;
+    _sha3_init(&sha3, mdlen);
+    _sha3_update(&sha3, in, inlen);
+    _sha3_final(md, &sha3);
+
+    return 1;
 }
 
 // SHAKE128 and SHAKE256 extensible-output functionality
 
-void shake_xof(sha3_ctx_t *c)
-{
-    c->st.b[c->pt] ^= 0x1F;
-    c->st.b[c->rsiz - 1] ^= 0x80;
-    sha3_keccakf(c->st.q);
-    c->pt = 0;
-}
+// void shake_xof(sha3_ctx_t *c)
+// {
+//     c->st.b[c->pt] ^= 0x1F;
+//     c->st.b[c->rsiz - 1] ^= 0x80;
+//     sha3_keccakf(c->st.q);
+//     c->pt = 0;
+// }
 
-void shake_out(sha3_ctx_t *c, void *out, size_t len)
-{
-    size_t i;
-    int j;
+// void shake_out(sha3_ctx_t *c, void *out, size_t len)
+// {
+//     size_t i;
+//     int j;
 
-    j = c->pt;
-    for (i = 0; i < len; i++) {
-        if (j >= c->rsiz) {
-            sha3_keccakf(c->st.q);
-            j = 0;
-        }
-        ((uint8_t *) out)[i] = c->st.b[j++];
-    }
-    c->pt = j;
-}
+//     j = c->pt;
+//     for (i = 0; i < len; i++) {
+//         if (j >= c->rsiz) {
+//             sha3_keccakf(c->st.q);
+//             j = 0;
+//         }
+//         ((uint8_t *) out)[i] = c->st.b[j++];
+//     }
+//     c->pt = j;
+// }
 
 
-// TODO: Get this compiled and working
-// TODO: Call this from inmate
-int main(int argc, char const *argv[])
-{
-        memset(sha, 0, sizeof(sha));
-        memset(buf, 0, sizeof(buf));
-        memset(msg, 0, sizeof(msg));
+// // TODO: Get this compiled and working
+// // TODO: Call this from inmate
+// int main(int argc, char const *argv[])
+// {
+//         char *input = NULL;
+//         int size = 0;
 
-        msg_len = test_readhex(msg, testvec[i][0], sizeof(msg));
-        sha_len = test_readhex(sha, testvec[i][1], sizeof(sha));
+//         if (argc != 1) {
+//                 printf("uio-userspace v0.1\n");
+//                 printf("Usage:\n");
+//                 printf("    uio-userspace [help]\n");
+//                 printf("    \n");
+//                 printf("    This program will try to interact with a Jailhouse inmate over a virtual PCI ivshmem device through shared memory.\n");
+//                 exit(0);
+//         }
 
-        // compute a SHA-3 hash (md) of given byte length from "in"
-        sha3(msg, msg_len, buf, sha_len);
 
-        if (memcmp(sha, buf, sha_len) != 0) {
-            fprintf(stderr, "[%d] SHA3-%d, len %d test FAILED.\n",
-                i, sha_len * 8, msg_len);
-            fails++;
-        }
+//         memset(sha, 0, sizeof(sha));
+//         memset(buf, 0, sizeof(buf));
+//         memset(msg, 0, sizeof(msg));
 
-        return 0;
-}
+//         msg_len = test_readhex(msg, testvec[i][0], sizeof(msg));
+//         sha_len = test_readhex(sha, testvec[i][1], sizeof(sha));
+
+//         // compute a SHA-3 hash (md) of given byte length from "in"
+//         sha3(msg, msg_len, buf, sha_len);
+
+//         if (memcmp(sha, buf, sha_len) != 0) {
+//             fprintf(stderr, "[%d] SHA3-%d, len %d test FAILED.\n",
+//                 i, sha_len * 8, msg_len);
+//             fails++;
+//         }
+
+//         return 0;
+// }

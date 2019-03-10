@@ -4,7 +4,7 @@
 # https://stackoverflow.com/questions/6659689/referring-to-a-file-relative-to-executing-script
 cd "${BASH_SOURCE%/*}" || exit
 
-# Set defaults for these vars that can be overwritten by env vars
+# Set defaults that can be overwritten
 if [ -z "$QEMU" ]; then
 	QEMU="/home/hintron/bin/qemu-system-x86_64"
 fi
