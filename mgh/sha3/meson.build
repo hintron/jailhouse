@@ -1,7 +1,7 @@
 project('mgh-sha3-512', 'c')
 
 src = [
-    'src/sha3_mgh.c',
+    '../../inmates/lib/sha3-mgh.c',
     'src/main.c',
 ]
 

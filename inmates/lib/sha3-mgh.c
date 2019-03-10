@@ -40,7 +40,13 @@ typedef struct {
     int pt, rsiz, mdlen;                    // these don't overflow
 } sha3_ctx_t;
 
-void sha3_keccakf(u64 st[25])
+// Prototypes
+static void _sha3_keccakf(u64 st[25]);
+static void _sha3_init(sha3_ctx_t *, int);
+static void _sha3_update(sha3_ctx_t *, const void *, int);
+static void _sha3_final(void *, sha3_ctx_t *);
+
+static void _sha3_keccakf(u64 st[25])
 {
     // constants
     const u64 keccakf_rndc[24] = {
@@ -153,7 +159,7 @@ static void _sha3_update(sha3_ctx_t *c, const void *data, int len)
     for (i = 0; i < len; i++) {
         c->st.b[j++] ^= ((const u8 *) data)[i];
         if (j >= c->rsiz) {
-            sha3_keccakf(c->st.q);
+            _sha3_keccakf(c->st.q);
             j = 0;
         }
     }
@@ -168,7 +174,7 @@ static void _sha3_final(void *md, sha3_ctx_t *c)
 
     c->st.b[c->pt] ^= 0x06;
     c->st.b[c->rsiz - 1] ^= 0x80;
-    sha3_keccakf(c->st.q);
+    _sha3_keccakf(c->st.q);
 
     for (i = 0; i < c->mdlen; i++) {
         ((u8 *) md)[i] = c->st.b[i];
