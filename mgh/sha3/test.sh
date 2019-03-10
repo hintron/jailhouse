@@ -5,6 +5,12 @@
 # To install rhash,
 # sudo apt install rhash
 
+# Test the locally-built binary instead of what's on the path
+mgh_bin=./mgh-sha3-512
+
+echo $CWD
+echo $PWD
+
 function rhash_sha3_512 {
     # Remove trailing characters from rhash output
     trailing=" (stdin)"
@@ -29,36 +35,37 @@ B_GOLD="b751850b1a57168a5693cd924b6b096e08f621827444f70d884f5d0240d2712e10e116e9
 
 RHASH_FAILED=""
 MGH_FAILED=""
+RET_CODE=0
 
 A_RHASH_OUT=$(rhash_sha3_512 "$A_IN")
 if [ "$A_RHASH_OUT" != "$A_GOLD" ]; then
-    echo "rhash failed test \"$A_IN\"!"
-    printf "    rhash:$A_RHASH_OUT \n    gold :$A_GOLD\n"
+    echo "rhash FAILED test \"$A_IN\"!"
+    printf "    rhash: $A_RHASH_OUT \n    gold : $A_GOLD\n"
     RHASH_FAILED="FAILED"
 else
     echo "rhash: Test A Passed"
 fi
 B_RHASH_OUT=$(rhash_sha3_512 "$B_IN")
 if [ "$B_RHASH_OUT" != "$B_GOLD" ]; then
-    echo "rhash failed test \"$B_IN\"!"
-    printf "    rhash:$B_RHASH_OUT \n    gold :$B_GOLD\n"
+    echo "rhash FAILED test \"$B_IN\"!"
+    printf "    rhash: $B_RHASH_OUT \n    gold : $B_GOLD\n"
     RHASH_FAILED="FAILED"
 else
     echo "rhash: Test B Passed"
 fi
 
-A_MGH_OUT=$(mgh-sha3-512 "$A_IN")
+A_MGH_OUT=$($mgh_bin "$A_IN")
 if [ "$A_MGH_OUT" != "$A_GOLD" ]; then
-    echo "mgh failed test \"\"!"
-    printf "    rhash:$A_MGH_OUT \n    gold :$A_GOLD\n"
+    echo "mgh FAILED test \"\"!"
+    printf "    mgh : $A_MGH_OUT \n    gold: $A_GOLD\n"
     MGH_FAILED="FAILED"
 else
     echo "mgh: Test A Passed"
 fi
-B_MGH_OUT=$(mgh-sha3-512 "$B_IN")
+B_MGH_OUT=$($mgh_bin "$B_IN")
 if [ "$B_MGH_OUT" != "$B_GOLD" ]; then
-    echo "mgh failed test \"\"!"
-    printf "    rhash:$B_MGH_OUT \n    gold :$B_GOLD\n"
+    echo "mgh FAILED test \"\"!"
+    printf "    mgh : $B_MGH_OUT \n    gold: $B_GOLD\n"
     MGH_FAILED="FAILED"
 else
     echo "mgh: Test B Passed"
@@ -77,14 +84,14 @@ test_strings=(
 
 for i in ${test_strings[@]}; do
     RHASH_OUT=$(rhash_sha3_512 "${i}")
-    MGH_OUT=$(mgh-sha3-512 "${i}")
+    MGH_OUT=$($mgh_bin "${i}")
 
     if [ "$RHASH_OUT" != "$MGH_OUT" ]; then
-        echo "Failure: rhash and mgh differ on string \"${i}\"!:"
-        echo "rhash: $RHASH_OUT"
-        echo "mgh  : $MGH_OUT"
+        echo "FAILURE: rhash and mgh differ on string \"${i}\"!:"
+        echo "    rhash: $RHASH_OUT"
+        echo "    mgh  : $MGH_OUT"
         # Assume we are the ones to blame
-        $MGH_FAILED="FAILED"
+        MGH_FAILED="FAILED"
     else
         echo "rhash and mgh match for string \"${i}\""
     fi
@@ -94,15 +101,16 @@ done
 
 if [ ! -z $RHASH_FAILED ]; then
     echo "rhash FAILED!"
+    RET_CODE=1
 else
     echo "rhash passed"
 fi
 
 if [ ! -z $MGH_FAILED ]; then
     echo "mgh FAILED!"
+    RET_CODE=1
 else
     echo "mgh passed"
 fi
 
-
-
+exit $RET_CODE
