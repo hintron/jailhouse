@@ -1,6 +1,7 @@
 // The MIT License (MIT)
 
 // Copyright (c) 2015 Markku-Juhani O. Saarinen
+// Copyright (c) 2019 Michael Hinton
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,10 +26,7 @@
 // https://github.com/mjosaarinen/tiny_sha3/blob/master/sha3.c
 // https://github.com/mjosaarinen/tiny_sha3/blob/master/sha3.h
 
-// TODO: Replace this with what's needed from the outside world
-// There is a lib.c and types.h from Jailhouse that could help
-#include <stddef.h>
-#include <stdint.h>
+#include <inmate.h>
 
 #define KECCAKF_ROUNDS 24
 #define ROTL64(x, y) (((x) << (y)) | ((x) >> (64 - (y))))
@@ -36,24 +34,16 @@
 // state context
 typedef struct {
     union {                                 // state:
-        uint8_t b[200];                     // 8-bit bytes
-        uint64_t q[25];                     // 64-bit words
+        u8 b[200];                     // 8-bit bytes
+        u64 q[25];                     // 64-bit words
     } st;
     int pt, rsiz, mdlen;                    // these don't overflow
 } sha3_ctx_t;
 
-// #define shake128_init(c) _sha3_init(c, 16)
-// #define shake256_init(c) _sha3_init(c, 32)
-// #define shake_update _sha3_update
-
-
-
-
-
-void sha3_keccakf(uint64_t st[25])
+void sha3_keccakf(u64 st[25])
 {
     // constants
-    const uint64_t keccakf_rndc[24] = {
+    const u64 keccakf_rndc[24] = {
         0x0000000000000001, 0x0000000000008082, 0x800000000000808a,
         0x8000000080008000, 0x000000000000808b, 0x0000000080000001,
         0x8000000080008081, 0x8000000000008009, 0x000000000000008a,
@@ -74,18 +64,18 @@ void sha3_keccakf(uint64_t st[25])
 
     // variables
     int i, j, r;
-    uint64_t t, bc[5];
+    u64 t, bc[5];
 
 #if __BYTE_ORDER__ != __ORDER_LITTLE_ENDIAN__
-    uint8_t *v;
+    u8 *v;
 
     // endianess conversion. this is redundant on little-endian targets
     for (i = 0; i < 25; i++) {
-        v = (uint8_t *) &st[i];
-        st[i] = ((uint64_t) v[0])     | (((uint64_t) v[1]) << 8) |
-            (((uint64_t) v[2]) << 16) | (((uint64_t) v[3]) << 24) |
-            (((uint64_t) v[4]) << 32) | (((uint64_t) v[5]) << 40) |
-            (((uint64_t) v[6]) << 48) | (((uint64_t) v[7]) << 56);
+        v = (u8 *) &st[i];
+        st[i] = ((u64) v[0])     | (((u64) v[1]) << 8) |
+            (((u64) v[2]) << 16) | (((u64) v[3]) << 24) |
+            (((u64) v[4]) << 32) | (((u64) v[5]) << 40) |
+            (((u64) v[6]) << 48) | (((u64) v[7]) << 56);
     }
 #endif
 
@@ -126,7 +116,7 @@ void sha3_keccakf(uint64_t st[25])
 #if __BYTE_ORDER__ != __ORDER_LITTLE_ENDIAN__
     // endianess conversion. this is redundant on little-endian targets
     for (i = 0; i < 25; i++) {
-        v = (uint8_t *) &st[i];
+        v = (u8 *) &st[i];
         t = st[i];
         v[0] = t & 0xFF;
         v[1] = (t >> 8) & 0xFF;
@@ -157,12 +147,11 @@ static void _sha3_init(sha3_ctx_t *c, int mdlen)
 
 static void _sha3_update(sha3_ctx_t *c, const void *data, int len)
 {
-    size_t i;
-    int j;
+    int i, j;
 
     j = c->pt;
     for (i = 0; i < len; i++) {
-        c->st.b[j++] ^= ((const uint8_t *) data)[i];
+        c->st.b[j++] ^= ((const u8 *) data)[i];
         if (j >= c->rsiz) {
             sha3_keccakf(c->st.q);
             j = 0;
@@ -182,14 +171,14 @@ static void _sha3_final(void *md, sha3_ctx_t *c)
     sha3_keccakf(c->st.q);
 
     for (i = 0; i < c->mdlen; i++) {
-        ((uint8_t *) md)[i] = c->st.b[i];
+        ((u8 *) md)[i] = c->st.b[i];
     }
 }
 
-// compute a SHA-3 hash (md) of given byte length from "in"
 
 /**
- * Comput the SHA-3 HASH
+ * Compute a SHA-3 hash (md) of given byte length from in.
+ *
  * @param  in    (IN) The input
  * @param  inlen (IN) The number of bytes to read from the input
  * @param  md    (OUT) A preallocated string of size mdlen to store the output
@@ -211,66 +200,3 @@ int sha3_mgh(const void *in, int inlen, void *md, int mdlen)
 
     return 1;
 }
-
-// SHAKE128 and SHAKE256 extensible-output functionality
-
-// void shake_xof(sha3_ctx_t *c)
-// {
-//     c->st.b[c->pt] ^= 0x1F;
-//     c->st.b[c->rsiz - 1] ^= 0x80;
-//     sha3_keccakf(c->st.q);
-//     c->pt = 0;
-// }
-
-// void shake_out(sha3_ctx_t *c, void *out, size_t len)
-// {
-//     size_t i;
-//     int j;
-
-//     j = c->pt;
-//     for (i = 0; i < len; i++) {
-//         if (j >= c->rsiz) {
-//             sha3_keccakf(c->st.q);
-//             j = 0;
-//         }
-//         ((uint8_t *) out)[i] = c->st.b[j++];
-//     }
-//     c->pt = j;
-// }
-
-
-// // TODO: Get this compiled and working
-// // TODO: Call this from inmate
-// int main(int argc, char const *argv[])
-// {
-//         char *input = NULL;
-//         int size = 0;
-
-//         if (argc != 1) {
-//                 printf("uio-userspace v0.1\n");
-//                 printf("Usage:\n");
-//                 printf("    uio-userspace [help]\n");
-//                 printf("    \n");
-//                 printf("    This program will try to interact with a Jailhouse inmate over a virtual PCI ivshmem device through shared memory.\n");
-//                 exit(0);
-//         }
-
-
-//         memset(sha, 0, sizeof(sha));
-//         memset(buf, 0, sizeof(buf));
-//         memset(msg, 0, sizeof(msg));
-
-//         msg_len = test_readhex(msg, testvec[i][0], sizeof(msg));
-//         sha_len = test_readhex(sha, testvec[i][1], sizeof(sha));
-
-//         // compute a SHA-3 hash (md) of given byte length from "in"
-//         sha3(msg, msg_len, buf, sha_len);
-
-//         if (memcmp(sha, buf, sha_len) != 0) {
-//             fprintf(stderr, "[%d] SHA3-%d, len %d test FAILED.\n",
-//                 i, sha_len * 8, msg_len);
-//             fails++;
-//         }
-
-//         return 0;
-// }
