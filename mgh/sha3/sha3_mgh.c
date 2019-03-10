@@ -197,7 +197,7 @@ static void _sha3_final(void *md, sha3_ctx_t *c)
  * @param  mdlen (IN) The length of the message digest (224, 256, 384, 512, custom)
  * @return       1 if successful, 0 if not
  */
-int sha3(const void *in, int inlen, void *md, int mdlen)
+int sha3_mgh(const void *in, int inlen, void *md, int mdlen)
 {
     sha3_ctx_t sha3;
 

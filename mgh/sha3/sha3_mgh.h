@@ -4,4 +4,4 @@
 // https://github.com/mjosaarinen/tiny_sha3/blob/master/sha3.h
 
 
-void *sha3(const void *, int, void *, int);
+void *sha3_mgh(const void *, int, void *, int);

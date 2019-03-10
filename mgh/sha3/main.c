@@ -1,4 +1,4 @@
-#include "sha3.h"
+#include "sha3_mgh.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -10,17 +10,17 @@ int main(int argc, char const *argv[])
 	int i;
 
 	if (argc != 2) {
-		printf("sha3 test program\n");
+		printf("mgh-sha3-512 test program\n");
 		printf("Written by Michael Hinton.\n");
 		printf("Usage:\n");
-		printf("    sha3 <input>\n");
+		printf("    mgh-sha3-512 \"input\"\n");
 		printf("    \n");
 		printf("    This program will take an input string and calculate the sha3 of the input\n");
 		return 1;
 	}
 
 
-	if (!sha3(argv[1], strlen(argv[1]), &output, MD_LENGTH)) {
+	if (!sha3_mgh(argv[1], strlen(argv[1]), &output, MD_LENGTH)) {
 		printf("sha3 failed for string `%s`\n", argv[1]);
 	}
 
