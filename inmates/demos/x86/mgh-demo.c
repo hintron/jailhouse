@@ -124,7 +124,7 @@ static char _get_hex_from_char(char in)
 		out = in + 'A' - 10;
 	}
 	else {
-		printk("%s: invalid argument: %d", __func__, in);
+		printk("%s: invalid argument: %d\n", __func__, in);
 	}
 	return out;
 }
@@ -143,6 +143,7 @@ static void calculate_sha3(void)
 	for (i = 0; i < MD_LENGTH; ++i) {
 		printk("%c", output[i]);
 	}
+	printk("\n");
 	for (i = 0; i < MD_LENGTH; ++i) {
 		printk("%c", _get_hex_from_char(output[i]));
 	}
