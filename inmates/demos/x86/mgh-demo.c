@@ -114,6 +114,21 @@ static void send_irq(struct ivshmem_dev_data *d)
 	mmio_write32(d->registers + 3, 1);
 }
 
+static char _get_hex_from_char(char in)
+{
+	// Init with bogux value
+	char out = 'G';
+	if (in <= 9) {
+		out = in + '0';
+	} else if (in > 9 && in <= 15) {
+		out = in + 'A' - 10;
+	}
+	else {
+		printk("%s: invalid argument: %d", __func__, in);
+	}
+	return out;
+}
+
 static void calculate_sha3(void)
 {
 	char *input = "";
@@ -126,7 +141,10 @@ static void calculate_sha3(void)
 	}
 	printk("sha3 of \"\":\n");
 	for (i = 0; i < MD_LENGTH; ++i) {
-		printk("%02hhx", output[i]);
+		printk("%c", output[i]);
+	}
+	for (i = 0; i < MD_LENGTH; ++i) {
+		printk("%c", _get_hex_from_char(output[i]));
 	}
 	printk("\n");
 }
