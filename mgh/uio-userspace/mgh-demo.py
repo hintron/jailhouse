@@ -32,6 +32,7 @@
 import sys
 import time
 import mmap
+import os
 
 device_file = '/dev/uio0'
 
@@ -40,9 +41,9 @@ def main(argv):
         print("Usage: mgh-demo.py <string>")
         sys.exit(0)
     elif argv[1] == "test":
-        file = open(device_file, 'r+b')
-        output = file.read()
-        print("interrupt #%s" % output)
+        fd = os.open(device_file, os.O_RDWR)
+        output = os.read(fd, 4)
+        print("interrupt #%s" % output[0])
         sys.exit(0)
     else:
         data_to_calculate = argv[1]
