@@ -41,10 +41,7 @@ def main(argv):
         print("Usage: mgh-demo.py <string>")
         sys.exit(0)
     elif argv[1] == "test":
-        fd = os.open(device_file, os.O_RDWR)
-        output = os.read(fd, 4)
-        print("interrupt #%s" % output[0])
-        os.close(fd)
+        print("Put test code here")
         sys.exit(0)
     else:
         data_to_calculate = argv[1]
@@ -129,4 +126,6 @@ if __name__ == "__main__":
 # https://docs.python.org/3/library/stdtypes.html#bytearray
 # https://stackoverflow.com/questions/16006165/why-is-discarding-the-volatile-qualifier-in-a-function-call-a-warning
 # https://stackoverflow.com/questions/8201955/python-does-it-have-a-argc-argument
+# https://stackoverflow.com/questions/7585435/best-way-to-convert-string-to-bytes-in-python-3
+# https://docs.python.org/3/library/os.html
 #
