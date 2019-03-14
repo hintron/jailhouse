@@ -39,7 +39,7 @@ def main(argv):
     if len(sys.argv) != 2:
         print("Usage: mgh-demo.py <string>")
         sys.exit(0)
-    elif argv[1] = "test":
+    elif argv[1] == "test":
         f = open(device_file, 'r+b')
         output = file.read()
         print("interrupt #%s" % output)
