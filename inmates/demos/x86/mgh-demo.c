@@ -134,11 +134,12 @@ static char _get_hex_from_upper_nibble(char in)
 	return _get_hex_from_lower_nibble(in >> 4);
 }
 
-static void calculate_sha3(char *input, char *output)
+
+static void calculate_sha3(char *input, int input_length, char *output)
 {
 	int i;
 
-	if (!sha3_mgh(input, strlen(input), output, MD_LENGTH)) {
+	if (!sha3_mgh(input, input_length, output, MD_LENGTH)) {
 		printk("sha3 failed for string `%s`\n", input);
 		return;
 	}
@@ -163,6 +164,7 @@ void inmate_main(void)
 	unsigned int class_rev;
 	struct ivshmem_dev_data *d;
 	volatile char *shmem;
+	u8 length_u8 = 0;
 
 	int_init();
 
@@ -219,8 +221,11 @@ void inmate_main(void)
 		// Indicate that we are now working on sha3
 		shmem[0] = 3;
 
-		// TODO: Do we need byte 1?
-		calculate_sha3((char *)&shmem[2], (char *)&shmem[258]);
+		// Cast signed length byte to unsigned
+		length_u8 = shmem[1];
+
+		calculate_sha3((char *)&shmem[2], (int)length_u8,
+			       (char *)&shmem[258]);
 
 		// Indicate that we are done
 		shmem[0] = 1;
@@ -230,3 +235,8 @@ void inmate_main(void)
 out:
 	halt();
 }
+
+
+// References:
+// https://wiki.sei.cmu.edu/confluence/display/c/STR34-C.+Cast+characters+to+unsigned+char+before+converting+to+larger+integer+sizes
+//

@@ -33,8 +33,12 @@ import sys
 import time
 import mmap
 import os
+import struct
 
 device_file = '/dev/uio0'
+
+MAX_STRING_BYTES = 256
+PAGE_SIZE = 4096
 
 def main(argv):
     if len(sys.argv) != 2:
@@ -47,11 +51,11 @@ def main(argv):
         data_to_calculate = argv[1]
 
     f = open(device_file, 'r+b')
-    shmem = mmap.mmap(f.fileno(), 4096, offset=4096)
+    shmem = mmap.mmap(f.fileno(), PAGE_SIZE, offset=PAGE_SIZE)
     # shmem = bytearray.fromhex('deadbeef')
 
     # Test read
-    print("Shmem content: '%s'" % shmem.read(30))
+    print("Shmem content (first 30 bytes): '%s'" % shmem.read(30))
 
 
     # Check to make sure inmate is ready
@@ -89,25 +93,27 @@ def is_inmate_ready(shmem):
 # Takes a string and puts it into shmem
 def write_input(shmem, string):
     print("Sending inmate string '%s'" % string)
-    if len(string) > 256:
-        print("error: string too long")
+    str_bytes = bytearray(string, 'utf-8')
+    str_bytes_len = len(str_bytes)
+    print("Sending byte string of length %d" % str_bytes_len)
+    if str_bytes_len > MAX_STRING_BYTES:
+        print("error: string too long; length > %d)" % MAX_STRING_BYTES)
         sys.exit(1)
 
-    shmem[1] = len(string) + 1
-    # need to specify 1 past end to get 256 bytes
-    shmem[2:len(string)+2] = bytearray(string, 'utf-8')
+    shmem[1] = str_bytes_len
+    shmem[2:str_bytes_len+2] = str_bytes
 
 # The inmate will wait until we write 2 to byte 0 of shmem
 def signal_inmate(shmem):
     print("Signaling inmate...")
-    # Reads must be 4 bytes?
     shmem[0] = 2
 
 # Waits on an interrupt from the inmate to know the sha3 is complete
 def pend_inmate(device_file):
     fd = os.open(device_file, os.O_RDWR)
-    interrupt_count = os.read(fd, 4)
-    print("interrupt #%s" % interrupt_count[0])
+    # Read out 4 bytes into an int
+    interrupt_count = struct.unpack('i', os.read(fd, 4))
+    print("interrupt #%s" % interrupt_count)
     os.close(fd)
 
 # Waits on an interrupt from the inmate to know the sha3 is complete
@@ -128,4 +134,5 @@ if __name__ == "__main__":
 # https://stackoverflow.com/questions/8201955/python-does-it-have-a-argc-argument
 # https://stackoverflow.com/questions/7585435/best-way-to-convert-string-to-bytes-in-python-3
 # https://docs.python.org/3/library/os.html
+# https://stackoverflow.com/questions/1163459/reading-integers-from-binary-file-in-python
 #
