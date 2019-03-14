@@ -91,7 +91,9 @@ def write_input(shmem, string):
         sys.exit(1)
 
     shmem[1] = len(string) + 1
-    shmem[2:len(string)+2] = bytearray(string, 'utf-8') # need to specify 1 past end to get 256 bytes
+    # need to specify 1 past end to get 256 bytes
+    shmem[2:len(string)+2] = bytearray(string, 'utf-8')
+    shmem[len(string)+2] = b''
 
 # The inmate will wait until we write 2 to byte 0 of shmem
 def signal_inmate(shmem):
