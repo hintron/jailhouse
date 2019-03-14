@@ -1,0 +1,125 @@
+#!/usr/bin/python3
+
+#################################
+# How this demo will work:
+#################################
+
+#######################
+# Shared memory layout:
+#######################
+# Byte 0: a u8 with the following values:
+#   If 0, the inmate has not yet been initialized.
+#   If 1, the inmate is initialized and ready for (more) work.
+#   If 2, Tells the inmate to calculate the sha3 of byte 2-(N+1). This will
+#         immediately set byte 0 to 3.
+#   If 3, the inmate is currently calculating sha3.
+# Byte 1: a u8 of how many bytes of data to hash (for a max of 256 bytes)
+#         TODO: support k, m, g so I can have the inmate sha3 large files?
+# Byte 2-257: the input data (checking for maximum shmem limit).
+# Byte 258-321: the output data (512-bit, 64-byte binary hash)
+#
+# The root cell sets byte 0 to 2, indicating to inmate that data is ready.
+# The inmate is constantly polling the byte.
+# If it's 2, inmate sets the byte to 3 (work in progress)
+# Inmate then works on the input
+# compute a (cryptographic) hash of the input. So SHA3, possibly from this simple code? https://github.com/mjosaarinen/tiny_sha3/blob/master/sha3.c
+# Inmate returns the result in bytes 2 – N, where byte 2 is the size of output, and bytes 3-N is the output
+# Inmate sets byte to 1, indicating computation is finished and ready for work.
+# Repeat
+
+import sys
+import time
+import mmap
+
+device_file = '/dev/uio0'
+
+def main(argv):
+    dev = open(device_file, 'r+b').fileno()
+    shmem = mmap.mmap(dev, 4096, offset=4096)
+    # shmem = bytearray.fromhex('deadbeef')
+    if len(sys.argv) != 2:
+        print("Usage: mgh-demo.py <string>")
+        sys.exit(0)
+    else:
+        data_to_calculate = argv[1]
+
+
+    # # Check to make sure inmate is ready
+    while not is_inmate_ready(shmem):
+        time.sleep(1)
+
+    while True:
+        # # Place input in shared memory
+        write_input(shmem, data_to_calculate)
+
+        # Tell inmate to calculate it
+        signal_inmate(shmem)
+
+        # Block on inmate until it is done
+        pend_inmate(dev)
+
+        # Read the sha3 output
+        read_output(shmem)
+
+        # Wait for a second, for good measure
+        time.sleep(1)
+
+    close(dev)
+    close(shmem)
+
+
+# Waits on an interrupt from the inmate to know the sha3 is complete
+def pend_inmate(dev):
+    # Reads must be 4 bytes?
+    interrupt_count = dev.read(4)
+    print("interrupt #%d" % interrupt_count)
+
+
+# The inmate will wait until we write 2 to byte 0 of shmem
+def signal_inmate(shmem):
+    # Reads must be 4 bytes?
+    shmem[0] = 2
+
+
+# # Waits on an interrupt from the inmate to know the sha3 is complete
+def is_inmate_ready(shmem):
+    if shmem[0] == 1:
+        print("Inmate is ready!")
+        return True
+    else:
+        print("Inmate is not yet ready...")
+        return False
+
+
+# Waits on an interrupt from the inmate to know the sha3 is complete
+def read_output(shmem):
+    output = shmem[258:322] # need to specify 1 past end to get 64 bytes
+    print('Shmem content: %s' % output.hex())
+
+# Takes a string and puts it into shmem
+def write_input(shmem, string):
+    print("Sending inmate string '%s'" % string)
+    if len(string) > 256:
+        print("error: string too long")
+        sys.exit(1)
+
+    shmem[1] = len(string) + 1
+    shmem[2] = string # need to specify 1 past end to get 256 bytes
+
+
+if __name__ == "__main__":
+    main(sys.argv)
+
+
+
+
+
+# References:
+# https://docs.python.org/3.7/library/mmap.html
+# https://stackoverflow.com/questions/1035340/reading-binary-file-and-looping-over-each-byte
+# https://stackoverflow.com/questions/4041238/why-use-def-main
+# https://stackoverflow.com/questions/6624453/whats-the-correct-way-to-convert-bytes-to-a-hex-string-in-python-3
+# https://docs.python.org/3/library/stdtypes.html#bytearray
+# https://stackoverflow.com/questions/16006165/why-is-discarding-the-volatile-qualifier-in-a-function-call-a-warning
+# https://stackoverflow.com/questions/8201955/python-does-it-have-a-argc-argument
+#
