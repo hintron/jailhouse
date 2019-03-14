@@ -56,18 +56,6 @@ static void dbg_write_stub(const char *msg)
 void (*arch_dbg_write)(const char *msg) = dbg_write_stub;
 
 
-// MGH: Add debug print macro
-// See https://stackoverflow.com/questions/1644868/define-macro-for-debug-printing-in-c
-#define printmgh(fmt, ...) \
-	do { if (MGH_DEBUG) printk(fmt, __VA_ARGS__); } while (0)
-#endif
-
-void printmgh(const char *fmt, ...)
-{
-	printk(fmt, ...);
-}
-
-
 void printk(const char *fmt, ...)
 {
 	va_list ap;
