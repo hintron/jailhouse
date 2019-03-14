@@ -44,6 +44,7 @@ def main(argv):
         fd = os.open(device_file, os.O_RDWR)
         output = os.read(fd, 4)
         print("interrupt #%s" % output[0])
+        os.close(fd)
         sys.exit(0)
     else:
         data_to_calculate = argv[1]
@@ -67,9 +68,8 @@ def main(argv):
         # Tell inmate to calculate it
         signal_inmate(shmem)
 
-        # TODO: This isn't working quite yet... is it needed?
-        # # Block on inmate until it is done
-        # pend_inmate(f)
+        # Block on inmate until it is done
+        pend_inmate(device_file)
 
         # Read the sha3 output
         read_output(shmem)
@@ -107,9 +107,11 @@ def signal_inmate(shmem):
     shmem[0] = 2
 
 # Waits on an interrupt from the inmate to know the sha3 is complete
-def pend_inmate(file):
-    interrupt_count = file.read(4)
-    print("interrupt #%d" % interrupt_count)
+def pend_inmate(device_file):
+    fd = os.open(device_file, os.O_RDWR)
+    interrupt_count = os.read(fd, 4)
+    print("interrupt #%s" % interrupt_count[0])
+    os.close(fd)
 
 # Waits on an interrupt from the inmate to know the sha3 is complete
 def read_output(shmem):
