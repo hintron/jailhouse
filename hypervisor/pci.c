@@ -286,10 +286,10 @@ enum pci_access pci_cfg_write_moderate(struct pci_device *device, u16 address,
 	struct pci_cfg_control cfg_control;
 	unsigned int bar_no, cap_offs;
 
-	printk("pci_cfg_write_moderate: address: 0x%x\n", address);
-	printk("pci_cfg_write_moderate: value: %u\n", value);
+	printmgh("pci_cfg_write_moderate: address: 0x%x\n", address);
+	printmgh("pci_cfg_write_moderate: value: %u\n", value);
 	if (!device) {
-		printk("pci_cfg_write_moderate: PCI_ACCESS_REJECT\n");
+		printmgh("pci_cfg_write_moderate: PCI_ACCESS_REJECT\n");
 		return PCI_ACCESS_REJECT;
 	}
 
@@ -300,11 +300,11 @@ enum pci_access pci_cfg_write_moderate(struct pci_device *device, u16 address,
 	if (device->info->type != JAILHOUSE_PCI_TYPE_BRIDGE &&
 	    address >= PCI_CFG_BAR && address <= PCI_CFG_BAR_END) {
 		bar_no = (address - PCI_CFG_BAR) / 4;
-		printk("pci_cfg_write_moderate: accessing bar %u\n", bar_no);
+		printmgh("pci_cfg_write_moderate: accessing bar %u\n", bar_no);
 		mask &= device->info->bar_mask[bar_no];
 		device->bar[bar_no] &= ~mask;
 		device->bar[bar_no] |= value & mask;
-		printk("pci_cfg_write_moderate: wrote %u\n", bar_no);
+		printmgh("pci_cfg_write_moderate: wrote %u\n", bar_no);
 		return PCI_ACCESS_DONE;
 	}
 
@@ -331,7 +331,7 @@ enum pci_access pci_cfg_write_moderate(struct pci_device *device, u16 address,
 	}
 
 	if (device->info->type == JAILHOUSE_PCI_TYPE_IVSHMEM) {
-		printk("pci_cfg_write_moderate() -> ivshmem_pci_cfg_write()\n");
+		printmgh("pci_cfg_write_moderate() -> ivshmem_pci_cfg_write()\n");
 		return ivshmem_pci_cfg_write(device, address / 4, mask, value);
 	}
 
@@ -424,18 +424,18 @@ static enum mmio_result pci_mmconfig_access_handler(void *arg,
 		goto invalid_access;
 
 	device = pci_get_assigned_device(this_cell(), bdf);
-	printk("pci_mmconfig_access_handler: mmio->address: %lu\n", mmio->address);
-	printk("pci_mmconfig_access_handler: reg_addr: %u\n", reg_addr);
-	printk("pci_mmconfig_access_handler: bdf: %u\n", bdf);
+	printmgh("pci_mmconfig_access_handler: mmio->address: %lu\n", mmio->address);
+	printmgh("pci_mmconfig_access_handler: reg_addr: %u\n", reg_addr);
+	printmgh("pci_mmconfig_access_handler: bdf: %u\n", bdf);
 
 	if (mmio->is_write) {
-		printk("pci_mmconfig_access_handler: mmio write\n");
+		printmgh("pci_mmconfig_access_handler: mmio write\n");
 		result = pci_cfg_write_moderate(device, reg_addr, mmio->size,
 						mmio->value);
 		if (result == PCI_ACCESS_REJECT)
 			goto invalid_access;
 	} else {
-		printk("pci_mmconfig_access_handler: mmio read\n");
+		printmgh("pci_mmconfig_access_handler: mmio read\n");
 		result = pci_cfg_read_moderate(device, reg_addr, mmio->size,
 					       &val);
 		if (result != PCI_ACCESS_PERFORM)
