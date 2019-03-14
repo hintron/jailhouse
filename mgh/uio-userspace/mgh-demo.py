@@ -9,10 +9,11 @@
 #   If 2, Tells the inmate to calculate the sha3 of byte 2-(N+1). This will
 #         immediately set byte 0 to 3.
 #   If 3, the inmate is currently calculating sha3.
-# Byte 1: a u8 of how many bytes of data to hash (for a max of 256 bytes)
-#         TODO: support k, m, g so I can have the inmate sha3 large files?
-# Byte 2-257: the input data (checking for maximum shmem limit).
-# Byte 258-321: the output data (512-bit, 64-byte binary hash)
+# Byte 1: a u8 of how many bytes of data to hash for a max of 256 characters.
+#         Make space for an additional a null character in shmem for ease of
+#         printing, making a total of 257 bytes.
+# Byte 2-258: the input data (checking for maximum shmem limit).
+# Byte 259-322: the output data (512-bit, 64-byte binary hash)
 
 #################################
 # How this demo will work:
@@ -37,8 +38,23 @@ import struct
 
 device_file = '/dev/uio0'
 
-MAX_STRING_BYTES = 256
 PAGE_SIZE = 4096
+MAX_INPUT_BYTES = 256
+OUTPUT_BYTES = 64
+
+# Map out shared memory (define the sizes)
+PING_SIZE = 1
+LENGTH_SIZE = 1
+IN_SIZE = MAX_INPUT_BYTES
+OUT_SIZE = OUTPUT_BYTES
+NULL_SIZE = 1
+
+OFFSET_PING = 0
+OFFSET_LENGTH = OFFSET_PING + PING_SIZE
+OFFSET_IN = OFFSET_LENGTH + LENGTH_SIZE
+OFFSET_NULL = OFFSET_IN + IN_SIZE
+OFFSET_OUT = OFFSET_NULL + NULL_SIZE
+
 
 def main(argv):
     if len(sys.argv) != 2:
@@ -83,7 +99,7 @@ def main(argv):
 
 # # Waits on an interrupt from the inmate to know the sha3 is complete
 def is_inmate_ready(shmem):
-    if shmem[0] == 1:
+    if shmem[OFFSET_PING] == 1:
         print("Inmate is ready!")
         return True
     else:
@@ -92,21 +108,22 @@ def is_inmate_ready(shmem):
 
 # Takes a string and puts it into shmem
 def write_input(shmem, string):
-    print("Sending inmate string '%s'" % string)
+    print("Sending inmate string '%s' (not including null)" % string)
     str_bytes = bytearray(string, 'utf-8')
     str_bytes_len = len(str_bytes)
     print("Sending byte string of length %d" % str_bytes_len)
-    if str_bytes_len > MAX_STRING_BYTES:
-        print("error: string too long; length > %d)" % MAX_STRING_BYTES)
+    if str_bytes_len > MAX_INPUT_BYTES:
+        print("error: string too long; length > %d)" % MAX_INPUT_BYTES)
         sys.exit(1)
 
-    shmem[1] = str_bytes_len
-    shmem[2:str_bytes_len+2] = str_bytes
+    shmem[OFFSET_PING] = str_bytes_len
+    # Append an extra +1 to account for python's slice syntax
+    shmem[OFFSET_IN:(OFFSET_IN+(str_bytes_len-1))+1] = str_bytes
 
 # The inmate will wait until we write 2 to byte 0 of shmem
 def signal_inmate(shmem):
     print("Signaling inmate...")
-    shmem[0] = 2
+    shmem[OFFSET_PING] = 2
 
 # Waits on an interrupt from the inmate to know the sha3 is complete
 def pend_inmate(device_file):
@@ -118,7 +135,8 @@ def pend_inmate(device_file):
 
 # Waits on an interrupt from the inmate to know the sha3 is complete
 def read_output(shmem):
-    output = shmem[258:322] # need to specify 1 past end to get 64 bytes
+    # Append an extra +1 to account for python's slice syntax
+    output = shmem[OFFSET_OUT:(OFFSET_OUT+(OUTPUT_BYTES-1))+1]
     print('Shmem content: %s' % output.hex())
 
 if __name__ == "__main__":

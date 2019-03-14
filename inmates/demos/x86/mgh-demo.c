@@ -29,7 +29,23 @@ static int ndevices = 0;
 static int irq_counter;
 
 // # of bytes for the sha3-512 message digest output
-#define MD_LENGTH (512/8)
+#define MD_LENGTH 	64
+#define MAX_INPUT_BYTES 256
+#define OUTPUT_BYTES 	MD_LENGTH
+
+// Map out shared memory (define the sizes)
+#define PING_SIZE 	1
+#define LENGTH_SIZE 	1
+#define IN_SIZE 	MAX_INPUT_BYTES
+#define OUT_SIZE 	OUTPUT_BYTES
+#define NULL_SIZE 	1
+
+#define OFFSET_PING 	0
+#define OFFSET_LENGTH 	(OFFSET_PING + PING_SIZE)
+#define OFFSET_IN 	(OFFSET_LENGTH + LENGTH_SIZE)
+#define OFFSET_NULL 	(OFFSET_IN + IN_SIZE)
+#define OFFSET_OUT 	(OFFSET_NULL + NULL_SIZE)
+
 
 struct ivshmem_dev_data {
 	u16 bdf;
@@ -134,10 +150,12 @@ static char _get_hex_from_upper_nibble(char in)
 	return _get_hex_from_lower_nibble(in >> 4);
 }
 
-
 static void calculate_sha3(char *input, int input_length, char *output)
 {
 	int i;
+
+	// A null character should have been added right after end of input, so
+	// that it can print properly.
 
 	if (!sha3_mgh(input, input_length, output, MD_LENGTH)) {
 		printk("sha3 failed for string `%s`\n", input);
@@ -162,7 +180,7 @@ void inmate_main(void)
 {
 	int bdf = 0;
 	unsigned int class_rev;
-	struct ivshmem_dev_data *d;
+	struct ivshmem_dev_data *dev;
 	volatile char *shmem;
 	u8 length_u8 = 0;
 
@@ -183,13 +201,13 @@ void inmate_main(void)
 			continue;
 		}
 		ndevices++;
-		d = devs + ndevices - 1;
-		d->bdf = bdf;
-		map_shmem_and_bars(d);
+		dev = devs + ndevices - 1;
+		dev->bdf = bdf;
+		map_shmem_and_bars(dev);
 		printk("MGH DEMO: mapped the bars got position %d\n",
-			get_ivpos(d));
+			get_ivpos(dev));
 
-		memcpy(d->shmem, str, 32);
+		memcpy(dev->shmem, str, 32);
 
 		int_set_handler(IRQ_VECTOR + ndevices - 1, irq_handler);
 		pci_msix_set_vector(bdf, IRQ_VECTOR + ndevices - 1, 0);
@@ -202,35 +220,38 @@ void inmate_main(void)
 	}
 
 	if (ndevices > 1) {
-		printk("MGH DEMO: Too many PCI devices found!\n");
-		goto out;
+		printk("MGH DEMO: Too many PCI devices found! Using first device\n");
 	}
 
-	shmem = devs[0].shmem;
+	dev = &devs[0];
+	shmem = dev->shmem;
 	// Indicate the we are up and running
-	shmem[0] = 1;
+	shmem[OFFSET_PING] = 1;
 	while (1) {
 		// Poll until byte 0 is 2 (meaning that the root has placed
 		// data for us in shmem to compute)
-		while (shmem[0] != 2) {
+		while (shmem[OFFSET_PING] != 2) {
 			printk("Waiting for root cell to signal us...\n");
 			// Delay a second
 			delay_us(1000*1000);
 		}
 
 		// Indicate that we are now working on sha3
-		shmem[0] = 3;
+		shmem[OFFSET_PING] = 3;
 
 		// Cast signed length byte to unsigned
-		length_u8 = shmem[1];
+		length_u8 = shmem[OFFSET_LENGTH];
 
-		calculate_sha3((char *)&shmem[2], (int)length_u8,
-			       (char *)&shmem[258]);
+		// Add a null char in for printing convenience
+		shmem[OFFSET_NULL] = '\0';
+
+		calculate_sha3((char *)&shmem[OFFSET_IN], (int)length_u8,
+			       (char *)&shmem[OFFSET_OUT]);
 
 		// Indicate that we are done
-		shmem[0] = 1;
+		shmem[OFFSET_PING] = 1;
 		// Tell the root cell that we are ready to calculate sha3
-		send_irq(&devs[0]);
+		send_irq(dev);
 	}
 out:
 	halt();
