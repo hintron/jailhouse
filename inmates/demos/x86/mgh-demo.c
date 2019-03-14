@@ -25,7 +25,7 @@
 #define UART_BASE	0x3F8
 
 static char str[32] = "Hello From MGH      ";
-static int ndevices;
+static int ndevices = 0;
 static int irq_counter;
 
 // # of bytes for the sha3-512 message digest output
@@ -124,7 +124,7 @@ static char _get_hex_from_lower_nibble(char in)
 	} else if (in > 9 && in <= 15) {
 		out = in + 'a' - 10;
 	} else {
-		printk("%s: invalid argument: %d\n", __func__, in);
+		printk("MGH DEMO: Warning: Could not convert '%d' to hex\n", in);
 	}
 	return out;
 }
@@ -134,20 +134,20 @@ static char _get_hex_from_upper_nibble(char in)
 	return _get_hex_from_lower_nibble(in >> 4);
 }
 
-static void calculate_sha3(void)
+static void calculate_sha3(char *input, char *output)
 {
-	char *input = "";
-	char output[MD_LENGTH] = {0};
 	int i;
 
-	if (!sha3_mgh(input, strlen(input), &output, MD_LENGTH)) {
+	if (!sha3_mgh(input, strlen(input), output, MD_LENGTH)) {
 		printk("sha3 failed for string `%s`\n", input);
 		return;
 	}
-	printk("sha3 of \"\":\n");
+	printk("sha3 of '%s':\n", input);
 	for (i = 0; i < MD_LENGTH; ++i) {
-		printk("%c", _get_hex_from_upper_nibble(output[i]));
-		printk("%c", _get_hex_from_lower_nibble(output[i]));
+		char upper = _get_hex_from_upper_nibble(output[i]);
+		char lower = _get_hex_from_lower_nibble(output[i]);
+		printk("%c", upper);
+		printk("%c", lower);
 	}
 	printk("\n");
 }
@@ -159,7 +159,6 @@ static void irq_handler(void)
 
 void inmate_main(void)
 {
-	int i;
 	int bdf = 0;
 	unsigned int class_rev;
 	struct ivshmem_dev_data *d;
@@ -195,22 +194,38 @@ void inmate_main(void)
 		bdf++;
 	}
 
-	if (!ndevices) {
+	if (ndevices <= 0) {
 		printk("MGH DEMO: No PCI devices found .. nothing to do.\n");
 		goto out;
 	}
 
-	// Enable interrupts
-	asm volatile("sti");
+	if (ndevices > 1) {
+		printk("MGH DEMO: Too many PCI devices found!\n");
+		goto out;
+	}
+
+	shmem = devs[0].shmem;
+	// Indicate the we are up and running
+	shmem[0] = 1;
 	while (1) {
-		for (i = 0; i < ndevices; i++) {
-			d = devs + i;
+		// Poll until byte 0 is 2 (meaning that the root has placed
+		// data for us in shmem to compute)
+		while (shmem[0] != 2) {
+			printk("Waiting for root cell to signal us...\n");
+			// Delay a second
 			delay_us(1000*1000);
-			shmem = d->shmem;
-			shmem[19]++;
-			send_irq(d);
-			calculate_sha3();
 		}
+
+		// Indicate that we are now working on sha3
+		shmem[0] = 3;
+
+		// TODO: Do we need byte 1?
+		calculate_sha3((char *)&shmem[2], (char *)&shmem[258]);
+
+		// Indicate that we are done
+		shmem[0] = 1;
+		// Tell the root cell that we are ready to calculate sha3
+		send_irq(&devs[0]);
 	}
 out:
 	halt();
