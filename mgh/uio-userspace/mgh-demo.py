@@ -1,9 +1,5 @@
 #!/usr/bin/python3
 
-#################################
-# How this demo will work:
-#################################
-
 #######################
 # Shared memory layout:
 #######################
@@ -17,14 +13,20 @@
 #         TODO: support k, m, g so I can have the inmate sha3 large files?
 # Byte 2-257: the input data (checking for maximum shmem limit).
 # Byte 258-321: the output data (512-bit, 64-byte binary hash)
-#
+
+#################################
+# How this demo will work:
+#################################
+# The root cell checks byte 0 to see if it's 1, indicating that the inmate is
+# up and running.
+# The root cell write the input to shmem.
 # The root cell sets byte 0 to 2, indicating to inmate that data is ready.
-# The inmate is constantly polling the byte.
+# The inmate is constantly polling byte 0.
 # If it's 2, inmate sets the byte to 3 (work in progress)
-# Inmate then works on the input
-# compute a (cryptographic) hash of the input. So SHA3, possibly from this simple code? https://github.com/mjosaarinen/tiny_sha3/blob/master/sha3.c
-# Inmate returns the result in bytes 2 – N, where byte 2 is the size of output, and bytes 3-N is the output
+# Inmate then computes a SHA3 hash of the input from shmem
+# Inmate writes the result to shmem
 # Inmate sets byte to 1, indicating computation is finished and ready for work.
+# Inmate sends interrupt to root cell, indicating that it's done.
 # Repeat
 
 import sys
@@ -45,7 +47,7 @@ def main(argv):
     # shmem = bytearray.fromhex('deadbeef')
 
     # Test read
-    print('Shmem content: ' + f.read(30))
+    print("Shmem content: '%s'" % shmem.read(30))
 
 
     # Check to make sure inmate is ready
@@ -59,6 +61,7 @@ def main(argv):
         # Tell inmate to calculate it
         signal_inmate(shmem)
 
+
         # Block on inmate until it is done
         pend_inmate(f)
 
@@ -71,20 +74,6 @@ def main(argv):
     close(f)
     close(shmem)
 
-
-# Waits on an interrupt from the inmate to know the sha3 is complete
-def pend_inmate(dev):
-    # Reads must be 4 bytes?
-    interrupt_count = dev.read(4)
-    print("interrupt #%d" % interrupt_count)
-
-
-# The inmate will wait until we write 2 to byte 0 of shmem
-def signal_inmate(shmem):
-    # Reads must be 4 bytes?
-    shmem[0] = 2
-
-
 # # Waits on an interrupt from the inmate to know the sha3 is complete
 def is_inmate_ready(shmem):
     if shmem[0] == 1:
@@ -93,12 +82,6 @@ def is_inmate_ready(shmem):
     else:
         print("Inmate is not yet ready...")
         return False
-
-
-# Waits on an interrupt from the inmate to know the sha3 is complete
-def read_output(shmem):
-    output = shmem[258:322] # need to specify 1 past end to get 64 bytes
-    print('Shmem content: %s' % output.hex())
 
 # Takes a string and puts it into shmem
 def write_input(shmem, string):
@@ -110,13 +93,25 @@ def write_input(shmem, string):
     shmem[1] = len(string) + 1
     shmem[2] = string # need to specify 1 past end to get 256 bytes
 
+# The inmate will wait until we write 2 to byte 0 of shmem
+def signal_inmate(shmem):
+    print("Signaling inmate...")
+    # Reads must be 4 bytes?
+    shmem[0] = 2
+
+# Waits on an interrupt from the inmate to know the sha3 is complete
+def pend_inmate(dev):
+    # Reads must be 4 bytes?
+    interrupt_count = dev.read(4)
+    print("interrupt #%d" % interrupt_count)
+
+# Waits on an interrupt from the inmate to know the sha3 is complete
+def read_output(shmem):
+    output = shmem[258:322] # need to specify 1 past end to get 64 bytes
+    print('Shmem content: %s' % output.hex())
 
 if __name__ == "__main__":
     main(sys.argv)
-
-
-
-
 
 # References:
 # https://docs.python.org/3.7/library/mmap.html
