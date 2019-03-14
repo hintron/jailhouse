@@ -39,6 +39,11 @@ def main(argv):
     if len(sys.argv) != 2:
         print("Usage: mgh-demo.py <string>")
         sys.exit(0)
+    elif argv[1] = "test":
+        f = open(device_file, 'r+b')
+        output = file.read()
+        print("interrupt #%s" % output)
+        sys.exit(0)
     else:
         data_to_calculate = argv[1]
 
@@ -61,9 +66,9 @@ def main(argv):
         # Tell inmate to calculate it
         signal_inmate(shmem)
 
-
-        # Block on inmate until it is done
-        pend_inmate(f)
+        # TODO: This isn't working quite yet... is it needed?
+        # # Block on inmate until it is done
+        # pend_inmate(f)
 
         # Read the sha3 output
         read_output(shmem)
@@ -101,9 +106,8 @@ def signal_inmate(shmem):
     shmem[0] = 2
 
 # Waits on an interrupt from the inmate to know the sha3 is complete
-def pend_inmate(dev):
-    # Reads must be 4 bytes?
-    interrupt_count = dev.read(4)
+def pend_inmate(file):
+    interrupt_count = file.read(4)
     print("interrupt #%d" % interrupt_count)
 
 # Waits on an interrupt from the inmate to know the sha3 is complete
