@@ -207,7 +207,7 @@ static int ivshmem_write_command(struct ivshmem_endpoint *ive, u16 val)
 	struct pci_device *device = ive->device;
 	int err;
 
-	printk("ivshmem_write_command: cmd: %u; val: %u\n", *cmd, val);
+	printmgh("ivshmem_write_command: cmd: %u; val: %u\n", *cmd, val);
 	if ((val & PCI_CMD_MASTER) != (*cmd & PCI_CMD_MASTER)) {
 		*cmd = (*cmd & ~PCI_CMD_MASTER) | (val & PCI_CMD_MASTER);
 		err = arch_ivshmem_update_msix(device);
@@ -244,7 +244,7 @@ static int ivshmem_write_msix_control(struct ivshmem_endpoint *ive, u32 val)
 		.raw = ive->cspace[IVSHMEM_CFG_MSIX_CAP/4]
 	};
 
-	printk("ivshmem_write_msix_control: val: %u\n", val);
+	printmgh("ivshmem_write_msix_control: val: %u\n", val);
 	newval.enable = p->enable;
 	newval.fmask = p->fmask;
 	if (ive->cspace[IVSHMEM_CFG_MSIX_CAP/4] != newval.raw) {
@@ -275,7 +275,7 @@ enum pci_access ivshmem_pci_cfg_write(struct pci_device *device,
 
 	value |= ive->cspace[row] & ~mask;
 
-	// printk("Write ivshmem cfg: %u, 0x%x, %u\n", row, mask, value);
+	// printmgh("Write ivshmem cfg: %u, 0x%x, %u\n", row, mask, value);
 	switch (row) {
 	case PCI_CFG_COMMAND / 4:
 		if (ivshmem_write_command(ive, value))
