@@ -34,17 +34,21 @@ import mmap
 device_file = '/dev/uio0'
 
 def main(argv):
-    dev = open(device_file, 'r+b').fileno()
-    shmem = mmap.mmap(dev, 4096, offset=4096)
-    # shmem = bytearray.fromhex('deadbeef')
     if len(sys.argv) != 2:
         print("Usage: mgh-demo.py <string>")
         sys.exit(0)
     else:
         data_to_calculate = argv[1]
 
+    f = open(device_file, 'r+b')
+    shmem = mmap.mmap(f.fileno(), 4096, offset=4096)
+    # shmem = bytearray.fromhex('deadbeef')
 
-    # # Check to make sure inmate is ready
+    # Test read
+    print('Shmem content: ' + f.read(30))
+
+
+    # Check to make sure inmate is ready
     while not is_inmate_ready(shmem):
         time.sleep(1)
 
@@ -56,7 +60,7 @@ def main(argv):
         signal_inmate(shmem)
 
         # Block on inmate until it is done
-        pend_inmate(dev)
+        pend_inmate(f)
 
         # Read the sha3 output
         read_output(shmem)
@@ -64,7 +68,7 @@ def main(argv):
         # Wait for a second, for good measure
         time.sleep(1)
 
-    close(dev)
+    close(f)
     close(shmem)
 
 
