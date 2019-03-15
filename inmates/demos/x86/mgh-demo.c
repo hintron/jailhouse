@@ -243,7 +243,7 @@ void inmate_main(void)
 		length_u8 = shmem[OFFSET_LENGTH];
 
 		// Add a null char in for printing convenience
-		shmem[OFFSET_NULL] = '\0';
+		shmem[OFFSET_IN + length_u8] = '\0';
 
 		calculate_sha3((char *)&shmem[OFFSET_IN], (int)length_u8,
 			       (char *)&shmem[OFFSET_OUT]);
