@@ -116,7 +116,7 @@ def write_input(shmem, string):
         print("error: string too long; length > %d)" % MAX_INPUT_BYTES)
         sys.exit(1)
 
-    shmem[OFFSET_PING] = str_bytes_len
+    shmem[OFFSET_LENGTH] = str_bytes_len
     # Append an extra +1 to account for python's slice syntax
     shmem[OFFSET_IN:(OFFSET_IN+(str_bytes_len-1))+1] = str_bytes
 
