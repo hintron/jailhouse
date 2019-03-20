@@ -47,10 +47,12 @@
 struct {
 	struct jailhouse_system header;
 	__u64 cpus[1];
-	struct jailhouse_memory mem_regions[61];
+	// MGH: Increment by 1 to 62 after adding ivshmem mem region
+	struct jailhouse_memory mem_regions[62];
 	struct jailhouse_irqchip irqchips[1];
 	__u8 pio_bitmap[0x2000];
-	struct jailhouse_pci_device pci_devices[16];
+	// MGH: Increment by 1 to 17 after adding ivshmem pci device
+	struct jailhouse_pci_device pci_devices[17];
 	struct jailhouse_pci_capability pci_caps[40];
 } __attribute__((packed)) config = {
 	.header = {
@@ -541,7 +543,18 @@ struct {
 		{
 			.phys_start = 0x3a600000,
 			.virt_start = 0x3a600000,
-			.size = 0x4c00000,
+			// MGH: Reduce by 0x100000 to create space for the
+			// IVSHMEM region
+			.size = 0x4b00000,
+			// .size = 0x4c00000,
+			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE,
+		},
+		/* MGH Added: IVSHMEM shared memory region (index 61)*/
+		{
+			.phys_start = 0x3f101000,
+			.virt_start = 0x3f101000,
+			// Create 1 MB of shared memory
+			.size = 0xff000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE,
 		},
 	},
@@ -858,6 +871,20 @@ struct {
 			.num_msix_vectors = 0,
 			.msix_region_size = 0x0,
 			.msix_address = 0x0,
+		},
+		/* MGH Added: IVSHMEM (demo) */
+		{
+			.type = JAILHOUSE_PCI_TYPE_IVSHMEM,
+			.domain = 0x0000,
+			.bdf = 0x0f << 3,
+			.bar_mask = {
+				0xffffff00, 0xffffffff, 0x00000000,
+				0x00000000, 0xffffffe0, 0xffffffff,
+			},
+			.num_msix_vectors = 1,
+			.shmem_region = 61,
+			.shmem_protocol = JAILHOUSE_SHMEM_PROTO_UNDEFINED,
+			// MGH: .iommu=1 seems to break things
 		},
 	},
 
