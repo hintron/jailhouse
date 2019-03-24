@@ -12,5 +12,5 @@ To autoload _uio_ivshmem.ko_ on next boot:
 To install _uio_ivshmem.ko_ ad-hoc, without boot:
 
     sudo modprobe uio
-    sudo insmod uio_kernel_module/uio_ivshmem.ko
+    sudo insmod uio_ivshmem.ko
 

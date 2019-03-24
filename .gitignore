@@ -39,3 +39,6 @@ build/
 *.class
 *.so
 .*.sw*
+# MGH - Kernel Module Signing Keys
+MOK.priv
+MOK.der
