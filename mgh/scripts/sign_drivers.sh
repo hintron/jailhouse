@@ -1,3 +1,5 @@
+#!/bin/bash
+cd "${BASH_SOURCE%/*}" || exit
 # See https://askubuntu.com/questions/760671/could-not-load-vboxdrv-after-upgrade-to-ubuntu-16-04-and-i-want-to-keep-secur/768310#768310
 
 # cd  ~/code/jailhouse/mgh/scripts
