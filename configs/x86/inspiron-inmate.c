@@ -31,10 +31,11 @@ struct {
 	.cell = {
 		.signature = JAILHOUSE_CELL_DESC_SIGNATURE,
 		.revision = JAILHOUSE_CONFIG_REVISION,
-		.name = "mgh-demo",
-		// .flags = JAILHOUSE_CELL_PASSIVE_COMMREG |
-		// 	JAILHOUSE_CELL_VIRTUAL_CONSOLE_PERMITTED,
-		.flags = JAILHOUSE_CELL_PASSIVE_COMMREG,
+		.name = "inspiron-inmate",
+		.flags = JAILHOUSE_CELL_PASSIVE_COMMREG |
+			JAILHOUSE_CELL_VIRTUAL_CONSOLE_PERMITTED,
+		// MGH
+		// .flags = JAILHOUSE_CELL_PASSIVE_COMMREG,
 
 		.cpu_set_size = sizeof(config.cpus),
 		.num_memory_regions = ARRAY_SIZE(config.mem_regions),
