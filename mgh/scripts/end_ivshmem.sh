@@ -1,2 +1,2 @@
-cd "${BASH_SOURCE%/*}" || exit
+#!/bin/bash
 ../../tools/jailhouse cell destroy ivshmem-demo
