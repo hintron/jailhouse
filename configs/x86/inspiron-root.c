@@ -579,10 +579,12 @@ struct {
 		[  0x60/8 ...   0x67/8] = 0xec, /* HACK: NMI status/control */
 		[  0x68/8 ...   0x6f/8] = -1,
 		[  0x70/8 ...   0x77/8] = 0xfc, /* RTC */
-		[  0x78/8 ...  0x3af/8] = -1,
+		[  0x78/8 ...   0xaf/8] = -1,
+		[  0xb0/8 ...   0xb7/8] = 0x00, /* MGH: Power cable detection */
+		[  0xb8/8 ...  0x3af/8] = -1,
 		[ 0x3b0/8 ...  0x3df/8] = 0x00, /* VGA */
 		[ 0x3e0/8 ...  0x92f/8] = -1,
-		[ 0x930/8 ...  0x937/8] = 0x00,
+		[ 0x930/8 ...  0x937/8] = 0x00, /* MGH: PNP0C09:00 - EC cmd */
 		[ 0x938/8 ...  0xcff/8] = -1,
 		[ 0xd00/8 ... 0xffff/8] = 0, /* HACK: PCI bus */
 		// NOTE: This doesn't fix the problem
