@@ -22,9 +22,7 @@ struct {
 	struct jailhouse_cell_desc cell;
 	__u64 cpus[1];
 	struct jailhouse_memory mem_regions[3];
-	// __u8 pio_bitmap[0x2000];
-	// MGH: Disable pio_bitmap
-	__u8 pio_bitmap[0];
+	__u8 pio_bitmap[0x2000];
 	struct jailhouse_pci_device pci_devices[1];
 	struct jailhouse_pci_capability pci_caps[0];
 } __attribute__((packed)) config = {
@@ -33,9 +31,7 @@ struct {
 		.revision = JAILHOUSE_CONFIG_REVISION,
 		.name = "inspiron-inmate",
 		.flags = JAILHOUSE_CELL_PASSIVE_COMMREG |
-			JAILHOUSE_CELL_VIRTUAL_CONSOLE_PERMITTED,
-		// MGH
-		// .flags = JAILHOUSE_CELL_PASSIVE_COMMREG,
+			JAILHOUSE_CELL_VIRTUAL_CONSOLE_ACTIVE,
 
 		.cpu_set_size = sizeof(config.cpus),
 		.num_memory_regions = ARRAY_SIZE(config.mem_regions),
@@ -44,12 +40,11 @@ struct {
 		.num_pci_devices = ARRAY_SIZE(config.pci_devices),
 		.num_pci_caps = ARRAY_SIZE(config.pci_caps),
 
-		// Laptop doesn't have a console device
-		// .console = {
-		// 	.type = JAILHOUSE_CON_TYPE_8250,
-		// 	.flags = JAILHOUSE_CON_ACCESS_PIO,
-		// 	.address = 0x3f8,
-		// },
+		.console = {
+			.type = JAILHOUSE_CON_TYPE_8250,
+			.flags = JAILHOUSE_CON_ACCESS_PIO,
+			.address = 0x3f8,
+		},
 	},
 
 	.cpus = {
@@ -82,14 +77,13 @@ struct {
 		},
 	},
 
-	// // MGH: Get rid of these (less /proc/ioports shows no serial devices)
-	// .pio_bitmap = {
-	// 	[     0/8 ...  0x2f7/8] = -1,
-	// 	[ 0x2f8/8 ...  0x2ff/8] = 0, /* serial2 */
-	// 	[ 0x300/8 ...  0x3f7/8] = -1,
-	// 	[ 0x3f8/8 ...  0x3ff/8] = 0, /* serial1 */
-	// 	[ 0x400/8 ... 0xffff/8] = -1,
-	// },
+	.pio_bitmap = {
+		[     0/8 ...  0x2f7/8] = -1,
+		[ 0x2f8/8 ...  0x2ff/8] = 0, /* serial2 */
+		[ 0x300/8 ...  0x3f7/8] = -1,
+		[ 0x3f8/8 ...  0x3ff/8] = 0, /* serial1 */
+		[ 0x400/8 ... 0xffff/8] = -1,
+	},
 
 
 	.pci_devices = {
