@@ -65,8 +65,6 @@ struct {
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_COMM_REGION,
 		},
 		/* MGH: IVSHMEM shared memory region */
-		// TODO: Implement a "console" via shared memory! Map the last
-		// page
 		{
 			.phys_start = 0x3f101000,
 			.virt_start = 0x3f101000,

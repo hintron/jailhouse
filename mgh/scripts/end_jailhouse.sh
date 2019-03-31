@@ -1,3 +1,3 @@
 #!/bin/bash
 cd "${BASH_SOURCE%/*}" || exit
-../../tools/jailhouse disable
+sudo ../../tools/jailhouse disable

@@ -1,3 +1,3 @@
 #!/bin/bash
 cd "${BASH_SOURCE%/*}" || exit
-../../tools/jailhouse cell destroy inspiron-inmate
+sudo ../../tools/jailhouse cell destroy inspiron-inmate
