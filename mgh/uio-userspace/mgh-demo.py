@@ -79,7 +79,7 @@ def main(argv):
         time.sleep(1)
 
     while True:
-        # # Place input in shared memory
+        # Place input in shared memory
         write_input(shmem, data_to_calculate)
 
         # Tell inmate to calculate it
