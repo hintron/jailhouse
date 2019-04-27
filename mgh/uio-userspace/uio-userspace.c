@@ -114,19 +114,22 @@ int main(int argc, char **argv) {
         exit(-1);
     }
 
+    // This call succeeds on Inspiron, but not in QEMU Jailhouse Image
     printf("Trying to mmap registers from %s\n", UIO_FILE);
     registers = (unsigned int *) mmap(NULL, PAGESIZE, PROT_READ|PROT_WRITE, MAP_SHARED, uio0_fd, PAGESIZE*0);
     if (registers == (void *) -1) {
         printf("registers mmap failed for %s (%p)\n", UIO_FILE, registers);
         printf("MGH: ERR %d: %s\n", errno, strerror(errno));
-    }
-    printf("Trying to mmap registers from %s\n", RES_0_FILE);
-    // Try again, but this time use the resource 0 version
-    registers = (unsigned int *) mmap(NULL, PAGESIZE, PROT_READ|PROT_WRITE, MAP_SHARED, res0_fd, PAGESIZE*0);
-    if (registers == (void *) -1) {
-        printf("registers mmap failed for %s (%p)\n", RES_0_FILE, registers);
-        printf("MGH: ERR %d: %s\n", errno, strerror(errno));
-        exit(-1);
+
+        // This call succeeds in QEMU Jailhouse Image, but not on Inspiron
+        printf("Trying to mmap registers from %s\n", RES_0_FILE);
+        // Try again, but this time use the resource 0 version
+        registers = (unsigned int *) mmap(NULL, PAGESIZE, PROT_READ|PROT_WRITE, MAP_SHARED, res0_fd, PAGESIZE*0);
+        if (registers == (void *) -1) {
+            printf("registers mmap failed for %s (%p)\n", RES_0_FILE, registers);
+            printf("MGH: ERR %d: %s\n", errno, strerror(errno));
+            exit(-1);
+        }
     }
     printf("registers mmap succeeded! Address:%p\n", registers);
 
