@@ -32,11 +32,14 @@ extern bool virtual_console;
 extern volatile struct jailhouse_virt_console console;
 
 // MGH: Add debug print macro if DEBUG is defined (pass in to compiler)
-#ifdef DEBUG
-#define MGH_DEBUG 1
-#else
+// #ifdef DEBUG
+// #define MGH_DEBUG 1
+// #else
+// #define MGH_DEBUG 0
+// #endif
+
 #define MGH_DEBUG 0
-#endif
+
 #define printmgh(fmt, ...) \
     do { if (MGH_DEBUG) printk(fmt, ##__VA_ARGS__); } while (0)
 
