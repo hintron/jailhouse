@@ -1163,6 +1163,7 @@ void vcpu_handle_exit(struct per_cpu *cpu_data)
 	u32 *stats = cpu_data->public.stats;
 
 	stats[JAILHOUSE_CPU_STAT_VMEXITS_TOTAL]++;
+	printk("MGH: vcpu_handle_exit() %d\n", reason);
 
 	switch (reason) {
 	case EXIT_REASON_EXCEPTION_NMI:
