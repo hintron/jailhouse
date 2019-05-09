@@ -229,7 +229,7 @@ void x86_check_events(void)
 	if (cpu_public->wait_for_sipi) {
 		vcpu_park();
 	} else if (sipi_vector >= 0) {
-		printk("CPU %d received SIPI, vector %x\n", this_cpu_id(),
+		printk("CPU %d received SIPI (woah dude, that's crazy!), vector %x\n", this_cpu_id(),
 		       sipi_vector);
 		apic_clear();
 		vcpu_reset(sipi_vector);
