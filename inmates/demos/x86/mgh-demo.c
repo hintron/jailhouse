@@ -231,7 +231,7 @@ void inmate_main(void)
 		// Poll until byte 0 is 2 (meaning that the root has placed
 		// data for us in shmem to compute)
 		while (shmem[OFFSET_PING] != 2) {
-			printk("Waiting for root cell to signal us...\n");
+			// printk("Waiting for root cell to signal us...\n");
 			// Delay a second
 			delay_us(1000*1000);
 		}
