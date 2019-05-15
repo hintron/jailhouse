@@ -1171,7 +1171,7 @@ void vcpu_handle_exit(struct per_cpu *cpu_data)
 		return;
 	case EXIT_REASON_PREEMPTION_TIMER:
 		stats[JAILHOUSE_CPU_STAT_VMEXITS_MANAGEMENT]++;
-		printk("MGH: Preemption Timer Handler A! %d\n", stats[JAILHOUSE_CPU_STAT_VMEXITS_MANAGEMENT]);
+		printk("MGH: Preemption Timer Handler B! %d\n", stats[JAILHOUSE_CPU_STAT_VMEXITS_MANAGEMENT]);
 		vmx_check_events();
 		return;
 	case EXIT_REASON_CPUID:
