@@ -338,7 +338,8 @@ void vmx_entry_failure(void);
 void vmx_vmexit(void);
 
 // MGH
-#define PREEMPTION_TIMER_INIT	0x80000000
+// #define PREEMPTION_TIMER_INIT	0x80000000
+#define PREEMPTION_TIMER_INIT	0x00008000
 
 
 #endif /* !_JAILHOUSE_ASM_VMX_H */
