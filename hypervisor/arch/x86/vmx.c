@@ -949,21 +949,25 @@ static void preemption_timer_handler_mgh(unsigned int cpu_id)
 	// 	nmi_preempt = false;
 	// }
 
-	// Reset the preemption timer
-	// If we don't do this, we'll freeze the CPU in a loop because the
-	// timer value will be 0, meaning it will trigger again instantaneously
-	printk("MGH: reset preemption timer to 0x%x\n", PREEMPTION_TIMER_INIT);
-	(void) set_preemption_timer(PREEMPTION_TIMER_INIT);
+	// // Reset the preemption timer
+	// // If we don't do this, we'll freeze the CPU in a loop because the
+	// // timer value will be 0, meaning it will trigger again instantaneously
+	// printk("MGH: reset preemption timer to 0x%x\n", PREEMPTION_TIMER_INIT);
+	// (void) set_preemption_timer(PREEMPTION_TIMER_INIT);
 }
 
 static void vmx_preemption_timer_set_enable(bool enable)
 {
 	u32 pin_based_ctrl = vmcs_read32(PIN_BASED_VM_EXEC_CONTROL);
 
-	if (enable)
+	if (enable) {
+		printk("MGH: Enabling preemption timer");
 		pin_based_ctrl |= PIN_BASED_VMX_PREEMPTION_TIMER;
-	else
+	}
+	else {
+		printk("MGH: Disabling preemption timer");
 		pin_based_ctrl &= ~PIN_BASED_VMX_PREEMPTION_TIMER;
+	}
 	vmcs_write32(PIN_BASED_VM_EXEC_CONTROL, pin_based_ctrl);
 }
 
