@@ -961,11 +961,11 @@ static void vmx_preemption_timer_set_enable(bool enable)
 	u32 pin_based_ctrl = vmcs_read32(PIN_BASED_VM_EXEC_CONTROL);
 
 	if (enable) {
-		printk("MGH: Enabling preemption timer");
+		printk("MGH: Enabling preemption timer\n");
 		pin_based_ctrl |= PIN_BASED_VMX_PREEMPTION_TIMER;
 	}
 	else {
-		printk("MGH: Disabling preemption timer");
+		printk("MGH: Disabling preemption timer\n");
 		pin_based_ctrl &= ~PIN_BASED_VMX_PREEMPTION_TIMER;
 	}
 	vmcs_write32(PIN_BASED_VM_EXEC_CONTROL, pin_based_ctrl);
