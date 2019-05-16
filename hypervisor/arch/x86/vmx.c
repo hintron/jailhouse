@@ -655,11 +655,11 @@ static int get_preemption_tsc_bit(void) {
  * @param val 	The 32-bit value to set the preemption timer to.
  * @return 	1 if the write was successful, 0 if not.
  */
-static bool set_preemption_timer(u32 val) {
-	bool ok = true;
-	ok &= vmcs_write32(VMX_PREEMPTION_TIMER_VALUE, val);
-	return ok;
-}
+// static bool set_preemption_timer(u32 val) {
+// 	bool ok = true;
+// 	ok &= vmcs_write32(VMX_PREEMPTION_TIMER_VALUE, val);
+// 	return ok;
+// }
 
 int vcpu_init(struct per_cpu *cpu_data)
 {
