@@ -960,12 +960,14 @@ static void vmx_preemption_timer_set_enable(bool enable)
 {
 	u32 pin_based_ctrl = vmcs_read32(PIN_BASED_VM_EXEC_CONTROL);
 
+	unsigned int cpu_id = this_cpu_data()->public.cpu_id;
+
 	if (enable) {
-		printk("MGH: Enabling preemption timer\n");
+		printk("MGH: Enabling preemption timer for CPU %d\n", cpu_id);
 		pin_based_ctrl |= PIN_BASED_VMX_PREEMPTION_TIMER;
 	}
 	else {
-		printk("MGH: Disabling preemption timer\n");
+		printk("MGH: Disabling preemption timer for CPU %d\n", cpu_id);
 		pin_based_ctrl &= ~PIN_BASED_VMX_PREEMPTION_TIMER;
 	}
 	vmcs_write32(PIN_BASED_VM_EXEC_CONTROL, pin_based_ctrl);
