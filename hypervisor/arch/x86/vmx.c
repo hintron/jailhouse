@@ -973,7 +973,7 @@ static void vmx_preemption_timer_set_enable(bool enable)
 
 void vcpu_nmi_handler(void)
 {
-	printk("MGH: CPU %d: vcpu_nmi_handler for \n", this_cpu_id());
+	printk("MGH: CPU %d: vcpu_nmi_handler()\n", this_cpu_id());
 	if (this_cpu_data()->vmx_state == VMCS_READY)
 		vmx_preemption_timer_set_enable(true);
 
@@ -1020,6 +1020,7 @@ static void vmx_handle_exception_nmi(void)
 	struct public_per_cpu *cpu_public = &this_cpu_data()->public;
 	u32 intr_info = vmcs_read32(VM_EXIT_INTR_INFO);
 
+	printk("MGH: CPU %d: vmx_handle_exception_nmi\n", cpu_public->cpu_id);
 	if ((intr_info & INTR_INFO_INTR_TYPE_MASK) == INTR_TYPE_NMI_INTR) {
 		printk("MGH: CPU %d: Calling nmi interrupt handler via the `int` instruction\n", cpu_public->cpu_id);
 		cpu_public->stats[JAILHOUSE_CPU_STAT_VMEXITS_MANAGEMENT]++;
@@ -1250,7 +1251,6 @@ void vcpu_handle_exit(struct per_cpu *cpu_data)
 
 	switch (reason) {
 	case EXIT_REASON_EXCEPTION_NMI:
-		printk("MGH: CPU %d: vmx_handle_exception_nmi\n", cpu_data->public.cpu_id);
 		vmx_handle_exception_nmi();
 		return;
 	case EXIT_REASON_PREEMPTION_TIMER:
