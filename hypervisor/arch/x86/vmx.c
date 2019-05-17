@@ -931,15 +931,15 @@ void vcpu_vendor_reset(unsigned int sipi_vector)
 	}
 }
 
-static void preemption_timer_handler_mgh(unsigned int cpu_id)
+static void preemption_timer_handler_mgh()
 {
-	printk("MGH: Running preemption timer handler on CPU # %d\n", cpu_id);
-	printk("MGH: TSC bit %d being monitored\n", get_preemption_tsc_bit());
+	printk("MGH: CPU %d: Running preemption timer handler\n", this_cpu_id());
+	printk("MGH: CPU %d: TSC bit %d being monitored\n", this_cpu_id(), get_preemption_tsc_bit());
 
 	// MGH: Don't throttle the real-time VM once it's loaded
-	// if (real_time_vm is loaded && cpu_data->public->cpu_id == real_time_vm) {
+	// if (real_time_vm is loaded && this_cpu_id() == real_time_vm) {
 	// For now, just don't ever throttle CPU 2 at any time
-	// if (cpu_id == 2) {
+	// if (this_cpu_id() == 2) {
 	// 	printk("MGH: CPU 2! Real-time VM's CPU, so don't throttle\n");
 	// } else {
 	// }
@@ -960,14 +960,12 @@ static void vmx_preemption_timer_set_enable(bool enable)
 {
 	u32 pin_based_ctrl = vmcs_read32(PIN_BASED_VM_EXEC_CONTROL);
 
-	unsigned int cpu_id = this_cpu_data()->public.cpu_id;
-
 	if (enable) {
-		printk("MGH: Enabling preemption timer for CPU %d\n", cpu_id);
+		printk("MGH: CPU %d: Enabling preemption timer\n", this_cpu_id());
 		pin_based_ctrl |= PIN_BASED_VMX_PREEMPTION_TIMER;
 	}
 	else {
-		printk("MGH: Disabling preemption timer for CPU %d\n", cpu_id);
+		printk("MGH: CPU %d: Disabling preemption timer\n", this_cpu_id());
 		pin_based_ctrl &= ~PIN_BASED_VMX_PREEMPTION_TIMER;
 	}
 	vmcs_write32(PIN_BASED_VM_EXEC_CONTROL, pin_based_ctrl);
@@ -975,7 +973,7 @@ static void vmx_preemption_timer_set_enable(bool enable)
 
 void vcpu_nmi_handler(void)
 {
-	printk("MGH: %s()\n", __func__);
+	printk("MGH: CPU %d: vcpu_nmi_handler for \n", this_cpu_id());
 	if (this_cpu_data()->vmx_state == VMCS_READY)
 		vmx_preemption_timer_set_enable(true);
 
@@ -1011,6 +1009,7 @@ void vcpu_skip_emulated_instruction(unsigned int inst_len)
 
 static void vmx_check_events(void)
 {
+	printk("MGH: CPU %d: leaving x86_check_events()\n", this_cpu_id());
 	vmx_preemption_timer_set_enable(false);
 	// MGH: TODO: Always keep preemption timer enabled?
 	x86_check_events();
@@ -1022,6 +1021,7 @@ static void vmx_handle_exception_nmi(void)
 	u32 intr_info = vmcs_read32(VM_EXIT_INTR_INFO);
 
 	if ((intr_info & INTR_INFO_INTR_TYPE_MASK) == INTR_TYPE_NMI_INTR) {
+		printk("MGH: CPU %d: Calling nmi interrupt handler via the `int` instruction\n", cpu_public->cpu_id);
 		cpu_public->stats[JAILHOUSE_CPU_STAT_VMEXITS_MANAGEMENT]++;
 		asm volatile("int %0" : : "i" (NMI_VECTOR));
 	} else {
@@ -1250,16 +1250,16 @@ void vcpu_handle_exit(struct per_cpu *cpu_data)
 
 	switch (reason) {
 	case EXIT_REASON_EXCEPTION_NMI:
-		printk("MGH: vmx_handle_exception_nmi");
+		printk("MGH: CPU %d: vmx_handle_exception_nmi\n", cpu_data->public.cpu_id);
 		vmx_handle_exception_nmi();
 		return;
 	case EXIT_REASON_PREEMPTION_TIMER:
 		stats[JAILHOUSE_CPU_STAT_VMEXITS_MANAGEMENT]++;
-		printk("MGH: Preemption Timer Handler before: %d\n", stats[JAILHOUSE_CPU_STAT_VMEXITS_MANAGEMENT]);
+		printk("MGH: CPU %d: Preemption Timer Handler before: %d\n", cpu_data->public.cpu_id, stats[JAILHOUSE_CPU_STAT_VMEXITS_MANAGEMENT]);
 		// MGH: Throttle the root cell (Linux VM) if necessary
-		preemption_timer_handler_mgh(cpu_data->public.cpu_id);
+		preemption_timer_handler_mgh();
 		vmx_check_events();
-		printk("MGH: Preemption Timer Handler after: %d\n", stats[JAILHOUSE_CPU_STAT_VMEXITS_MANAGEMENT]);
+		printk("MGH: CPU %d: Preemption Timer Handler after: %d\n", cpu_data->public.cpu_id, stats[JAILHOUSE_CPU_STAT_VMEXITS_MANAGEMENT]);
 		return;
 	case EXIT_REASON_CPUID:
 		vcpu_handle_cpuid();

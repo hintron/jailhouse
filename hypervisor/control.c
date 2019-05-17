@@ -408,7 +408,7 @@ static int cell_create(struct per_cpu *cpu_data, unsigned long config_address)
 	void *cfg_mapping;
 	int err;
 
-	printk("MGH: Got into hypervisor/control.c#cell_create()\n");
+	// printk("MGH: Got into hypervisor/control.c#cell_create()\n");
 
 	/* We do not support creation over non-root cells. */
 	if (cpu_data->public.cell != &root_cell)
