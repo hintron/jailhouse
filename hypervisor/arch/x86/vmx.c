@@ -931,7 +931,7 @@ void vcpu_vendor_reset(unsigned int sipi_vector)
 	}
 }
 
-static void preemption_timer_handler_mgh()
+static void preemption_timer_handler_mgh(void)
 {
 	printk("MGH: CPU %d: Running preemption timer handler\n", this_cpu_id());
 	printk("MGH: CPU %d: TSC bit %d being monitored\n", this_cpu_id(), get_preemption_tsc_bit());
