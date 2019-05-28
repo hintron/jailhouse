@@ -108,7 +108,7 @@ int main(int argc, char **argv) {
         printf("MGH: ERR %d: %s\n", errno, strerror(errno));
         exit(-1);
     }
-    if (uio0_fd == -1) {
+    if (config_fd == -1) {
         printf("open(%s) failed\n", CONFIG_FILE);
         printf("MGH: ERR %d: %s\n", errno, strerror(errno));
         exit(-1);
