@@ -337,10 +337,12 @@ void vmx_entry_failure(void);
 
 void vmx_vmexit(void);
 
-// MGH
-// #define PREEMPTION_TIMER_INIT	0x80000000
-// #define PREEMPTION_TIMER_INIT	0x00008000
-#define PREEMPTION_TIMER_INIT	0x00000001
+/* MGH: Aim for a 5-second timeout.
+ * TSC bit being monitored is 5, so 2^5 = 16 cycles per timer tick.
+ * Assume clock frequency of 2.7 GHz.
+ * x = 5 s / ( 16 cycles/tick * (1/(2.7 * 10^9)) seconds/cycle )
+ * x = 840,000,000 ticks */
+#define PREEMPTION_TIMEOUT	840000000
 
 
 #endif /* !_JAILHOUSE_ASM_VMX_H */

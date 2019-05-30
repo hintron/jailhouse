@@ -84,9 +84,6 @@ static u8 __attribute__((aligned(PAGE_SIZE))) apic_access_page[PAGE_SIZE];
 static struct paging ept_paging[EPT_PAGE_DIR_LEVELS];
 static u32 secondary_exec_addon;
 static unsigned long cr_maybe1[2], cr_required1[2];
-// MGH
-// static bool nmi_preempt = false;
-
 
 static bool vmxon(void)
 {
@@ -574,13 +571,13 @@ static bool vmcs_setup(void)
 
 	val = read_msr(MSR_IA32_VMX_PINBASED_CTLS);
 	val |= PIN_BASED_NMI_EXITING;
-	// MGH: Enable preemption timer from the beginning
-	// val |= PIN_BASED_VMX_PREEMPTION_TIMER;
+	/* MGH: Don't enable preemption timer from the beginning - wait until
+	 * the first NMI is handled (no need to set an initial value, either) */
 	ok &= vmcs_write32(PIN_BASED_VM_EXEC_CONTROL, val);
 
-	ok &= vmcs_write32(VMX_PREEMPTION_TIMER_VALUE, 0);
-	// MGH: Set the preemption timer to an initial value
-	// ok &= vmcs_write32(VMX_PREEMPTION_TIMER_VALUE, PREEMPTION_TIMER_INIT);
+	// Initialize helper fields for the preemption timer
+	cpu_data->preemption_enabled = false;
+	cpu_data->immediate_exit = 0;
 
 	val = read_msr(MSR_IA32_VMX_PROCBASED_CTLS);
 	val |= CPU_BASED_USE_IO_BITMAPS | CPU_BASED_USE_MSR_BITMAPS |
@@ -605,14 +602,14 @@ static bool vmcs_setup(void)
 	ok &= vmcs_write32(EXCEPTION_BITMAP,
 			   (1 << DB_VECTOR) | (1 << AC_VECTOR));
 
-	// MGH: If VM_EXIT_SAVE_PREEMPTION_TIME is set, the actual value of the
-	// timer will be saved to the timer value field used on VM entry. This
-	// allows the timer to get smaller and smaller, regardless of unrelated
-	// VM exits.
 	val = read_msr(MSR_IA32_VMX_EXIT_CTLS);
 	val |= VM_EXIT_HOST_ADDR_SPACE_SIZE |
 		VM_EXIT_SAVE_IA32_PAT | VM_EXIT_LOAD_IA32_PAT |
-		// VM_EXIT_SAVE_PREEMPTION_TIME |
+		/* MGH: If VM_EXIT_SAVE_PREEMPTION_TIME is set, the actual value
+		 * of the timer will be saved to the timer value field used on
+		 * VM entry. This makes it so the timer value doesn't get reset
+		 * on every unrelated VM exit. */
+		VM_EXIT_SAVE_PREEMPTION_TIME |
 		VM_EXIT_SAVE_IA32_EFER | VM_EXIT_LOAD_IA32_EFER;
 	ok &= vmcs_write32(VM_EXIT_CONTROLS, val);
 
@@ -625,12 +622,6 @@ static bool vmcs_setup(void)
 		VM_ENTRY_LOAD_IA32_EFER;
 	ok &= vmcs_write32(VM_ENTRY_CONTROLS, val);
 
-	// MGH
-	// TODO: Based on preemption_tsc_bit, figure out what value to set
-	// the preemption timer value (to make it portable? or is this
-	// unecessary?)
-	// Calculate the value for the preemption timer
-
 	ok &= vmcs_write64(CR4_GUEST_HOST_MASK, 0);
 
 	ok &= vmcs_write32(CR3_TARGET_COUNT, 0);
@@ -638,28 +629,15 @@ static bool vmcs_setup(void)
 	return ok;
 }
 
-/**
- * Gets the TSC bit that is checked for change before decrementing the
- * preemption counter
+/*
+ * MGH: Get the TSC bit that the VMX preemption timer monitors for change. When
+ * this bit changes, the preemption timer counter value decrements.
  *
  * @return  The bit position
  */
-// static int get_preemption_tsc_bit(void) {
-// 	return (read_msr(MSR_IA32_VMX_MISC) & VMX_MISC_PREEMPTION_TSC_BIT);
-// }
-
-/**
- * Sets the 32-bit preemption timer value that will be used next time there
- * is a VM entry and PIN_BASED_VMX_PREEMPTION_TIMER bit is set to 1.
- *
- * @param val 	The 32-bit value to set the preemption timer to.
- * @return 	1 if the write was successful, 0 if not.
- */
-// static bool set_preemption_timer(u32 val) {
-// 	bool ok = true;
-// 	ok &= vmcs_write32(VMX_PREEMPTION_TIMER_VALUE, val);
-// 	return ok;
-// }
+static int get_preemption_tsc_bit(void) {
+	return (read_msr(MSR_IA32_VMX_MISC) & VMX_MISC_PREEMPTION_TSC_BIT);
+}
 
 int vcpu_init(struct per_cpu *cpu_data)
 {
@@ -933,59 +911,41 @@ void vcpu_vendor_reset(unsigned int sipi_vector)
 
 static void preemption_timer_handler_mgh(void)
 {
-	// printk("MGH: CPU %d: Running preemption timer handler\n", this_cpu_id());
-	// printk("MGH: CPU %d: TSC bit %d being monitored\n", this_cpu_id(), get_preemption_tsc_bit());
+	printk("MGH: CPU %d: Running special preemption timer handler\n",
+	       this_cpu_id());
+	printk("MGH: CPU %d: TSC bit %d being monitored\n", this_cpu_id(),
+	       get_preemption_tsc_bit());
 
-	// MGH: Don't throttle the real-time VM once it's loaded
+	/* MGH: TODO: Throttle the root cell if the real-time VM is struggling
+	 * to meet deadlines */
 	// if (real_time_vm is loaded && this_cpu_id() == real_time_vm) {
 	// For now, just don't ever throttle CPU 2 at any time
 	// if (this_cpu_id() == 2) {
 	// 	printk("MGH: CPU 2! Real-time VM's CPU, so don't throttle\n");
 	// } else {
 	// }
-
-	// // Set preemption time back to init
-	// if (nmi_preempt) {
-	// 	nmi_preempt = false;
-	// }
-
-	// // Reset the preemption timer
-	// // If we don't do this, we'll freeze the CPU in a loop because the
-	// // timer value will be 0, meaning it will trigger again instantaneously
-	// printk("MGH: reset preemption timer to 0x%x\n", PREEMPTION_TIMER_INIT);
-	// (void) set_preemption_timer(PREEMPTION_TIMER_INIT);
-}
-
-static void vmx_preemption_timer_set_enable(bool enable)
-{
-	u32 pin_based_ctrl = vmcs_read32(PIN_BASED_VM_EXEC_CONTROL);
-
-	if (enable) {
-		// printk("MGH: CPU %d: Enabling preemption timer\n", this_cpu_id());
-		pin_based_ctrl |= PIN_BASED_VMX_PREEMPTION_TIMER;
-	}
-	else {
-		// printk("MGH: CPU %d: Disabling preemption timer\n", this_cpu_id());
-		pin_based_ctrl &= ~PIN_BASED_VMX_PREEMPTION_TIMER;
-	}
-	vmcs_write32(PIN_BASED_VM_EXEC_CONTROL, pin_based_ctrl);
 }
 
 void vcpu_nmi_handler(void)
 {
-	// printk("MGH: CPU %d: vcpu_nmi_handler()\n", this_cpu_id());
-	if (this_cpu_data()->vmx_state == VMCS_READY)
-		vmx_preemption_timer_set_enable(true);
+	struct per_cpu *cpu_data = this_cpu_data();
+	u32 pin_based_ctrl;
 
-	// if (this_cpu_data()->vmx_state == VMCS_READY) {
-	// 	// Reset the timer value to 0, to force an immediate
-	// 	// preemption. After forcing this preemption, set it back to
-	// 	// init.
-	// 	// nmi_preempt = true;
-	// 	// Force an immediate preemption by overwriting the value to 0
-	// 	printk("MGH: %s(): Setting preemption timer to 0\n", __func__);
-	// 	(void) set_preemption_timer(0);
-	// }
+	cpu_data->public.stats[JAILHOUSE_CPU_STAT_VMEXITS_MANAGEMENT]++;
+	// printk("MGH: CPU %d: vcpu_nmi_handler()\n", this_cpu_id());
+	if (cpu_data->vmx_state == VMCS_READY) {
+		// Enable the preemption timer if not yet enabled
+		if (!cpu_data->preemption_enabled) {
+			pin_based_ctrl = vmcs_read32(PIN_BASED_VM_EXEC_CONTROL);
+			pin_based_ctrl |= PIN_BASED_VMX_PREEMPTION_TIMER;
+			vmcs_write32(PIN_BASED_VM_EXEC_CONTROL, pin_based_ctrl);
+			cpu_data->preemption_enabled = true;
+		}
+		// Set timer to 0
+		vmcs_write32(VMX_PREEMPTION_TIMER_VALUE, 0);
+		// Set immediate_exit to true
+		cpu_data->immediate_exit++;
+	}
 }
 
 void vcpu_park(void)
@@ -1009,10 +969,31 @@ void vcpu_skip_emulated_instruction(unsigned int inst_len)
 
 static void vmx_check_events(void)
 {
-	// printk("MGH: CPU %d: leaving x86_check_events()\n", this_cpu_id());
-	vmx_preemption_timer_set_enable(false);
-	// MGH: TODO: Always keep preemption timer enabled?
-	x86_check_events();
+	struct per_cpu *cpu_data = this_cpu_data();
+	if (cpu_data->immediate_exit > 0) {
+		// Service the NMI
+		x86_check_events();
+		/* Clear the immediate exit flag before returning
+		 * TODO: Is this atomic? If not, we risk overwriting a value */
+		cpu_data->immediate_exit--;
+		// if ever goes negative, abort!
+		if (cpu_data->immediate_exit < 0) {
+			panic_printk("FATAL: MGH: cpu_data->immediate_exit went negative!");
+		}
+	} else {
+		/* If not an immediate exit, we know the preemption timer
+		 * triggered naturally, so we know it's just for us */
+		preemption_timer_handler_mgh();
+	}
+	/* MGH: Reset the timer back to a normal value on next vm entry.
+	 * Do it this way to avoid issues with non-atomic checking of
+	 * immediate_exit (in case an NMI happens to come right now!). */
+	vmcs_write32(VMX_PREEMPTION_TIMER_VALUE, PREEMPTION_TIMEOUT);
+	if (cpu_data->immediate_exit > 0) {
+		/* Undo setting the timeout to return the value to 0 to trigger
+		 * the preemption timer immediately on next vm entry */
+		vmcs_write32(VMX_PREEMPTION_TIMER_VALUE, 0);
+	}
 }
 
 static void vmx_handle_exception_nmi(void)
@@ -1023,7 +1004,6 @@ static void vmx_handle_exception_nmi(void)
 	// printk("MGH: CPU %d: vmx_handle_exception_nmi\n", cpu_public->cpu_id);
 	if ((intr_info & INTR_INFO_INTR_TYPE_MASK) == INTR_TYPE_NMI_INTR) {
 		// printk("MGH: CPU %d: Calling nmi interrupt handler via the `int` instruction\n", cpu_public->cpu_id);
-		cpu_public->stats[JAILHOUSE_CPU_STAT_VMEXITS_MANAGEMENT]++;
 		asm volatile("int %0" : : "i" (NMI_VECTOR));
 	} else {
 		cpu_public->stats[JAILHOUSE_CPU_STAT_VMEXITS_EXCEPTION]++;
@@ -1254,12 +1234,7 @@ void vcpu_handle_exit(struct per_cpu *cpu_data)
 		vmx_handle_exception_nmi();
 		return;
 	case EXIT_REASON_PREEMPTION_TIMER:
-		stats[JAILHOUSE_CPU_STAT_VMEXITS_MANAGEMENT]++;
-		// printk("MGH: CPU %d: Preemption Timer Handler before: %d\n", cpu_data->public.cpu_id, stats[JAILHOUSE_CPU_STAT_VMEXITS_MANAGEMENT]);
-		// MGH: Throttle the root cell (Linux VM) if necessary
-		preemption_timer_handler_mgh();
 		vmx_check_events();
-		// printk("MGH: CPU %d: Preemption Timer Handler after: %d\n", cpu_data->public.cpu_id, stats[JAILHOUSE_CPU_STAT_VMEXITS_MANAGEMENT]);
 		return;
 	case EXIT_REASON_CPUID:
 		vcpu_handle_cpuid();
