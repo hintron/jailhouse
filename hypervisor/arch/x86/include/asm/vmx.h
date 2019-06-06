@@ -240,12 +240,11 @@ enum vmx_state { VMXOFF = 0, VMXON, VMCS_READY };
 #define VM_ENTRY_LOAD_IA32_PAT			(1UL << 14)
 #define VM_ENTRY_LOAD_IA32_EFER			(1UL << 15)
 
-// MGH:
-// This returns X, where X is a number between 31-0.
-// X is the bit position of the TSC that VMX monitors for change.
-// If the bit changes, the preemption timer counter is decremented.
-// See Intel SDM Vol. 4 Appendix A.6.
-// I'm assuming that this value is constant per processor
+/* MGH: This returns X, where X is a number between 31-0.
+ * X is the bit position of the TSC that VMX monitors for change.
+ * If the bit changes, the preemption timer counter is decremented.
+ * See Intel SDM Vol. 4 Appendix A.6.
+ * I'm assuming that this value is constant per processor */
 #define VMX_MISC_PREEMPTION_TSC_BIT		BIT_MASK(4, 0)
 #define VMX_MISC_ACTIVITY_HLT			(1UL << 6)
 
