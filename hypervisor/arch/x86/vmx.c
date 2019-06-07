@@ -942,10 +942,10 @@ static void preemption_timer_handler_mgh(void)
 
 		// Change the clock modulation scheme every 5 times
 		if (cycle_count % 10 > 5) {
-			printk("MGH: Enabling clock modulation (cycle count %d)\n",
-			       cycle_count);
 			// Enable clock modulation, if not already
 			if (!(feature_ctrl & CLOCK_MODULATION_ENABLE)) {
+				printk("MGH: Enabling clock modulation (cycle count %d)\n",
+				       cycle_count);
 				feature_ctrl |= CLOCK_MODULATION_ENABLE;
 			}
 
@@ -962,10 +962,10 @@ static void preemption_timer_handler_mgh(void)
 			/* Commit the changes */
 			write_msr(MSR_IA32_CLOCK_MODULATION, feature_ctrl);
 		} else {
-			printk("MGH: Disabling clock modulation (cycle count %d)\n",
-			       cycle_count);
 			// Disable clock modulation, if not already
 			if (feature_ctrl & CLOCK_MODULATION_ENABLE) {
+				printk("MGH: Disabling clock modulation (cycle count %d)\n",
+				       cycle_count);
 				feature_ctrl &= ~CLOCK_MODULATION_ENABLE;
 			}
 		}
