@@ -240,6 +240,16 @@ enum vmx_state { VMXOFF = 0, VMXON, VMCS_READY };
 #define VM_ENTRY_LOAD_IA32_PAT			(1UL << 14)
 #define VM_ENTRY_LOAD_IA32_EFER			(1UL << 15)
 
+/* MGH: Define fields of IA32_CLOCK_MODULATION */
+#define CLOCK_MODULATION_ENABLE			(1UL << 4)
+/* MGH: The 4-bit extended duty cycle is only available if
+ * CPUID.06H:EAX[Bit 5] = 1 */
+#define CLOCK_MODULATION_DUTY_CYCLE		BIT_MASK(3, 0)
+/* MGH: Require 4-bit extended duty cycle. Maybe support 3-bit version later */
+// #define CLOCK_MODULATION_DUTY_CYCLE_3_BIT	BIT_MASK(3, 1)
+
+// TODO: Create enums for all possible duty cycle values?
+
 /* MGH: This returns X, where X is a number between 31-0.
  * X is the bit position of the TSC that VMX monitors for change.
  * If the bit changes, the preemption timer counter is decremented.

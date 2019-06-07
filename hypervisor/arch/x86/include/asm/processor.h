@@ -28,6 +28,14 @@
 #define X86_FEATURE_OSXSAVE				(1 << 27)
 #define X86_FEATURE_HYPERVISOR				(1 << 31)
 
+/* MGH: leaf 0x01, EDX */
+/* (See Intel SDM vol. 2a table 3-11) */
+#define X86_FEATURE_CLOCK_MODULATION			(1 << 22)
+
+/* MGH: leaf 0x06, EBX */
+/* See Intel SDM vol. 3b 14.7.3.1 */
+#define X86_FEATURE_EXTENDED_DUTY_CYCLE			(1 << 5)
+
 /* leaf 0x07, subleaf 0, EBX */
 #define X86_FEATURE_INVPCID				(1 << 10)
 #define X86_FEATURE_CAT					(1 << 15)
@@ -77,6 +85,8 @@
 #define MSR_IA32_SYSENTER_CS				0x00000174
 #define MSR_IA32_SYSENTER_ESP				0x00000175
 #define MSR_IA32_SYSENTER_EIP				0x00000176
+/* MGH: Clock modulation/frequency scaling */
+#define MSR_IA32_CLOCK_MODULATION			0x0000019a
 #define MSR_IA32_PERF_GLOBAL_CTRL			0x0000038f
 #define MSR_IA32_VMX_BASIC				0x00000480
 #define MSR_IA32_VMX_PINBASED_CTLS			0x00000481

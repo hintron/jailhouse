@@ -285,6 +285,17 @@ static int vmx_check_features(void)
 	if (!vmx_define_cr_restrictions(CR4_IDX, maybe1, required1))
 		return trace_error(-EIO);
 
+	/* MGH: Require CPU clock modulation (frequency scaling).
+	 * (CPUID.01H:EDX[Bit 22] == 1) - Intel SDM vol. 4 table 2-2 */
+	if (cpuid_edx(0x01, 0) & X86_FEATURE_CLOCK_MODULATION)
+		return trace_error(-EIO);
+
+	/* MGH: Require a 4-bit duty cycle instead of the 3 bit.
+	 * (CPUID.06H:EAX[Bit 5] == 1) - Intel SDM vol. 4 table 2-2 and
+	 * vol. 3b 14.7.3.1 */
+	if (cpuid_eax(0x06, 0) & X86_FEATURE_EXTENDED_DUTY_CYCLE)
+		return trace_error(-EIO);
+
 	return 0;
 }
 
@@ -909,8 +920,12 @@ void vcpu_vendor_reset(unsigned int sipi_vector)
 	}
 }
 
+
 static void preemption_timer_handler_mgh(void)
 {
+	unsigned long feature_ctrl = 0;
+	static int cycle_count = 0;
+
 	printk("MGH: CPU %d: Running special preemption timer handler\n",
 	       this_cpu_id());
 	printk("MGH: CPU %d: TSC bit %d being monitored\n", this_cpu_id(),
@@ -918,12 +933,43 @@ static void preemption_timer_handler_mgh(void)
 
 	/* MGH: TODO: Throttle the root cell if the real-time VM is struggling
 	 * to meet deadlines */
-	// if (real_time_vm is loaded && this_cpu_id() == real_time_vm) {
 	// For now, just don't ever throttle CPU 2 at any time
-	// if (this_cpu_id() == 2) {
-	// 	printk("MGH: CPU 2! Real-time VM's CPU, so don't throttle\n");
-	// } else {
-	// }
+	// Try CPU scaling the real-time VM just to see it work
+	if (this_cpu_id() == 2) {
+		printk("MGH: This is the real-time VM (CPU 2)!\n");
+		feature_ctrl = read_msr(MSR_IA32_CLOCK_MODULATION);
+
+		// Change the clock modulation scheme every 5 times
+		if (cycle_count % 10 > 5) {
+			printk("MGH: Enabling clock modulation (cycle count %d)\n",
+			       cycle_count);
+			// Enable clock modulation, if not already
+			if (!(feature_ctrl & CLOCK_MODULATION_ENABLE)) {
+				feature_ctrl |= CLOCK_MODULATION_ENABLE;
+			}
+
+			/* The default clock modulation is the lowest setting -
+			 * 6.25% or 1/16 for 4-bit, 12.5% or 1/8 for 3 bit. */
+
+			// // TODO: Change the default setting?
+			// if ((feature_ctrl & CLOCK_MODULATION_DUTY_CYCLE) != NEW_SETTING)
+			// 	/* Clear the old value */
+			// 	feature_ctrl &= ~CLOCK_MODULATION_DUTY_CYCLE;
+			// 	/* ...and set the new */
+			// 	feature_ctrl |= (CLOCK_MODULATION_DUTY_CYCLE & NEW_SETTING);
+
+			/* Commit the changes */
+			write_msr(MSR_IA32_CLOCK_MODULATION, feature_ctrl);
+		} else {
+			printk("MGH: Disabling clock modulation (cycle count %d)\n",
+			       cycle_count);
+			// Disable clock modulation, if not already
+			if (feature_ctrl & CLOCK_MODULATION_ENABLE) {
+				feature_ctrl &= ~CLOCK_MODULATION_ENABLE;
+			}
+		}
+	}
+	cycle_count++;
 }
 
 void vcpu_nmi_handler(void)
