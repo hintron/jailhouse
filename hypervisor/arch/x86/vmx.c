@@ -933,10 +933,11 @@ static void preemption_timer_handler_mgh(void)
 
 	/* MGH: TODO: Throttle the root cell if the real-time VM is struggling
 	 * to meet deadlines */
-	// For now, just don't ever throttle CPU 2 at any time
-	// Try CPU scaling the real-time VM just to see it work
 	if (this_cpu_id() == 2) {
 		printk("MGH: This is the real-time VM (CPU 2)!\n");
+		/* NOTE: This will fail in QEMU/KVM and cause a #GP fault UNLESS
+		 * kvm.ignore_msrs=1 is set in /etc/default/grub. If set, all
+		 * unimplemented MSRs will be ignored (whatever that means). */
 		feature_ctrl = read_msr(MSR_IA32_CLOCK_MODULATION);
 
 		// Change the clock modulation scheme every 5 times
@@ -968,8 +969,8 @@ static void preemption_timer_handler_mgh(void)
 				feature_ctrl &= ~CLOCK_MODULATION_ENABLE;
 			}
 		}
+		cycle_count++;
 	}
-	cycle_count++;
 }
 
 void vcpu_nmi_handler(void)
