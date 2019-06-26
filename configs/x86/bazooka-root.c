@@ -33,7 +33,7 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  *
  * Configuration for Micro-Star International Co., Ltd. MS-7B24
- * created with './tools/jailhouse config create bazooka-root-2019-06-22.c'
+ * created with './tools/jailhouse config create 2019-06-26_recent-changes'
  *
  * NOTE: This config expects the following to be appended to your kernel cmdline
  *       "memmap=0x5200000$0x3a000000"
@@ -41,8 +41,6 @@
 
 #include <jailhouse/types.h>
 #include <jailhouse/cell-config.h>
-
-#define ARRAY_SIZE(a) (sizeof(a) / sizeof((a)[0]))
 
 struct {
 	struct jailhouse_system header;
@@ -423,27 +421,27 @@ struct {
 			.size = 0x4b000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE,
 		},
-		/* MemRegion: 100000000-1e95fffff : System RAM */
+		/* MemRegion: 100000000-2e29fffff : System RAM */
 		{
 			.phys_start = 0x100000000,
 			.virt_start = 0x100000000,
-			.size = 0xe9600000,
+			.size = 0x1e2a00000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_EXECUTE | JAILHOUSE_MEM_DMA,
 		},
-		/* MemRegion: 1e9600000-1ebffffff : Kernel */
+		/* MemRegion: 2e2a00000-2e4ffffff : Kernel */
 		{
-			.phys_start = 0x1e9600000,
-			.virt_start = 0x1e9600000,
-			.size = 0x2a00000,
+			.phys_start = 0x2e2a00000,
+			.virt_start = 0x2e2a00000,
+			.size = 0x2600000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_EXECUTE | JAILHOUSE_MEM_DMA,
 		},
-		/* MemRegion: 1ec000000-46dffffff : System RAM */
+		/* MemRegion: 2e5000000-46dffffff : System RAM */
 		{
-			.phys_start = 0x1ec000000,
-			.virt_start = 0x1ec000000,
-			.size = 0x282000000,
+			.phys_start = 0x2e5000000,
+			.virt_start = 0x2e5000000,
+			.size = 0x189000000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_EXECUTE | JAILHOUSE_MEM_DMA,
 		},
@@ -521,6 +519,7 @@ struct {
 			.num_caps = 1,
 			.num_msi_vectors = 0,
 			.msi_64bits = 0,
+			.msi_maskable = 0,
 			.num_msix_vectors = 0,
 			.msix_region_size = 0x0,
 			.msix_address = 0x0,
@@ -539,6 +538,7 @@ struct {
 			.num_caps = 7,
 			.num_msi_vectors = 1,
 			.msi_64bits = 0,
+			.msi_maskable = 0,
 			.num_msix_vectors = 0,
 			.msix_region_size = 0x0,
 			.msix_address = 0x0,
@@ -557,6 +557,7 @@ struct {
 			.num_caps = 3,
 			.num_msi_vectors = 1,
 			.msi_64bits = 0,
+			.msi_maskable = 0,
 			.num_msix_vectors = 0,
 			.msix_region_size = 0x0,
 			.msix_address = 0x0,
@@ -575,6 +576,7 @@ struct {
 			.num_caps = 2,
 			.num_msi_vectors = 1,
 			.msi_64bits = 0,
+			.msi_maskable = 0,
 			.num_msix_vectors = 0,
 			.msix_region_size = 0x0,
 			.msix_address = 0x0,
@@ -593,6 +595,7 @@ struct {
 			.num_caps = 3,
 			.num_msi_vectors = 8,
 			.msi_64bits = 1,
+			.msi_maskable = 0,
 			.num_msix_vectors = 0,
 			.msix_region_size = 0x0,
 			.msix_address = 0x0,
@@ -611,6 +614,7 @@ struct {
 			.num_caps = 1,
 			.num_msi_vectors = 0,
 			.msi_64bits = 0,
+			.msi_maskable = 0,
 			.num_msix_vectors = 0,
 			.msix_region_size = 0x0,
 			.msix_address = 0x0,
@@ -629,6 +633,7 @@ struct {
 			.num_caps = 3,
 			.num_msi_vectors = 1,
 			.msi_64bits = 1,
+			.msi_maskable = 0,
 			.num_msix_vectors = 0,
 			.msix_region_size = 0x0,
 			.msix_address = 0x0,
@@ -647,6 +652,7 @@ struct {
 			.num_caps = 3,
 			.num_msi_vectors = 1,
 			.msi_64bits = 0,
+			.msi_maskable = 0,
 			.num_msix_vectors = 0,
 			.msix_region_size = 0x0,
 			.msix_address = 0x0,
@@ -665,6 +671,7 @@ struct {
 			.num_caps = 9,
 			.num_msi_vectors = 1,
 			.msi_64bits = 0,
+			.msi_maskable = 0,
 			.num_msix_vectors = 0,
 			.msix_region_size = 0x0,
 			.msix_address = 0x0,
@@ -683,6 +690,7 @@ struct {
 			.num_caps = 9,
 			.num_msi_vectors = 1,
 			.msi_64bits = 0,
+			.msi_maskable = 0,
 			.num_msix_vectors = 0,
 			.msix_region_size = 0x0,
 			.msix_address = 0x0,
@@ -701,6 +709,7 @@ struct {
 			.num_caps = 0,
 			.num_msi_vectors = 0,
 			.msi_64bits = 0,
+			.msi_maskable = 0,
 			.num_msix_vectors = 0,
 			.msix_region_size = 0x0,
 			.msix_address = 0x0,
@@ -719,6 +728,7 @@ struct {
 			.num_caps = 3,
 			.num_msi_vectors = 1,
 			.msi_64bits = 1,
+			.msi_maskable = 0,
 			.num_msix_vectors = 0,
 			.msix_region_size = 0x0,
 			.msix_address = 0x0,
@@ -737,6 +747,7 @@ struct {
 			.num_caps = 0,
 			.num_msi_vectors = 0,
 			.msi_64bits = 0,
+			.msi_maskable = 0,
 			.num_msix_vectors = 0,
 			.msix_region_size = 0x0,
 			.msix_address = 0x0,
@@ -755,6 +766,7 @@ struct {
 			.num_caps = 0,
 			.num_msi_vectors = 0,
 			.msi_64bits = 0,
+			.msi_maskable = 0,
 			.num_msix_vectors = 0,
 			.msix_region_size = 0x0,
 			.msix_address = 0x0,
@@ -773,6 +785,7 @@ struct {
 			.num_caps = 9,
 			.num_msi_vectors = 1,
 			.msi_64bits = 1,
+			.msi_maskable = 0,
 			.num_msix_vectors = 4,
 			.msix_region_size = 0x1000,
 			.msix_address = 0xa1600000,
@@ -791,6 +804,7 @@ struct {
 			.num_caps = 5,
 			.num_msi_vectors = 0,
 			.msi_64bits = 0,
+			.msi_maskable = 0,
 			.num_msix_vectors = 16,
 			.msix_region_size = 0x1000,
 			.msix_address = 0xa13b3000,
@@ -800,146 +814,146 @@ struct {
 	.pci_caps = {
 		/* PCIDevice: 00:00.0 */
 		{
-			.id = 0x9,
+			.id = PCI_CAP_ID_VNDR,
 			.start = 0xe0,
 			.len = 2,
 			.flags = 0,
 		},
 		/* PCIDevice: 00:02.0 */
 		{
-			.id = 0x9,
+			.id = PCI_CAP_ID_VNDR,
 			.start = 0x40,
 			.len = 2,
 			.flags = 0,
 		},
 		{
-			.id = 0x10,
+			.id = PCI_CAP_ID_EXP,
 			.start = 0x70,
 			.len = 60,
 			.flags = 0,
 		},
 		{
-			.id = 0x5,
+			.id = PCI_CAP_ID_MSI,
 			.start = 0xac,
 			.len = 10,
 			.flags = JAILHOUSE_PCICAPS_WRITE,
 		},
 		{
-			.id = 0x1,
+			.id = PCI_CAP_ID_PM,
 			.start = 0xd0,
 			.len = 8,
 			.flags = JAILHOUSE_PCICAPS_WRITE,
 		},
 		{
-			.id = 0x1b | JAILHOUSE_PCI_EXT_CAP,
+			.id = PCI_EXT_CAP_ID_PASID | JAILHOUSE_PCI_EXT_CAP,
 			.start = 0x100,
 			.len = 4,
 			.flags = 0,
 		},
 		{
-			.id = 0xf | JAILHOUSE_PCI_EXT_CAP,
+			.id = PCI_EXT_CAP_ID_ATS | JAILHOUSE_PCI_EXT_CAP,
 			.start = 0x200,
 			.len = 4,
 			.flags = 0,
 		},
 		{
-			.id = 0x13 | JAILHOUSE_PCI_EXT_CAP,
+			.id = PCI_EXT_CAP_ID_PRI | JAILHOUSE_PCI_EXT_CAP,
 			.start = 0x300,
 			.len = 4,
 			.flags = 0,
 		},
 		/* PCIDevice: 00:08.0 */
 		{
-			.id = 0x5,
+			.id = PCI_CAP_ID_MSI,
 			.start = 0x90,
 			.len = 10,
 			.flags = JAILHOUSE_PCICAPS_WRITE,
 		},
 		{
-			.id = 0x1,
+			.id = PCI_CAP_ID_PM,
 			.start = 0xdc,
 			.len = 8,
 			.flags = JAILHOUSE_PCICAPS_WRITE,
 		},
 		{
-			.id = 0x13,
+			.id = PCI_CAP_ID_AF,
 			.start = 0xf0,
 			.len = 2,
 			.flags = 0,
 		},
 		/* PCIDevice: 00:12.0 */
 		{
-			.id = 0x1,
+			.id = PCI_CAP_ID_PM,
 			.start = 0x50,
 			.len = 8,
 			.flags = JAILHOUSE_PCICAPS_WRITE,
 		},
 		{
-			.id = 0x5,
+			.id = PCI_CAP_ID_MSI,
 			.start = 0x80,
 			.len = 10,
 			.flags = JAILHOUSE_PCICAPS_WRITE,
 		},
 		/* PCIDevice: 00:14.0 */
 		{
-			.id = 0x1,
+			.id = PCI_CAP_ID_PM,
 			.start = 0x70,
 			.len = 8,
 			.flags = JAILHOUSE_PCICAPS_WRITE,
 		},
 		{
-			.id = 0x5,
+			.id = PCI_CAP_ID_MSI,
 			.start = 0x80,
 			.len = 14,
 			.flags = JAILHOUSE_PCICAPS_WRITE,
 		},
 		{
-			.id = 0x9,
+			.id = PCI_CAP_ID_VNDR,
 			.start = 0x90,
 			.len = 2,
 			.flags = 0,
 		},
 		/* PCIDevice: 00:14.2 */
 		{
-			.id = 0x1,
+			.id = PCI_CAP_ID_PM,
 			.start = 0x80,
 			.len = 8,
 			.flags = JAILHOUSE_PCICAPS_WRITE,
 		},
 		/* PCIDevice: 00:16.0 */
 		{
-			.id = 0x1,
+			.id = PCI_CAP_ID_PM,
 			.start = 0x50,
 			.len = 8,
 			.flags = JAILHOUSE_PCICAPS_WRITE,
 		},
 		{
-			.id = 0x5,
+			.id = PCI_CAP_ID_MSI,
 			.start = 0x8c,
 			.len = 14,
 			.flags = JAILHOUSE_PCICAPS_WRITE,
 		},
 		{
-			.id = 0x9,
+			.id = PCI_CAP_ID_VNDR,
 			.start = 0xa4,
 			.len = 2,
 			.flags = 0,
 		},
 		/* PCIDevice: 00:17.0 */
 		{
-			.id = 0x5,
+			.id = PCI_CAP_ID_MSI,
 			.start = 0x80,
 			.len = 10,
 			.flags = JAILHOUSE_PCICAPS_WRITE,
 		},
 		{
-			.id = 0x1,
+			.id = PCI_CAP_ID_PM,
 			.start = 0x70,
 			.len = 8,
 			.flags = JAILHOUSE_PCICAPS_WRITE,
 		},
 		{
-			.id = 0x12,
+			.id = PCI_CAP_ID_SATA,
 			.start = 0xa8,
 			.len = 2,
 			.flags = 0,
@@ -947,160 +961,160 @@ struct {
 		/* PCIDevice: 00:1c.0 */
 		/* PCIDevice: 00:1c.5 */
 		{
-			.id = 0x10,
+			.id = PCI_CAP_ID_EXP,
 			.start = 0x40,
 			.len = 60,
 			.flags = 0,
 		},
 		{
-			.id = 0x5,
+			.id = PCI_CAP_ID_MSI,
 			.start = 0x80,
 			.len = 10,
 			.flags = JAILHOUSE_PCICAPS_WRITE,
 		},
 		{
-			.id = 0xd,
+			.id = PCI_CAP_ID_SSVID,
 			.start = 0x90,
 			.len = 2,
 			.flags = 0,
 		},
 		{
-			.id = 0x1,
+			.id = PCI_CAP_ID_PM,
 			.start = 0xa0,
 			.len = 8,
 			.flags = JAILHOUSE_PCICAPS_WRITE,
 		},
 		{
-			.id = 0x1 | JAILHOUSE_PCI_EXT_CAP,
+			.id = PCI_EXT_CAP_ID_ERR | JAILHOUSE_PCI_EXT_CAP,
 			.start = 0x100,
 			.len = 4,
 			.flags = 0,
 		},
 		{
-			.id = 0xd | JAILHOUSE_PCI_EXT_CAP,
+			.id = PCI_EXT_CAP_ID_ACS | JAILHOUSE_PCI_EXT_CAP,
 			.start = 0x140,
 			.len = 4,
 			.flags = 0,
 		},
 		{
-			.id = 0x1f | JAILHOUSE_PCI_EXT_CAP,
+			.id = PCI_EXT_CAP_ID_PTM | JAILHOUSE_PCI_EXT_CAP,
 			.start = 0x150,
 			.len = 4,
 			.flags = 0,
 		},
 		{
-			.id = 0x19 | JAILHOUSE_PCI_EXT_CAP,
+			.id = PCI_EXT_CAP_ID_SECPCI | JAILHOUSE_PCI_EXT_CAP,
 			.start = 0x220,
 			.len = 4,
 			.flags = 0,
 		},
 		{
-			.id = 0x1d | JAILHOUSE_PCI_EXT_CAP,
+			.id = PCI_EXT_CAP_ID_DPC | JAILHOUSE_PCI_EXT_CAP,
 			.start = 0x250,
 			.len = 4,
 			.flags = 0,
 		},
 		/* PCIDevice: 00:1f.3 */
 		{
-			.id = 0x1,
+			.id = PCI_CAP_ID_PM,
 			.start = 0x50,
 			.len = 8,
 			.flags = JAILHOUSE_PCICAPS_WRITE,
 		},
 		{
-			.id = 0x9,
+			.id = PCI_CAP_ID_VNDR,
 			.start = 0x80,
 			.len = 2,
 			.flags = 0,
 		},
 		{
-			.id = 0x5,
+			.id = PCI_CAP_ID_MSI,
 			.start = 0x60,
 			.len = 14,
 			.flags = JAILHOUSE_PCICAPS_WRITE,
 		},
 		/* PCIDevice: 01:00.0 */
 		{
-			.id = 0x1,
+			.id = PCI_CAP_ID_PM,
 			.start = 0x40,
 			.len = 8,
 			.flags = JAILHOUSE_PCICAPS_WRITE,
 		},
 		{
-			.id = 0x5,
+			.id = PCI_CAP_ID_MSI,
 			.start = 0x50,
 			.len = 14,
 			.flags = JAILHOUSE_PCICAPS_WRITE,
 		},
 		{
-			.id = 0x10,
+			.id = PCI_CAP_ID_EXP,
 			.start = 0x70,
 			.len = 60,
 			.flags = 0,
 		},
 		{
-			.id = 0x11,
+			.id = PCI_CAP_ID_MSIX,
 			.start = 0xb0,
 			.len = 12,
 			.flags = JAILHOUSE_PCICAPS_WRITE,
 		},
 		{
-			.id = 0x1 | JAILHOUSE_PCI_EXT_CAP,
+			.id = PCI_EXT_CAP_ID_ERR | JAILHOUSE_PCI_EXT_CAP,
 			.start = 0x100,
 			.len = 4,
 			.flags = 0,
 		},
 		{
-			.id = 0x2 | JAILHOUSE_PCI_EXT_CAP,
+			.id = PCI_EXT_CAP_ID_VC | JAILHOUSE_PCI_EXT_CAP,
 			.start = 0x140,
 			.len = 4,
 			.flags = 0,
 		},
 		{
-			.id = 0x3 | JAILHOUSE_PCI_EXT_CAP,
+			.id = PCI_EXT_CAP_ID_DSN | JAILHOUSE_PCI_EXT_CAP,
 			.start = 0x160,
 			.len = 4,
 			.flags = 0,
 		},
 		{
-			.id = 0x18 | JAILHOUSE_PCI_EXT_CAP,
+			.id = PCI_EXT_CAP_ID_LTR | JAILHOUSE_PCI_EXT_CAP,
 			.start = 0x170,
 			.len = 4,
 			.flags = 0,
 		},
 		{
-			.id = 0x1e | JAILHOUSE_PCI_EXT_CAP,
+			.id = PCI_EXT_CAP_ID_L1SS | JAILHOUSE_PCI_EXT_CAP,
 			.start = 0x178,
 			.len = 4,
 			.flags = 0,
 		},
 		/* PCIDevice: 02:00.0 */
 		{
-			.id = 0x1,
+			.id = PCI_CAP_ID_PM,
 			.start = 0x40,
 			.len = 8,
 			.flags = JAILHOUSE_PCICAPS_WRITE,
 		},
 		{
-			.id = 0x10,
+			.id = PCI_CAP_ID_EXP,
 			.start = 0x70,
 			.len = 20,
 			.flags = 0,
 		},
 		{
-			.id = 0x11,
+			.id = PCI_CAP_ID_MSIX,
 			.start = 0xb0,
 			.len = 12,
 			.flags = JAILHOUSE_PCICAPS_WRITE,
 		},
 		{
-			.id = 0x3 | JAILHOUSE_PCI_EXT_CAP,
+			.id = PCI_EXT_CAP_ID_DSN | JAILHOUSE_PCI_EXT_CAP,
 			.start = 0x100,
 			.len = 4,
 			.flags = 0,
 		},
 		{
-			.id = 0x4 | JAILHOUSE_PCI_EXT_CAP,
+			.id = PCI_EXT_CAP_ID_PWR | JAILHOUSE_PCI_EXT_CAP,
 			.start = 0x110,
 			.len = 4,
 			.flags = 0,
