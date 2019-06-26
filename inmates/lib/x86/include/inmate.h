@@ -218,6 +218,13 @@ static inline unsigned int cpu_id(void)
 	return read_msr(X2APIC_ID);
 }
 
+#define MAX_INTERRUPT_VECTORS	32
+
+extern unsigned long idt[];
+extern void *stack;
+
+void excp_reporting_init(void);
+
 typedef void(*int_handler_t)(void);
 
 void int_init(void);
@@ -235,9 +242,7 @@ void ioapic_pin_set_vector(unsigned int pin,
 			   enum ioapic_trigger_mode trigger_mode,
 			   unsigned int vector);
 
-void hypercall_init(void);
-
-unsigned long pm_timer_read(void);
+unsigned long long pm_timer_read(void);
 
 unsigned long tsc_read_ns(void);
 unsigned long tsc_init(void);
@@ -245,7 +250,7 @@ unsigned long tsc_init(void);
 void delay_us(unsigned long microsecs);
 
 unsigned long apic_timer_init(unsigned int vector);
-void apic_timer_set(unsigned long timeout_ns);
+void apic_timer_set(unsigned long long timeout_ns);
 
 u32 pci_read_config(u16 bdf, unsigned int addr, unsigned int size);
 void pci_write_config(u16 bdf, unsigned int addr, u32 value,

@@ -15,8 +15,6 @@
 #include <jailhouse/types.h>
 #include <jailhouse/cell-config.h>
 
-#define ARRAY_SIZE(a) sizeof(a) / sizeof(a[0])
-
 struct {
 	struct jailhouse_system header;
 	__u64 cpus[1];
@@ -30,7 +28,7 @@ struct {
 		.flags = JAILHOUSE_SYS_VIRTUAL_DEBUG_CONSOLE,
 		.hypervisor_memory = {
 			.phys_start = 0x4f800000,
-			.size = 0x800000,
+			.size = 0x7b0000,
 		},
 		.debug_console = {
 			.address = 0x01c28000,

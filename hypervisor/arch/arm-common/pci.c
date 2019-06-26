@@ -31,9 +31,9 @@ void arch_pci_remove_physical_device(struct pci_device *device)
 {
 }
 
-void arch_pci_suppress_msi(struct pci_device *device,
-			   const struct jailhouse_pci_capability *cap,
-			   bool suppressed)
+void arch_pci_set_suppress_msi(struct pci_device *device,
+			       const struct jailhouse_pci_capability *cap,
+			       bool suppress)
 {
 }
 
@@ -58,8 +58,8 @@ int arch_pci_update_msi(struct pci_device *device,
 int arch_pci_update_msix_vector(struct pci_device *device, unsigned int index)
 {
 	/* NOTE: See arch_pci_update_msi. */
-	mmio_write64(&device->msix_table[index].address,
-		     device->msix_vectors[index].address);
+	mmio_write64_split(&device->msix_table[index].address,
+			   device->msix_vectors[index].address);
 	mmio_write32(&device->msix_table[index].data,
 		     device->msix_vectors[index].data);
 	return 0;

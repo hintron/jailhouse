@@ -398,6 +398,7 @@ static int vtd_emulate_inv_int(unsigned int unit_no, unsigned int index)
 		return 0;
 
 	device = pci_get_assigned_device(&root_cell, irte_usage->device_id);
+	/* On x86, ivshmem devices only support MSI-X. */
 	if (device && device->info->type == JAILHOUSE_PCI_TYPE_IVSHMEM)
 		return arch_ivshmem_update_msix(device);
 
@@ -506,7 +507,7 @@ static enum mmio_result vtd_unit_access_handler(void *arg,
 
 invalid_iq_entry:
 	panic_printk("FATAL: Invalid/unsupported invalidation queue entry\n");
-	return -1;
+	return MMIO_ERROR;
 }
 
 static void vtd_init_unit(void *reg_base, void *inv_queue)
@@ -620,8 +621,9 @@ static int vtd_reserve_int_remap_region(u16 device_id, unsigned int length)
 		if (start < 0)
 			start = n;
 		if (n + 1 == start + length) {
-			printk("Reserving %u interrupt(s) for device %04x "
-			       "at index %d\n", length, device_id, start);
+			printk("Reserving %u interrupt(s) for device "
+			       "%02x:%02x.%x at index %d\n", length,
+			       PCI_BDF_PARAMS(device_id), start);
 			for (n = start; n < start + length; n++) {
 				int_remap_table[n].field.assigned = 1;
 				int_remap_table[n].field.sid = device_id;
@@ -638,8 +640,8 @@ static void vtd_free_int_remap_region(u16 device_id, unsigned int length)
 	int pos = vtd_find_int_remap_region(device_id);
 
 	if (pos >= 0) {
-		printk("Freeing %u interrupt(s) for device %04x at index %d\n",
-		       length, device_id, pos);
+		printk("Freeing %u interrupt(s) for device %02x:%02x.%x at "
+		       "index %d\n", length, PCI_BDF_PARAMS(device_id), pos);
 		while (length-- > 0)
 			vtd_update_irte(pos++, free_irte);
 	}

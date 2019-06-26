@@ -131,7 +131,7 @@ void inmate_main(void)
 	init_apic();
 
 	while (!terminate) {
-		asm volatile("hlt");
+		cpu_relax();
 
 		if (cache_pollution)
 			pollute_cache(mem);
@@ -146,6 +146,8 @@ void inmate_main(void)
 				allow_terminate = true;
 			} else
 				terminate = true;
+			break;
+		case JAILHOUSE_MSG_NONE:
 			break;
 		default:
 			jailhouse_send_reply_from_cell(comm_region,

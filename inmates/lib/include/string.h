@@ -1,10 +1,10 @@
 /*
  * Jailhouse, a Linux-based partitioning hypervisor
  *
- * Copyright (c) Valentine Sinitsyn, 2014
+ * Copyright (c) OTH Regensburg, 2019
  *
  * Authors:
- *  Valentine Sinitsyn <valentine.sinitsyn@gmail.com>
+ *  Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>
  *
  * This work is licensed under the terms of the GNU GPL, version 2.  See
  * the COPYING file in the top-level directory.
@@ -36,26 +36,5 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <inmate.h>
-
-#define X86_FEATURE_VMX		(1 << 5)
-
-bool jailhouse_use_vmcall = true;
-
-#define AUTHENTIC_AMD(n)	(((const u32 *)"AuthenticAMD")[n])
-
-void hypercall_init(void)
-{
-	u32 eax, ebx, ecx, edx;
-
-	asm volatile("cpuid"
-		: "=a" (eax), "=b" (ebx), "=c" (ecx), "=d" (edx)
-		: "a" (0)
-		: "memory"
-	);
-
-	if (ebx == AUTHENTIC_AMD(0) &&
-	    edx == AUTHENTIC_AMD(1) &&
-	    ecx == AUTHENTIC_AMD(2))
-		jailhouse_use_vmcall = false;
-}
+#define __stringify_1(x...)     #x
+#define __stringify(x...)       __stringify_1(x)

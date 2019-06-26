@@ -282,13 +282,14 @@ x86_pci_translate_msi(struct pci_device *device, unsigned int vector,
 	return irq_msg;
 }
 
-void arch_pci_suppress_msi(struct pci_device *device,
-			   const struct jailhouse_pci_capability *cap,
-			   bool suppressed)
+void arch_pci_set_suppress_msi(struct pci_device *device,
+			       const struct jailhouse_pci_capability *cap,
+			       bool suppress)
 {
 	unsigned int n, vectors = pci_enabled_msi_vectors(device);
 	const struct jailhouse_pci_device *info = device->info;
 	struct apic_irq_message irq_msg;
+	unsigned int mask_pos, mask = 0;
 	union x86_msi_vector msi = {
 		.native.dest_logical = 1,
 		.native.redir_hint = 1,
@@ -298,7 +299,7 @@ void arch_pci_suppress_msi(struct pci_device *device,
 	if (!(pci_read_config(info->bdf, PCI_CFG_COMMAND, 2) & PCI_CMD_MASTER))
 		return;
 
-	if (suppressed) {
+	if (suppress) {
 		/*
 		 * Disable delivery by setting no destination CPU bit in logical
 		 * addressing mode.
@@ -312,11 +313,15 @@ void arch_pci_suppress_msi(struct pci_device *device,
 		 * Inject MSI vectors to avoid losing events while suppressed.
 		 * Linux can handle rare spurious interrupts.
 		 */
+		if (info->msi_maskable) {
+			mask_pos = cap->start + (info->msi_64bits ? 0x10 : 0xc);
+			mask = pci_read_config(info->bdf, mask_pos, 4);
+		}
 		msi = pci_get_x86_msi_vector(device);
 		for (n = 0; n < vectors; n++) {
 			irq_msg = x86_pci_translate_msi(device, n, vectors,
 							msi);
-			if (irq_msg.valid)
+			if ((mask & (1 << n)) == 0 && irq_msg.valid)
 				apic_send_irq(irq_msg);
 		}
 	}
@@ -393,8 +398,8 @@ int arch_pci_update_msix_vector(struct pci_device *device, unsigned int index)
 				     irq_msg);
 	// HACK for QEMU
 	if (result == -ENOSYS) {
-		mmio_write64(&device->msix_table[index].address,
-			     device->msix_vectors[index].address);
+		mmio_write64_split(&device->msix_table[index].address,
+				   device->msix_vectors[index].address);
 		mmio_write32(&device->msix_table[index].data,
 			     device->msix_vectors[index].data);
 		return 0;
@@ -402,8 +407,8 @@ int arch_pci_update_msix_vector(struct pci_device *device, unsigned int index)
 	if (result < 0)
 		return result;
 
-	mmio_write64(&device->msix_table[index].address,
-		     pci_get_x86_msi_remap_address(result));
+	mmio_write64_split(&device->msix_table[index].address,
+			   pci_get_x86_msi_remap_address(result));
 	mmio_write32(&device->msix_table[index].data, 0);
 
 	return 0;

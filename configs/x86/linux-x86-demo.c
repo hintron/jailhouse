@@ -15,8 +15,6 @@
 #include <jailhouse/types.h>
 #include <jailhouse/cell-config.h>
 
-#define ARRAY_SIZE(a) sizeof(a) / sizeof(a[0])
-
 struct {
 	struct jailhouse_cell_desc cell;
 	__u64 cpus[1];
@@ -67,7 +65,8 @@ struct {
 		/* communication region */ {
 			.virt_start = 0x00100000,
 			.size = 0x00001000,
-			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_COMM_REGION,
+			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
+				JAILHOUSE_MEM_COMM_REGION,
 		},
 		/* high RAM */ {
 			.phys_start = 0x3a700000,
@@ -180,37 +179,37 @@ struct {
 
 	.pci_caps = {
 		{ /* e1000e */
-			.id = 0x1,
+			.id = PCI_CAP_ID_PM,
 			.start = 0xc8,
 			.len = 8,
 			.flags = JAILHOUSE_PCICAPS_WRITE,
 		},
 		{
-			.id = 0x5,
+			.id = PCI_CAP_ID_MSI,
 			.start = 0xd0,
 			.len = 14,
 			.flags = JAILHOUSE_PCICAPS_WRITE,
 		},
 		{
-			.id = 0x10,
+			.id = PCI_CAP_ID_EXP,
 			.start = 0xe0,
 			.len = 20,
 			.flags = JAILHOUSE_PCICAPS_WRITE,
 		},
 		{
-			.id = 0x11,
+			.id = PCI_CAP_ID_MSIX,
 			.start = 0xa0,
 			.len = 12,
 			.flags = JAILHOUSE_PCICAPS_WRITE,
 		},
 		{
-			.id = 0x1 | JAILHOUSE_PCI_EXT_CAP,
+			.id = PCI_EXT_CAP_ID_ERR | JAILHOUSE_PCI_EXT_CAP,
 			.start = 0x100,
 			.len = 4,
 			.flags = 0,
 		},
 		{
-			.id = 0x3 | JAILHOUSE_PCI_EXT_CAP,
+			.id = PCI_EXT_CAP_ID_DSN | JAILHOUSE_PCI_EXT_CAP,
 			.start = 0x140,
 			.len = 4,
 			.flags = 0,

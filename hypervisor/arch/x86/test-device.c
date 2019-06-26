@@ -67,6 +67,7 @@ static unsigned long testdev_get_mmio_base(struct cell *cell)
 	const struct jailhouse_memory *mem;
 	unsigned int n;
 
+	/* The mmio test page is one page after the COMM_REGION */
 	for_each_mem_region(mem, cell->config, n)
 		if (mem->flags & JAILHOUSE_MEM_COMM_REGION)
 			return mem->virt_start + PAGE_SIZE;
@@ -76,14 +77,14 @@ static unsigned long testdev_get_mmio_base(struct cell *cell)
 
 static int testdev_cell_init(struct cell *cell)
 {
-	unsigned long comm_base;
+	unsigned long mmio_base;
 
 	if (cell->config->flags & JAILHOUSE_CELL_TEST_DEVICE) {
-		comm_base = testdev_get_mmio_base(cell);
-		if (comm_base == INVALID_PHYS_ADDR)
+		mmio_base = testdev_get_mmio_base(cell);
+		if (mmio_base == INVALID_PHYS_ADDR)
 			return trace_error(-EINVAL);
 
-		mmio_region_register(cell, comm_base, PAGE_SIZE,
+		mmio_region_register(cell, mmio_base, PAGE_SIZE,
 				     testdev_handle_mmio_access, NULL);
 	}
 	return 0;

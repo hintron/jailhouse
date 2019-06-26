@@ -40,25 +40,33 @@ include $(INMATES_LIB)/Makefile.lib
 
 always := lib.a lib32.a
 
-TARGETS := header.o hypercall.o ioapic.o printk.o setup.o smp.o uart.o
-TARGETS += ../alloc.o ../pci.o ../string.o ../cmdline.o ../setup.o
+TARGETS := cpu-features.o excp.o header-common.o int.o ioapic.o printk.o
+TARGETS += setup.o uart.o
+TARGETS += ../alloc.o ../pci.o ../string.o ../cmdline.o ../setup.o ../test.o
 TARGETS += ../uart-8250.o ../printk.o
 TARGETS += ../sha3-mgh.o
-TARGETS_64_ONLY := int.o mem.o pci.o timing.o
+TARGETS_32_ONLY := header-32.o
+TARGETS_64_ONLY := mem.o pci.o smp.o timing.o header-64.o
 
 lib-y := $(TARGETS) $(TARGETS_64_ONLY)
-
-lib32-y := $(addprefix $(obj)/,$(TARGETS:.o=-32.o))
+lib32-y := $(TARGETS:.o=-32.o) $(TARGETS_32_ONLY)
 
 quiet_cmd_link_archive32 = AR      $@
-cmd_link_archive32 = rm -f $@; $(AR) rcs$(KBUILD_ARFLAGS) $@ $(lib32-y)
+cmd_link_archive32 = rm -f $@; $(AR) rcs$(KBUILD_ARFLAGS) $@ $^
 
-$(obj)/lib32.a: $(lib32-y)
+$(obj)/lib32.a: $(addprefix $(obj)/,$(lib32-y))
 	$(call if_changed,link_archive32)
 
-AFLAGS_header-32.o := -m32
-targets += header-32.o
+targets += $(lib32-y)
+
+# Code of this object is called before SSE/AVX extensions are available. Ensure
+# that the compiler won't generate unsupported instructions for this file.
+CFLAGS_cpu-features.o += -mno-sse
 
 $(obj)/%-32.o: c_flags += -m32
-$(obj)/%-32.o: $(src)/%.c
+$(obj)/%-32.o: $(src)/%.c FORCE
 	$(call if_changed_rule,cc_o_c)
+
+$(obj)/%-32.o: a_flags += -m32
+$(obj)/%-32.o: $(src)/%.S FORCE
+	$(call if_changed_rule,as_o_S)

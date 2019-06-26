@@ -22,7 +22,10 @@ import struct
 import os
 import fnmatch
 
+from .pci_defs import PCI_CAP_ID, PCI_EXT_CAP_ID
+
 root_dir = "/"
+
 
 def set_root_dir(dir):
     global root_dir
@@ -94,14 +97,13 @@ def input_listdir(dir, wildcards):
 
 
 def parse_iomem(pcidevices):
-    regions = IOMemRegionTree.parse_iomem_tree(
+    (regions, dmar_regions) = IOMemRegionTree.parse_iomem_tree(
         IOMemRegionTree.parse_iomem_file())
 
     rom_region = MemRegion(0xc0000, 0xdffff, 'ROMs')
     add_rom_region = False
 
     ret = []
-    dmar_regions = []
     for r in regions:
         append_r = True
         # filter the list for MSI-X pages
@@ -368,7 +370,7 @@ def parse_ivrs(pcidevices, ioapics):
                 if d.bdf() == iommu_bdf:
                     # Extract MSI capability offset
                     for c in d.caps:
-                        if c.id == 0x05:
+                        if c.id == PCI_CAP_ID.MSI:
                             msi_cap_ofs = c.start
                     # We must not map IOMMU to the cells
                     del pcidevices[i]
@@ -479,7 +481,10 @@ def parse_ivrs(pcidevices, ioapics):
                       'regions. The memory at 0x%x will be mapped accessible '
                       'to all devices.' % mem_addr)
 
-            regions.append(MemRegion(mem_addr, mem_len, 'ACPI IVRS', comment))
+            regions.append(
+                MemRegion(mem_addr, mem_addr + mem_len - 1, 'ACPI IVRS',
+                    comment))
+
         elif type == 0x40:
             raise RuntimeError(
                 'You board uses IVRS Rev. 2 feature Jailhouse doesn\'t '
@@ -543,8 +548,9 @@ class PCIBARs:
 
 
 class PCICapability:
-    def __init__(self, id, start, len, flags, content, msix_address):
+    def __init__(self, id, extended, start, len, flags, content, msix_address):
         self.id = id
+        self.extended = extended
         self.start = start
         self.len = len
         self.flags = flags
@@ -555,6 +561,10 @@ class PCICapability:
     def __eq__(self, other):
         return self.id == other.id and self.start == other.start and \
             self.len == other.len and self.flags == other.flags
+
+    def gen_id_str(self):
+        return str(self.id) + \
+            (' | JAILHOUSE_PCI_EXT_CAP' if self.extended else '')
 
     RD = '0'
     RW = 'JAILHOUSE_PCICAPS_WRITE'
@@ -580,11 +590,12 @@ class PCICapability:
             msix_address = 0
             f.seek(cap)
             (id, next) = struct.unpack('<BB', f.read(2))
-            if id == 0x01:  # Power Management
+            id = PCI_CAP_ID(id)
+            if id == PCI_CAP_ID.PM:
                 # this cap can be handed out completely
                 len = 8
                 flags = PCICapability.RW
-            elif id == 0x05:  # MSI
+            elif id == PCI_CAP_ID.MSI:
                 # access will be moderated by hypervisor
                 len = 10
                 (msgctl,) = struct.unpack('<H', f.read(2))
@@ -593,7 +604,7 @@ class PCICapability:
                 if (msgctl & (1 << 8)) != 0:  # per-vector masking support
                     len += 10
                 flags = PCICapability.RW
-            elif id == 0x10:  # Express
+            elif id == PCI_CAP_ID.EXP:
                 len = 20
                 (cap_reg,) = struct.unpack('<H', f.read(2))
                 if (cap_reg & 0xf) >= 2:  # v2 capability
@@ -601,7 +612,7 @@ class PCICapability:
                 # access side effects still need to be analyzed
                 flags = PCICapability.RD
                 has_extended_caps = True
-            elif id == 0x11:  # MSI-X
+            elif id == PCI_CAP_ID.MSIX:
                 # access will be moderated by hypervisor
                 len = 12
                 (table,) = struct.unpack('<xxI', f.read(6))
@@ -620,7 +631,7 @@ class PCICapability:
                 flags = PCICapability.RD
             f.seek(cap + 2)
             content = f.read(len - 2)
-            caps.append(PCICapability(id, cap, len, flags, content,
+            caps.append(PCICapability(id, False, cap, len, flags, content,
                                       msix_address))
 
         if has_extended_caps:
@@ -630,25 +641,27 @@ class PCICapability:
                 cap = next
                 f.seek(cap)
                 (id, version_next) = struct.unpack('<HH', f.read(4))
-                next = version_next >> 4
                 if id == 0xffff:
                     break
-                elif id == 0x0010:  # SR-IOV
+                elif (id & PCICapability.JAILHOUSE_PCI_EXT_CAP) != 0:
+                    print('WARNING: Ignoring unsupported PCI Express '
+                          'Extended Capability ID %x' % id)
+                    continue
+
+                id = PCI_EXT_CAP_ID(id)
+                next = version_next >> 4
+                if id == PCI_EXT_CAP_ID.SRIOV:
                     len = 64
                     # access side effects still need to be analyzed
                     flags = PCICapability.RD
                 else:
-                    if (id & PCICapability.JAILHOUSE_PCI_EXT_CAP) != 0:
-                        print('WARNING: Ignoring unsupported PCI Express '
-                              'Extended Capability ID %x' % id)
-                        continue
                     # unknown/unhandled cap, mark its existence
                     len = 4
                     flags = PCICapability.RD
                 f.seek(cap + 4)
                 content = f.read(len - 4)
-                id |= PCICapability.JAILHOUSE_PCI_EXT_CAP
-                caps.append(PCICapability(id, cap, len, flags, content, 0))
+                caps.append(PCICapability(id, True, cap, len, flags, content,
+                                          0))
 
         f.close()
         return caps
@@ -669,15 +682,17 @@ class PCIDevice:
         self.num_caps = len(caps)
         self.num_msi_vectors = 0
         self.msi_64bits = 0
+        self.msi_maskable = 0
         self.num_msix_vectors = 0
         self.msix_region_size = 0
         self.msix_address = 0
         for c in caps:
-            if c.id in (0x05, 0x11):
+            if c.id in (PCI_CAP_ID.MSI, PCI_CAP_ID.MSIX):
                 msg_ctrl = struct.unpack('<H', c.content[:2])[0]
-                if c.id == 0x05:  # MSI
+                if c.id == PCI_CAP_ID.MSI:
                     self.num_msi_vectors = 1 << ((msg_ctrl >> 1) & 0x7)
                     self.msi_64bits = (msg_ctrl >> 7) & 1
+                    self.msi_maskable = (msg_ctrl >> 8) & 1
                 else:  # MSI-X
                     if c.msix_address != 0:
                         vectors = (msg_ctrl & 0x7ff) + 1
@@ -860,21 +875,22 @@ class IOMemRegionTree:
 
         return root
 
-    # find HPET regions in tree
+    # find specific regions in tree
     @staticmethod
-    def find_hpet_regions(tree):
+    def find_regions_by_name(tree, name):
         regions = []
 
         for tree in tree.children:
             r = tree.region
             s = r.typestr
 
-            if (s.find('HPET') >= 0):
+            if (s.find(name) >= 0):
                 regions.append(r)
 
             # if the tree continues recurse further down ...
             if (len(tree.children) > 0):
-                regions.extend(IOMemRegionTree.find_hpet_regions(tree))
+                regions.extend(
+                    IOMemRegionTree.find_regions_by_name(tree, name))
 
         return regions
 
@@ -882,6 +898,7 @@ class IOMemRegionTree:
     @staticmethod
     def parse_iomem_tree(tree):
         regions = []
+        dmar_regions = []
 
         for tree in tree.children:
             r = tree.region
@@ -901,20 +918,26 @@ class IOMemRegionTree:
             ):
                 continue
 
-            # generally blacklisted, unless we find an HPET behind it
+            # generally blacklisted, with a few exceptions
             if (s.lower() == 'reserved'):
-                regions.extend(IOMemRegionTree.find_hpet_regions(tree))
+                regions.extend(
+                    IOMemRegionTree.find_regions_by_name(tree, 'HPET'))
+                dmar_regions.extend(
+                    IOMemRegionTree.find_regions_by_name(tree, 'dmar'))
                 continue
 
             # if the tree continues recurse further down ...
             if (len(tree.children) > 0):
-                regions.extend(IOMemRegionTree.parse_iomem_tree(tree))
+                (temp_regions, temp_dmar_regions) = \
+                    IOMemRegionTree.parse_iomem_tree(tree)
+                regions.extend(temp_regions)
+                dmar_regions.extend(temp_dmar_regions)
                 continue
 
             # add all remaining leaves
             regions.append(r)
 
-        return regions
+        return regions, dmar_regions
 
 
 class IOMMUConfig:

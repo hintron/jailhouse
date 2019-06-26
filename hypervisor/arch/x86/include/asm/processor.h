@@ -74,7 +74,7 @@
 #define X86_CR4_VMXE					(1UL << 13)
 #define X86_CR4_OSXSAVE					(1UL << 18)
 #define X86_CR4_RESERVED				\
-	(BIT_MASK(31, 22) | (1UL << 19) | (1UL << 15) | BIT_MASK(12, 11))
+	(BIT_MASK(31, 23) | (1UL << 19) | (1UL << 15) | BIT_MASK(12, 11))
 
 #define X86_XCR0_FP					0x00000001
 
@@ -155,6 +155,7 @@
 
 #define X86_REX_CODE					4
 
+#define X86_PREFIX_OP_SZ				0x66
 #define X86_PREFIX_ADDR_SZ				0x67
 
 #define X86_OP_MOVZX_OPC1				0x0f

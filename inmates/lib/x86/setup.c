@@ -1,10 +1,12 @@
 /*
  * Jailhouse, a Linux-based partitioning hypervisor
  *
- * Copyright (c) OTH Regensburg, 2018
+ * Copyright (c) OTH Regensburg, 2018-2019
+ * Copyright (c) Valentine Sinitsyn, 2014
  *
  * Authors:
  *  Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>
+ *  Valentine Sinitsyn <valentine.sinitsyn@gmail.com>
  *
  * This work is licensed under the terms of the GNU GPL, version 2.  See
  * the COPYING file in the top-level directory.
@@ -38,6 +40,36 @@
 
 #include <inmate.h>
 
+#define AUTHENTIC_AMD(n)	(((const u32 *)"AuthenticAMD")[n])
+
+void *stack = (void*)stack_top;
+
+struct desc_table_reg {
+	u16 limit;
+	unsigned long base;
+} __attribute__((packed));
+
+bool jailhouse_use_vmcall = true;
+
+unsigned long idt[(32 + MAX_INTERRUPT_VECTORS) * 2];
+
 void arch_init_early(void)
 {
+	struct desc_table_reg dtr;
+	u32 eax, ebx, ecx, edx;
+
+	asm volatile("cpuid"
+		: "=a" (eax), "=b" (ebx), "=c" (ecx), "=d" (edx)
+		: "a" (0)
+		: "memory"
+	);
+
+	if (ebx == AUTHENTIC_AMD(0) &&
+	    edx == AUTHENTIC_AMD(1) &&
+	    ecx == AUTHENTIC_AMD(2))
+		jailhouse_use_vmcall = false;
+
+	dtr.limit = sizeof(idt) - 1;
+	dtr.base = (unsigned long)&idt;
+	asm volatile("lidt %0" : : "m" (dtr));
 }

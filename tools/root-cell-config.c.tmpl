@@ -42,8 +42,6 @@
 #include <jailhouse/types.h>
 #include <jailhouse/cell-config.h>
 
-#define ARRAY_SIZE(a) (sizeof(a) / sizeof((a)[0]))
-
 struct {
 	struct jailhouse_system header;
 	__u64 cpus[${int((cpucount + 63) / 64)}];
@@ -185,6 +183,7 @@ struct {
 			.num_caps = ${d.num_caps},
 			.num_msi_vectors = ${d.num_msi_vectors},
 			.msi_64bits = ${d.msi_64bits},
+			.msi_maskable = ${d.msi_maskable},
 			.num_msix_vectors = ${d.num_msix_vectors},
 			.msix_region_size = ${hex(d.msix_region_size)},
 			.msix_address = ${hex(d.msix_address).strip('L')},
@@ -198,11 +197,7 @@ struct {
 		/* ${comment} */
 		% endfor
 		{
-			% if (c.id & 0x8000) != 0:
-			.id = ${hex(c.id & 0x7fff)} | JAILHOUSE_PCI_EXT_CAP,
-			% else:
-			.id = ${hex(c.id)},
-			% endif
+			.id = ${c.gen_id_str()},
 			.start = ${hex(c.start)},
 			.len = ${c.len},
 			.flags = ${c.flags},

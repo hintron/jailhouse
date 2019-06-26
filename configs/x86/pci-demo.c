@@ -16,8 +16,6 @@
 #include <jailhouse/types.h>
 #include <jailhouse/cell-config.h>
 
-#define ARRAY_SIZE(a) sizeof(a) / sizeof(a[0])
-
 struct {
 	struct jailhouse_cell_desc cell;
 	__u64 cpus[1];
@@ -62,7 +60,8 @@ struct {
 		/* communication region */ {
 			.virt_start = 0x00100000,
 			.size = 0x00001000,
-			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_COMM_REGION,
+			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
+				JAILHOUSE_MEM_COMM_REGION,
 		},
 		/* HDA BAR0 */ {
 			.phys_start = 0xfebd4000,
@@ -96,7 +95,7 @@ struct {
 
 	.pci_caps = {
 		{ /* Intel HDA @00:1b.0 */
-			.id = 0x5,
+			.id = PCI_CAP_ID_MSI,
 			.start = 0x60,
 			.len = 14,
 			.flags = JAILHOUSE_PCICAPS_WRITE,

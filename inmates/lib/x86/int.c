@@ -38,101 +38,106 @@
 
 #include <inmate.h>
 
-#define NUM_IDT_DESC		64
-
-#define X2APIC_EOI		0x80b
 #define X2APIC_SPIV		0x80f
 
 #define APIC_EOI_ACK		0
 
-struct desc_table_reg {
-	u16 limit;
-	u64 base;
-} __attribute__((packed));
-
-static u32 idt[NUM_IDT_DESC * 4];
-static int_handler_t int_handler[NUM_IDT_DESC];
-
 extern u8 irq_entry[];
 
-static inline void write_idtr(struct desc_table_reg *val)
-{
-	asm volatile("lidt %0" : : "m" (*val));
-}
+static int_handler_t __attribute__((used)) int_handler[MAX_INTERRUPT_VECTORS];
 
 void int_init(void)
 {
-	struct desc_table_reg dtr;
-
 	write_msr(X2APIC_SPIV, 0x1ff);
-
-	dtr.limit = NUM_IDT_DESC * 16 - 1;
-	dtr.base = (u64)&idt;
-	write_idtr(&dtr);
-}
-
-static void __attribute__((used)) handle_interrupt(unsigned int vector)
-{
-	int_handler[vector]();
-	write_msr(X2APIC_EOI, APIC_EOI_ACK);
 }
 
 void int_set_handler(unsigned int vector, int_handler_t handler)
 {
-	unsigned long entry = (unsigned long)irq_entry + vector * 16;
+	unsigned int int_number = vector - 32;
+	u64 entry = (unsigned long)irq_entry + int_number * 16;
 
-	int_handler[vector] = handler;
+	int_handler[int_number] = handler;
 
-	idt[vector * 4] = (entry & 0xffff) | (INMATE_CS64 << 16);
-	idt[vector * 4 + 1] = 0x8e00 | (entry & 0xffff0000);
-	idt[vector * 4 + 2] = entry >> 32;
+	idt[vector * 2] = (entry & 0xffff) | (INMATE_CS64 << 16) |
+		((0x8e00 | (entry & 0xffff0000)) << 32);
+	idt[vector * 2 + 1] = entry >> 32;
 }
 
-#ifdef __x86_64__
 asm(
-".macro irq_prologue vector\n\t"
-	"push %rdi\n\t"
-	"mov $vector,%rdi\n\t"
+".macro eoi\n\t"
+	/* write 0 as ack to x2APIC EOI register (0x80b) */
+	"xor %eax,%eax\n\t"
+	"xor %edx,%edx\n\t"
+	"mov $0x80b,%ecx\n\t"
+	"wrmsr\n"
+".endm\n"
+
+".macro irq_prologue irq\n\t"
+#ifdef __x86_64__
+	"push %rax\n\t"
+	"mov $irq * 8,%rax\n\t"
+#else
+	"push %eax\n\t"
+	"mov $irq * 4,%eax\n\t"
+#endif
 	"jmp irq_common\n"
+	".balign 16\n"
 ".endm\n\t"
 
 	".global irq_entry\n\t"
 	".balign 16\n"
 "irq_entry:\n"
-"vector=0\n"
-".rept 64\n"
-	"irq_prologue vector\n\t"
-	"vector=vector+1\n\t"
-	".balign 16\n\t"
+"irq=0\n"
+".rept 32\n"
+	"irq_prologue irq\n\t"
+	"irq=irq+1\n\t"
 ".endr\n"
 
 "irq_common:\n\t"
-	"push %rax\n\t"
+#ifdef __x86_64__
 	"push %rcx\n\t"
 	"push %rdx\n\t"
 	"push %rsi\n\t"
+	"push %rdi\n\t"
 	"push %r8\n\t"
 	"push %r9\n\t"
 	"push %r10\n\t"
 	"push %r11\n\t"
 
-	"call handle_interrupt\n\t"
+	"call *int_handler(%rax)\n\t"
+
+	"eoi\n\t"
 
 	"pop %r11\n\t"
 	"pop %r10\n\t"
 	"pop %r9\n\t"
 	"pop %r8\n\t"
+	"pop %rdi\n\t"
 	"pop %rsi\n\t"
 	"pop %rdx\n\t"
 	"pop %rcx\n\t"
 	"pop %rax\n\t"
-	"pop %rdi\n\t"
 
 	"iretq"
-);
 #else
-#error implement me!
+	"push %ecx\n\t"
+	"push %edx\n\t"
+	"push %esi\n\t"
+	"push %edi\n\t"
+
+	"call *int_handler(%eax)\n\t"
+
+	"eoi\n\t"
+
+	"pop %edi\n\t"
+	"pop %esi\n\t"
+	"pop %edx\n\t"
+	"pop %ecx\n\t"
+	"pop %eax\n\t"
+
+	"iret"
 #endif
+);
 
 void int_send_ipi(unsigned int cpu_id, unsigned int vector)
 {

@@ -37,34 +37,11 @@
  */
 
 #include <inmate.h>
-
-#define X86_CR0_PE		0x00000001
-#define X86_CR0_WP		0x00010000
-#define X86_CR0_PG		0x80000000
-
-#define X86_CR4_PAE		0x00000020
-
-#define MSR_EFER		0xc0000080
-#define EFER_LME		0x00000100
-
-#define MSR_MTRR_DEF_TYPE	0x000002ff
-#define MTRR_ENABLE		0x00000800
-
-	.code16
-	.section ".boot", "ax"
-
-	.globl __reset_entry
-__reset_entry:
-	lgdtl %cs:gdt_ptr
-
-	mov %cr0,%eax
-	or $X86_CR0_PE,%al
-	mov %eax,%cr0
-
-	ljmpl $INMATE_CS32,$start32
-
+#include <asm/regs.h>
 
 	.code32
+	.section ".boot", "ax"
+	.globl start32
 start32:
 	mov %cr4,%eax
 	or $X86_CR4_PAE,%eax
@@ -101,7 +78,7 @@ start64:
 	cmp $SMP_MAX_CPUS,%edi
 	jae stop
 
-	mov $0x01,%eax
+	mov $X86_CPUID_FEATURES, %eax
 	cpuid
 	shr $24,%ebx
 	mov %bl,smp_cpu_ids(%edi)
@@ -119,7 +96,11 @@ start64:
 	mov $c_entry,%rbx
 
 call_entry:
-	mov $stack_top,%rsp
+	xor %rsp, %rsp
+	xchg stack, %rsp
+
+	call arch_init_features
+
 	callq *%rbx
 
 stop:	cli
@@ -152,6 +133,7 @@ gdt:
 	.quad	0x00c09b000000ffff
 	.quad	0x00af9b000000ffff
 
+	.globl gdt_ptr
 gdt_ptr:
 	.short	gdt_ptr - gdt - 1
 	.long	gdt
