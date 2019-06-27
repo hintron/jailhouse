@@ -33,7 +33,7 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  *
  * Configuration for Micro-Star International Co., Ltd. MS-7B24
- * created with './tools/jailhouse config create 2019-06-26_recent-changes'
+ * created with './tools/jailhouse config create --console ttyS4 2019-06-26_ttyS4'
  *
  * NOTE: This config expects the following to be appended to your kernel cmdline
  *       "memmap=0x5200000$0x3a000000"
@@ -60,9 +60,10 @@ struct {
 			.size = 0x600000,
 		},
 		.debug_console = {
-			.address = 0x3f8,
+			.address = 0xa1401000,
 			.type = JAILHOUSE_CON_TYPE_8250,
-			.flags = JAILHOUSE_CON_ACCESS_PIO |
+			.size = 0x1000,
+			.flags = JAILHOUSE_CON_ACCESS_MMIO |
 				 JAILHOUSE_CON_REGDIST_1,
 		},
 		.platform_info = {
@@ -421,27 +422,27 @@ struct {
 			.size = 0x4b000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE,
 		},
-		/* MemRegion: 100000000-2e29fffff : System RAM */
+		/* MemRegion: 100000000-3ad1fffff : System RAM */
 		{
 			.phys_start = 0x100000000,
 			.virt_start = 0x100000000,
-			.size = 0x1e2a00000,
+			.size = 0x2ad200000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_EXECUTE | JAILHOUSE_MEM_DMA,
 		},
-		/* MemRegion: 2e2a00000-2e4ffffff : Kernel */
+		/* MemRegion: 3ad200000-3aeffffff : Kernel */
 		{
-			.phys_start = 0x2e2a00000,
-			.virt_start = 0x2e2a00000,
-			.size = 0x2600000,
+			.phys_start = 0x3ad200000,
+			.virt_start = 0x3ad200000,
+			.size = 0x1e00000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_EXECUTE | JAILHOUSE_MEM_DMA,
 		},
-		/* MemRegion: 2e5000000-46dffffff : System RAM */
+		/* MemRegion: 3af000000-46dffffff : System RAM */
 		{
-			.phys_start = 0x2e5000000,
-			.virt_start = 0x2e5000000,
-			.size = 0x189000000,
+			.phys_start = 0x3af000000,
+			.virt_start = 0x3af000000,
+			.size = 0xbf000000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_EXECUTE | JAILHOUSE_MEM_DMA,
 		},
