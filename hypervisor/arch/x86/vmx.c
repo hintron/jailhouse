@@ -287,14 +287,18 @@ static int vmx_check_features(void)
 
 	/* MGH: Require CPU clock modulation (frequency scaling).
 	 * (CPUID.01H:EDX[Bit 22] == 1) - Intel SDM vol. 4 table 2-2 */
-	if (cpuid_edx(0x01, 0) & X86_FEATURE_CLOCK_MODULATION)
+	if ((cpuid_edx(0x01, 0) & X86_FEATURE_CLOCK_MODULATION) == 0) {
+		printk("MGH: Failed to find clock modulation on CPU\n");
 		return trace_error(-EIO);
+	}
 
 	/* MGH: Require a 4-bit duty cycle instead of the 3 bit.
 	 * (CPUID.06H:EAX[Bit 5] == 1) - Intel SDM vol. 4 table 2-2 and
 	 * vol. 3b 14.7.3.1 */
-	if (cpuid_eax(0x06, 0) & X86_FEATURE_EXTENDED_DUTY_CYCLE)
+	if ((cpuid_eax(0x06, 0) & X86_FEATURE_EXTENDED_DUTY_CYCLE) == 0) {
+		printk("MGH: Failed to find extended duty cycle on CPU\n");
 		return trace_error(-EIO);
+	}
 
 	return 0;
 }
