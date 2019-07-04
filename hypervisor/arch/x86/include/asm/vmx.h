@@ -234,6 +234,7 @@ enum vmx_state { VMXOFF = 0, VMXON, VMCS_READY };
 #define VM_EXIT_LOAD_IA32_PAT			(1UL << 19)
 #define VM_EXIT_SAVE_IA32_EFER			(1UL << 20)
 #define VM_EXIT_LOAD_IA32_EFER			(1UL << 21)
+/* MGH: See Intel SDM v3C, Sections 24.7.1 and 31.13 */
 #define VM_EXIT_SAVE_PREEMPTION_TIME	(1UL << 22)
 
 #define VM_ENTRY_IA32E_MODE			(1UL << 9)

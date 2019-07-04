@@ -115,10 +115,10 @@
 				__attribute__((aligned(PAGE_SIZE)));	\
 		};							\
 	};								\
-	/** This is incremented every time an NMI needs the VMX		\
+	/** MGH: This is incremented every time an NMI needs the VMX	\
 	 *  preemption timer to trigger an immediately VM exit on the	\
 	 *  next VM entry. */						\
 	int immediate_exit;						\
-	/** Used to make sure the VMX preemption timer is only enabled	\
-	 *  once. */							\
+	/** MGH: Used to make sure the VMX preemption timer is only	\
+	 *  enabled once. */						\
 	bool preemption_enabled;
