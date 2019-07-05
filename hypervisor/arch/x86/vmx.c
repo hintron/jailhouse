@@ -964,6 +964,8 @@ static void preemption_timer_handler_mgh(void)
 				printk("MGH: Enabling clock modulation (cycle count %d)\n",
 				       cycle_count);
 				feature_ctrl |= CLOCK_MODULATION_ENABLE;
+				/* Commit the changes */
+				write_msr(MSR_IA32_CLOCK_MODULATION, feature_ctrl);
 			}
 
 			/* The default clock modulation is the lowest setting -
@@ -976,14 +978,16 @@ static void preemption_timer_handler_mgh(void)
 			// 	/* ...and set the new */
 			// 	feature_ctrl |= (CLOCK_MODULATION_DUTY_CYCLE & NEW_SETTING);
 
-			/* Commit the changes */
-			write_msr(MSR_IA32_CLOCK_MODULATION, feature_ctrl);
+			// /* Commit the changes */
+			// write_msr(MSR_IA32_CLOCK_MODULATION, feature_ctrl);
 		} else {
 			// Disable clock modulation, if not already
 			if (feature_ctrl & CLOCK_MODULATION_ENABLE) {
 				printk("MGH: Disabling clock modulation (cycle count %d)\n",
 				       cycle_count);
 				feature_ctrl &= ~CLOCK_MODULATION_ENABLE;
+				/* Commit the changes */
+				write_msr(MSR_IA32_CLOCK_MODULATION, feature_ctrl);
 			}
 		}
 		cycle_count++;
