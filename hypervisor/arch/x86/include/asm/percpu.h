@@ -120,5 +120,5 @@
 	 *  next VM entry. */						\
 	int immediate_exit;						\
 	/** MGH: Used to make sure the VMX preemption timer is only	\
-	 *  enabled once. */						\
+	 *  enabled once. (Currently unused) */						\
 	bool preemption_enabled;
