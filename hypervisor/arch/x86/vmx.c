@@ -938,8 +938,9 @@ static void preemption_timer_handler_mgh(void)
 
 	printk("MGH: CPU %d: Running special preemption timer handler\n",
 	       cpu_id);
-	printk("MGH: CPU %d: TSC bit %d being monitored\n", cpu_id,
-	       get_preemption_tsc_bit());
+	if (cycle_count == 0)
+		printk("MGH: CPU %d: TSC bit %d being monitored\n", cpu_id,
+		       get_preemption_tsc_bit());
 
 	// Make sure this never runs when it isn't supposed to
 	if (cpu_data->vmx_state != VMCS_READY) {
@@ -951,7 +952,7 @@ static void preemption_timer_handler_mgh(void)
 	 * to meet deadlines */
 	// TODO: Figure out which CPUs to throttle (the CPU IDs vary)
 	if (cpu_id == 2) {
-		printk("MGH: This is the root VM (CPU 2)!\n");
+		printk("MGH: CPU %d: This is the root VM!\n", cpu_id);
 		/* NOTE: This will fail in QEMU/KVM and cause a #GP fault UNLESS
 		 * kvm.ignore_msrs=1 is set in /etc/default/grub. If set, all
 		 * unimplemented MSRs will be ignored (whatever that means). */
