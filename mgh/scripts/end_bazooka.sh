@@ -1,3 +1,3 @@
 #!/bin/bash
 cd "${BASH_SOURCE%/*}" || exit
-sudo ../../tools/jailhouse cell destroy bazooka-demo
+sudo ../../tools/jailhouse cell destroy bazooka-inmate
