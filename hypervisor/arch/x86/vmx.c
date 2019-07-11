@@ -935,6 +935,7 @@ static void preemption_timer_handler_mgh(void)
 	static int cycle_count = 0;
 	struct per_cpu *cpu_data = this_cpu_data();
 	int cpu_id = cpu_data->public.cpu_id;
+	struct cell *cell = this_cell();
 
 	printk("MGH: CPU %d: Running special preemption timer handler\n",
 	       cpu_id);
@@ -946,6 +947,10 @@ static void preemption_timer_handler_mgh(void)
 	if (cpu_data->vmx_state != VMCS_READY) {
 		printk("MGH: VMCS is not yet ready, so returning early from preemption_timer_handler_mgh()");
 		return;
+	}
+
+	if (cell != &root_cell) {
+		printk("MGH: CPU %2d: This is the inmate's CPU!\n", cpu_id);
 	}
 
 	/* MGH: TODO: Throttle the root cell if the real-time VM is struggling
