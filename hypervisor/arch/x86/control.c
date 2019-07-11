@@ -30,6 +30,35 @@ struct exception_frame {
 	u64 ss;
 };
 
+/*
+ * MGH: Add helpful debug info
+ * Intel Software Development Manual, Volume 3A, Section 6.3, Table 6-1
+ * For descriptions of each exception, see Section 6.15
+ */
+static const char *exception_desc[21] = {
+	"0: Divide Error (#DE)",
+	"1: Debug Exception (#DB)",
+	"2: NMI Interrupt (-)",
+	"3: Breakpoint (#BP)",
+	"4: Overflow (#OF)",
+	"5: BOUND Range Exceeded (#BR)",
+	"6: Invalid Opcode (Undefined Opcode) (#UD)",
+	"7: Device Not Available (No Math Coprocessor) (#NM)",
+	"8: Double Fault (#DF)",
+	"9: Coprocessor Segment Overrun (reserved) (-)",
+	"10: Invalid TSS (#TS)",
+	"11: Segment Not Present (#NP)",
+	"12: Stack-Segment Fault (#SS)",
+	"13: General Protection (#GP)",
+	"14: Page Fault (#PF)",
+	"15: (Intel reserved. Do not use.) (-)",
+	"16: x87 FPU Floating-Point Error (Math Fault) (#MF)",
+	"17: Alignment Check (#AC)",
+	"18: Machine Check (#MC)",
+	"19: SIMD Floating-Point Exception (#XM)",
+	"20: Virtualization Exception (#VE)",
+};
+
 int arch_cell_create(struct cell *cell)
 {
 	int err;
@@ -244,6 +273,9 @@ x86_exception_handler(struct exception_frame *frame)
 {
 	panic_printk("FATAL: Jailhouse triggered exception #%lld\n",
 		     frame->vector);
+	if (frame->vector < ARRAY_SIZE(exception_desc))
+		panic_printk("%s\n", exception_desc[frame->vector]);
+
 	if (frame->error != -1)
 		panic_printk("Error code: %llx\n", frame->error);
 	panic_printk("Physical CPU ID: %lu\n", phys_processor_id());
