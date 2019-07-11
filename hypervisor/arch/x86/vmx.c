@@ -936,18 +936,21 @@ static void preemption_timer_handler_mgh(void)
 	struct per_cpu *cpu_data = this_cpu_data();
 	int cpu_id = cpu_data->public.cpu_id;
 	struct cell *cell = this_cell();
-
-	printk("MGH: CPU %2d: (%d) Running special preemption timer handler\n",
-	       cpu_id, cycle_count);
-	if (cycle_count == 0)
-		printk("MGH: CPU %2d: TSC bit %d being monitored\n", cpu_id,
-		       get_preemption_tsc_bit());
+	bool throttle_now = false;
 
 	// Make sure this never runs when it isn't supposed to
 	if (cpu_data->vmx_state != VMCS_READY) {
 		printk("MGH: VMCS is not yet ready, so returning early from preemption_timer_handler_mgh()");
 		return;
 	}
+
+	if (cycle_count == 0)
+		printk("MGH: CPU %2d: TSC bit %d being monitored\n", cpu_id,
+		       get_preemption_tsc_bit());
+	cycle_count++;
+
+	printk("MGH: CPU %2d: (%d) Running special preemption timer handler\n",
+	       cpu_id, cycle_count);
 
 	// NOTE: BAD. This doesn't work. Use the Jailhouse communication region instead
 	// // Try to access the ivshmem data
@@ -959,52 +962,48 @@ static void preemption_timer_handler_mgh(void)
 
 	if (cell != &root_cell) {
 		printk("MGH: CPU %2d: This is the inmate's CPU!\n", cpu_id);
+		return;
 	}
 
-	/* MGH: TODO: Throttle the root cell if the real-time VM is struggling
+	// TODO: Check if we need to throttle or stop throttling
+
+	/* NOTE: This will fail in QEMU/KVM and cause a #GP fault UNLESS
+	 * kvm.ignore_msrs=1 is set in /etc/default/grub. If set, all
+	 * unimplemented MSRs will be ignored (whatever that means). */
+	feature_ctrl = read_msr(MSR_IA32_CLOCK_MODULATION);
+
+	/* MGH: Throttle the root cell if the real-time VM is struggling
 	 * to meet deadlines */
-	// TODO: Figure out which CPUs to throttle (the CPU IDs vary)
-	if (cpu_id == 2) {
-		printk("MGH: CPU %2d: This is the root VM!\n", cpu_id);
-		/* NOTE: This will fail in QEMU/KVM and cause a #GP fault UNLESS
-		 * kvm.ignore_msrs=1 is set in /etc/default/grub. If set, all
-		 * unimplemented MSRs will be ignored (whatever that means). */
-		feature_ctrl = read_msr(MSR_IA32_CLOCK_MODULATION);
+	if (throttle_now == true) {
+		printk("MGH: CPU %2d: Throttling CPU!\n", cpu_id);
 
-		// Change the clock modulation scheme every 5 times
-		if (cycle_count % 10 > 5) {
-			// Enable clock modulation, if not already
-			if (!(feature_ctrl & CLOCK_MODULATION_ENABLE)) {
-				printk("MGH: CPU %2d: Enabling clock modulation (cycle count %d)\n",
-				       cpu_id, cycle_count);
-				feature_ctrl |= CLOCK_MODULATION_ENABLE;
-				/* Commit the changes */
-				write_msr(MSR_IA32_CLOCK_MODULATION, feature_ctrl);
-			}
-
-			/* The default clock modulation is the lowest setting -
-			 * 6.25% or 1/16 for 4-bit, 12.5% or 1/8 for 3 bit. */
-
-			// // TODO: Change the default setting?
-			// if ((feature_ctrl & CLOCK_MODULATION_DUTY_CYCLE) != NEW_SETTING)
-			// 	/* Clear the old value */
-			// 	feature_ctrl &= ~CLOCK_MODULATION_DUTY_CYCLE;
-			// 	/* ...and set the new */
-			// 	feature_ctrl |= (CLOCK_MODULATION_DUTY_CYCLE & NEW_SETTING);
-
-			// /* Commit the changes */
-			// write_msr(MSR_IA32_CLOCK_MODULATION, feature_ctrl);
-		} else {
-			// Disable clock modulation, if not already
-			if (feature_ctrl & CLOCK_MODULATION_ENABLE) {
-				printk("MGH: CPU %2d: Disabling clock modulation (cycle count %d)\n",
-				       cpu_id, cycle_count);
-				feature_ctrl &= ~CLOCK_MODULATION_ENABLE;
-				/* Commit the changes */
-				write_msr(MSR_IA32_CLOCK_MODULATION, feature_ctrl);
-			}
+		// Enable clock modulation, if not already
+		if (!(feature_ctrl & CLOCK_MODULATION_ENABLE)) {
+			printk("MGH: CPU %2d: Enabling clock modulation\n",
+			       cpu_id);
+			feature_ctrl |= CLOCK_MODULATION_ENABLE;
+			/* Commit the changes */
+			write_msr(MSR_IA32_CLOCK_MODULATION, feature_ctrl);
 		}
-		cycle_count++;
+
+		/* The default clock modulation is the lowest setting -
+		 * 6.25% or 1/16 for 4-bit, 12.5% or 1/8 for 3 bit. */
+
+		// // TODO: Change the default setting?
+		// if ((feature_ctrl & CLOCK_MODULATION_DUTY_CYCLE) != NEW_SETTING)
+		// 	/* Clear the old value */
+		// 	feature_ctrl &= ~CLOCK_MODULATION_DUTY_CYCLE;
+		// 	/* ...and set the new */
+		// 	feature_ctrl |= (CLOCK_MODULATION_DUTY_CYCLE & NEW_SETTING);
+	} else {
+		// Disable clock modulation, if not already
+		if (feature_ctrl & CLOCK_MODULATION_ENABLE) {
+			printk("MGH: CPU %2d: Disabling clock modulation\n",
+			       cpu_id);
+			feature_ctrl &= ~CLOCK_MODULATION_ENABLE;
+			/* Commit the changes */
+			write_msr(MSR_IA32_CLOCK_MODULATION, feature_ctrl);
+		}
 	}
 }
 
