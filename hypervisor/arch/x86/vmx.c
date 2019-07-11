@@ -949,6 +949,14 @@ static void preemption_timer_handler_mgh(void)
 		return;
 	}
 
+	// NOTE: BAD. This doesn't work. Use the Jailhouse communication region instead
+	// // Try to access the ivshmem data
+	// // printk("MGH: CPU %2d: Accessing IVSHMEM\n", cpu_id);
+	// char *ivshmem_ptr = (char *)0x3f101000;
+	// ivshmem_ptr[50] = '\0';
+	// printk("MGH: CPU %2d: ivshmem_ptr: [%p] -> %s\n", cpu_id, ivshmem_ptr,
+	//        ivshmem_ptr);
+
 	if (cell != &root_cell) {
 		printk("MGH: CPU %2d: This is the inmate's CPU!\n", cpu_id);
 	}
