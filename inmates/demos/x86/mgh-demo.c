@@ -183,6 +183,7 @@ void inmate_main(void)
 	struct ivshmem_dev_data *dev;
 	volatile char *shmem;
 	u8 length_u8 = 0;
+	int count = 0;
 
 	int_init();
 
@@ -227,14 +228,68 @@ void inmate_main(void)
 	shmem = dev->shmem;
 	// Indicate the we are up and running
 	shmem[OFFSET_PING] = 1;
+
+
 	while (1) {
+		delay_us(1000*1000);
+		count++;
+
+		// printk("MGH DEMO: Count %d\n", count);
+		// printk("MGH DEMO: comm_region pointer: %p\n", comm_region);
+
+		// TODO: Request that the root throttle itself when deadlines
+		// are getting close to being missed
+
+		// For debugging, toggle throttling on, then off after 3
+		// seconds, every 10 seconds
+		if (count % 10 == 9) {
+			/* Communicate to the hypervisor via the Jailhouse
+			 * communication region of this cell */
+			jailhouse_send_msg_to_cell(comm_region,
+					JAILHOUSE_MSG_START_THROTTLING);
+
+			printk("MGH DEMO: (%d) Sent enable throttle request\n",
+			       count);
+			printk("MGH DEMO: (%d) Waiting 3 seconds...\n",
+			       count);
+
+			// Wait 3 seconds, then stop throttling
+			delay_us(1000*1000*3);
+			count += 3;
+
+			jailhouse_send_msg_to_cell(comm_region,
+					JAILHOUSE_MSG_STOP_THROTTLING);
+
+			printk("MGH DEMO: (%d) Sent disable throttle request\n",
+			       count);
+		}
+
+		// Check if there are any messages from the root cell
+		// // Process any messages to the cell
+		// switch (comm_region->msg_to_cell) {
+		// case JAILHOUSE_MSG_NONE:
+		// 	break;
+		// default:
+		// 	jailhouse_send_reply_from_cell(comm_region,
+		// 			JAILHOUSE_MSG_UNKNOWN);
+		// 	break;
+		// }
+
+		// TODO: Also process SHA3 as well
+
+		// TODO: Have the root cell automatically throttle itself,
+		// rather than wait for the root to request it (is there shared
+		// read-only memory it could monitor?)
+
+		// Communicate via IVSHMEM with user space
+
 		// Poll until byte 0 is 2 (meaning that the root has placed
 		// data for us in shmem to compute)
-		while (shmem[OFFSET_PING] != 2) {
-			// printk("Waiting for root cell to signal us...\n");
-			// Delay a second
-			delay_us(1000*1000);
+		if (shmem[OFFSET_PING] != 2) {
+			continue;
 		}
+
+		printk("Calculating SHA3 on incoming data!\n");
 
 		// Indicate that we are now working on sha3
 		shmem[OFFSET_PING] = 3;

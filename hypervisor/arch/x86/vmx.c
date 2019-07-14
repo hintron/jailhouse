@@ -928,15 +928,63 @@ void vcpu_vendor_reset(unsigned int sipi_vector)
 	}
 }
 
+/*
+ * Returns 2 if throttle needs to be turned ON
+ * Returns 1 if throttle needs to be turned OFF
+ * Returns 0 if no action should be taken
+ */
+static int check_throttle_request(int cpu_id)
+{
+	bool throttle_now = 0;
+	struct cell *cell;
+	struct jailhouse_comm_region *comm_region;
+
+	// For now, there is only one inmate to iterate over
+	for_each_non_root_cell(cell) {
+	 	comm_region = &(cell->comm_page.comm_region);
+		/* Check for and process any pending messages to the root cell
+		 * from the inmate in order to know whether to start or stop
+		 * throttling */
+		switch (comm_region->msg_to_cell) {
+		case JAILHOUSE_MSG_START_THROTTLING:
+			throttle_now = 2;
+			printk("MGH: CPU %2d: Enable throttling request from cell %s\n",
+			       cpu_id, cell->config->name);
+			jailhouse_send_reply_from_cell(comm_region,
+						       JAILHOUSE_MSG_REQUEST_APPROVED);
+			break;
+		case JAILHOUSE_MSG_STOP_THROTTLING:
+			throttle_now = 1;
+			printk("MGH: CPU %2d: Disable throttling request from cell %s\n",
+			       cpu_id, cell->config->name);
+			jailhouse_send_reply_from_cell(comm_region,
+						       JAILHOUSE_MSG_REQUEST_APPROVED);
+			break;
+		case JAILHOUSE_MSG_NONE:
+			// printk("MGH: CPU %2d: No message found", cpu_id);
+			break;
+		default:
+			jailhouse_send_reply_from_cell(comm_region,
+						       JAILHOUSE_MSG_UNKNOWN);
+			break;
+		}
+
+		/* Make a throttle enable trump any other request if there are
+		 * multiple inmates */
+		if (throttle_now == 2)
+			break;
+	}
+	return throttle_now;
+}
 
 static void preemption_timer_handler_mgh(void)
 {
 	unsigned long feature_ctrl = 0;
 	static int cycle_count = 0;
+	static bool print_inmate_cpu = false;
 	struct per_cpu *cpu_data = this_cpu_data();
 	int cpu_id = cpu_data->public.cpu_id;
 	struct cell *cell = this_cell();
-	bool throttle_now = false;
 
 	// Make sure this never runs when it isn't supposed to
 	if (cpu_data->vmx_state != VMCS_READY) {
@@ -949,8 +997,8 @@ static void preemption_timer_handler_mgh(void)
 		       get_preemption_tsc_bit());
 	cycle_count++;
 
-	printk("MGH: CPU %2d: (%d) Running special preemption timer handler\n",
-	       cpu_id, cycle_count);
+	// printk("MGH: CPU %2d: (%d) Running special preemption timer handler\n",
+	//        cpu_id, cycle_count);
 
 	// NOTE: BAD. This doesn't work. Use the Jailhouse communication region instead
 	// // Try to access the ivshmem data
@@ -961,21 +1009,26 @@ static void preemption_timer_handler_mgh(void)
 	//        ivshmem_ptr);
 
 	if (cell != &root_cell) {
-		printk("MGH: CPU %2d: This is the inmate's CPU!\n", cpu_id);
+		if (!print_inmate_cpu) {
+			printk("MGH: CPU %2d: This is the inmate's CPU!\n",
+			       cpu_id);
+			print_inmate_cpu = true;
+		}
 		return;
 	}
-
-	// TODO: Check if we need to throttle or stop throttling
 
 	/* NOTE: This will fail in QEMU/KVM and cause a #GP fault UNLESS
 	 * kvm.ignore_msrs=1 is set in /etc/default/grub. If set, all
 	 * unimplemented MSRs will be ignored (whatever that means). */
-	feature_ctrl = read_msr(MSR_IA32_CLOCK_MODULATION);
+
+	// TODO: Somehow, turn off throttling when inmate is no longer running
 
 	/* MGH: Throttle the root cell if the real-time VM is struggling
 	 * to meet deadlines */
-	if (throttle_now == true) {
+	switch(check_throttle_request(cpu_id)) {
+	case 2:
 		printk("MGH: CPU %2d: Throttling CPU!\n", cpu_id);
+		feature_ctrl = read_msr(MSR_IA32_CLOCK_MODULATION);
 
 		// Enable clock modulation, if not already
 		if (!(feature_ctrl & CLOCK_MODULATION_ENABLE)) {
@@ -995,8 +1048,11 @@ static void preemption_timer_handler_mgh(void)
 		// 	feature_ctrl &= ~CLOCK_MODULATION_DUTY_CYCLE;
 		// 	/* ...and set the new */
 		// 	feature_ctrl |= (CLOCK_MODULATION_DUTY_CYCLE & NEW_SETTING);
-	} else {
+		break;
+	case 1:
+		printk("MGH: CPU %2d: Turning off CPU throttling\n", cpu_id);
 		// Disable clock modulation, if not already
+		feature_ctrl = read_msr(MSR_IA32_CLOCK_MODULATION);
 		if (feature_ctrl & CLOCK_MODULATION_ENABLE) {
 			printk("MGH: CPU %2d: Disabling clock modulation\n",
 			       cpu_id);
@@ -1004,7 +1060,14 @@ static void preemption_timer_handler_mgh(void)
 			/* Commit the changes */
 			write_msr(MSR_IA32_CLOCK_MODULATION, feature_ctrl);
 		}
+		break;
+	case 0:
+	default:
+		// Do nothing
+		break;
+
 	}
+
 }
 
 void vcpu_nmi_handler(void)

@@ -32,7 +32,9 @@ struct {
 		.name = "bazooka-inmate",
 		.flags = JAILHOUSE_CELL_PASSIVE_COMMREG |
 			JAILHOUSE_CELL_VIRTUAL_CONSOLE_ACTIVE,
-
+		/* MGH: Remove the JAILHOUSE_CELL_PASSIVE_COMMREG flag to make
+		 * the hypervisor ask the inmate for permission before shutting
+		 * it down (see apic-demo.c) */
 		.cpu_set_size = sizeof(config.cpus),
 		.num_memory_regions = ARRAY_SIZE(config.mem_regions),
 		.num_irqchips = 0,
@@ -62,7 +64,10 @@ struct {
 		/* communication region */ {
 			.virt_start = 0x00100000,
 			.size = 0x00001000,
-			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_COMM_REGION,
+			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_COMM_REGION |
+				/* MGH: Allow the inmate to write to the comm
+				 * region, so it can send messages to root */
+				JAILHOUSE_MEM_WRITE,
 		},
 		/* MGH: IVSHMEM shared memory region */
 		{
