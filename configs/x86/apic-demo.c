@@ -26,7 +26,10 @@ struct {
 		.signature = JAILHOUSE_CELL_DESC_SIGNATURE,
 		.revision = JAILHOUSE_CONFIG_REVISION,
 		.name = "apic-demo",
-		.flags = JAILHOUSE_CELL_VIRTUAL_CONSOLE_PERMITTED,
+		/* MGH: Use ACTIVE instead of PERMITTED to also write the debug
+		 * output to the virtual console, which will then get forwarded
+		 * to wherever the root prints to. */
+		.flags = JAILHOUSE_CELL_VIRTUAL_CONSOLE_ACTIVE,
 
 		.cpu_set_size = sizeof(config.cpus),
 		.num_memory_regions = ARRAY_SIZE(config.mem_regions),
