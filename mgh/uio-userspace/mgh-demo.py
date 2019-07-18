@@ -78,6 +78,9 @@ def main(argv):
     while not is_inmate_ready(shmem):
         time.sleep(1)
 
+    # TODO: Figure out the best way to get a lot of data to the inmate
+
+    count = 0
     while True:
         # Place input in shared memory
         write_input(shmem, data_to_calculate)
@@ -86,13 +89,17 @@ def main(argv):
         signal_inmate(shmem)
 
         # Block on inmate until it is done
-        pend_inmate(device_file)
+        pend_inmate_poll(shmem)
 
         # Read the sha3 output
         read_output(shmem)
 
-        # Wait for a second, for good measure
+        print("Iteration %d finished" % count)
+        count += 1
+
+        # Wait for a second, to slow down demo
         time.sleep(1)
+        data_to_calculate = "%s%d" % (data_to_calculate, count)
 
     close(f)
     close(shmem)
@@ -125,13 +132,23 @@ def signal_inmate(shmem):
     print("Signaling inmate...")
     shmem[OFFSET_PING] = 2
 
+# Polls until the bit becomes 3, indicating that the inmate is done
+def pend_inmate_poll(shmem):
+    while shmem[OFFSET_PING] == 3:
+        print("Inmate is calculating...")
+        time.sleep(1)
+
+    print("Inmate is finished, with ping=%d" % shmem[OFFSET_PING])
+
 # Waits on an interrupt from the inmate to know the sha3 is complete
-def pend_inmate(device_file):
+# Currently not used
+def pend_inmate_intr(device_file):
     fd = os.open(device_file, os.O_RDWR)
     # Read out 4 bytes into an int
     interrupt_count = struct.unpack('i', os.read(fd, 4))
     print("interrupt #%s" % interrupt_count)
     os.close(fd)
+
 
 # Waits on an interrupt from the inmate to know the sha3 is complete
 def read_output(shmem):
