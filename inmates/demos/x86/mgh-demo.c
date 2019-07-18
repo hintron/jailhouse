@@ -24,8 +24,9 @@
 #define MAX_NDEV	4
 #define UART_BASE	0x3F8
 
+
+static bool is_throttle_enabled = false;
 static char str[32] = "Hello From MGH      ";
-static int irq_counter;
 
 // # of bytes for the sha3-512 message digest output
 #define MD_LENGTH 	64
@@ -121,13 +122,14 @@ static int get_ivpos(struct ivshmem_dev_data *d)
 	return mmio_read32(d->registers + 2);
 }
 
-static void send_irq(struct ivshmem_dev_data *d)
-{
-	printk("MGH DEMO: %02x:%02x.%x sending IRQ; Shared: %s\n",
-	       d->bdf >> 8, (d->bdf >> 3) & 0x1f, d->bdf & 0x3, (char *)d->shmem);
-	// Write to the doorbell register (3 * u32 = 12 bytes)
-	mmio_write32(d->registers + 3, 1);
-}
+// TODO: Get this working? Do I need this?
+// static void send_irq(struct ivshmem_dev_data *d)
+// {
+// 	printk("MGH DEMO: %02x:%02x.%x sending IRQ; Shared: %s\n",
+// 	       d->bdf >> 8, (d->bdf >> 3) & 0x1f, d->bdf & 0x3, (char *)d->shmem);
+// 	// Write to the doorbell register (3 * u32 = 12 bytes)
+// 	mmio_write32(d->registers + 3, 1);
+// }
 
 static char _get_hex_from_lower_nibble(char in)
 {
@@ -172,10 +174,13 @@ static void calculate_sha3(char *input, int input_length, char *output)
 
 static void irq_handler(void)
 {
+	static int irq_counter = 0;
 	printk("MGH DEMO: got interrupt ... %d\n", irq_counter++);
 }
 
-// Returns true if there is a PCI device 
+/*
+ * Returns true if there is an IVSHMEM PCI device that we can use
+ */
 static bool device_setup(void)
 {
 	int bdf = 0;
@@ -226,104 +231,147 @@ static bool device_setup(void)
 	return true;
 }
 
+static void enable_throttle(void)
+{
+	/* Communicate to the hypervisor via the Jailhouse
+	 * communication region of this cell */
+	jailhouse_send_msg_to_cell(comm_region,
+			JAILHOUSE_MSG_START_THROTTLING);
+	// printk("MGH DEMO: (%d) Sent enable throttle request\n",
+	//        count);
+}
+
+static void disable_throttle(void)
+{
+	jailhouse_send_msg_to_cell(comm_region,
+			JAILHOUSE_MSG_STOP_THROTTLING);
+	// printk("MGH DEMO: (%d) Sent disable throttle request\n",
+	//        count);
+}
+
+/*
+ * Request that the root throttle itself when deadlines
+ * are getting close to being missed
+ */
+static void check_deadlines(void)
+{
+	static int now = 0;
+	static int previous = 0;
+	static int DEADLINE = 500;
+	bool meeting_deadlines = false;
+
+	// TODO: Have a timing mechanism that we can use to keep track of things
+	// Look at apic demo for how to use timer
+
+	if (now - previous < DEADLINE) { // this does nothing right now
+		meeting_deadlines = true;
+	}
+
+	// TODO: Add some smoothing if needed, so inmate isn't thrashing back
+	// and forth between throttle and no throttle
+
+	// If we are meeting deadlines, and we are throttling, stop throttling
+	if (meeting_deadlines && is_throttle_enabled) {
+		disable_throttle();
+		is_throttle_enabled = false;
+	} else if (!meeting_deadlines && !is_throttle_enabled) {
+		enable_throttle();
+		is_throttle_enabled = true;
+	}
+
+	// TODO: Have the root cell automatically throttle itself,
+	// rather than wait for the root to request it (is there shared
+	// read-only memory it could monitor?)
+}
+
+/*
+ * If the root wants us to shut down, disable throttling beforehand, if needed.
+ * Then, change the inmate's cell state and return true.
+ * Else, return false.
+ */
+static bool check_shutdown(void)
+{
+	bool ret = false;
+	switch (comm_region->msg_to_cell) {
+	case JAILHOUSE_MSG_SHUTDOWN_REQUEST:
+		/* Note: For the inmate to get this message from root, remove
+		 * JAILHOUSE_CELL_PASSIVE_COMMREG from the inmate config */
+		if (is_throttle_enabled) {
+			printk("MGH DEMO: Disabling root throttling\n");
+			disable_throttle();
+		}
+
+		printk("MGH DEMO: Stopping inmate\n");
+		comm_region->cell_state = JAILHOUSE_CELL_SHUT_DOWN;
+		ret = true;
+		break;
+	case JAILHOUSE_MSG_NONE:
+		break;
+	default:
+		jailhouse_send_reply_from_cell(comm_region,
+					       JAILHOUSE_MSG_UNKNOWN);
+		break;
+	}
+	return ret;
+}
+
+/*
+ * Calculate the SHA3 of the next item
+ */
+static void workload(volatile char *shmem)
+{
+	u8 len = shmem[OFFSET_LENGTH];
+
+	printk("MGH DEMO: Calculating SHA3 on incoming data!\n");
+
+	// Add a null char in for printing convenience
+	shmem[OFFSET_IN + len] = '\0';
+
+	calculate_sha3((char *)&shmem[OFFSET_IN], (int)len,
+		       (char *)&shmem[OFFSET_OUT]);
+}
+
 void inmate_main(void)
 {
-	struct ivshmem_dev_data *dev;
 	volatile char *shmem;
-	u8 length_u8 = 0;
-	int count = 0;
 
 	if (!device_setup())
-		goto out;
+		return;
 
 	// Get the first PCI device, which should be the IVSHMEM device
-	dev = &devs[0];
-	shmem = dev->shmem;
+	shmem = devs[0].shmem;
 
 	// Indicate to userspace that we are up and running
 	shmem[OFFSET_PING] = 1;
 
 	// Continuously wait on userspace for a workload
 	while (1) {
-		count++;
+		// If lagging behind, try throttling the root cell
+		check_deadlines();
 
-		// printk("MGH DEMO: Count %d\n", count);
-		// printk("MGH DEMO: comm_region pointer: %p\n", comm_region);
+		// If about to shutdown, disable throttling first
+		if (check_shutdown())
+			return;
 
-		// TODO: Request that the root throttle itself when deadlines
-		// are getting close to being missed
-
-		// For debugging, toggle throttling on, then off after 3
-		// seconds, every 10 seconds
-		if (count % 10 == 9) {
-			/* Communicate to the hypervisor via the Jailhouse
-			 * communication region of this cell */
-			jailhouse_send_msg_to_cell(comm_region,
-					JAILHOUSE_MSG_START_THROTTLING);
-
-			printk("MGH DEMO: (%d) Sent enable throttle request\n",
-			       count);
-			printk("MGH DEMO: (%d) Waiting 3 seconds...\n",
-			       count);
-
-			// Wait 3 seconds, then stop throttling
-			delay_us(1000*1000*3);
-			count += 3;
-
-			jailhouse_send_msg_to_cell(comm_region,
-					JAILHOUSE_MSG_STOP_THROTTLING);
-
-			printk("MGH DEMO: (%d) Sent disable throttle request\n",
-			       count);
-		}
-
-		// Check if there are any messages from the root cell
-		// // Process any messages to the cell
-		// switch (comm_region->msg_to_cell) {
-		// case JAILHOUSE_MSG_NONE:
-		// 	break;
-		// default:
-		// 	jailhouse_send_reply_from_cell(comm_region,
-		// 			JAILHOUSE_MSG_UNKNOWN);
-		// 	break;
-		// }
-
-		// TODO: Also process SHA3 as well
-
-		// TODO: Have the root cell automatically throttle itself,
-		// rather than wait for the root to request it (is there shared
-		// read-only memory it could monitor?)
-
-		// Communicate via IVSHMEM with user space
-		// Check if there is a workload
-		// Poll until byte 0 is 2 (meaning that the root has placed
-		// data for us in shmem to compute)
+		// Check if the root placed a workload in shmem. If not, delay
 		if (shmem[OFFSET_PING] != 2) {
+			// TODO: Delay by 1 ms instead of 1 s
 			delay_us(1000*1000);
 			continue;
 		}
 
-		printk("Calculating SHA3 on incoming data!\n");
-
 		// Indicate that we are now working on sha3
 		shmem[OFFSET_PING] = 3;
 
-		// Cast signed length byte to unsigned
-		length_u8 = shmem[OFFSET_LENGTH];
-
-		// Add a null char in for printing convenience
-		shmem[OFFSET_IN + length_u8] = '\0';
-
-		calculate_sha3((char *)&shmem[OFFSET_IN], (int)length_u8,
-			       (char *)&shmem[OFFSET_OUT]);
+		workload(shmem);
 
 		// Indicate that we are done
 		shmem[OFFSET_PING] = 1;
-		// Tell the root cell that we are ready to calculate sha3
-		send_irq(dev);
+
+		// TODO: irq doesn't seem to work right now
+		// // Tell the root cell that we are ready to calculate sha3
+		// send_irq(&devs[0]);
 	}
-out:
-	halt();
 }
 
 

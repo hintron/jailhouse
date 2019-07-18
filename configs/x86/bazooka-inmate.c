@@ -30,8 +30,7 @@ struct {
 		.signature = JAILHOUSE_CELL_DESC_SIGNATURE,
 		.revision = JAILHOUSE_CONFIG_REVISION,
 		.name = "bazooka-inmate",
-		.flags = JAILHOUSE_CELL_PASSIVE_COMMREG |
-			JAILHOUSE_CELL_VIRTUAL_CONSOLE_ACTIVE,
+		.flags = JAILHOUSE_CELL_VIRTUAL_CONSOLE_ACTIVE,
 		/* MGH: Remove the JAILHOUSE_CELL_PASSIVE_COMMREG flag to make
 		 * the hypervisor ask the inmate for permission before shutting
 		 * it down (see apic-demo.c) */
