@@ -25,7 +25,6 @@
 #define UART_BASE	0x3F8
 
 static char str[32] = "Hello From MGH      ";
-static int ndevices = 0;
 static int irq_counter;
 
 // # of bytes for the sha3-512 message digest output
@@ -176,15 +175,15 @@ static void irq_handler(void)
 	printk("MGH DEMO: got interrupt ... %d\n", irq_counter++);
 }
 
-void inmate_main(void)
+// Returns true if there is a PCI device 
+static bool device_setup(void)
 {
 	int bdf = 0;
 	unsigned int class_rev;
 	struct ivshmem_dev_data *dev;
-	volatile char *shmem;
-	u8 length_u8 = 0;
-	int count = 0;
+	int ndevices = 0;
 
+	// Set up interrupts
 	int_init();
 
 	while ((ndevices < MAX_NDEV) &&
@@ -201,37 +200,51 @@ void inmate_main(void)
 			bdf++;
 			continue;
 		}
-		ndevices++;
-		dev = devs + ndevices - 1;
+		dev = &devs[ndevices];
 		dev->bdf = bdf;
 		map_shmem_and_bars(dev);
 		printk("MGH DEMO: mapped the bars got position %d\n",
-			get_ivpos(dev));
+		       get_ivpos(dev));
 
 		memcpy(dev->shmem, str, 32);
 
-		int_set_handler(IRQ_VECTOR + ndevices - 1, irq_handler);
-		pci_msix_set_vector(bdf, IRQ_VECTOR + ndevices - 1, 0);
+		int_set_handler(IRQ_VECTOR + ndevices, irq_handler);
+		pci_msix_set_vector(bdf, IRQ_VECTOR + ndevices, 0);
 		bdf++;
+		ndevices++;
 	}
 
 	if (ndevices <= 0) {
-		printk("MGH DEMO: No PCI devices found .. nothing to do.\n");
-		goto out;
+		printk("MGH DEMO: No PCI devices found! Nothing to do\n");
+		return false;
 	}
 
 	if (ndevices > 1) {
-		printk("MGH DEMO: Too many PCI devices found! Using first device\n");
+		printk("MGH DEMO: More than one PCI device found!\n");
 	}
 
+	return true;
+}
+
+void inmate_main(void)
+{
+	struct ivshmem_dev_data *dev;
+	volatile char *shmem;
+	u8 length_u8 = 0;
+	int count = 0;
+
+	if (!device_setup())
+		goto out;
+
+	// Get the first PCI device, which should be the IVSHMEM device
 	dev = &devs[0];
 	shmem = dev->shmem;
-	// Indicate the we are up and running
+
+	// Indicate to userspace that we are up and running
 	shmem[OFFSET_PING] = 1;
 
-
+	// Continuously wait on userspace for a workload
 	while (1) {
-		delay_us(1000*1000);
 		count++;
 
 		// printk("MGH DEMO: Count %d\n", count);
@@ -282,10 +295,11 @@ void inmate_main(void)
 		// read-only memory it could monitor?)
 
 		// Communicate via IVSHMEM with user space
-
+		// Check if there is a workload
 		// Poll until byte 0 is 2 (meaning that the root has placed
 		// data for us in shmem to compute)
 		if (shmem[OFFSET_PING] != 2) {
+			delay_us(1000*1000);
 			continue;
 		}
 
