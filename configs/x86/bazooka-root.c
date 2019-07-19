@@ -59,7 +59,7 @@ struct {
 		.flags = JAILHOUSE_SYS_VIRTUAL_DEBUG_CONSOLE,
 		.hypervisor_memory = {
 			.phys_start = 0x3a000000,
-			.size = 0x600000,
+			.size = 0x600000, // 6 MB
 		},
 		.debug_console = {
 			.address = 0xa1401000,
@@ -478,15 +478,15 @@ struct {
 		{
 			.phys_start = 0x3a600000,
 			.virt_start = 0x3a600000,
-			.size = 0x4c00000,
+			// MGH: Leave a 1 MB region for IVSHMEM (4c -> 4b)
+			.size = 0x4b00000, // 75 MB
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE,
 		},
 		/* MGH Added: IVSHMEM shared memory region (index 61)*/
 		{
-			.phys_start = 0x3f101000,
-			.virt_start = 0x3f101000,
-			// Create 1 MB of shared memory
-			.size = 0xff000,
+			.phys_start = 0x3f100000,
+			.virt_start = 0x3f100000,
+			.size = 0x100000, // 1 MB
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE,
 		},
 	},

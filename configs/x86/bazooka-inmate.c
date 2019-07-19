@@ -53,29 +53,37 @@ struct {
 	},
 
 	.mem_regions = {
-		/* RAM */ {
+		/* RAM */
+		{
 			.phys_start = 0x3f000000,
 			.virt_start = 0,
+			// 1 MB of RAM for the inmate to work with
 			.size = 0x00100000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_EXECUTE | JAILHOUSE_MEM_LOADABLE,
 		},
-		/* communication region */ {
+		/* communication region */
+		{
 			.virt_start = 0x00100000,
 			.size = 0x00001000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_COMM_REGION |
 				/* MGH: Allow the inmate to write to the comm
 				 * region, so it can send messages to root */
 				JAILHOUSE_MEM_WRITE,
+			/* MGH: What is behind this virtual memory region? */
 		},
 		/* MGH: IVSHMEM shared memory region */
 		{
-			.phys_start = 0x3f101000,
-			.virt_start = 0x3f101000,
-			// Create almost 1 MB of shared memory
-			.size = 0xff000,
+			.phys_start = 0x3f100000,
+			.virt_start = 0x3f100000,
+			// Create 1 MB of shared memory
+			.size = 0x00100000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_ROOTSHARED,
+			/* MGH: I think virt_start could be set to 0x00101000.
+			 * However, then the virtual address would be different
+			 * than the physical address for no good reason. Being
+			 * the same is a convenience */
 		},
 	},
 
