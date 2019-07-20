@@ -24,7 +24,7 @@ To install:
 
 # Tests
 
-These tests assume `rhash` is installed and on your path.
+These tests require `rhash`.
 
 To install `rhash`, do the following (on Ubuntu):
 

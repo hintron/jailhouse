@@ -1,15 +1,24 @@
 #!/bin/bash
+cd "${BASH_SOURCE%/*}" || exit
 
 # Compare my borrowed sha3 code to a 3rd-party tool (RHash)
 
-# To install rhash,
-# sudo apt install rhash
+if hash rhash 2>/dev/null; then
+    echo "rhash found"
+else
+    printf "rhash not found. Install it:\n\n    sudo apt install rhash\n\n"
+    exit
+fi
+
+if [ -f ./build/mgh-sha3-512 ] ; then
+    echo "mgh-sha3-512 found"
+else
+    printf "mgh-sha3-512 not found. Build it with Meson:\n\n    meson build\n    ninja -C build\n\n"
+    exit
+fi
 
 # Test the locally-built binary instead of what's on the path
-mgh_bin=./mgh-sha3-512
-
-echo $CWD
-echo $PWD
+mgh_bin=./build/mgh-sha3-512
 
 function rhash_sha3_512 {
     # Remove trailing characters from rhash output
