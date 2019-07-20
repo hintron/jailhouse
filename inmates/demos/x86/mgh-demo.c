@@ -30,21 +30,24 @@ static char str[32] = "Hello From MGH      ";
 
 // # of bytes for the sha3-512 message digest output
 #define MD_LENGTH 	64
-#define MAX_INPUT_BYTES 256
+#define MB		(1 << 20) // 2^20 = 1048576 = 1 MB
 #define OUTPUT_BYTES 	MD_LENGTH
 
 // Map out shared memory (define the sizes)
-#define PING_SIZE 	1
-#define LENGTH_SIZE 	1
-#define IN_SIZE 	MAX_INPUT_BYTES
-#define OUT_SIZE 	OUTPUT_BYTES
-#define NULL_SIZE 	1
+#define SYNC_SIZE 	1
+#define RES_1_SIZE 	3
+#define IN_LEN_SIZE 	4
+#define OUT_SIZE 	64
+#define RES_2_SIZE 	4032
+// The entire IVSHMEM region is 1 MB. Input Data gets the rest of the space.
+#define IN_SIZE 	(MB - (SYNC_SIZE + RES_1_SIZE + IN_LEN_SIZE + OUT_SIZE + RES_1_SIZE))
 
-#define OFFSET_PING 	0
-#define OFFSET_LENGTH 	(OFFSET_PING + PING_SIZE)
-#define OFFSET_IN 	(OFFSET_LENGTH + LENGTH_SIZE)
-#define OFFSET_NULL 	(OFFSET_IN + IN_SIZE)
-#define OFFSET_OUT 	(OFFSET_NULL + NULL_SIZE)
+#define OFFSET_SYNC 	0
+#define OFFSET_RES_1 	(OFFSET_SYNC + SYNC_SIZE)
+#define OFFSET_IN_LEN 	(OFFSET_RES_1 + RES_1_SIZE)
+#define OFFSET_OUT 	(OFFSET_IN_LEN + IN_LEN_SIZE)
+#define OFFSET_RES_2 	(OFFSET_OUT + OUT_SIZE)
+#define OFFSET_IN 	(OFFSET_RES_2 + RES_2_SIZE)
 
 
 struct ivshmem_dev_data {
@@ -320,14 +323,24 @@ static bool check_shutdown(void)
  */
 static void workload(volatile char *shmem)
 {
-	u8 len = shmem[OFFSET_LENGTH];
+	u32 *len_ptr = (u32 *) &shmem[OFFSET_IN_LEN];
+	u32 len = *len_ptr;
+
+	printk("MGH DEMO: Input data length: %d\n", len);
+
+	// Account for space needed to tack on NULL character
+	if (len > IN_SIZE - 1) {
+		printk("MGH DEMO: Input data max length exceeded (%d > %d)\n",
+		       len, IN_SIZE - 1);
+		return;
+	}
 
 	printk("MGH DEMO: Calculating SHA3 on incoming data!\n");
 
 	// Add a null char in for printing convenience
 	shmem[OFFSET_IN + len] = '\0';
 
-	calculate_sha3((char *)&shmem[OFFSET_IN], (int)len,
+	calculate_sha3((char *)&shmem[OFFSET_IN], (int) len,
 		       (char *)&shmem[OFFSET_OUT]);
 }
 
@@ -342,7 +355,7 @@ void inmate_main(void)
 	shmem = devs[0].shmem;
 
 	// Indicate to userspace that we are up and running
-	shmem[OFFSET_PING] = 1;
+	shmem[OFFSET_SYNC] = 1;
 
 	// Continuously wait on userspace for a workload
 	while (1) {
@@ -354,19 +367,19 @@ void inmate_main(void)
 			return;
 
 		// Check if the root placed a workload in shmem. If not, delay
-		if (shmem[OFFSET_PING] != 2) {
+		if (shmem[OFFSET_SYNC] != 2) {
 			// TODO: Delay by 1 ms instead of 1 s
 			delay_us(1000*1000);
 			continue;
 		}
 
 		// Indicate that we are now working on sha3
-		shmem[OFFSET_PING] = 3;
+		shmem[OFFSET_SYNC] = 3;
 
 		workload(shmem);
 
 		// Indicate that we are done
-		shmem[OFFSET_PING] = 1;
+		shmem[OFFSET_SYNC] = 1;
 
 		// TODO: irq doesn't seem to work right now
 		// // Tell the root cell that we are ready to calculate sha3
