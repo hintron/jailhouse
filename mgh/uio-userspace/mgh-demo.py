@@ -35,6 +35,7 @@ import mmap
 import os
 import struct
 import subprocess
+import argparse
 
 device_file = '/dev/uio0'
 
@@ -57,15 +58,12 @@ OFFSET_OUT = OFFSET_IN_LEN + IN_LEN_SIZE
 OFFSET_RES_2 = OFFSET_OUT + OUT_SIZE
 OFFSET_IN = OFFSET_RES_2 + RES_2_SIZE
 
-def main(argv):
-    if len(sys.argv) != 2:
-        print("Usage: mgh-demo.py <string>")
-        sys.exit(0)
-    elif argv[1] == "test":
-        print("Put test code here")
-        sys.exit(0)
+def main(args):
+    if args.file:
+        with open(args.input, 'r') as f:
+            input_data = f.read()
     else:
-        data_to_calculate = argv[1]
+        input_data = args.input
 
     f = open(device_file, 'r+b')
     shmem = mmap.mmap(f.fileno(), MB, offset=PAGE_SIZE)
@@ -74,19 +72,17 @@ def main(argv):
     # Test read
     print("Shmem content (first 30 bytes): '%s'" % shmem.read(30))
 
-
     # Check to make sure inmate is ready
     while not is_inmate_ready(shmem):
         time.sleep(1)
 
-    # TODO: Figure out the best way to get a lot of data to the inmate
-
     count = 0
     while True:
-        print("\nIteration %d" % count)
-        print("***************************************************************")
+        if not args.file and args.demo:
+            print("\nIteration %d" % count)
+            print("***************************************************************")
         # Place input in shared memory
-        write_input(shmem, data_to_calculate)
+        write_input(shmem, input_data)
 
         # Tell inmate to calculate it
         signal_inmate(shmem)
@@ -98,24 +94,29 @@ def main(argv):
         inmate_output = read_output(shmem).hex()
         print('Inmate output: %s' % inmate_output)
 
-        rhash_output = str_to_sha3(data_to_calculate)
+        if args.file:
+            rhash_output = file_to_sha3(args.input)
+        else:
+            rhash_output = str_to_sha3(input_data)
         # TODO: Use this when taking in input files instead
-        # file_to_sha3("test.txt"))
 
         # Check to make sure the hash calculated by the inmate is accurate
         if inmate_output == rhash_output:
             print("\nOutput is correct")
         else:
-            print("\nOutput **DOES NOT** match rhash!...\n%s" % inmate_output)
+            print("\nOutput **DOES NOT** match rhash!...\n%s" % rhash_output)
 
-        count += 1
+        if not args.file and args.demo:
+            count += 1
 
-        # Wait for a second, to slow down demo
-        time.sleep(1)
-        data_to_calculate = "%s%d" % (data_to_calculate, count)
+            # Wait for a second, to slow down demo
+            time.sleep(1)
+            input_data = "%s%d" % (input_data, count)
+        else:
+            break
 
-    close(f)
-    close(shmem)
+    f.close()
+    shmem.close()
 
 # # Waits on an interrupt from the inmate to know the sha3 is complete
 def is_inmate_ready(shmem):
@@ -128,10 +129,11 @@ def is_inmate_ready(shmem):
 
 # Takes a string and puts it into shmem
 def write_input(shmem, string):
-    print("Sending inmate string '%s' (not including null)" % string)
     str_bytes = bytearray(string, 'utf-8')
     str_bytes_len = len(str_bytes)
-    print("Sending byte string of length %d" % str_bytes_len)
+    print("Input length: %d" % str_bytes_len)
+    if str_bytes_len < 256:
+        print("Input string: '%s'" % string)
 
     if str_bytes_len > IN_SIZE:
         print("error: Input data too long; length > %d bytes)" % IN_SIZE)
@@ -195,8 +197,20 @@ def read_output(shmem):
     # Append an extra +1 to account for python's slice syntax
     return shmem[OFFSET_OUT:(OFFSET_OUT+(OUT_SIZE-1))+1]
 
+################################################################################
+# ARGS
+################################################################################
+
+parser = argparse.ArgumentParser(
+    description='Userspace tool to send workloads to a Jailhouse inmate over a IVSHMEM PCI device.',
+)
+parser.add_argument('input', metavar='INPUT', type=str, help='The input data to send to the inmate. If -f/--file is specified, INPUT is a filename with the input taken from the contents of the file. Otherwise, INPUT is interpreted as a string containing the input data.')
+parser.add_argument('-f', '--file', dest='file', action='store_true', help='If True, INPUT is interpreted as a filename instead of a string. Defaults to False.')
+parser.add_argument('-d', '--demo', dest='demo', action='store_true', help='If True, and if INPUT is a string instead of a file, demo mode is activated. This will continuously send the inmate a slightly changed string every second. Defaults to False.')
+args = parser.parse_args()
+
 if __name__ == "__main__":
-    main(sys.argv)
+    main(args)
 
 # References:
 # https://docs.python.org/3.7/library/mmap.html
