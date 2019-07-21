@@ -78,7 +78,7 @@ def main(args):
 
     count = 0
     while True:
-        if not args.file and args.demo:
+        if args.loop or (args.demo and not args.file):
             print("\nIteration %d" % count)
             print("***************************************************************")
 
@@ -110,12 +110,13 @@ def main(args):
         else:
             print("\nOutput **DOES NOT** match rhash!...\n%s" % rhash_output)
 
-        if not args.file and args.demo:
-            count += 1
+        if (args.demo and not args.file):
+            input_data = "%s+" % (input_data)
 
+        if args.loop or (args.demo and not args.file):
+            count += 1
             # Wait for a second, to slow down demo
             time.sleep(1)
-            input_data = "%s+" % (input_data)
         else:
             break
 
@@ -215,6 +216,7 @@ parser = argparse.ArgumentParser(
 parser.add_argument('input', metavar='INPUT', type=str, help='The input data to send to the inmate. If -f/--file is specified, INPUT is a filename with the input taken from the contents of the file. Otherwise, INPUT is interpreted as a string containing the input data.')
 parser.add_argument('-f', '--file', dest='file', action='store_true', help='If True, INPUT is interpreted as a filename instead of a string. Defaults to False.')
 parser.add_argument('-d', '--demo', dest='demo', action='store_true', help='If True, and if INPUT is a string instead of a file, demo mode is activated. This will continuously append `+` to the string and repeat the workload every second. Defaults to False.')
+parser.add_argument('-l', '--loop', dest='loop', action='store_true', help='If True, continuously repeats the exact same workload every second. Defaults to False.')
 
 args = parser.parse_args()
 
