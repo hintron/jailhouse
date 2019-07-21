@@ -31,6 +31,10 @@
 static bool is_throttle_enabled = false;
 static char str[32] = "Hello From MGH      ";
 
+/* Change to false to disable print statements during regular operation. */
+#define MGH_INMATE_DEBUG	false
+// #define MGH_INMATE_DEBUG	true
+
 // # of bytes for the sha3-512 message digest output
 #define MD_LENGTH 	64
 #define MB		(1 << 20) // 2^20 = 1048576 = 1 MB
@@ -163,6 +167,9 @@ static void calculate_sha3(char *input, int input_length, char *output)
 		printk("sha3 failed for string `%s`\n", input);
 		return;
 	}
+
+	if (!MGH_INMATE_DEBUG)
+		return;
 
 	// Print out the calculated SHA3
 	for (i = 0; i < MD_LENGTH; ++i) {
@@ -344,7 +351,8 @@ static void workload(volatile char *shmem)
 	u32 *len_ptr = (u32 *) &shmem[OFFSET_IN_LEN];
 	u32 len = *len_ptr;
 
-	printk("MGH DEMO: Input data length: %d\n", len);
+	if (MGH_INMATE_DEBUG)
+		printk("MGH DEMO: Input data length: %d\n", len);
 
 	// Account for space needed to tack on NULL character
 	if (len > IN_SIZE - 1) {
@@ -353,7 +361,8 @@ static void workload(volatile char *shmem)
 		return;
 	}
 
-	printk("MGH DEMO: Calculating SHA3 on incoming data!\n");
+	if (MGH_INMATE_DEBUG)
+		printk("MGH DEMO: Calculating SHA3 on incoming data!\n");
 
 	// Add a null char in for printing convenience
 	shmem[OFFSET_IN + len] = '\0';
@@ -366,6 +375,7 @@ void inmate_main(void)
 {
 	volatile char *shmem;
 	struct ivshmem_dev_data devs[MAX_NDEV];
+	unsigned long workload_duration;
 
 	if (!hardware_setup())
 		return;
@@ -381,6 +391,9 @@ void inmate_main(void)
 
 	// Continuously wait on userspace for a workload
 	while (1) {
+		unsigned long start;
+		unsigned long end;
+
 		// If lagging behind, try throttling the root cell
 		check_deadlines();
 
@@ -398,7 +411,12 @@ void inmate_main(void)
 		// Indicate that we are now working on sha3
 		shmem[OFFSET_SYNC] = 3;
 
+		start = tsc_read_ns();
 		workload(shmem);
+		end = tsc_read_ns();
+		workload_duration = end - start;
+
+		printk("Workload took %lu ns\n", workload_duration);
 
 		// Indicate that we are done
 		shmem[OFFSET_SYNC] = 1;
