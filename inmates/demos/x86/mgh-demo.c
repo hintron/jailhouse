@@ -265,33 +265,31 @@ static void enable_throttle(void)
 	 * communication region of this cell */
 	jailhouse_send_msg_to_cell(comm_region,
 			JAILHOUSE_MSG_START_THROTTLING);
-	// printk("MGH DEMO: (%d) Sent enable throttle request\n",
-	//        count);
+	printk("MGH DEMO: Sent enable throttle request\n");
 }
 
 static void disable_throttle(void)
 {
 	jailhouse_send_msg_to_cell(comm_region,
 			JAILHOUSE_MSG_STOP_THROTTLING);
-	// printk("MGH DEMO: (%d) Sent disable throttle request\n",
-	//        count);
+	printk("MGH DEMO: Sent disable throttle request\n");
 }
 
 /*
  * Request that the root throttle itself when deadlines
  * are getting close to being missed
  */
-static void check_deadlines(void)
+static void check_deadlines(unsigned long ns_per_byte)
 {
-	static int now = 0;
-	static int previous = 0;
-	static int DEADLINE = 500;
+	// static int now = 0;
+	// static int previous = 0;
+	static int MAX_NS_PER_BYTE = 120;
 	bool meeting_deadlines = false;
 
-	// TODO: Have a timing mechanism that we can use to keep track of things
-	// Look at apic demo for how to use timer
-
-	if (now - previous < DEADLINE) { // this does nothing right now
+	if (ns_per_byte > MAX_NS_PER_BYTE) {
+		// Throttle!
+		meeting_deadlines = false;
+	} else {
 		meeting_deadlines = true;
 	}
 
@@ -333,12 +331,14 @@ static bool check_shutdown(void)
 		comm_region->cell_state = JAILHOUSE_CELL_SHUT_DOWN;
 		ret = true;
 		break;
+	default:
 	case JAILHOUSE_MSG_NONE:
 		break;
-	default:
-		jailhouse_send_reply_from_cell(comm_region,
-					       JAILHOUSE_MSG_UNKNOWN);
-		break;
+	// NOTE: We don't want to send an UNKNOWN message because that could
+	// mess with the throttling messages we send
+	// 	jailhouse_send_reply_from_cell(comm_region,
+	// 				       JAILHOUSE_MSG_UNKNOWN);
+	// 	break;
 	}
 	return ret;
 }
@@ -381,8 +381,8 @@ void inmate_main(void)
 {
 	volatile char *shmem;
 	struct ivshmem_dev_data devs[MAX_NDEV];
-	unsigned long workload_duration;
-	unsigned long ns_per_byte;
+	unsigned long workload_duration = 0;
+	unsigned long ns_per_byte = 0;
 
 	if (!hardware_setup())
 		return;
@@ -401,12 +401,15 @@ void inmate_main(void)
 		unsigned long start;
 		unsigned long end;
 
-		// If lagging behind, try throttling the root cell
-		check_deadlines();
-
 		// If about to shutdown, disable throttling first
 		if (check_shutdown())
 			return;
+
+		// If lagging behind, try throttling the root cell
+		// Skip the first run through
+		if (ns_per_byte != 0)
+			check_deadlines(ns_per_byte);
+
 
 		// Check if the root placed a workload in shmem. If not, delay
 		if (shmem[OFFSET_SYNC] != 2) {
