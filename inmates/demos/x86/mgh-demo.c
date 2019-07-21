@@ -343,13 +343,19 @@ static bool check_shutdown(void)
 	return ret;
 }
 
+static u32 get_input_length(volatile char *shmem)
+{
+	u32 *len_ptr = (u32 *) &shmem[OFFSET_IN_LEN];
+	return *len_ptr;
+}
+
+
 /*
  * Calculate the SHA3 of the next item
  */
 static void workload(volatile char *shmem)
 {
-	u32 *len_ptr = (u32 *) &shmem[OFFSET_IN_LEN];
-	u32 len = *len_ptr;
+	u32 len = get_input_length(shmem);
 
 	if (MGH_INMATE_DEBUG)
 		printk("MGH DEMO: Input data length: %d\n", len);
@@ -376,6 +382,7 @@ void inmate_main(void)
 	volatile char *shmem;
 	struct ivshmem_dev_data devs[MAX_NDEV];
 	unsigned long workload_duration;
+	unsigned long ns_per_byte;
 
 	if (!hardware_setup())
 		return;
@@ -415,8 +422,10 @@ void inmate_main(void)
 		workload(shmem);
 		end = tsc_read_ns();
 		workload_duration = end - start;
+		ns_per_byte = workload_duration / get_input_length(shmem);
 
-		printk("Workload took %lu ns\n", workload_duration);
+		printk("Workload took %lu ns (%lu ns / byte)\n",
+		       workload_duration, ns_per_byte);
 
 		// Indicate that we are done
 		shmem[OFFSET_SYNC] = 1;
