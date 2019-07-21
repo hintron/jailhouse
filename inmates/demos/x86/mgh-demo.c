@@ -59,8 +59,6 @@ struct ivshmem_dev_data {
 	u64 bar2sz;
 };
 
-static struct ivshmem_dev_data devs[MAX_NDEV];
-
 static u64 pci_cfg_read64(u16 bdf, unsigned int addr)
 {
 	u64 bar;
@@ -180,9 +178,9 @@ static void irq_handler(void)
 }
 
 /*
- * Returns true if there is an IVSHMEM PCI device that we can use
+ * Returns true if device setup was successful.
  */
-static bool device_setup(void)
+static bool device_setup(struct ivshmem_dev_data *devs)
 {
 	int bdf = 0;
 	unsigned int class_rev;
@@ -345,8 +343,9 @@ static void workload(volatile char *shmem)
 void inmate_main(void)
 {
 	volatile char *shmem;
+	struct ivshmem_dev_data devs[MAX_NDEV];
 
-	if (!device_setup())
+	if (!device_setup(devs))
 		return;
 
 	// Get the first PCI device, which should be the IVSHMEM device
