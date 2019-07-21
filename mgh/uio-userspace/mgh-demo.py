@@ -115,7 +115,7 @@ def main(args):
 
             # Wait for a second, to slow down demo
             time.sleep(1)
-            input_data = "%s%d" % (input_data, count)
+            input_data = "%s+" % (input_data)
         else:
             break
 
@@ -214,7 +214,8 @@ parser = argparse.ArgumentParser(
 )
 parser.add_argument('input', metavar='INPUT', type=str, help='The input data to send to the inmate. If -f/--file is specified, INPUT is a filename with the input taken from the contents of the file. Otherwise, INPUT is interpreted as a string containing the input data.')
 parser.add_argument('-f', '--file', dest='file', action='store_true', help='If True, INPUT is interpreted as a filename instead of a string. Defaults to False.')
-parser.add_argument('-d', '--demo', dest='demo', action='store_true', help='If True, and if INPUT is a string instead of a file, demo mode is activated. This will continuously send the inmate a slightly changed string every second. Defaults to False.')
+parser.add_argument('-d', '--demo', dest='demo', action='store_true', help='If True, and if INPUT is a string instead of a file, demo mode is activated. This will continuously append `+` to the string and repeat the workload every second. Defaults to False.')
+
 args = parser.parse_args()
 
 if __name__ == "__main__":
