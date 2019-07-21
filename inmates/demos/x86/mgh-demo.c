@@ -24,6 +24,9 @@
 #define MAX_NDEV	4
 #define UART_BASE	0x3F8
 
+//
+// MGH Section
+//
 
 static bool is_throttle_enabled = false;
 static char str[32] = "Hello From MGH      ";
@@ -175,6 +178,25 @@ static void irq_handler(void)
 {
 	static int irq_counter = 0;
 	printk("MGH DEMO: got interrupt ... %d\n", irq_counter++);
+}
+
+
+/*
+ * Returns true if hardware setup was successful.
+ */
+static bool hardware_setup(void)
+{
+	unsigned long tsc_freq;
+
+	// Set up the Time Stamp Counter (TSC)
+	tsc_freq = tsc_init();
+	if (tsc_freq == 0) {
+		printk("MGH DEMO: TSC was not initialized successfully (frequency == 0).\n");
+		return false;
+	}
+
+	printk("MGH DEMO: TSC frequency is %lu Hz.\n", tsc_freq);
+	return true;
 }
 
 /*
@@ -344,6 +366,9 @@ void inmate_main(void)
 {
 	volatile char *shmem;
 	struct ivshmem_dev_data devs[MAX_NDEV];
+
+	if (!hardware_setup())
+		return;
 
 	if (!device_setup(devs))
 		return;
