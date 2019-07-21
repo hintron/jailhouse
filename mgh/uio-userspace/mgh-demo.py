@@ -60,7 +60,7 @@ OFFSET_IN = OFFSET_RES_2 + RES_2_SIZE
 
 def main(args):
     if args.file:
-        with open(args.input, 'r') as f:
+        with open(args.input, 'rb') as f:
             input_data = f.read()
     else:
         input_data = args.input
@@ -81,8 +81,12 @@ def main(args):
         if not args.file and args.demo:
             print("\nIteration %d" % count)
             print("***************************************************************")
+
         # Place input in shared memory
-        write_input(shmem, input_data)
+        if args.file:
+            write_input_binary(shmem, input_data)
+        else:
+            write_input_str(shmem, input_data)
 
         # Tell inmate to calculate it
         signal_inmate(shmem)
@@ -128,21 +132,25 @@ def is_inmate_ready(shmem):
         return False
 
 # Takes a string and puts it into shmem
-def write_input(shmem, string):
-    str_bytes = bytearray(string, 'utf-8')
-    str_bytes_len = len(str_bytes)
-    print("Input length: %d" % str_bytes_len)
-    if str_bytes_len < 256:
-        print("Input string: '%s'" % string)
+def write_input_str(shmem, input_str):
+    return write_input_binary(shmem, bytearray(input_str, 'utf-8'))
 
-    if str_bytes_len > IN_SIZE:
+# Takes a string and puts it into shmem
+def write_input_binary(shmem, input_bytes):
+    input_len = len(input_bytes)
+    print("Input length: %d" % input_len)
+    if input_len < 256:
+        print("Input:")
+        print(input_bytes)
+
+    if input_len > IN_SIZE:
         print("error: Input data too long; length > %d bytes)" % IN_SIZE)
         sys.exit(1)
 
     shmem.seek(OFFSET_IN_LEN)
-    shmem.write(str_bytes_len.to_bytes(4, "little"))
+    shmem.write(input_len.to_bytes(4, "little"))
     # Append an extra +1 to account for python's slice syntax
-    shmem[OFFSET_IN:(OFFSET_IN+(str_bytes_len-1))+1] = str_bytes
+    shmem[OFFSET_IN:(OFFSET_IN+(input_len-1))+1] = input_bytes
 
 # The inmate will wait until we write 2 to byte 0 of shmem
 def signal_inmate(shmem):

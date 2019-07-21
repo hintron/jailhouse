@@ -158,14 +158,12 @@ static void calculate_sha3(char *input, int input_length, char *output)
 {
 	int i;
 
-	// A null character should have been added right after end of input, so
-	// that it can print properly.
-
 	if (!sha3_mgh(input, input_length, output, MD_LENGTH)) {
 		printk("sha3 failed for string `%s`\n", input);
 		return;
 	}
-	printk("sha3 of '%s':\n", input);
+
+	// Print out the calculated SHA3
 	for (i = 0; i < MD_LENGTH; ++i) {
 		char upper = _get_hex_from_upper_nibble(output[i]);
 		char lower = _get_hex_from_lower_nibble(output[i]);
