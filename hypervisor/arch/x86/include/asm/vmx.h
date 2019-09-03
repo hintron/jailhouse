@@ -352,13 +352,15 @@ void vmx_vmexit(void);
  * Assume clock frequency of 2.7 GHz.
  * x = 5 s / ( 16 cycles/tick * (1/(2.7 * 10^9)) seconds/cycle )
  * x = 840,000,000 ticks */
-// #define PREEMPTION_TIMEOUT	840000000
 
-// For Bazooka, the base frequency is 3.7 GHz and TSC bit 7 is monitored.
-// The following is about a 5 second period, empirically
-// Since this is based on cycle count, the way CPUs sleep could affect the
-// actual timings seen.
-#define PREEMPTION_TIMEOUT	5000000
+/* For Bazooka, the base frequency is 3.7 GHz and TSC bit 7 is monitored.
+ * 5000000 is about a 5 second period, empirically.
+ * 1000000 is about a 1 second period.
+ * 1000 is about a 1 ms period.
+ * 100 is about a 100 us period.
+ * Since this is based on cycle count, the way CPUs sleep could affect the
+ * actual timings seen. */
+#define PREEMPTION_TIMEOUT	1000
 
 
 #endif /* !_JAILHOUSE_ASM_VMX_H */
