@@ -977,9 +977,55 @@ static int check_throttle_request(int cpu_id)
 	return throttle_now;
 }
 
+// TODO: Change the throttling mechanisms depending on a #define
+
+// // TODO: Change the default clock modulation setting?
+// if ((feature_ctrl & CLOCK_MODULATION_DUTY_CYCLE) != NEW_SETTING)
+// 	/* Clear the old value */
+// 	feature_ctrl &= ~CLOCK_MODULATION_DUTY_CYCLE;
+// 	/* ...and set the new */
+// 	feature_ctrl |= (CLOCK_MODULATION_DUTY_CYCLE & NEW_SETTING);
+
+/**
+ * Enable throttling on the current CPU
+ */
+static void enable_throttling(void)
+{
+	unsigned long feature_ctrl = read_msr(MSR_IA32_CLOCK_MODULATION);
+	// Enable clock modulation, if not already
+	if (!(feature_ctrl & CLOCK_MODULATION_ENABLE)) {
+		printk("MGH: CPU %2d: Enabling clock modulation\n",
+		       this_cpu_id());
+		feature_ctrl |= CLOCK_MODULATION_ENABLE;
+		/* Commit the changes */
+		write_msr(MSR_IA32_CLOCK_MODULATION, feature_ctrl);
+		/* The default clock modulation is the lowest setting -
+		 * 6.25% or 1/16 for 4-bit, 12.5% or 1/8 for 3 bit. */
+	}
+}
+
+/**
+ * Disable throttling on the current CPU
+ */
+static void disable_throttling(void)
+{
+	unsigned long feature_ctrl = read_msr(MSR_IA32_CLOCK_MODULATION);
+	// Disable clock modulation, if not already
+	if (feature_ctrl & CLOCK_MODULATION_ENABLE) {
+		printk("MGH: CPU %2d: Disabling clock modulation\n",
+		       this_cpu_id());
+		feature_ctrl &= ~CLOCK_MODULATION_ENABLE;
+		/* Commit the changes */
+		write_msr(MSR_IA32_CLOCK_MODULATION, feature_ctrl);
+	}
+}
+
+/**
+ * This is run on each CPU (inmate and root) when the preemption timer expires
+ * for that CPU.
+ */
 static void preemption_timer_handler_mgh(void)
 {
-	unsigned long feature_ctrl = 0;
 	static int cycle_count = 0;
 	static bool print_inmate_cpu = false;
 	struct per_cpu *cpu_data = this_cpu_data();
@@ -1027,45 +1073,15 @@ static void preemption_timer_handler_mgh(void)
 	 * to meet deadlines */
 	switch(check_throttle_request(cpu_id)) {
 	case 2:
-		printk("MGH: CPU %2d: Throttling CPU!\n", cpu_id);
-		feature_ctrl = read_msr(MSR_IA32_CLOCK_MODULATION);
-
-		// Enable clock modulation, if not already
-		if (!(feature_ctrl & CLOCK_MODULATION_ENABLE)) {
-			printk("MGH: CPU %2d: Enabling clock modulation\n",
-			       cpu_id);
-			feature_ctrl |= CLOCK_MODULATION_ENABLE;
-			/* Commit the changes */
-			write_msr(MSR_IA32_CLOCK_MODULATION, feature_ctrl);
-		}
-
-		/* The default clock modulation is the lowest setting -
-		 * 6.25% or 1/16 for 4-bit, 12.5% or 1/8 for 3 bit. */
-
-		// // TODO: Change the default setting?
-		// if ((feature_ctrl & CLOCK_MODULATION_DUTY_CYCLE) != NEW_SETTING)
-		// 	/* Clear the old value */
-		// 	feature_ctrl &= ~CLOCK_MODULATION_DUTY_CYCLE;
-		// 	/* ...and set the new */
-		// 	feature_ctrl |= (CLOCK_MODULATION_DUTY_CYCLE & NEW_SETTING);
+		enable_throttling();
 		break;
 	case 1:
-		printk("MGH: CPU %2d: Turning off CPU throttling\n", cpu_id);
-		// Disable clock modulation, if not already
-		feature_ctrl = read_msr(MSR_IA32_CLOCK_MODULATION);
-		if (feature_ctrl & CLOCK_MODULATION_ENABLE) {
-			printk("MGH: CPU %2d: Disabling clock modulation\n",
-			       cpu_id);
-			feature_ctrl &= ~CLOCK_MODULATION_ENABLE;
-			/* Commit the changes */
-			write_msr(MSR_IA32_CLOCK_MODULATION, feature_ctrl);
-		}
+		disable_throttling();
 		break;
 	case 0:
 	default:
 		// Do nothing
 		break;
-
 	}
 
 }
