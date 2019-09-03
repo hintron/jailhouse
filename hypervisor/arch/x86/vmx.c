@@ -30,6 +30,9 @@
 
 #define PIO_BITMAP_PAGES	2
 
+// MGH: Set a relatively high max CPU count
+#define CPUS_THROTTLED_COUNT	256
+
 static const struct segment invalid_seg = {
 	.access_rights = 0x10000
 };
@@ -1021,6 +1024,17 @@ static void disable_throttling(void)
 }
 
 /**
+ * Returns true if an inmate exists and hasn't been destroyed. False otherwise.
+ */
+static bool inmate_exists(void)
+{
+	struct cell *cell;
+	for_each_non_root_cell(cell)
+		return true;
+	return false;
+}
+
+/**
  * This is run on each CPU (inmate and root) when the preemption timer expires
  * for that CPU.
  */
@@ -1028,6 +1042,10 @@ static void preemption_timer_handler_mgh(void)
 {
 	static int cycle_count = 0;
 	static bool print_inmate_cpu = false;
+	static bool inmate_started = false;
+	// MGH: A bitmask indicating which CPUs are currently being throttled
+	static unsigned int cpus_throtted[CPUS_THROTTLED_COUNT];
+
 	struct per_cpu *cpu_data = this_cpu_data();
 	int cpu_id = cpu_data->public.cpu_id;
 	struct cell *cell = this_cell();
@@ -1054,11 +1072,44 @@ static void preemption_timer_handler_mgh(void)
 	// printk("MGH: CPU %2d: ivshmem_ptr: [%p] -> %s\n", cpu_id, ivshmem_ptr,
 	//        ivshmem_ptr);
 
+	if (inmate_started && !inmate_exists()) {
+		// The inmate was shut down! Undo any leftover throttling
+		if (cpus_throtted[cpu_id] == 1) {
+			cpus_throtted[cpu_id] = 0;
+			disable_throttling();
+		}
+
+		// Check if there are any more CPUs to disable throttling for
+		for (int i = 0; i < CPUS_THROTTLED_COUNT; ++i) {
+			if (cpus_throtted[i]) {
+				/* There are still other CPUs that need to
+				 * disable throttling. Wait for them to do it
+				 * on their own */
+				printk("MGH: CPU %2d: There are still other CPUs (like CPU %d) that need throttling turned off\n",
+				       cpu_id, i);
+				return;
+			}
+		}
+		// Reset
+		inmate_started = false;
+		print_inmate_cpu = false;
+	}
+
+	// If it's the inmate's CPU, don't throttle it
 	if (cell != &root_cell) {
 		if (!print_inmate_cpu) {
 			printk("MGH: CPU %2d: This is the inmate's CPU!\n",
 			       cpu_id);
 			print_inmate_cpu = true;
+		}
+
+		// If we get here, then the inmate has been created and started
+		if (!inmate_started) {
+			inmate_started = true;
+			// Initialize cpus_throtted to all zeros only once
+			for (int i = 0; i < CPUS_THROTTLED_COUNT; ++i) {
+				cpus_throtted[i] = 0;
+			}
 		}
 		return;
 	}
@@ -1067,15 +1118,15 @@ static void preemption_timer_handler_mgh(void)
 	 * kvm.ignore_msrs=1 is set in /etc/default/grub. If set, all
 	 * unimplemented MSRs will be ignored (whatever that means). */
 
-	// TODO: Somehow, turn off throttling when inmate is no longer running
-
 	/* MGH: Throttle the root cell if the real-time VM is struggling
 	 * to meet deadlines */
 	switch(check_throttle_request(cpu_id)) {
 	case 2:
+		cpus_throtted[cpu_id] = 1;
 		enable_throttling();
 		break;
 	case 1:
+		cpus_throtted[cpu_id] = 0;
 		disable_throttling();
 		break;
 	case 0:

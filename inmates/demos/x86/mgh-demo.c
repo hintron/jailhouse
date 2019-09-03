@@ -320,14 +320,7 @@ static bool check_shutdown(void)
 	bool ret = false;
 	switch (comm_region->msg_to_cell) {
 	case JAILHOUSE_MSG_SHUTDOWN_REQUEST:
-		/* Note: For the inmate to get this message from root, remove
-		 * JAILHOUSE_CELL_PASSIVE_COMMREG from the inmate config */
-		if (is_throttle_enabled) {
-			printk("MGH DEMO: Disabling root throttling\n");
-			disable_throttle();
-		}
-
-		printk("MGH DEMO: Stopping inmate\n");
+		printk("MGH DEMO: Allowing inmate to be shut down\n");
 		comm_region->cell_state = JAILHOUSE_CELL_SHUT_DOWN;
 		ret = true;
 		break;
