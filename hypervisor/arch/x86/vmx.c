@@ -33,6 +33,15 @@
 // MGH: Set a relatively high max CPU count
 #define CPUS_THROTTLED_COUNT	256
 
+typedef enum throttle_type {
+	CLOCK,
+	SPIN,
+	PAUSE
+} throttle_t;
+
+
+// #define THROTTLE_MECHANISM	CLOCK
+
 static const struct segment invalid_seg = {
 	.access_rights = 0x10000
 };
@@ -980,7 +989,17 @@ static int check_throttle_request(int cpu_id)
 	return throttle_now;
 }
 
-// TODO: Change the throttling mechanisms depending on a #define
+static void enable_throttle_spin_loop(void)
+{
+	printk("MGH: CPU %2d: TODO: Implement enable spin loop throttle\n",
+	       this_cpu_id());
+}
+
+static void enable_throttle_pause(void)
+{
+	printk("MGH: CPU %2d: TODO: Implement enable pause instruction throttle\n",
+	       this_cpu_id());
+}
 
 // // TODO: Change the default clock modulation setting?
 // if ((feature_ctrl & CLOCK_MODULATION_DUTY_CYCLE) != NEW_SETTING)
@@ -988,16 +1007,12 @@ static int check_throttle_request(int cpu_id)
 // 	feature_ctrl &= ~CLOCK_MODULATION_DUTY_CYCLE;
 // 	/* ...and set the new */
 // 	feature_ctrl |= (CLOCK_MODULATION_DUTY_CYCLE & NEW_SETTING);
-
-/**
- * Enable throttling on the current CPU
- */
-static void enable_throttling(void)
+static void enable_throttle_clock_modulation(void)
 {
 	unsigned long feature_ctrl = read_msr(MSR_IA32_CLOCK_MODULATION);
 	// Enable clock modulation, if not already
 	if (!(feature_ctrl & CLOCK_MODULATION_ENABLE)) {
-		printk("MGH: CPU %2d: Enabling clock modulation\n",
+		printk("MGH: CPU %2d: Enabling clock modulation throttling\n",
 		       this_cpu_id());
 		feature_ctrl |= CLOCK_MODULATION_ENABLE;
 		/* Commit the changes */
@@ -1008,18 +1023,73 @@ static void enable_throttling(void)
 }
 
 /**
- * Disable throttling on the current CPU
+ * Enable throttling on the current CPU
  */
-static void disable_throttling(void)
+static void enable_throttling(throttle_t type)
+{
+	switch(type) {
+	case SPIN:
+		enable_throttle_spin_loop();
+		break;
+	case PAUSE:
+		enable_throttle_pause();
+		break;
+	case CLOCK:
+		enable_throttle_clock_modulation();
+		break;
+	default:
+		printk("MGH: CPU %2d: ERROR: Throttling mechanism not specified\n",
+		       this_cpu_id());
+		break;
+	}
+}
+
+static void disable_throttle_spin_loop(void)
+{
+	printk("MGH: CPU %2d: TODO: Implement disable spin loop throttle\n",
+	       this_cpu_id());
+
+}
+
+static void disable_throttle_pause(void)
+{
+	printk("MGH: CPU %2d: TODO: Implement disable pause instruction throttle\n",
+	       this_cpu_id());
+
+}
+
+static void disable_throttle_clock_modulation(void)
 {
 	unsigned long feature_ctrl = read_msr(MSR_IA32_CLOCK_MODULATION);
 	// Disable clock modulation, if not already
 	if (feature_ctrl & CLOCK_MODULATION_ENABLE) {
-		printk("MGH: CPU %2d: Disabling clock modulation\n",
+		printk("MGH: CPU %2d: Disabling clock modulation throttling\n",
 		       this_cpu_id());
 		feature_ctrl &= ~CLOCK_MODULATION_ENABLE;
 		/* Commit the changes */
 		write_msr(MSR_IA32_CLOCK_MODULATION, feature_ctrl);
+	}
+}
+
+/**
+ * Disable throttling on the current CPU
+ */
+static void disable_throttling(throttle_t type)
+{
+	switch(type) {
+	case SPIN:
+		disable_throttle_spin_loop();
+		break;
+	case PAUSE:
+		disable_throttle_pause();
+		break;
+	case CLOCK:
+		disable_throttle_clock_modulation();
+		break;
+	default:
+		printk("MGH: CPU %2d: ERROR: Throttling mechanism not specified\n",
+		       this_cpu_id());
+		break;
 	}
 }
 
@@ -1076,7 +1146,7 @@ static void preemption_timer_handler_mgh(void)
 		// The inmate was shut down! Undo any leftover throttling
 		if (cpus_throtted[cpu_id] == 1) {
 			cpus_throtted[cpu_id] = 0;
-			disable_throttling();
+			disable_throttling(CLOCK);
 		}
 
 		// Check if there are any more CPUs to disable throttling for
@@ -1123,11 +1193,11 @@ static void preemption_timer_handler_mgh(void)
 	switch(check_throttle_request(cpu_id)) {
 	case 2:
 		cpus_throtted[cpu_id] = 1;
-		enable_throttling();
+		enable_throttling(CLOCK);
 		break;
 	case 1:
 		cpus_throtted[cpu_id] = 0;
-		disable_throttling();
+		disable_throttling(CLOCK);
 		break;
 	case 0:
 	default:
