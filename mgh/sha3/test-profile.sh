@@ -39,7 +39,7 @@ function rhash_sha3_512 {
     echo $out
 }
 
-ITERATIONS=6
+ITERATIONS=1000
 ITERATIONS_REAL=$((($ITERATIONS-2) / 2))
 
 # echo $ITERATIONS_REAL

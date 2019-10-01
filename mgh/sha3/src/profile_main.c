@@ -4,7 +4,7 @@
 
 // A 512-bit hash is really 64 bytes x 8 bits/byte
 #define MD_LENGTH 64
-#define ITERATIONS 6
+#define ITERATIONS 1000000
 #define ITERATIONS_REAL ((ITERATIONS-2)/2)
 int main(int argc, char const *argv[])
 {
