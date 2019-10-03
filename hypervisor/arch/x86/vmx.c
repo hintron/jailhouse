@@ -39,8 +39,18 @@ typedef enum throttle_type {
 	PAUSE
 } throttle_t;
 
+static bool spin_loop_throttle = false;
+
+// Things are very laggy, but usable
+// #define SPIN_LOOP_ITERATIONS	10000
+#define SPIN_LOOP_ITERATIONS	50000
+// Makes things super slow (almost unusable), but still can do some things
+// #define SPIN_LOOP_ITERATIONS	100000
+// This seems to mostly freeze everything (can't see prints)
+// #define SPIN_LOOP_ITERATIONS	1000000
 
 // #define THROTTLE_MECHANISM	CLOCK
+#define THROTTLE_MECHANISM	SPIN
 
 static const struct segment invalid_seg = {
 	.access_rights = 0x10000
@@ -991,7 +1001,8 @@ static int check_throttle_request(int cpu_id)
 
 static void enable_throttle_spin_loop(void)
 {
-	printk("MGH: CPU %2d: TODO: Implement enable spin loop throttle\n",
+	spin_loop_throttle = true;
+	printk("MGH: CPU %2d: Enabling spin loop throttle\n",
 	       this_cpu_id());
 }
 
@@ -1046,7 +1057,8 @@ static void enable_throttling(throttle_t type)
 
 static void disable_throttle_spin_loop(void)
 {
-	printk("MGH: CPU %2d: TODO: Implement disable spin loop throttle\n",
+	spin_loop_throttle = false;
+	printk("MGH: CPU %2d: Disabling spin loop throttle\n",
 	       this_cpu_id());
 
 }
@@ -1146,7 +1158,7 @@ static void preemption_timer_handler_mgh(void)
 		// The inmate was shut down! Undo any leftover throttling
 		if (cpus_throtted[cpu_id] == 1) {
 			cpus_throtted[cpu_id] = 0;
-			disable_throttling(CLOCK);
+			disable_throttling(THROTTLE_MECHANISM);
 		}
 
 		// Check if there are any more CPUs to disable throttling for
@@ -1193,16 +1205,26 @@ static void preemption_timer_handler_mgh(void)
 	switch(check_throttle_request(cpu_id)) {
 	case 2:
 		cpus_throtted[cpu_id] = 1;
-		enable_throttling(CLOCK);
+		enable_throttling(THROTTLE_MECHANISM);
 		break;
 	case 1:
 		cpus_throtted[cpu_id] = 0;
-		disable_throttling(CLOCK);
+		disable_throttling(THROTTLE_MECHANISM);
 		break;
 	case 0:
 	default:
 		// Do nothing
 		break;
+	}
+
+	/*
+	 * If spin-loop throttling has been enabled, then add an artificial
+	 * delay to the preemption timer here
+	 */
+	if (spin_loop_throttle) {
+		unsigned long count = 0;
+		while (count++ < SPIN_LOOP_ITERATIONS)
+			cpu_relax();
 	}
 
 }
