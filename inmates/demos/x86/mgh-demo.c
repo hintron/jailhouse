@@ -446,6 +446,7 @@ void inmate_main(void)
 {
 	volatile char *shmem;
 	struct ivshmem_dev_data devs[MAX_NDEV];
+	unsigned long workload_counter = 0;
 	unsigned long workload_duration = 0;
 	unsigned long ns_per_byte = 0;
 	throttle_mode_t throttle_mode = ALTERNATING;
@@ -495,6 +496,7 @@ void inmate_main(void)
 
 		start = tsc_read_ns();
 		workload(shmem);
+		workload_counter++;
 		end = tsc_read_ns();
 		workload_duration = end - start;
 		input_len = get_input_length(shmem);
@@ -504,7 +506,7 @@ void inmate_main(void)
 			printk("Workload took %lu ns (%lu ns / byte)\n",
 			       workload_duration, ns_per_byte);
 
-		printk("MGHOUT:%u,%lu,%lu\n", input_len, workload_duration,
+		printk("MGHOUT:%ld|%u,%lu,%lu\n", workload_counter, input_len, workload_duration,
 		       ns_per_byte);
 
 		// Indicate that we are done
