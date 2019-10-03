@@ -405,6 +405,7 @@ void inmate_main(void)
 	while (1) {
 		unsigned long start;
 		unsigned long end;
+		u32 input_len = 0;
 
 		// If about to shutdown, disable throttling first
 		if (check_shutdown())
@@ -430,11 +431,15 @@ void inmate_main(void)
 		workload(shmem);
 		end = tsc_read_ns();
 		workload_duration = end - start;
-		ns_per_byte = workload_duration / get_input_length(shmem);
+		input_len = get_input_length(shmem);
+		ns_per_byte = workload_duration / input_len;
 
 		if (MGH_DEBUG_MODE)
 			printk("Workload took %lu ns (%lu ns / byte)\n",
 			       workload_duration, ns_per_byte);
+
+		printk("MGHOUT:%u,%lu,%lu\n", input_len, workload_duration,
+		       ns_per_byte);
 
 		// Indicate that we are done
 		shmem[OFFSET_SYNC] = 1;
