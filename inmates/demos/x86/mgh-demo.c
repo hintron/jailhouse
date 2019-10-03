@@ -32,8 +32,8 @@ static bool is_throttle_enabled = false;
 static char str[32] = "Hello From MGH      ";
 
 /* Change to false to disable print statements during regular operation. */
-#define MGH_INMATE_DEBUG	false
-// #define MGH_INMATE_DEBUG	true
+#define MGH_DEBUG_MODE	false
+// #define MGH_DEBUG_MODE	true
 
 // # of bytes for the sha3-512 message digest output
 #define MD_LENGTH 	64
@@ -107,15 +107,22 @@ static void map_shmem_and_bars(struct ivshmem_dev_data *d)
 	d->shmemsz = pci_cfg_read64(d->bdf, IVSHMEM_CFG_SHMEM_SZ);
 	d->shmem = (void *)pci_cfg_read64(d->bdf, IVSHMEM_CFG_SHMEM_PTR);
 
-	printk("MGH DEMO: shmem is at %p\n", d->shmem);
+	if (MGH_DEBUG_MODE)
+		printk("MGH DEMO: shmem is at %p\n", d->shmem);
+
 	d->registers = (u32 *)((u64)(d->shmem + d->shmemsz + PAGE_SIZE - 1)
 		& PAGE_MASK);
 	pci_cfg_write64(d->bdf, PCI_CFG_BAR, (u64)d->registers);
-	printk("MGH DEMO: bar0 is at %p\n", d->registers);
+
+	if (MGH_DEBUG_MODE)
+		printk("MGH DEMO: bar0 is at %p\n", d->registers);
+
 	d->bar2sz = get_bar_sz(d->bdf, 2);
 	d->msix_table = (u32 *)((u64)d->registers + PAGE_SIZE);
 	pci_cfg_write64(d->bdf, PCI_CFG_BAR + 16, (u64)d->msix_table);
-	printk("MGH DEMO: bar2 is at %p\n", d->msix_table);
+
+	if (MGH_DEBUG_MODE)
+		printk("MGH DEMO: bar2 is at %p\n", d->msix_table);
 
 	pci_write_config(d->bdf, PCI_CFG_COMMAND,
 			 (PCI_CMD_MEM | PCI_CMD_MASTER), 2);
@@ -168,7 +175,8 @@ static void calculate_sha3(char *input, int input_length, char *output)
 		return;
 	}
 
-	if (!MGH_INMATE_DEBUG)
+	// Return early if not in debug mode
+	if (!MGH_DEBUG_MODE)
 		return;
 
 	// Print out the calculated SHA3
@@ -202,7 +210,8 @@ static bool hardware_setup(void)
 		return false;
 	}
 
-	printk("MGH DEMO: TSC frequency is %lu Hz.\n", tsc_freq);
+	if (MGH_DEBUG_MODE)
+		printk("MGH DEMO: TSC frequency is %lu Hz.\n", tsc_freq);
 	return true;
 }
 
@@ -221,10 +230,12 @@ static bool device_setup(struct ivshmem_dev_data *devs)
 
 	while ((ndevices < MAX_NDEV) &&
 	       (-1 != (bdf = pci_find_device(VENDORID, DEVICEID, bdf)))) {
-		printk("MGH DEMO: Found %04x:%04x at %02x:%02x.%x\n",
-		       pci_read_config(bdf, PCI_CFG_VENDOR_ID, 2),
-		       pci_read_config(bdf, PCI_CFG_DEVICE_ID, 2),
-		       bdf >> 8, (bdf >> 3) & 0x1f, bdf & 0x3);
+	       	if (MGH_DEBUG_MODE)
+			printk("MGH DEMO: Found %04x:%04x at %02x:%02x.%x\n",
+			       pci_read_config(bdf, PCI_CFG_VENDOR_ID, 2),
+			       pci_read_config(bdf, PCI_CFG_DEVICE_ID, 2),
+			       bdf >> 8, (bdf >> 3) & 0x1f, bdf & 0x3);
+
 		class_rev = pci_read_config(bdf, 0x8, 4);
 		if (class_rev != (PCI_DEV_CLASS_OTHER << 24 |
 				  JAILHOUSE_SHMEM_PROTO_UNDEFINED << 8)) {
@@ -236,8 +247,9 @@ static bool device_setup(struct ivshmem_dev_data *devs)
 		dev = &devs[ndevices];
 		dev->bdf = bdf;
 		map_shmem_and_bars(dev);
-		printk("MGH DEMO: mapped the bars got position %d\n",
-		       get_ivpos(dev));
+		if (MGH_DEBUG_MODE)
+			printk("MGH DEMO: mapped the bars got position %d\n",
+			       get_ivpos(dev));
 
 		memcpy(dev->shmem, str, 32);
 
@@ -350,8 +362,8 @@ static void workload(volatile char *shmem)
 {
 	u32 len = get_input_length(shmem);
 
-	if (MGH_INMATE_DEBUG)
-		printk("MGH DEMO: Input data length: %d\n", len);
+	if (MGH_DEBUG_MODE)
+		printk("MGH DEBUG: Input data length: %d\n", len);
 
 	// Account for space needed to tack on NULL character
 	if (len > IN_SIZE - 1) {
@@ -360,8 +372,8 @@ static void workload(volatile char *shmem)
 		return;
 	}
 
-	if (MGH_INMATE_DEBUG)
-		printk("MGH DEMO: Calculating SHA3 on incoming data!\n");
+	if (MGH_DEBUG_MODE)
+		printk("MGH DEBUG: Calculating SHA3 on incoming data!\n");
 
 	// Add a null char in for printing convenience
 	shmem[OFFSET_IN + len] = '\0';
@@ -420,8 +432,9 @@ void inmate_main(void)
 		workload_duration = end - start;
 		ns_per_byte = workload_duration / get_input_length(shmem);
 
-		printk("Workload took %lu ns (%lu ns / byte)\n",
-		       workload_duration, ns_per_byte);
+		if (MGH_DEBUG_MODE)
+			printk("Workload took %lu ns (%lu ns / byte)\n",
+			       workload_duration, ns_per_byte);
 
 		// Indicate that we are done
 		shmem[OFFSET_SYNC] = 1;
