@@ -181,7 +181,7 @@ def pend_inmate_poll(shmem, poll_speed):
 
 
     # print("Inmate is finished, with ping=%d" % shmem[OFFSET_SYNC])
-    print("Inmate is finished (polled %d times)" % count)
+    print("Inmate is finished (polled %d times at %0.3fs/poll)" % (count, poll_speed))
 
 # Waits on an interrupt from the inmate to know the sha3 is complete
 # Currently not used
@@ -234,7 +234,7 @@ parser.add_argument('-f', '--file', dest='file', action='store_true', help='If T
 parser.add_argument('-d', '--demo', dest='demo', action='store_true', help='If True, and if INPUT is a string instead of a file, demo mode is activated. This will continuously append `+` to the string and repeat the workload every second. Defaults to False.')
 parser.add_argument('-l', '--loop', dest='loop', action='store_true', help='If True, continuously repeats the exact same workload every second. Defaults to False.')
 parser.add_argument('-s', '--loop-speed', dest='sleep', type=int, default=0, help='How many seconds to sleep between loops. 0 for no wait. Defaults to 0.')
-parser.add_argument('-p', '--poll-speed', dest='poll', type=float, default=0.2, help='How many seconds to sleep between loops. Defaults to 0.2 (200 ms)')
+parser.add_argument('-p', '--poll-speed', dest='poll', type=float, default=0.1, help='How many seconds to sleep between loops. Defaults to 0.1 (100 ms)')
 
 args = parser.parse_args()
 
