@@ -36,6 +36,7 @@ import os
 import struct
 import subprocess
 import argparse
+import datetime
 
 device_file = '/dev/uio0'
 
@@ -71,6 +72,7 @@ def main(args):
 
     # Test read
     print("Shmem content (first 30 bytes): '%s'" % shmem.read(30))
+    print("Poll speed: %f" % args.poll)
 
     # Check to make sure inmate is ready
     while not is_inmate_ready(shmem):
@@ -88,14 +90,24 @@ def main(args):
         else:
             write_input_str(shmem, input_data)
 
+        # Keep track of how long inmate takes (roughly)
+        start = datetime.datetime.now()
+
         # Tell inmate to calculate it
         signal_inmate(shmem)
-
         # Block on inmate until it is done
-        pend_inmate_poll(shmem)
+        pend_inmate_poll(shmem, args.poll)
+
+        stop = datetime.datetime.now()
+        duration = (stop-start)
 
         # Read the sha3 output
         inmate_output = read_output(shmem).hex()
+        # print('Inmate start (python): %d s %d us' % (start.second, start.microsecond))
+        # print('Inmate stop (python): %d s %d us' % (stop.second, stop.microsecond))
+        # Note: just because the resolution is in us, the accuracy is more in
+        # the seconds range due to how slow Python is
+        print('Inmate duration (python): %d s %d us' % (duration.seconds, duration.microseconds))
         print('Inmate output: %s' % inmate_output)
 
         if args.file:
@@ -115,8 +127,9 @@ def main(args):
 
         if args.loop or (args.demo and not args.file):
             count += 1
-            # Wait for a second, to slow down demo
-            time.sleep(1)
+            if args.sleep:
+                print("sleep for %d", args.sleep)
+                time.sleep(args.speed)
         else:
             break
 
@@ -159,13 +172,16 @@ def signal_inmate(shmem):
     shmem[OFFSET_SYNC] = 2
 
 # Polls until the bit becomes 3, indicating that the inmate is done
-def pend_inmate_poll(shmem):
+def pend_inmate_poll(shmem, poll_speed):
+    count = 0
     while shmem[OFFSET_SYNC] != 1:
-        print("Inmate is calculating...")
-        time.sleep(1)
+        # print("Inmate is calculating...")
+        time.sleep(poll_speed)
+        count += 1
+
 
     # print("Inmate is finished, with ping=%d" % shmem[OFFSET_SYNC])
-    print("Inmate is finished")
+    print("Inmate is finished (polled %d times)" % count)
 
 # Waits on an interrupt from the inmate to know the sha3 is complete
 # Currently not used
@@ -217,6 +233,8 @@ parser.add_argument('input', metavar='INPUT', type=str, help='The input data to 
 parser.add_argument('-f', '--file', dest='file', action='store_true', help='If True, INPUT is interpreted as a filename instead of a string. Defaults to False.')
 parser.add_argument('-d', '--demo', dest='demo', action='store_true', help='If True, and if INPUT is a string instead of a file, demo mode is activated. This will continuously append `+` to the string and repeat the workload every second. Defaults to False.')
 parser.add_argument('-l', '--loop', dest='loop', action='store_true', help='If True, continuously repeats the exact same workload every second. Defaults to False.')
+parser.add_argument('-s', '--loop-speed', dest='sleep', type=int, default=0, help='How many seconds to sleep between loops. 0 for no wait. Defaults to 0.')
+parser.add_argument('-p', '--poll-speed', dest='poll', type=float, default=0.2, help='How many seconds to sleep between loops. Defaults to 0.2 (200 ms)')
 
 args = parser.parse_args()
 
