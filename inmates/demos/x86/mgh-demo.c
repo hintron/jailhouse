@@ -47,7 +47,14 @@ typedef enum {
 
 /* Change to false to disable print statements during regular operation. */
 #define MGH_DEBUG_MODE	false
-// #define MGH_DEBUG_MODE	true
+
+/*
+ * If true, then the input data will be copied into a local buffer before
+ * passing to the workload. This is important, since the input originates in
+ * a shared memory region which could introduce interference from other CPUs
+ * if accessed throughout the workload.
+ */
+#define LOCAL_BUFFER	true
 
 // # of bytes for the sha3-512 message digest output
 #define MD_LENGTH 	64
@@ -408,26 +415,34 @@ static bool check_shutdown(void)
 	return ret;
 }
 
-static u32 get_input_length(volatile char *shmem)
+static unsigned long get_input_length(volatile char *shmem)
 {
-	u32 *len_ptr = (u32 *) &shmem[OFFSET_IN_LEN];
-	return *len_ptr;
+	u32 *len_ptr = (u32 *)&shmem[OFFSET_IN_LEN];
+	return (unsigned long)(*len_ptr);
+}
+
+static char *get_input(volatile char *shmem)
+{
+	return (char *)&shmem[OFFSET_IN];
+}
+
+static char *get_output(volatile char *shmem)
+{
+	return (char *)&shmem[OFFSET_OUT];
 }
 
 
 /*
  * Calculate the SHA3 of the next item
  */
-static void workload(volatile char *shmem)
+static void workload(char *input, unsigned long len, char *output)
 {
-	u32 len = get_input_length(shmem);
-
 	if (MGH_DEBUG_MODE)
-		printk("MGH DEBUG: Input data length: %d\n", len);
+		printk("MGH DEBUG: Input data length: %lu\n", len);
 
 	// Account for space needed to tack on NULL character
 	if (len > IN_SIZE - 1) {
-		printk("MGH DEMO: Input data max length exceeded (%d > %d)\n",
+		printk("MGH DEMO: Input data max length exceeded (%lu > %u)\n",
 		       len, IN_SIZE - 1);
 		return;
 	}
@@ -435,11 +450,11 @@ static void workload(volatile char *shmem)
 	if (MGH_DEBUG_MODE)
 		printk("MGH DEBUG: Calculating SHA3 on incoming data!\n");
 
-	// Add a null char in for printing convenience
-	shmem[OFFSET_IN + len] = '\0';
+	// Add a null char to end of input for printing convenience
+	input[len] = '\0';
 
-	calculate_sha3((char *)&shmem[OFFSET_IN], (int) len,
-		       (char *)&shmem[OFFSET_OUT]);
+	/* Calculate sha3 of input and store in output */
+	calculate_sha3(input, (int)len, output);
 }
 
 void inmate_main(void)
@@ -450,6 +465,9 @@ void inmate_main(void)
 	unsigned long workload_duration = 0;
 	unsigned long ns_per_byte = 0;
 	throttle_mode_t throttle_mode = ALTERNATING;
+
+	// Create a 3 MB input buffer to hold a 1 MB input, to be safe
+	char buffer[3 * MB];
 
 	if (!hardware_setup())
 		return;
@@ -467,7 +485,10 @@ void inmate_main(void)
 	while (1) {
 		unsigned long start;
 		unsigned long end;
-		u32 input_len = 0;
+		unsigned long input_len = 0;
+		unsigned long copy_duration = 0;
+		char *input = NULL;
+		char *output = NULL;
 
 		// If about to shutdown, disable throttling first
 		if (check_shutdown())
@@ -494,19 +515,37 @@ void inmate_main(void)
 		// Indicate that we are now working on sha3
 		shmem[OFFSET_SYNC] = 3;
 
+		input_len = get_input_length(shmem);
+		input = get_input(shmem);
+		output = get_output(shmem);
+
+		/* Completely copy the input from shmem to a local buffer.
+		 * We want to avoid constantly reading from shared memory during
+		 * calculations, since that might slow things down. This may be
+		 * why there was coupling between unrelated CPUs. */
+		if (LOCAL_BUFFER) {
+			start = tsc_read_ns();
+			memcpy(buffer, input, input_len);
+			/* Point input to local buffer after copy */
+			input = buffer;
+			end = tsc_read_ns();
+			copy_duration = end - start;
+		} else
+			copy_duration = 0;
+
 		start = tsc_read_ns();
-		workload(shmem);
+		workload(input, input_len, output);
 		workload_counter++;
 		end = tsc_read_ns();
 		workload_duration = end - start;
-		input_len = get_input_length(shmem);
 		ns_per_byte = workload_duration / input_len;
 
 		if (MGH_DEBUG_MODE)
 			printk("Workload took %lu ns (%lu ns / byte)\n",
 			       workload_duration, ns_per_byte);
 
-		printk("MGHOUT:%ld|%u,%lu,%lu\n", workload_counter, input_len, workload_duration,
+		printk("MGHOUT:%ld|%ld,%ld+%ld,%lu\n", workload_counter,
+		       input_len, copy_duration, workload_duration,
 		       ns_per_byte);
 
 		// Indicate that we are done
