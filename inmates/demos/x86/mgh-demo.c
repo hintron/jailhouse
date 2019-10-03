@@ -419,8 +419,8 @@ void inmate_main(void)
 
 		// Check if the root placed a workload in shmem. If not, delay
 		if (shmem[OFFSET_SYNC] != 2) {
-			// TODO: Delay by 1 ms instead of 1 s
-			delay_us(1000*1000);
+			// Delay 1 ms
+			delay_us(1000);
 			continue;
 		}
 
