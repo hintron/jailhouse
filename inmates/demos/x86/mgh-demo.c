@@ -31,6 +31,20 @@
 static bool is_throttle_enabled = false;
 static char str[32] = "Hello From MGH      ";
 
+/*
+ * The number of nanoseconds before toggling the throttle mechanism on or off.
+ * Currently set to 15 seconds = 15 * 10^9
+ */
+#define ALTERNATING_PERIOD 15000000000
+/* Delay 1 ms between each poll of the workload input */
+#define POLL_DELAY_US 1000
+
+typedef enum {
+	ALTERNATING,
+	DEADLINE,
+	NONE
+} throttle_mode_t;
+
 /* Change to false to disable print statements during regular operation. */
 #define MGH_DEBUG_MODE	false
 // #define MGH_DEBUG_MODE	true
@@ -288,15 +302,61 @@ static void disable_throttle(void)
 }
 
 /*
- * Request that the root throttle itself when deadlines
- * are getting close to being missed
+ * Toggle the throttling mechanism on or off if it has been ALTERNATING_PERIOD
+ * nanoseconds since the last throttle toggle. Run this check before every
+ * workload. Use this throttle mode to measure the impact of throttling with a
+ * sustained root userspace workload.
  */
-static void check_deadlines(unsigned long ns_per_byte)
+static void check_alternating_throttle(void)
+{
+	static unsigned long start = 0;
+	static bool throttled = false;
+	unsigned long current, duration;
+
+	/* If 0, it means we haven't initialized the timer yet */
+	if (start == 0) {
+		start = tsc_read_ns();
+		return;
+	}
+
+	current = tsc_read_ns();
+	if (current < start) {
+		printk("MGH: ERROR: TSC underflow (current=%ld, start=%ld\n",
+		       current, start);
+		return;
+	}
+
+	duration = current - start;
+	if (duration < ALTERNATING_PERIOD)
+		return;
+
+	/* Toggle the throttling mechanism on or off */
+	if (throttled) {
+		disable_throttle();
+		throttled = false;
+	} else {
+		enable_throttle();
+		throttled = true;
+	}
+
+	/* Reset timer */
+	start = tsc_read_ns();
+}
+
+/*
+ * Turn on throttling if deadlines were not met during the last workload. Run
+ * this check before every workload.
+ */
+static void check_deadline_throttle(unsigned long ns_per_byte)
 {
 	// static int now = 0;
 	// static int previous = 0;
 	static int MAX_NS_PER_BYTE = 120;
 	bool meeting_deadlines = false;
+
+	/* If we haven't run yet, we don't know if we need to throttle or not */
+	if (ns_per_byte == 0)
+		return;
 
 	if (ns_per_byte > MAX_NS_PER_BYTE) {
 		// Throttle!
@@ -388,6 +448,7 @@ void inmate_main(void)
 	struct ivshmem_dev_data devs[MAX_NDEV];
 	unsigned long workload_duration = 0;
 	unsigned long ns_per_byte = 0;
+	throttle_mode_t throttle_mode = ALTERNATING;
 
 	if (!hardware_setup())
 		return;
@@ -411,16 +472,21 @@ void inmate_main(void)
 		if (check_shutdown())
 			return;
 
-		// If lagging behind, try throttling the root cell
-		// Skip the first run through
-		if (ns_per_byte != 0)
-			check_deadlines(ns_per_byte);
-
+		switch (throttle_mode) {
+		case ALTERNATING:
+			check_alternating_throttle();
+			break;
+		case DEADLINE:
+			check_deadline_throttle(ns_per_byte);
+			break;
+		default:
+			printk("MGH: Error: unknown throttle mode\n");
+			break;
+		}
 
 		// Check if the root placed a workload in shmem. If not, delay
 		if (shmem[OFFSET_SYNC] != 2) {
-			// Delay 1 ms
-			delay_us(1000);
+			delay_us(POLL_DELAY_US);
 			continue;
 		}
 
