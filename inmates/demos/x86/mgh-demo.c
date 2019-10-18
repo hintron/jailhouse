@@ -28,6 +28,23 @@
 // MGH Section
 //
 
+#define MGH_HEAP_BASE		0x00200000
+#define MGH_HEAP_SiZE_MB	10
+// /* See alloc.c and d54cbbcc7c38 */
+// extern unsigned long heap_pos;
+
+/* NOTE: The stack size is the same size as a page (4 kb) */
+
+/*
+ * If true, then the input data will be copied into a local buffer before
+ * passing to the workload. Then, a local output buffer will also be passed into
+ * the workload. This is important, since the input originates in
+ * a shared memory region which could introduce interference from other CPUs
+ * if accessed throughout the workload.
+ */
+// #define LOCAL_BUFFER	true
+#define LOCAL_BUFFER	false
+
 static bool is_throttle_enabled = false;
 static char str[32] = "Hello From MGH      ";
 
@@ -45,16 +62,10 @@ typedef enum {
 	NONE
 } throttle_mode_t;
 
+static throttle_mode_t THROTTLE_MODE = ALTERNATING;
+
 /* Change to false to disable print statements during regular operation. */
 #define MGH_DEBUG_MODE	false
-
-/*
- * If true, then the input data will be copied into a local buffer before
- * passing to the workload. This is important, since the input originates in
- * a shared memory region which could introduce interference from other CPUs
- * if accessed throughout the workload.
- */
-#define LOCAL_BUFFER	true
 
 // # of bytes for the sha3-512 message digest output
 #define MD_LENGTH 	64
@@ -187,11 +198,12 @@ static char _get_hex_from_upper_nibble(char in)
 	return _get_hex_from_lower_nibble(in >> 4);
 }
 
-static void calculate_sha3(char *input, int input_length, char *output)
+static void calculate_sha3(char *input, unsigned long input_length,
+			   char *output)
 {
 	int i;
 
-	if (!sha3_mgh(input, input_length, output, MD_LENGTH)) {
+	if (!sha3_mgh(input, (int)input_length, output, MD_LENGTH)) {
 		printk("sha3 failed for string `%s`\n", input);
 		return;
 	}
@@ -454,20 +466,34 @@ static void workload(char *input, unsigned long len, char *output)
 	input[len] = '\0';
 
 	/* Calculate sha3 of input and store in output */
-	calculate_sha3(input, (int)len, output);
+	calculate_sha3(input, len, output);
+}
+
+/*
+ * MGH: By default, x86 inmates only map the first 2 MB of virtual memory, even
+ * when more memory is configured. So map configured memory pages behind the
+ * virtual memory address MGH_HEAP_BASE. Without this, there is nothing behind
+ * the virtual memory address and you'll get a page fault.
+ */
+static void expand_memory(void)
+{
+	map_range((char *)MGH_HEAP_BASE, MGH_HEAP_SiZE_MB*MB, MAP_UNCACHED);
+
+	// TODO: Implement when merged with d54cbbcc7c38 */
+	// /* Set heap_pos to point to MGH_HEAP_BASE, instead of right after the
+	//  * inmate's stack, so alloc() can allocated more than 1 MB. */
+	// heap_pos = (char *)MGH_HEAP_BASE;
+	// char *input_buffer = alloc(5*MB, PAGE_SIZE);
+	// char *output_buffer = alloc(5*MB, PAGE_SIZE);
 }
 
 void inmate_main(void)
 {
 	volatile char *shmem;
+	char *input_buffer;
+	char *output_buffer;
 	struct ivshmem_dev_data devs[MAX_NDEV];
 	unsigned long workload_counter = 0;
-	unsigned long workload_duration = 0;
-	unsigned long ns_per_byte = 0;
-	throttle_mode_t throttle_mode = ALTERNATING;
-
-	// Create a 3 MB input buffer to hold a 1 MB input, to be safe
-	char buffer[3 * MB];
 
 	if (!hardware_setup())
 		return;
@@ -482,15 +508,49 @@ void inmate_main(void)
 	// Get the first PCI device, which should be the IVSHMEM device
 	shmem = devs[0].shmem;
 
+	if (MGH_DEBUG_MODE) {
+		printk("MGH DEBUG: is_throttle_enabled addr: %p\n",
+		       &is_throttle_enabled);
+		printk("MGH DEBUG: str addr: %p\n", str);
+		printk("MGH DEBUG: devs addr: %p\n", devs);
+		printk("MGH DEBUG: workload_counter addr: %p\n",
+		       &workload_counter);
+		printk("MGH DEBUG: comm_region addr: %p\n", comm_region);
+		printk("MGH DEBUG: shmem addr: %p\n", shmem);
+	}
+
+	if (LOCAL_BUFFER) {
+		/* Make sure MGH_HEAP has 10 MB to work with */
+		expand_memory();
+		input_buffer = (char *)MGH_HEAP_BASE;
+		/* Separate the input and output by 5 MB */
+		output_buffer = input_buffer + (5*MB);
+		if (MGH_DEBUG_MODE) {
+			printk("MGH DEBUG: input_buffer addr: %p\n",
+				input_buffer);
+			printk("MGH DEBUG: output_buffer addr: %p\n",
+				output_buffer);
+			input_buffer[0] = 'M';
+			input_buffer[1] = 'G';
+			input_buffer[2] = 'H';
+			input_buffer[3] = '\0';
+			printk("MGH DEBUG: input_buffer: %s\n", input_buffer);
+		}
+	}
+
 	// Indicate to userspace that we are up and running
 	shmem[OFFSET_SYNC] = 1;
 
 	// Continuously wait on userspace for a workload
 	while (1) {
-		unsigned long start;
-		unsigned long end;
+		unsigned long start = 0;
+		unsigned long end = 0;
 		unsigned long input_len = 0;
 		unsigned long copy_duration = 0;
+		unsigned long workload_duration = 0;
+		unsigned long total_duration = 0;
+		unsigned long ns_per_byte = 0;
+
 		char *input = NULL;
 		char *output = NULL;
 
@@ -498,7 +558,7 @@ void inmate_main(void)
 		if (check_shutdown())
 			return;
 
-		switch (throttle_mode) {
+		switch (THROTTLE_MODE) {
 		case ALTERNATING:
 			check_alternating_throttle();
 			break;
@@ -518,7 +578,6 @@ void inmate_main(void)
 
 		// Indicate that we are now working on sha3
 		shmem[OFFSET_SYNC] = 3;
-
 		input_len = get_input_length(shmem);
 		input = get_input(shmem);
 		output = get_output(shmem);
@@ -529,28 +588,40 @@ void inmate_main(void)
 		 * why there was coupling between unrelated CPUs. */
 		if (LOCAL_BUFFER) {
 			start = tsc_read_ns();
-			memcpy(buffer, input, input_len);
-			/* Point input to local buffer after copy */
-			input = buffer;
+			memcpy(input_buffer, input, input_len);
+			/* Point workload input and output to local buffers */
+			input = input_buffer;
+			output = output_buffer;
 			end = tsc_read_ns();
 			copy_duration = end - start;
-		} else
-			copy_duration = 0;
+			if (MGH_DEBUG_MODE)
+				printk("Input buffer copy took %lu ns\n",
+				       copy_duration);
+		}
 
 		start = tsc_read_ns();
 		workload(input, input_len, output);
 		workload_counter++;
 		end = tsc_read_ns();
 		workload_duration = end - start;
-		ns_per_byte = workload_duration / input_len;
 
-		if (MGH_DEBUG_MODE)
-			printk("Workload took %lu ns (%lu ns / byte)\n",
-			       workload_duration, ns_per_byte);
+		if (LOCAL_BUFFER) {
+			start = tsc_read_ns();
+			output = get_output(shmem);
+			memcpy(output, output_buffer, MD_LENGTH);
+			end = tsc_read_ns();
+			copy_duration += (end - start);
+			if (MGH_DEBUG_MODE)
+				printk("Output buffer copy took %lu ns\n",
+				       (end - start));
+		}
 
-		printk("MGHOUT:%ld|%ld,%ld+%ld,%lu\n", workload_counter,
-		       input_len, copy_duration, workload_duration,
-		       ns_per_byte);
+		total_duration = copy_duration + workload_duration;
+		ns_per_byte = total_duration / input_len;
+
+		printk("MGHOUT:%ld|%ld,%ld(%ld+%ld),%lu\n", workload_counter,
+		       input_len, total_duration, copy_duration,
+		       workload_duration, ns_per_byte);
 
 		// Indicate that we are done
 		shmem[OFFSET_SYNC] = 1;
