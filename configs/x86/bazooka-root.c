@@ -98,6 +98,7 @@ struct {
 	},
 
 	.cpus = {
+		// Change this to fff if hyperthreading is turned on (12 CPUs)
 		0x000000000000003f,
 	},
 
