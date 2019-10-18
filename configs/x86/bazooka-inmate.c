@@ -21,7 +21,8 @@
 struct {
 	struct jailhouse_cell_desc cell;
 	__u64 cpus[1];
-	struct jailhouse_memory mem_regions[3];
+	// struct jailhouse_memory mem_regions[3];
+	struct jailhouse_memory mem_regions[4];
 	__u8 pio_bitmap[0x2000];
 	struct jailhouse_pci_device pci_devices[1];
 	struct jailhouse_pci_capability pci_caps[0];
@@ -55,22 +56,26 @@ struct {
 	.mem_regions = {
 		/* RAM */
 		{
-			.phys_start = 0x3f000000,
+			.phys_start = 0x3a600000,
 			.virt_start = 0,
-			// 1 MB of RAM for the inmate to work with
+			// 1 MB of RAM for the inmate's program
 			.size = 0x00100000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_EXECUTE | JAILHOUSE_MEM_LOADABLE,
 		},
 		/* communication region */
 		{
+			/* MGH: This virtual memory region points to memory
+			 * allocated by Jailhouse within its own hypervisor
+			 * memory region for communication to each inmate.
+			 * This is NOT pointing to anything in the 75 MB inmate
+			 * memory region */
 			.virt_start = 0x00100000,
 			.size = 0x00001000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_COMM_REGION |
 				/* MGH: Allow the inmate to write to the comm
 				 * region, so it can send messages to root */
 				JAILHOUSE_MEM_WRITE,
-			/* MGH: What is behind this virtual memory region? */
 		},
 		/* MGH: IVSHMEM shared memory region */
 		{
@@ -84,6 +89,18 @@ struct {
 			 * However, then the virtual address would be different
 			 * than the physical address for no good reason. Being
 			 * the same is a convenience */
+		},
+		/* MGH: RAM - Heap */
+		{
+			/* MGH: We have 75 MB of memory allocated to the inmate
+			 * in the root config, but are only using 2 MB. So
+			 * create an additional "heap" area of 10 MB to allow
+			 * the program more memory to work with. */
+			.phys_start = 0x3a700000,
+			.virt_start = 0x00200000,
+			.size = 0x00a00000,
+			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
+				JAILHOUSE_MEM_EXECUTE | JAILHOUSE_MEM_LOADABLE,
 		},
 	},
 
