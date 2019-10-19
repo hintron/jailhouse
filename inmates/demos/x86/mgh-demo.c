@@ -29,7 +29,7 @@
 //
 
 #define MGH_HEAP_BASE		0x00200000
-#define MGH_HEAP_SiZE_MB	10
+#define MGH_HEAP_SiZE_MB	30
 // /* See alloc.c and d54cbbcc7c38 */
 // extern unsigned long heap_pos;
 
@@ -41,8 +41,8 @@
  * the workload. This is important, since the input originates in
  * a shared memory region which could introduce interference from other CPUs
  * if accessed throughout the workload.
+ * NOTE: For now, keep disabled, because it hurts performance rather than helps.
  */
-// #define LOCAL_BUFFER	true
 #define LOCAL_BUFFER	false
 
 static bool is_throttle_enabled = false;
@@ -59,10 +59,16 @@ static char str[32] = "Hello From MGH      ";
 typedef enum {
 	ALTERNATING,
 	DEADLINE,
-	NONE
 } throttle_mode_t;
 
 static throttle_mode_t THROTTLE_MODE = ALTERNATING;
+
+typedef enum {
+	SHA3,
+	CACHE_ANALYSIS,
+} workload_t;
+
+static workload_t WORKLOAD_MODE = CACHE_ANALYSIS;
 
 /* Change to false to disable print statements during regular operation. */
 #define MGH_DEBUG_MODE	false
@@ -198,10 +204,14 @@ static char _get_hex_from_upper_nibble(char in)
 	return _get_hex_from_lower_nibble(in >> 4);
 }
 
+/* Calculate sha3 of input and store in output */
 static void calculate_sha3(char *input, unsigned long input_length,
 			   char *output)
 {
 	int i;
+
+	// Add a null char to end of input for printing convenience
+	input[input_length] = '\0';
 
 	if (!sha3_mgh(input, (int)input_length, output, MD_LENGTH)) {
 		printk("sha3 failed for string `%s`\n", input);
@@ -220,6 +230,15 @@ static void calculate_sha3(char *input, unsigned long input_length,
 		printk("%c", lower);
 	}
 	printk("\n");
+}
+
+
+static void cache_analysis(char *input, unsigned long input_len, char *output)
+{
+	// TODO: Write a simple program that has a working memory set > 12 MB
+	// in order to thrash the L3 cache.
+	// For now, just create a wrapper to sha3
+	calculate_sha3(input, input_len, output);
 }
 
 static void irq_handler(void)
@@ -459,14 +478,18 @@ static void workload(char *input, unsigned long len, char *output)
 		return;
 	}
 
-	if (MGH_DEBUG_MODE)
-		printk("MGH DEBUG: Calculating SHA3 on incoming data!\n");
+	switch (WORKLOAD_MODE) {
+	case SHA3:
+		calculate_sha3(input, len, output);
+		break;
+	case CACHE_ANALYSIS:
+		cache_analysis(input, len, output);
+		break;
+	default:
+		printk("MGH: Error: Unknown workload mode\n");
+		break;
+	}
 
-	// Add a null char to end of input for printing convenience
-	input[len] = '\0';
-
-	/* Calculate sha3 of input and store in output */
-	calculate_sha3(input, len, output);
 }
 
 /*
@@ -519,9 +542,10 @@ void inmate_main(void)
 		printk("MGH DEBUG: shmem addr: %p\n", shmem);
 	}
 
+	/* Make sure MGH_HEAP has 10 MB to work with */
+	expand_memory();
+
 	if (LOCAL_BUFFER) {
-		/* Make sure MGH_HEAP has 10 MB to work with */
-		expand_memory();
 		input_buffer = (char *)MGH_HEAP_BASE;
 		/* Separate the input and output by 5 MB */
 		output_buffer = input_buffer + (5*MB);
