@@ -30,8 +30,7 @@
 
 #define MGH_HEAP_BASE		0x00200000
 #define MGH_HEAP_SiZE_MB	30
-// /* See alloc.c and d54cbbcc7c38 */
-// extern unsigned long heap_pos;
+static unsigned long CPU_CACHE_LINE_SIZE = 64;
 
 /* NOTE: The stack size is the same size as a page (4 kb) */
 
@@ -70,8 +69,13 @@ typedef enum {
 
 static workload_t WORKLOAD_MODE = CACHE_ANALYSIS;
 
+#define CACHE_ANALYSIS_SIZE_MB 20
+#define CACHE_ANALYSIS_POLLUTE_CACHE false
+#define CACHE_ANALYSIS_USE_INPUT false
+
 /* Change to false to disable print statements during regular operation. */
-#define MGH_DEBUG_MODE	false
+#define MGH_DEBUG_MODE	true
+// #define MGH_DEBUG_MODE	false
 
 // # of bytes for the sha3-512 message digest output
 #define MD_LENGTH 	64
@@ -94,6 +98,31 @@ static workload_t WORKLOAD_MODE = CACHE_ANALYSIS;
 #define OFFSET_RES_2 	(OFFSET_OUT + OUT_SIZE)
 #define OFFSET_IN 	(OFFSET_RES_2 + RES_2_SIZE)
 
+// /* See alloc.c and d54cbbcc7c38 */
+// extern unsigned long heap_pos;
+
+// TODO: Replace this with Jailhouse alloc with commit d54cbbcc7c38
+// Adapted from inmates/lib/alloc.c
+static void *_alloc(unsigned long size, unsigned long align)
+{
+	static unsigned long heap_pos = (unsigned long)MGH_HEAP_BASE;
+
+	if (MGH_DEBUG_MODE)
+		printk("MGH DEBUG: heap_pos before: 0x%lx\n", heap_pos);
+
+	unsigned long base = (heap_pos + align - 1) & ~(align - 1);
+	heap_pos = base + size;
+
+	if (MGH_DEBUG_MODE)
+		printk("MGH DEBUG: heap_pos after: 0x%lx\n", heap_pos);
+
+	return (void *)base;
+}
+
+static void *alloc_heap(unsigned long size)
+{
+	return _alloc(size, PAGE_SIZE);
+}
 
 struct ivshmem_dev_data {
 	u16 bdf;
@@ -204,6 +233,42 @@ static char _get_hex_from_upper_nibble(char in)
 	return _get_hex_from_lower_nibble(in >> 4);
 }
 
+static unsigned long get_cache_line_size(void)
+{
+	unsigned long cache_line_size = 0;
+	unsigned long ebx;
+
+	asm volatile("cpuid" : "=b" (ebx) : "a" (1)
+		: "rcx", "rdx", "memory");
+	cache_line_size = (ebx & 0xff00) >> 5;
+
+	if (MGH_DEBUG_MODE)
+		printk("MGH DEBUG: cache_line_size = %lu\n", cache_line_size);
+
+	/* The cache line size should always be 64 B on Intel x86-64 */
+	if (cache_line_size != 64)
+		printk("MGH DEBUG: Error: Actual cache line size is %lu B\n",
+		       cache_line_size);
+
+	return cache_line_size;
+}
+
+/*
+ * Write to the first byte of each cache line at a given memory location. This
+ * will force the CPU to load data from the memory location into the cache.
+ *
+ * mem		(IN/OUT) A pointer to the memory location.
+ * size		(IN) How much of the memory to disturb.
+ *
+ * Adapted from apic-demo.c
+ */
+static void pollute_cache(char *mem, unsigned long size)
+{
+	for (unsigned long n = 0; n < size; n += CPU_CACHE_LINE_SIZE) {
+		mem[n] ^= 0xAA;
+	}
+}
+
 /* Calculate sha3 of input and store in output */
 static void calculate_sha3(char *input, unsigned long input_length,
 			   char *output)
@@ -235,10 +300,48 @@ static void calculate_sha3(char *input, unsigned long input_length,
 
 static void cache_analysis(char *input, unsigned long input_len, char *output)
 {
-	// TODO: Write a simple program that has a working memory set > 12 MB
-	// in order to thrash the L3 cache.
-	// For now, just create a wrapper to sha3
-	calculate_sha3(input, input_len, output);
+	unsigned char *buffer = NULL;
+	unsigned long buffer_size = CACHE_ANALYSIS_SIZE_MB*MB;
+	unsigned char input_hash = 0;
+
+	if (CACHE_ANALYSIS_USE_INPUT) {
+		// Create a simple 1-byte hash from the input
+		for (unsigned long i = 0; i < input_len; ++i) {
+			// Implicit cast of signed char to unsigned
+			input_hash += input[i];
+		}
+	} else {
+		input_hash = CACHE_ANALYSIS_SIZE_MB;
+	}
+	if (MGH_DEBUG_MODE) {
+		printk("MGH DEBUG: input_hash: %u\n", input_hash);
+		printk("MGH DEBUG: buffer_size: 0x%lx\n", buffer_size);
+	}
+
+	// Allocate 20 MB of memory to play with
+	buffer = (unsigned char *)alloc_heap(buffer_size);
+
+	if (MGH_DEBUG_MODE) {
+		printk("MGH DEBUG: buffer: %p\n", buffer);
+		printk("MGH DEBUG: buffer_end: %p\n", &buffer[buffer_size-1]);
+	}
+
+	// Force entire buffer into cache
+	if (CACHE_ANALYSIS_POLLUTE_CACHE)
+		pollute_cache((char *)buffer, buffer_size);
+
+	// n stores
+	for (unsigned long i = 0; i < buffer_size; ++i) {
+		buffer[i] = i;
+		if (MGH_DEBUG_MODE && (i % MB == 0))
+			printk("MGH DEBUG: i==0x%lx\n", i);
+	}
+
+	// n stores
+	for (unsigned long i = 0; i < buffer_size-1; ++i) {
+		buffer[i] = buffer[i] + buffer[i+1];
+	}
+	buffer[buffer_size-1] = (2 * buffer[buffer_size-1]) + 1;
 }
 
 static void irq_handler(void)
@@ -264,6 +367,10 @@ static bool hardware_setup(void)
 
 	if (MGH_DEBUG_MODE)
 		printk("MGH DEMO: TSC frequency is %lu Hz.\n", tsc_freq);
+
+	// Set the cache line size
+	CPU_CACHE_LINE_SIZE = get_cache_line_size();
+
 	return true;
 }
 
@@ -542,7 +649,7 @@ void inmate_main(void)
 		printk("MGH DEBUG: shmem addr: %p\n", shmem);
 	}
 
-	/* Make sure MGH_HEAP has 10 MB to work with */
+	/* Make sure MGH_HEAP address space is initialized */
 	expand_memory();
 
 	if (LOCAL_BUFFER) {
