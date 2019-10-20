@@ -93,12 +93,14 @@ struct {
 		/* MGH: RAM - Heap */
 		{
 			/* MGH: We have 75 MB of memory allocated to the inmate
-			 * in the root config, but are only using 2 MB. So
-			 * create an additional "heap" area of 10 MB to allow
-			 * the program more memory to work with. */
+			 * in the root config, but are only using 1 MB for the
+			 * inmate's stack and program. So create an additional
+			 * "heap" area with the other 74 MB to allow the program
+			 * more memory to work with. */
 			.phys_start = 0x3a700000,
 			.virt_start = 0x00200000,
-			.size = 0x00a00000,
+			// 74 MB (3a7 + 4a = 3f1)
+			.size = 0x04a00000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_EXECUTE | JAILHOUSE_MEM_LOADABLE,
 		},
