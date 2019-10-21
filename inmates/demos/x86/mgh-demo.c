@@ -103,10 +103,12 @@ static workload_t WORKLOAD_MODE = CACHE_ANALYSIS;
 
 // TODO: Replace this with Jailhouse alloc with commit d54cbbcc7c38
 // Adapted from inmates/lib/alloc.c
+// NOTE: The "heap" is really just another stack at this point.
+
+static unsigned long heap_pos = MGH_HEAP_BASE;
+
 static void *_alloc(unsigned long size, unsigned long align)
 {
-	static unsigned long heap_pos = (unsigned long)MGH_HEAP_BASE;
-
 	if (MGH_DEBUG_MODE)
 		printk("MGH DEBUG: heap_pos before: 0x%lx\n", heap_pos);
 
@@ -122,6 +124,15 @@ static void *_alloc(unsigned long size, unsigned long align)
 static void *alloc_heap(unsigned long size)
 {
 	return _alloc(size, PAGE_SIZE);
+}
+
+/*
+ * Effectively "free" all memory allocated via alloc_heap() by resetting the
+ * heap position.
+ */
+static void free_heap_all(void)
+{
+	heap_pos = MGH_HEAP_BASE;
 }
 
 struct ivshmem_dev_data {
@@ -342,6 +353,8 @@ static void cache_analysis(char *input, unsigned long input_len, char *output)
 		buffer[i] = buffer[i] + buffer[i+1];
 	}
 	buffer[buffer_size-1] = (2 * buffer[buffer_size-1]) + 1;
+
+	free_heap_all();
 }
 
 static void irq_handler(void)
