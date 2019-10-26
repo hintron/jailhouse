@@ -98,32 +98,12 @@ static workload_t WORKLOAD_MODE = CACHE_ANALYSIS;
 #define OFFSET_RES_2 	(OFFSET_OUT + OUT_SIZE)
 #define OFFSET_IN 	(OFFSET_RES_2 + RES_2_SIZE)
 
-// /* See alloc.c and d54cbbcc7c38 */
-// extern unsigned long heap_pos;
-
-// TODO: Replace this with Jailhouse alloc with commit d54cbbcc7c38
-// Adapted from inmates/lib/alloc.c
-// NOTE: The "heap" is really just another stack at this point.
-
-static unsigned long heap_pos = MGH_HEAP_BASE;
-
-static void *_alloc(unsigned long size, unsigned long align)
-{
-	if (MGH_DEBUG_MODE)
-		printk("MGH DEBUG: heap_pos before: 0x%lx\n", heap_pos);
-
-	unsigned long base = (heap_pos + align - 1) & ~(align - 1);
-	heap_pos = base + size;
-
-	if (MGH_DEBUG_MODE)
-		printk("MGH DEBUG: heap_pos after: 0x%lx\n", heap_pos);
-
-	return (void *)base;
-}
+// NOTE: The "heap" is really just another stack.
+extern unsigned long heap_pos;
 
 static void *alloc_heap(unsigned long size)
 {
-	return _alloc(size, PAGE_SIZE);
+	return alloc(size, PAGE_SIZE);
 }
 
 /*
@@ -622,12 +602,9 @@ static void expand_memory(void)
 {
 	map_range((char *)MGH_HEAP_BASE, MGH_HEAP_SiZE_MB*MB, MAP_UNCACHED);
 
-	// TODO: Implement when merged with d54cbbcc7c38 */
-	// /* Set heap_pos to point to MGH_HEAP_BASE, instead of right after the
-	//  * inmate's stack, so alloc() can allocated more than 1 MB. */
-	// heap_pos = (char *)MGH_HEAP_BASE;
-	// char *input_buffer = alloc(5*MB, PAGE_SIZE);
-	// char *output_buffer = alloc(5*MB, PAGE_SIZE);
+	/* Set heap_pos to point to MGH_HEAP_BASE, instead of right after the
+	 * inmate's stack, so alloc() can allocated more than 1 MB. */
+	heap_pos = MGH_HEAP_BASE;
 }
 
 void inmate_main(void)

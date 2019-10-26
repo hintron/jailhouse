@@ -48,7 +48,7 @@ struct {
 	// MGH: Increment by 1 to 53 after adding ivshmem mem region
 	struct jailhouse_memory mem_regions[53];
 	struct jailhouse_irqchip irqchips[1];
-	__u8 pio_bitmap[0x2000];
+	struct jailhouse_pio pio_regions[6];
 	// MGH: Increment by 1 to 17 after adding ivshmem pci device
 	struct jailhouse_pci_device pci_devices[17];
 	struct jailhouse_pci_capability pci_caps[49];
@@ -76,10 +76,12 @@ struct {
 				.vtd_interrupt_limit = 256,
 				.iommu_units = {
 					{
+						.type = JAILHOUSE_IOMMU_INTEL,
 						.base = 0xfed90000,
 						.size = 0x1000,
 					},
 					{
+						.type = JAILHOUSE_IOMMU_INTEL,
 						.base = 0xfed91000,
 						.size = 0x1000,
 					},
@@ -91,7 +93,7 @@ struct {
 			.cpu_set_size = sizeof(config.cpus),
 			.num_memory_regions = ARRAY_SIZE(config.mem_regions),
 			.num_irqchips = ARRAY_SIZE(config.irqchips),
-			.pio_bitmap_size = ARRAY_SIZE(config.pio_bitmap),
+			.num_pio_regions = ARRAY_SIZE(config.pio_regions),
 			.num_pci_devices = ARRAY_SIZE(config.pci_devices),
 			.num_pci_caps = ARRAY_SIZE(config.pci_caps),
 		},
@@ -158,11 +160,11 @@ struct {
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_EXECUTE | JAILHOUSE_MEM_DMA,
 		},
-		/* MemRegion: 8a35e000-8a73efff : ACPI Non-volatile Storage */
+		/* MemRegion: 8a38e000-8a73efff : ACPI Non-volatile Storage */
 		{
-			.phys_start = 0x8a35e000,
-			.virt_start = 0x8a35e000,
-			.size = 0x3e1000,
+			.phys_start = 0x8a38e000,
+			.virt_start = 0x8a38e000,
+			.size = 0x3b1000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE,
 		},
 		/* MemRegion: 8af3f000-8affefff : Unknown E820 type */
@@ -425,27 +427,27 @@ struct {
 			.size = 0x4b000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE,
 		},
-		/* MemRegion: 100000000-3ad1fffff : System RAM */
+		/* MemRegion: 100000000-3baffffff : System RAM */
 		{
 			.phys_start = 0x100000000,
 			.virt_start = 0x100000000,
-			.size = 0x2ad200000,
+			.size = 0x2bb000000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_EXECUTE | JAILHOUSE_MEM_DMA,
 		},
-		/* MemRegion: 3ad200000-3aeffffff : Kernel */
+		/* MemRegion: 3bb000000-3bcffffff : Kernel */
 		{
-			.phys_start = 0x3ad200000,
-			.virt_start = 0x3ad200000,
-			.size = 0x1e00000,
+			.phys_start = 0x3bb000000,
+			.virt_start = 0x3bb000000,
+			.size = 0x2000000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_EXECUTE | JAILHOUSE_MEM_DMA,
 		},
-		/* MemRegion: 3af000000-46dffffff : System RAM */
+		/* MemRegion: 3bd000000-46dffffff : System RAM */
 		{
-			.phys_start = 0x3af000000,
-			.virt_start = 0x3af000000,
-			.size = 0xbf000000,
+			.phys_start = 0x3bd000000,
+			.virt_start = 0x3bd000000,
+			.size = 0xb1000000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_EXECUTE | JAILHOUSE_MEM_DMA,
 		},
@@ -457,11 +459,11 @@ struct {
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_EXECUTE | JAILHOUSE_MEM_DMA,
 		},
-		/* MemRegion: 8a152000-8a171fff : ACPI DMAR RMRR */
+		/* MemRegion: 8a160000-8a17ffff : ACPI DMAR RMRR */
 		/* PCI device: 00:14.0 */
 		{
-			.phys_start = 0x8a152000,
-			.virt_start = 0x8a152000,
+			.phys_start = 0x8a160000,
+			.virt_start = 0x8a160000,
 			.size = 0x20000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_EXECUTE | JAILHOUSE_MEM_DMA,
@@ -503,17 +505,13 @@ struct {
 		},
 	},
 
-	.pio_bitmap = {
-		[     0/8 ...   0x3f/8] = -1,
-		[  0x40/8 ...   0x47/8] = 0xf0, /* PIT */
-		[  0x48/8 ...   0x5f/8] = -1,
-		[  0x60/8 ...   0x67/8] = 0xec, /* HACK: NMI status/control */
-		[  0x68/8 ...   0x6f/8] = -1,
-		[  0x70/8 ...   0x77/8] = 0xfc, /* RTC */
-		[  0x78/8 ...  0x3af/8] = -1,
-		[ 0x3b0/8 ...  0x3df/8] = 0x00, /* VGA */
-		[ 0x3e0/8 ...  0xcff/8] = -1,
-		[ 0xd00/8 ... 0xffff/8] = 0, /* HACK: PCI bus */
+	.pio_regions = {
+		PIO_RANGE(0x40, 4), /* PIT */
+		PIO_RANGE(0x60, 2), /* HACK: NMI status/control */
+		PIO_RANGE(0x64, 1), /* I8042 */
+		PIO_RANGE(0x70, 2), /* RTC */
+		PIO_RANGE(0x3b0, 0x30), /* VGA */
+		PIO_RANGE(0xd00, 0xf300), /* HACK: PCI bus */
 	},
 
 	.pci_devices = {
@@ -1088,7 +1086,8 @@ struct {
 		{
 			.id = PCI_EXT_CAP_ID_ERR | JAILHOUSE_PCI_EXT_CAP,
 			.start = 0x100,
-			.len = 4,
+			// .len = 4,
+			.len = 0x40, // The newest config changed to 0x40! Why?
 			.flags = 0,
 		},
 		{
