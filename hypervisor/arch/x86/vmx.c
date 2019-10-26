@@ -371,13 +371,6 @@ unsigned long arch_paging_gphys2phys(unsigned long gphys, unsigned long flags)
 
 int vcpu_vendor_cell_init(struct cell *cell)
 {
-	int err;
-
-	/* allocate io_bitmap */
-	cell->arch.vmx.io_bitmap = page_alloc(&mem_pool, PIO_BITMAP_PAGES);
-	if (!cell->arch.vmx.io_bitmap)
-		return -ENOMEM;
-
 	/* build root EPT of cell */
 	cell->arch.vmx.ept_structs.root_paging = ept_paging;
 	cell->arch.vmx.ept_structs.root_table =
@@ -385,20 +378,11 @@ int vcpu_vendor_cell_init(struct cell *cell)
 
 	/* Map the special APIC access page into the guest's physical address
 	 * space at the default address (XAPIC_BASE) */
-	err = paging_create(&cell->arch.vmx.ept_structs,
-			    paging_hvirt2phys(apic_access_page),
-			    PAGE_SIZE, XAPIC_BASE,
-			    EPT_FLAG_READ | EPT_FLAG_WRITE | EPT_FLAG_WB_TYPE,
-			    PAGING_NON_COHERENT);
-	if (err)
-		goto err_free_io_bitmap;
-
-	return 0;
-
-err_free_io_bitmap:
-	page_free(&mem_pool, cell->arch.vmx.io_bitmap, 2);
-
-	return err;
+	return paging_create(&cell->arch.vmx.ept_structs,
+			     paging_hvirt2phys(apic_access_page),
+			     PAGE_SIZE, XAPIC_BASE,
+			     EPT_FLAG_READ | EPT_FLAG_WRITE | EPT_FLAG_WB_TYPE,
+			     PAGING_NON_COHERENT);
 }
 
 int vcpu_map_memory_region(struct cell *cell,
@@ -431,7 +415,6 @@ void vcpu_vendor_cell_exit(struct cell *cell)
 {
 	paging_destroy(&cell->arch.vmx.ept_structs, XAPIC_BASE, PAGE_SIZE,
 		       PAGING_NON_COHERENT);
-	page_free(&mem_pool, cell->arch.vmx.io_bitmap, 2);
 }
 
 void vcpu_tlb_flush(void)
@@ -496,7 +479,7 @@ static bool vmx_set_cell_config(void)
 	u8 *io_bitmap;
 	bool ok = true;
 
-	io_bitmap = cell->arch.vmx.io_bitmap;
+	io_bitmap = cell->arch.io_bitmap;
 	ok &= vmcs_write64(IO_BITMAP_A, paging_hvirt2phys(io_bitmap));
 	ok &= vmcs_write64(IO_BITMAP_B,
 			   paging_hvirt2phys(io_bitmap + PAGE_SIZE));
@@ -1596,11 +1579,9 @@ void vmx_entry_failure(void)
 	panic_stop();
 }
 
-void vcpu_vendor_get_cell_io_bitmap(struct cell *cell,
-		                    struct vcpu_io_bitmap *iobm)
+unsigned int vcpu_vendor_get_io_bitmap_pages(void)
 {
-	iobm->data = cell->arch.vmx.io_bitmap;
-	iobm->size = PIO_BITMAP_PAGES * PAGE_SIZE;
+	return PIO_BITMAP_PAGES;
 }
 
 #define VCPU_VENDOR_GET_REGISTER(__reg__, __field__)	\

@@ -563,9 +563,18 @@ class Irqchip:
         return self.address == 0xfec00000
 
 
+class PIORegion:
+    _REGION_FORMAT = 'HH'
+    SIZE = struct.calcsize(_REGION_FORMAT)
+
+    def __init__(self, pio_struct):
+        (self.base, self.length) = struct.unpack_from(self._REGION_FORMAT, \
+                                                      pio_struct)
+
+
 class Config:
-    _HEADER_FORMAT = '6sH32s4xIIIIIIIIIQ8x32x'
-    _HEADER_REVISION = 10
+    _HEADER_FORMAT = '=6sH32s4xIIIIIIIIIIQ8x32x'
+    _HEADER_REVISION = 12
 
     def __init__(self, config_file):
         self.data = config_file.read()
@@ -578,9 +587,10 @@ class Config:
          self.num_memory_regions,
          self.num_cache_regions,
          self.num_irqchips,
-         self.pio_bitmap_size,
+         self.num_pio_regions,
          self.num_pci_devices,
          self.num_pci_caps,
+         self.num_stream_ids,
          self.vpci_irq_base,
          self.cpu_reset_address) = \
             struct.unpack_from(Config._HEADER_FORMAT, self.data)
@@ -608,6 +618,12 @@ class Config:
             self.irqchips.append(
                 Irqchip(self.data[irqchip_offs:]))
             irqchip_offs += Irqchip.SIZE
+
+        pioregion_offs = irqchip_offs
+        self.pio_regions = []
+        for n in range(self.num_pio_regions):
+            self.pio_regions.append(PIORegion(self.data[pioregion_offs:]))
+            pioregion_offs += PIORegion.SIZE
 
 
 # see linux/Documentation/x86/boot.txt
@@ -761,15 +777,26 @@ class X86ZeroPage:
 def x86_gen_setup_data(config):
     SETUP_TYPE_JAILHOUSE = 6
     MAX_CPUS = 255
-    SETUP_DATA_VERSION = 1
+    SETUP_DATA_VERSION = 2
+    SETUP_DATA_COMPAT_VERSION = 1
     standard_ioapic = 0
+    setup_data_hdr_struct = '8xII'
+    setup_data_struct = ('HH12x8xB%uxI' % MAX_CPUS)
+
     for irqchip in config.irqchips:
         if irqchip.is_standard():
             standard_ioapic = 1
-    return struct.pack('8xIIHH12x8xB', SETUP_TYPE_JAILHOUSE, 25 + MAX_CPUS,
-                       SETUP_DATA_VERSION, SETUP_DATA_VERSION,
-                       standard_ioapic) + \
-        bytearray(MAX_CPUS)
+
+    flags = 0
+    platform_uarts = [0x3f8, 0x2f8, 0x3e8, 0x2e8]
+    for pio_region in config.pio_regions:
+        if pio_region.base in platform_uarts and pio_region.length == 8:
+            flags |= (1 << platform_uarts.index(pio_region.base))
+
+    return struct.pack(setup_data_hdr_struct, SETUP_TYPE_JAILHOUSE,
+                       struct.calcsize(setup_data_struct)) + \
+           struct.pack(setup_data_struct, SETUP_DATA_VERSION,
+                       SETUP_DATA_COMPAT_VERSION, standard_ioapic, flags)
 
 
 # pretend to be part of the jailhouse tool

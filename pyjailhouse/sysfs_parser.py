@@ -248,6 +248,7 @@ def parse_dmar(pcidevices, ioapics, dmar_regions):
             if size > 0x3000:
                 raise RuntimeError('Unexpectedly large DMAR region.')
             units.append(IOMMUConfig({
+                'type': 'JAILHOUSE_IOMMU_INTEL',
                 'base_addr': base,
                 'mmio_size': size
             }))
@@ -392,6 +393,7 @@ def parse_ivrs(pcidevices, ioapics):
                 mmio_size = 16384
 
             units.append(IOMMUConfig({
+                'type': 'JAILHOUSE_IOMMU_AMD',
                 'base_addr': base_addr,
                 'mmio_size': mmio_size,
                 'amd_bdf': iommu_bdf,
@@ -655,14 +657,41 @@ class PCICapability:
 
                 id = PCI_EXT_CAP_ID(id)
                 next = version_next >> 4
-                if id == PCI_EXT_CAP_ID.SRIOV:
+                # access side effects still need to be analyzed
+                flags = PCICapability.RD
+
+                if id == PCI_EXT_CAP_ID.VNDR:
+                    (vsec_len,) = struct.unpack('<I', f.read(4))
+                    len = 4 + (vsec_len >> 20)
+                elif id == PCI_EXT_CAP_ID.ACS:
+                    len = 8
+                    vector_size = 0
+
+                    (acs_cap, acs_ctrl) = struct.unpack('<HH', f.read(4))
+                    if acs_cap & (1 << 5) and acs_ctrl & (1 << 5):
+                        vector_bits = acs_cap >> 8
+                        if vector_bits == 0:
+                            vector_bits = 256
+                        vector_bytes = int((vector_bits + 31) / (8 * 4))
+                        len += vector_bytes
+                elif id in [PCI_EXT_CAP_ID.VC, PCI_EXT_CAP_ID.VC9]:
+                    # parsing is too complex, but we have at least 4 DWORDS
+                    len = 4 * 4
+                elif id == PCI_EXT_CAP_ID.MFVC:
+                    len = 4
+                elif id in [PCI_EXT_CAP_ID.LTR, PCI_EXT_CAP_ID.ARI, PCI_EXT_CAP_ID.PASID]:
+                    len = 8
+                elif id in [PCI_EXT_CAP_ID.DSN, PCI_EXT_CAP_ID.PTM]:
+                    len = 12
+                elif id in [PCI_EXT_CAP_ID.PWR, PCI_EXT_CAP_ID.SECPCI]:
+                    len = 16
+                elif id == PCI_EXT_CAP_ID.MCAST:
+                    len = 48
+                elif id in [PCI_EXT_CAP_ID.SRIOV, PCI_EXT_CAP_ID.ERR]:
                     len = 64
-                    # access side effects still need to be analyzed
-                    flags = PCICapability.RD
                 else:
                     # unknown/unhandled cap, mark its existence
                     len = 4
-                    flags = PCICapability.RD
                 f.seek(cap + 4)
                 content = f.read(len - 4)
                 caps.append(PCICapability(id, True, cap, len, flags, content,
@@ -947,6 +976,7 @@ class IOMemRegionTree:
 
 class IOMMUConfig:
     def __init__(self, props):
+        self.type = props['type']
         self.base_addr = props['base_addr']
         self.mmio_size = props['mmio_size']
         if 'amd_bdf' in props:

@@ -50,7 +50,7 @@
  * Incremented on any layout or semantic change of system or cell config.
  * Also update HEADER_REVISION in tools.
  */
-#define JAILHOUSE_CONFIG_REVISION	10
+#define JAILHOUSE_CONFIG_REVISION	12
 
 #define JAILHOUSE_CELL_NAME_MAXLEN	31
 
@@ -74,6 +74,8 @@
 
 #define JAILHOUSE_CELL_DESC_SIGNATURE	"JHCELL"
 
+#define JAILHOUSE_INVALID_STREAMID			(~0)
+
 /**
  * The jailhouse cell configuration.
  *
@@ -92,9 +94,10 @@ struct jailhouse_cell_desc {
 	__u32 num_memory_regions;
 	__u32 num_cache_regions;
 	__u32 num_irqchips;
-	__u32 pio_bitmap_size;
+	__u32 num_pio_regions;
 	__u32 num_pci_devices;
 	__u32 num_pci_caps;
+	__u32 num_stream_ids;
 
 	__u32 vpci_irq_base;
 
@@ -197,14 +200,31 @@ struct jailhouse_pci_capability {
 
 #define JAILHOUSE_MAX_IOMMU_UNITS	8
 
+#define JAILHOUSE_IOMMU_AMD		1
+#define JAILHOUSE_IOMMU_INTEL		2
+#define JAILHOUSE_IOMMU_SMMUV3		3
+
 struct jailhouse_iommu {
+	__u32 type;
 	__u64 base;
 	__u32 size;
+
 	__u16 amd_bdf;
 	__u8 amd_base_cap;
 	__u8 amd_msi_cap;
 	__u32 amd_features;
 } __attribute__((packed));
+
+struct jailhouse_pio {
+	__u16 base;
+	__u16 length;
+} __attribute__((packed));
+
+#define PIO_RANGE(__base, __length)	\
+	{				\
+		.base = __base,		\
+		.length = __length,	\
+	}
 
 #define JAILHOUSE_SYSTEM_SIGNATURE	"JHSYST"
 
@@ -252,6 +272,8 @@ struct jailhouse_system {
 				u64 gich_base;
 				u64 gicv_base;
 				u64 gicr_base;
+				struct jailhouse_iommu
+					iommu_units[JAILHOUSE_MAX_IOMMU_UNITS];
 			} __attribute__((packed)) arm;
 		} __attribute__((packed));
 	} __attribute__((packed)) platform_info;
@@ -266,9 +288,10 @@ jailhouse_cell_config_size(struct jailhouse_cell_desc *cell)
 		cell->num_memory_regions * sizeof(struct jailhouse_memory) +
 		cell->num_cache_regions * sizeof(struct jailhouse_cache) +
 		cell->num_irqchips * sizeof(struct jailhouse_irqchip) +
-		cell->pio_bitmap_size +
+		cell->num_pio_regions * sizeof(struct jailhouse_pio) +
 		cell->num_pci_devices * sizeof(struct jailhouse_pci_device) +
-		cell->num_pci_caps * sizeof(struct jailhouse_pci_capability);
+		cell->num_pci_caps * sizeof(struct jailhouse_pci_capability) +
+		cell->num_stream_ids * sizeof(__u32);
 }
 
 static inline __u32
@@ -308,10 +331,11 @@ jailhouse_cell_irqchips(const struct jailhouse_cell_desc *cell)
 		 cell->num_cache_regions * sizeof(struct jailhouse_cache));
 }
 
-static inline const __u8 *
-jailhouse_cell_pio_bitmap(const struct jailhouse_cell_desc *cell)
+static inline const struct jailhouse_pio *
+jailhouse_cell_pio(const struct jailhouse_cell_desc *cell)
 {
-	return (const __u8 *)((void *)jailhouse_cell_irqchips(cell) +
+	return (const struct jailhouse_pio *)
+		((void *)jailhouse_cell_irqchips(cell) +
 		cell->num_irqchips * sizeof(struct jailhouse_irqchip));
 }
 
@@ -319,8 +343,8 @@ static inline const struct jailhouse_pci_device *
 jailhouse_cell_pci_devices(const struct jailhouse_cell_desc *cell)
 {
 	return (const struct jailhouse_pci_device *)
-		((void *)jailhouse_cell_pio_bitmap(cell) +
-		 cell->pio_bitmap_size);
+		((void *)jailhouse_cell_pio(cell) +
+		 cell->num_pio_regions * sizeof(struct jailhouse_pio));
 }
 
 static inline const struct jailhouse_pci_capability *
@@ -329,6 +353,13 @@ jailhouse_cell_pci_caps(const struct jailhouse_cell_desc *cell)
 	return (const struct jailhouse_pci_capability *)
 		((void *)jailhouse_cell_pci_devices(cell) +
 		 cell->num_pci_devices * sizeof(struct jailhouse_pci_device));
+}
+
+static inline const __u32 *
+jailhouse_cell_stream_ids(const struct jailhouse_cell_desc *cell)
+{
+	return (const __u32 *)((void *)jailhouse_cell_pci_caps(cell) +
+		cell->num_pci_caps * sizeof(struct jailhouse_pci_capability));
 }
 
 #endif /* !_JAILHOUSE_CELL_CONFIG_H */
