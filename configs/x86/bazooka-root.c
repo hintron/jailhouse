@@ -45,12 +45,10 @@
 struct {
 	struct jailhouse_system header;
 	__u64 cpus[1];
-	// MGH: Increment by 1 to 53 after adding ivshmem mem region
-	struct jailhouse_memory mem_regions[53];
+	struct jailhouse_memory mem_regions[53]; // 52 + 1 for IVSHMEM
 	struct jailhouse_irqchip irqchips[1];
 	struct jailhouse_pio pio_regions[6];
-	// MGH: Increment by 1 to 17 after adding ivshmem pci device
-	struct jailhouse_pci_device pci_devices[17];
+	struct jailhouse_pci_device pci_devices[17]; // 16 + 1 for IVSHMEM
 	struct jailhouse_pci_capability pci_caps[49];
 } __attribute__((packed)) config = {
 	.header = {
@@ -100,8 +98,7 @@ struct {
 	},
 
 	.cpus = {
-		// Change this to fff if hyperthreading is turned on (12 CPUs)
-		0x000000000000003f,
+		0x000000000000003f, // 0xfff w/ hyperthreading (12 CPUs)
 	},
 
 	.mem_regions = {
@@ -152,11 +149,11 @@ struct {
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_EXECUTE | JAILHOUSE_MEM_DMA,
 		},
-		/* MemRegion: 8a1af000-8a35dfff : System RAM */
+		/* MemRegion: 8a1af000-8a38dfff : System RAM */
 		{
 			.phys_start = 0x8a1af000,
 			.virt_start = 0x8a1af000,
-			.size = 0x1af000,
+			.size = 0x1df000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_EXECUTE | JAILHOUSE_MEM_DMA,
 		},
@@ -427,27 +424,27 @@ struct {
 			.size = 0x4b000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE,
 		},
-		/* MemRegion: 100000000-3baffffff : System RAM */
+		/* MemRegion: 100000000-2ec5fffff : System RAM */
 		{
 			.phys_start = 0x100000000,
 			.virt_start = 0x100000000,
-			.size = 0x2bb000000,
+			.size = 0x1ec600000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_EXECUTE | JAILHOUSE_MEM_DMA,
 		},
-		/* MemRegion: 3bb000000-3bcffffff : Kernel */
+		/* MemRegion: 2ec600000-2eeffffff : Kernel */
 		{
-			.phys_start = 0x3bb000000,
-			.virt_start = 0x3bb000000,
-			.size = 0x2000000,
+			.phys_start = 0x2ec600000,
+			.virt_start = 0x2ec600000,
+			.size = 0x2a00000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_EXECUTE | JAILHOUSE_MEM_DMA,
 		},
-		/* MemRegion: 3bd000000-46dffffff : System RAM */
+		/* MemRegion: 2ef000000-46dffffff : System RAM */
 		{
-			.phys_start = 0x3bd000000,
-			.virt_start = 0x3bd000000,
-			.size = 0xb1000000,
+			.phys_start = 0x2ef000000,
+			.virt_start = 0x2ef000000,
+			.size = 0x17f000000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_EXECUTE | JAILHOUSE_MEM_DMA,
 		},
@@ -481,7 +478,6 @@ struct {
 		{
 			.phys_start = 0x3a600000,
 			.virt_start = 0x3a600000,
-			// MGH: Leave a 1 MB region for IVSHMEM (4c -> 4b)
 			.size = 0x4b00000, // 75 MB
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE,
 		},
@@ -1012,7 +1008,7 @@ struct {
 		{
 			.id = PCI_EXT_CAP_ID_ERR | JAILHOUSE_PCI_EXT_CAP,
 			.start = 0x100,
-			.len = 4,
+			.len = 0x40, // changed to 0x40 from 4! Why?
 			.flags = 0,
 		},
 		{
@@ -1030,7 +1026,7 @@ struct {
 		{
 			.id = PCI_EXT_CAP_ID_SECPCI | JAILHOUSE_PCI_EXT_CAP,
 			.start = 0x220,
-			.len = 4,
+			.len = 0x10, // changed to 0x10 from 4! Why?
 			.flags = 0,
 		},
 		{
@@ -1086,26 +1082,25 @@ struct {
 		{
 			.id = PCI_EXT_CAP_ID_ERR | JAILHOUSE_PCI_EXT_CAP,
 			.start = 0x100,
-			// .len = 4,
-			.len = 0x40, // The newest config changed to 0x40! Why?
+			.len = 0x40, // changed to 0x40 from 4! Why?
 			.flags = 0,
 		},
 		{
 			.id = PCI_EXT_CAP_ID_VC | JAILHOUSE_PCI_EXT_CAP,
 			.start = 0x140,
-			.len = 4,
+			.len = 0x10, // changed to 0x10 from 4! Why?
 			.flags = 0,
 		},
 		{
 			.id = PCI_EXT_CAP_ID_DSN | JAILHOUSE_PCI_EXT_CAP,
 			.start = 0x160,
-			.len = 4,
+			.len = 0xc, // changed to 0xc from 4! Why?
 			.flags = 0,
 		},
 		{
 			.id = PCI_EXT_CAP_ID_LTR | JAILHOUSE_PCI_EXT_CAP,
 			.start = 0x170,
-			.len = 4,
+			.len = 0x8, // changed to 0x8 from 4! Why?
 			.flags = 0,
 		},
 		{
@@ -1136,13 +1131,13 @@ struct {
 		{
 			.id = PCI_EXT_CAP_ID_DSN | JAILHOUSE_PCI_EXT_CAP,
 			.start = 0x100,
-			.len = 4,
+			.len = 0xc, // changed to 0xc from 4! Why?
 			.flags = 0,
 		},
 		{
 			.id = PCI_EXT_CAP_ID_PWR | JAILHOUSE_PCI_EXT_CAP,
 			.start = 0x110,
-			.len = 4,
+			.len = 0x10, // changed to 0x10 from 4! Why?
 			.flags = 0,
 		},
 	},
