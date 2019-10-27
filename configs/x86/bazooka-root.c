@@ -868,7 +868,7 @@ struct {
 		{
 			.id = PCI_EXT_CAP_ID_PASID | JAILHOUSE_PCI_EXT_CAP,
 			.start = 0x100,
-			.len = 4,
+			.len = 0x8, // changed to 0x8 from 4! Why?
 			.flags = 0,
 		},
 		{
@@ -1014,13 +1014,13 @@ struct {
 		{
 			.id = PCI_EXT_CAP_ID_ACS | JAILHOUSE_PCI_EXT_CAP,
 			.start = 0x140,
-			.len = 4,
+			.len = 0x8, // changed to 0x8 from 4! Why?
 			.flags = 0,
 		},
 		{
 			.id = PCI_EXT_CAP_ID_PTM | JAILHOUSE_PCI_EXT_CAP,
 			.start = 0x150,
-			.len = 4,
+			.len = 0xc, // changed to 0xc from 4! Why?
 			.flags = 0,
 		},
 		{
