@@ -174,11 +174,11 @@ struct {
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_EXECUTE | JAILHOUSE_MEM_DMA,
 		},
-		/* MemRegion: 90000000-9fffffff : 0000:01:00.0 */
+		/* MemRegion: 90000000-a0ffffff : 0000:01:00.0 */
 		{
 			.phys_start = 0x90000000,
 			.virt_start = 0x90000000,
-			.size = 0x10000000,
+			.size = 0x11000000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE,
 		},
 		/* MemRegion: a1000000-a12fffff : efifb */
