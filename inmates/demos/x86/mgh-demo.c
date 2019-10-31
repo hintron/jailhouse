@@ -28,6 +28,14 @@
 // MGH Section
 //
 
+/*
+ * This is the frequency the TSC is guaranteed to tick at, as well as the CPU's
+ * advertised frequency.
+ * From Wiki: "the TSC ticks at the processor's nominal frequency, regardless of
+ * the actual CPU clock frequency due to turbo or power saving states."
+ */
+static unsigned long tsc_freq = 0;
+
 #define MGH_HEAP_BASE		0x00200000
 #define MGH_HEAP_SiZE_MB	30
 static unsigned long CPU_CACHE_LINE_SIZE = 64;
@@ -349,8 +357,6 @@ static void irq_handler(void)
  */
 static bool hardware_setup(void)
 {
-	unsigned long tsc_freq;
-
 	// Set up the Time Stamp Counter (TSC)
 	tsc_freq = tsc_init();
 	if (tsc_freq == 0) {
