@@ -44,7 +44,9 @@ static u64 max_freq = 0;
 
 #define MGH_HEAP_BASE		0x00200000
 #define MGH_HEAP_SiZE_MB	30
-static unsigned long CPU_CACHE_LINE_SIZE = 64;
+
+#define EXPECTED_CPU_CACHE_LINE_SIZE 64
+static unsigned long cpu_cache_line_size = 64;
 
 /* NOTE: The stack size is the same size as a page (4 kb) */
 
@@ -326,24 +328,22 @@ static char _get_hex_from_upper_nibble(char in)
 	return _get_hex_from_lower_nibble(in >> 4);
 }
 
-static unsigned long get_cache_line_size(void)
+static void init_cache_line_size(void)
 {
-	unsigned long cache_line_size = 0;
 	unsigned long ebx;
 
 	asm volatile("cpuid" : "=b" (ebx) : "a" (1)
 		: "rcx", "rdx", "memory");
-	cache_line_size = (ebx & 0xff00) >> 5;
+	cpu_cache_line_size = (ebx & 0xff00) >> 5;
 
 	if (MGH_DEBUG_MODE)
-		printk("MGH DEBUG: cache_line_size = %lu\n", cache_line_size);
+		printk("MGH DEBUG: cache_line_size = %lu\n",
+		       cpu_cache_line_size);
 
 	/* The cache line size should always be 64 B on Intel x86-64 */
-	if (cache_line_size != 64)
+	if (cpu_cache_line_size != EXPECTED_CPU_CACHE_LINE_SIZE)
 		printk("MGH DEBUG: Error: Actual cache line size is %lu B\n",
-		       cache_line_size);
-
-	return cache_line_size;
+		       cpu_cache_line_size);
 }
 
 /*
@@ -357,7 +357,7 @@ static unsigned long get_cache_line_size(void)
  */
 static void pollute_cache(char *mem, unsigned long size)
 {
-	for (unsigned long n = 0; n < size; n += CPU_CACHE_LINE_SIZE) {
+	for (unsigned long n = 0; n < size; n += cpu_cache_line_size) {
 		mem[n] ^= 0xAA;
 	}
 }
@@ -460,7 +460,7 @@ static bool hardware_setup(void)
 		printk("MGH DEMO: TSC frequency is %lu Hz.\n", tsc_freq);
 
 	// Set the cache line size
-	CPU_CACHE_LINE_SIZE = get_cache_line_size();
+	init_cache_line_size();
 
 	// Clear the frequency counters to start with clean slate
 	clear_freq_counters();
