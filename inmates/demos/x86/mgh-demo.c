@@ -35,6 +35,12 @@
  * the actual CPU clock frequency due to turbo or power saving states."
  */
 static unsigned long tsc_freq = 0;
+static u64 max_freq = 0;
+
+/* See Intel SDM Vol. 4: Model-Specific Registers */
+#define MSR_IA32_MPERF		0xe7
+#define MSR_IA32_APERF		0xe8
+#define MSR_PLATFORM_INFO	0xce
 
 #define MGH_HEAP_BASE		0x00200000
 #define MGH_HEAP_SiZE_MB	30
@@ -75,7 +81,7 @@ typedef enum {
 	CACHE_ANALYSIS,
 } workload_t;
 
-static workload_t WORKLOAD_MODE = CACHE_ANALYSIS;
+static workload_t WORKLOAD_MODE = SHA3;
 
 #define CACHE_ANALYSIS_SIZE_MB 20
 #define CACHE_ANALYSIS_POLLUTE_CACHE false
@@ -114,6 +120,7 @@ static void *alloc_heap(unsigned long size)
 	return alloc(size, PAGE_SIZE);
 }
 
+
 /*
  * Effectively "free" all memory allocated via alloc_heap() by resetting the
  * heap position.
@@ -121,6 +128,93 @@ static void *alloc_heap(unsigned long size)
 static void free_heap_all(void)
 {
 	heap_pos = MGH_HEAP_BASE;
+}
+
+
+static u64 query_max_freq_ratio(void)
+{
+	u64 plat_info = read_msr(MSR_PLATFORM_INFO);
+	u64 max_ratio = (plat_info & 0xff00) >> 8;
+	return max_ratio;
+}
+
+/*
+ * Return the Maximum Non-Turbo Frequency in Hz
+ *
+ * “Maximum Non-Turbo Ratio (R/O) This is the ratio of the frequency that
+ * invariant TSC runs at. Frequency = ratio * 100 MHz.” See Intel SDM Vol. 4
+ * Section 2.17 and tables 2-20, 2-25, and 2-29.
+ *
+ * Get bits 8-15 of MSR_PLATFORM_INFO
+ */
+static u64 query_max_freq(void)
+{
+	u64 max_ratio = query_max_freq_ratio();
+	u64 max_freq = max_ratio * 100000000;
+	printk("MGH: Maximum Non-Turbo Ratio: %llu\n", max_ratio);
+	printk("MGH: Maximum Non-Turbo Frequency: %llu\n", max_freq);
+	return max_freq;
+}
+
+static u64 query_freq_ratio(void)
+{
+	// TODO: How to avoid preemption-timer interrupt between the following
+	// msr instructions? Needs to be successive, or readings will be off.
+	u64 mperf = read_msr(MSR_IA32_MPERF);
+	u64 aperf = read_msr(MSR_IA32_APERF);
+
+	return aperf / mperf;
+}
+
+static void clear_freq_counters(void)
+{
+	// TODO: How to avoid preemption-timer interrupt between the following
+	// msr instructions? Needs to be successive, or readings will be off.
+
+	// Reset the frequency counters
+	write_msr(MSR_IA32_MPERF, 0);
+	write_msr(MSR_IA32_APERF, 0);
+}
+/*
+ * Calculate the CPU's current frequency. Must call hardware_init() beforehand!
+ *
+ * See the Intel SDM, Vol 3B, Section 14.2
+ *
+ * We should probably query the frequency multiple times to get an accurate
+ * reading (in case both counters are 0 or really low, etc.)
+ * max frequency is the same as tsc_freq. Right?
+ * See https://stackoverflow.com/questions/65095/assembly-cpu-frequency-measuring-algorithm
+ */
+static u64 query_freq(void)
+{
+	static u64 counter = 0;
+	u64 freq;
+	u64 freq_ratio;
+
+	if (tsc_freq == 0) {
+		printk("MGH: ERROR: tsc_freq is uninitialized\n");
+		return 0;
+	}
+
+	if (max_freq == 0) {
+		printk("MGH: ERROR: max_freq is uninitialized\n");
+		return 0;
+	}
+
+	freq_ratio = query_freq_ratio();
+
+	// Reset freq counters
+	clear_freq_counters();
+
+	// freq = tsc_freq * freq_ratio;
+	freq = max_freq * freq_ratio;
+
+	if (MGH_DEBUG_MODE)
+		printk("MGH: CPU Frequency %6llu: %llu Hz (ratio=%llu)\n",
+		       counter, freq, freq_ratio);
+	counter++;
+
+	return freq;
 }
 
 struct ivshmem_dev_data {
@@ -332,8 +426,6 @@ static void cache_analysis(char *input, unsigned long input_len, char *output)
 	// n stores
 	for (unsigned long i = 0; i < buffer_size; ++i) {
 		buffer[i] = i;
-		if (MGH_DEBUG_MODE && (i % MB == 0))
-			printk("MGH DEBUG: i==0x%lx\n", i);
 	}
 
 	// n stores
@@ -369,6 +461,13 @@ static bool hardware_setup(void)
 
 	// Set the cache line size
 	CPU_CACHE_LINE_SIZE = get_cache_line_size();
+
+	// Clear the frequency counters to start with clean slate
+	clear_freq_counters();
+
+	// Architecture-dependent!
+	// Get the max turbo frequency from Recent Intel architectures
+	max_freq = query_max_freq();
 
 	return true;
 }
@@ -627,6 +726,8 @@ void inmate_main(void)
 	if (!device_setup(devs))
 		return;
 
+	(void) query_freq();
+
 	/* Initialize better (?) exception reporting */
 	if (MGH_DEBUG_MODE)
 		excp_reporting_init();
@@ -668,6 +769,8 @@ void inmate_main(void)
 	// Indicate to userspace that we are up and running
 	shmem[OFFSET_SYNC] = 1;
 
+	(void) query_freq();
+
 	// Continuously wait on userspace for a workload
 	while (1) {
 		unsigned long start = 0;
@@ -677,6 +780,7 @@ void inmate_main(void)
 		unsigned long workload_duration = 0;
 		unsigned long total_duration = 0;
 		unsigned long ns_per_byte = 0;
+		u64 freq1, freq2, freq3, freq4, avg_freq;
 
 		char *input = NULL;
 		char *output = NULL;
@@ -709,6 +813,9 @@ void inmate_main(void)
 		input = get_input(shmem);
 		output = get_output(shmem);
 
+
+		freq1 = query_freq();
+
 		/* Completely copy the input from shmem to a local buffer.
 		 * We want to avoid constantly reading from shared memory during
 		 * calculations, since that might slow things down. This may be
@@ -726,11 +833,15 @@ void inmate_main(void)
 				       copy_duration);
 		}
 
+		freq2 = query_freq();
+
 		start = tsc_read_ns();
 		workload(input, input_len, output);
 		workload_counter++;
 		end = tsc_read_ns();
 		workload_duration = end - start;
+
+		freq3 = query_freq();
 
 		if (LOCAL_BUFFER) {
 			start = tsc_read_ns();
@@ -743,12 +854,15 @@ void inmate_main(void)
 				       (end - start));
 		}
 
+		freq4 = query_freq();
+		avg_freq = (freq1 + freq2 + freq3 + freq4) / 4;
+
 		total_duration = copy_duration + workload_duration;
 		ns_per_byte = total_duration / input_len;
 
-		printk("MGHOUT:%ld|%ld,%ld(%ld+%ld),%lu\n", workload_counter,
+		printk("MGHOUT:%ld|%ld,%ld(%ld+%ld),%lu,%llu\n", workload_counter,
 		       input_len, total_duration, copy_duration,
-		       workload_duration, ns_per_byte);
+		       workload_duration, ns_per_byte, avg_freq);
 
 		// Indicate that we are done
 		shmem[OFFSET_SYNC] = 1;
