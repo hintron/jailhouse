@@ -96,23 +96,18 @@ static workload_t WORKLOAD_MODE = SHA3;
 // # of bytes for the sha3-512 message digest output
 #define MD_LENGTH 	64
 #define MB		(1 << 20) // 2^20 = 1048576 = 1 MB
-#define OUTPUT_BYTES 	MD_LENGTH
 
 // Map out shared memory (define the sizes)
 #define SYNC_SIZE 	1
-#define RES_1_SIZE 	3
-#define IN_LEN_SIZE 	4
-#define OUT_SIZE 	64
-#define RES_2_SIZE 	4032
-// The entire IVSHMEM region is 1 MB. Input Data gets the rest of the space.
-#define IN_SIZE 	(MB - (SYNC_SIZE + RES_1_SIZE + IN_LEN_SIZE + OUT_SIZE + RES_1_SIZE))
+#define RESERVED_SIZE	3
+#define LEN_SIZE	4
+// The entire IVSHMEM region is 1 MB. Data gets the rest of the space.
+#define DATA_SIZE	(MB - (SYNC_SIZE + RESERVED_SIZE + LEN_SIZE))
 
 #define OFFSET_SYNC 	0
-#define OFFSET_RES_1 	(OFFSET_SYNC + SYNC_SIZE)
-#define OFFSET_IN_LEN 	(OFFSET_RES_1 + RES_1_SIZE)
-#define OFFSET_OUT 	(OFFSET_IN_LEN + IN_LEN_SIZE)
-#define OFFSET_RES_2 	(OFFSET_OUT + OUT_SIZE)
-#define OFFSET_IN 	(OFFSET_RES_2 + RES_2_SIZE)
+#define OFFSET_RESERVED	(OFFSET_SYNC + SYNC_SIZE)
+#define OFFSET_LEN	(OFFSET_RESERVED + RESERVED_SIZE)
+#define OFFSET_DATA	(OFFSET_LEN + LEN_SIZE)
 
 // NOTE: The "heap" is really just another stack.
 extern unsigned long heap_pos;
@@ -651,50 +646,54 @@ static bool check_shutdown(void)
 	return ret;
 }
 
-static unsigned long get_input_length(volatile char *shmem)
+static unsigned long get_data_length(volatile char *shmem)
 {
-	u32 *len_ptr = (u32 *)&shmem[OFFSET_IN_LEN];
+	u32 *len_ptr = (u32 *)&shmem[OFFSET_LEN];
 	return (unsigned long)(*len_ptr);
 }
 
-static char *get_input(volatile char *shmem)
+static void set_data_length(volatile char *shmem, unsigned long len)
 {
-	return (char *)&shmem[OFFSET_IN];
+	u32 *len_ptr = (u32 *)&shmem[OFFSET_LEN];
+	*len_ptr = (u32)(len);
 }
 
-static char *get_output(volatile char *shmem)
+static char *get_inout(volatile char *shmem)
 {
-	return (char *)&shmem[OFFSET_OUT];
+	return (char *)&shmem[OFFSET_DATA];
 }
-
 
 /*
- * Calculate the SHA3 of the next item
+ * Do a workload on len bytes from input, and store result in output_len bytes
+ * of output while also setting output_len.
  */
-static void workload(char *input, unsigned long len, char *output)
+static void workload(char *input, unsigned long len, char *output,
+		     unsigned long *output_len)
 {
 	if (MGH_DEBUG_MODE)
 		printk("MGH DEBUG: Input data length: %lu\n", len);
 
 	// Account for space needed to tack on NULL character
-	if (len > IN_SIZE - 1) {
+	if (len > DATA_SIZE - 1) {
 		printk("MGH DEMO: Input data max length exceeded (%lu > %u)\n",
-		       len, IN_SIZE - 1);
+		       len, DATA_SIZE - 1);
 		return;
 	}
 
 	switch (WORKLOAD_MODE) {
 	case SHA3:
 		calculate_sha3(input, len, output);
+		*output_len = MD_LENGTH;
 		break;
 	case CACHE_ANALYSIS:
 		cache_analysis(input, len, output);
+		// No output so far
+		*output_len = 0;
 		break;
 	default:
 		printk("MGH: Error: Unknown workload mode\n");
 		break;
 	}
-
 }
 
 /*
@@ -715,8 +714,7 @@ static void expand_memory(void)
 void inmate_main(void)
 {
 	volatile char *shmem;
-	char *input_buffer;
-	char *output_buffer;
+	char *buffer;
 	struct ivshmem_dev_data devs[MAX_NDEV];
 	unsigned long workload_counter = 0;
 
@@ -750,19 +748,15 @@ void inmate_main(void)
 	expand_memory();
 
 	if (LOCAL_BUFFER) {
-		input_buffer = (char *)MGH_HEAP_BASE;
-		/* Separate the input and output by 5 MB */
-		output_buffer = input_buffer + (5*MB);
+		buffer = (char *)MGH_HEAP_BASE;
 		if (MGH_DEBUG_MODE) {
-			printk("MGH DEBUG: input_buffer addr: %p\n",
-				input_buffer);
-			printk("MGH DEBUG: output_buffer addr: %p\n",
-				output_buffer);
-			input_buffer[0] = 'M';
-			input_buffer[1] = 'G';
-			input_buffer[2] = 'H';
-			input_buffer[3] = '\0';
-			printk("MGH DEBUG: input_buffer: %s\n", input_buffer);
+			printk("MGH DEBUG: buffer addr: %p\n",
+				buffer);
+			buffer[0] = 'M';
+			buffer[1] = 'G';
+			buffer[2] = 'H';
+			buffer[3] = '\0';
+			printk("MGH DEBUG: buffer: %s\n", buffer);
 		}
 	}
 
@@ -776,14 +770,14 @@ void inmate_main(void)
 		unsigned long start = 0;
 		unsigned long end = 0;
 		unsigned long input_len = 0;
+		unsigned long output_len = 0;
 		unsigned long copy_duration = 0;
 		unsigned long workload_duration = 0;
 		unsigned long total_duration = 0;
 		unsigned long ns_per_byte = 0;
 		u64 freq1, freq2, freq3, freq4, avg_freq;
 
-		char *input = NULL;
-		char *output = NULL;
+		char *inout = NULL;
 
 		// If about to shutdown, disable throttling first
 		if (check_shutdown())
@@ -809,23 +803,19 @@ void inmate_main(void)
 
 		// Indicate that we are now working on sha3
 		shmem[OFFSET_SYNC] = 3;
-		input_len = get_input_length(shmem);
-		input = get_input(shmem);
-		output = get_output(shmem);
-
+		input_len = get_data_length(shmem);
+		inout = get_inout(shmem);
 
 		freq1 = query_freq();
 
 		/* Completely copy the input from shmem to a local buffer.
 		 * We want to avoid constantly reading from shared memory during
-		 * calculations, since that might slow things down. This may be
-		 * why there was coupling between unrelated CPUs. */
+		 * calculations, since that might slow things down. */
 		if (LOCAL_BUFFER) {
 			start = tsc_read_ns();
-			memcpy(input_buffer, input, input_len);
+			memcpy(buffer, inout, input_len);
 			/* Point workload input and output to local buffers */
-			input = input_buffer;
-			output = output_buffer;
+			inout = buffer;
 			end = tsc_read_ns();
 			copy_duration = end - start;
 			if (MGH_DEBUG_MODE)
@@ -836,17 +826,19 @@ void inmate_main(void)
 		freq2 = query_freq();
 
 		start = tsc_read_ns();
-		workload(input, input_len, output);
+		workload(inout, input_len, inout, &output_len);
 		workload_counter++;
 		end = tsc_read_ns();
+
+		set_data_length(shmem, output_len);
 		workload_duration = end - start;
 
 		freq3 = query_freq();
 
 		if (LOCAL_BUFFER) {
 			start = tsc_read_ns();
-			output = get_output(shmem);
-			memcpy(output, output_buffer, MD_LENGTH);
+			inout = get_inout(shmem);
+			memcpy(inout, buffer, MD_LENGTH);
 			end = tsc_read_ns();
 			copy_duration += (end - start);
 			if (MGH_DEBUG_MODE)
@@ -860,9 +852,9 @@ void inmate_main(void)
 		total_duration = copy_duration + workload_duration;
 		ns_per_byte = total_duration / input_len;
 
-		printk("MGHOUT:%ld|%ld,%ld(%ld+%ld),%lu,%llu\n", workload_counter,
+		printk("MGHOUT:%ld|%ld,%ld(%ld+%ld),%llu,%lu\n", workload_counter,
 		       input_len, total_duration, copy_duration,
-		       workload_duration, ns_per_byte, avg_freq);
+		       workload_duration, avg_freq, ns_per_byte);
 
 		// Indicate that we are done
 		shmem[OFFSET_SYNC] = 1;

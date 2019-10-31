@@ -10,10 +10,8 @@
 #         immediately set byte 0 to 3.
 #   If 3, the inmate is currently calculating sha3.
 # Byte      1-3: Reserved.
-# Byte      4-7: Input Length. A u32 for the length of the input data.
-# Byte     8-71: Output Data. 64 bytes (For 512-bit SHA3).
-# Byte  72-4103: Reserved.
-# Byte 4104-1MB: Input Data.
+# Byte      4-7: Data Length. u32
+# Byte      8-1MB: Data.
 
 #################################
 # How this demo will work:
@@ -45,19 +43,15 @@ MB = 1 << 20 # 2^20 = 1048576 = 1 MB
 
 # Map out shared memory (define the sizes)
 SYNC_SIZE = 1
-RES_1_SIZE = 3
-IN_LEN_SIZE = 4
-OUT_SIZE = 64
-RES_2_SIZE = 4032
-# The entire IVSHMEM region is 1 MB. Input Data gets the rest of the space.
-IN_SIZE = MB - (SYNC_SIZE + RES_1_SIZE + IN_LEN_SIZE + OUT_SIZE + RES_2_SIZE)
+RESERVED_SIZE = 3
+LEN_SIZE = 4
+# The entire IVSHMEM region is 1 MB. Data gets the rest of the space.
+DATA_SIZE = MB - (SYNC_SIZE + RESERVED_SIZE + LEN_SIZE)
 
 OFFSET_SYNC = 0
-OFFSET_RES_1 = OFFSET_SYNC + SYNC_SIZE
-OFFSET_IN_LEN = OFFSET_RES_1 + RES_1_SIZE
-OFFSET_OUT = OFFSET_IN_LEN + IN_LEN_SIZE
-OFFSET_RES_2 = OFFSET_OUT + OUT_SIZE
-OFFSET_IN = OFFSET_RES_2 + RES_2_SIZE
+OFFSET_RESERVED = OFFSET_SYNC + SYNC_SIZE
+OFFSET_LEN = OFFSET_RESERVED + RESERVED_SIZE
+OFFSET_DATA = OFFSET_LEN + LEN_SIZE
 
 def main(args):
     if args.file:
@@ -73,6 +67,7 @@ def main(args):
     # Test read
     print("Shmem content (first 30 bytes): '%s'" % shmem.read(30))
     print("Poll speed: %f" % args.poll)
+    print("Data region size (input/output max size): %d" % DATA_SIZE)
 
     # Check to make sure inmate is ready
     while not is_inmate_ready(shmem):
@@ -101,8 +96,8 @@ def main(args):
         stop = datetime.datetime.now()
         duration = (stop-start)
 
-        # Read the sha3 output
-        inmate_output = read_output(shmem).hex()
+        # Read the 64-byte (512-bit) sha3 output
+        inmate_output = read_output(shmem, 64).hex()
         # print('Inmate start (python): %d s %d us' % (start.second, start.microsecond))
         # print('Inmate stop (python): %d s %d us' % (stop.second, stop.microsecond))
         # Note: just because the resolution is in us, the accuracy is more in
@@ -157,14 +152,14 @@ def write_input_binary(shmem, input_bytes):
         print("Input:")
         print(input_bytes)
 
-    if input_len > IN_SIZE:
-        print("error: Input data too long; length > %d bytes)" % IN_SIZE)
+    if input_len > DATA_SIZE:
+        print("error: Input data too long; length > %d bytes)" % DATA_SIZE)
         sys.exit(1)
 
-    shmem.seek(OFFSET_IN_LEN)
+    shmem.seek(OFFSET_LEN)
     shmem.write(input_len.to_bytes(4, "little"))
     # Append an extra +1 to account for python's slice syntax
-    shmem[OFFSET_IN:(OFFSET_IN+(input_len-1))+1] = input_bytes
+    shmem[OFFSET_DATA:(OFFSET_DATA+(input_len-1))+1] = input_bytes
 
 # The inmate will wait until we write 2 to byte 0 of shmem
 def signal_inmate(shmem):
@@ -218,9 +213,9 @@ def file_to_sha3(file, str_mode=True):
     return output
 
 # Waits on an interrupt from the inmate to know the sha3 is complete
-def read_output(shmem):
+def read_output(shmem, size):
     # Append an extra +1 to account for python's slice syntax
-    return shmem[OFFSET_OUT:(OFFSET_OUT+(OUT_SIZE-1))+1]
+    return shmem[OFFSET_DATA:(OFFSET_DATA+(size-1))+1]
 
 ################################################################################
 # ARGS
