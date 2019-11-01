@@ -360,11 +360,8 @@ static void pollute_cache(char *mem, unsigned long size)
 /* Calculate sha3 of input and store in output */
 static void calculate_sha3(char *input, unsigned long input_len, char *output)
 {
-	// Add a null char to end of input for printing convenience
-	input[input_len] = '\0';
-
 	if (!sha3_mgh(input, (int)input_len, output, MD_LENGTH)) {
-		printk("sha3 failed for string `%s`\n", input);
+		printk("ERROR: SHA3 failed!\n");
 		return;
 	}
 
@@ -671,9 +668,9 @@ static void workload(char *input, unsigned long len, char *output,
 		printk("MGH DEBUG: Input data length: %lu\n", len);
 
 	// Account for space needed to tack on NULL character
-	if (len > DATA_SIZE - 1) {
+	if (len > DATA_SIZE) {
 		printk("MGH DEMO: Input data max length exceeded (%lu > %u)\n",
-		       len, DATA_SIZE - 1);
+		       len, DATA_SIZE);
 		return;
 	}
 
