@@ -153,16 +153,6 @@ static u64 query_max_freq(void)
 	return max_freq;
 }
 
-static u64 query_freq_ratio(void)
-{
-	// TODO: How to avoid preemption-timer interrupt between the following
-	// msr instructions? Needs to be successive, or readings will be off.
-	u64 mperf = read_msr(MSR_IA32_MPERF);
-	u64 aperf = read_msr(MSR_IA32_APERF);
-
-	return aperf / mperf;
-}
-
 static void clear_freq_counters(void)
 {
 	// TODO: How to avoid preemption-timer interrupt between the following
@@ -186,7 +176,6 @@ static u64 query_freq(void)
 {
 	static u64 counter = 0;
 	u64 freq;
-	u64 freq_ratio;
 
 	if (tsc_freq == 0) {
 		printk("MGH: ERROR: tsc_freq is uninitialized\n");
@@ -198,17 +187,27 @@ static u64 query_freq(void)
 		return 0;
 	}
 
-	freq_ratio = query_freq_ratio();
+	// TODO: How to avoid preemption-timer interrupt between the following
+	// msr instructions? Needs to be successive, or readings will be off.
+	u64 mperf = read_msr(MSR_IA32_MPERF);
+	u64 aperf = read_msr(MSR_IA32_APERF);
 
 	// Reset freq counters
 	clear_freq_counters();
 
-	// freq = tsc_freq * freq_ratio;
-	freq = max_freq * freq_ratio;
+	// NOTE: Beware of order of operations so integer division does not
+	// prematurely floor the ratio to 0!
+	// freq = (tsc_freq * aperf) / mperf;
+	freq = (max_freq * aperf) / mperf;
 
-	if (MGH_DEBUG_MODE)
-		printk("MGH: CPU Frequency %6llu: %llu Hz (ratio=%llu)\n",
-		       counter, freq, freq_ratio);
+	printk("MGH: %6llu: freq:%llu max_freq:%llu aperf:%llu mperf:%llu\n",
+	       counter, freq, max_freq, aperf, mperf);
+
+	if (freq < max_freq) {
+		printk("MGH: WARNING: %6llu: Actual CPU frequency less than max!\n",
+		       counter);
+	}
+
 	counter++;
 
 	return freq;
