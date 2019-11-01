@@ -358,15 +358,12 @@ static void pollute_cache(char *mem, unsigned long size)
 }
 
 /* Calculate sha3 of input and store in output */
-static void calculate_sha3(char *input, unsigned long input_length,
-			   char *output)
+static void calculate_sha3(char *input, unsigned long input_len, char *output)
 {
-	int i;
-
 	// Add a null char to end of input for printing convenience
-	input[input_length] = '\0';
+	input[input_len] = '\0';
 
-	if (!sha3_mgh(input, (int)input_length, output, MD_LENGTH)) {
+	if (!sha3_mgh(input, (int)input_len, output, MD_LENGTH)) {
 		printk("sha3 failed for string `%s`\n", input);
 		return;
 	}
@@ -376,7 +373,7 @@ static void calculate_sha3(char *input, unsigned long input_length,
 		return;
 
 	// Print out the calculated SHA3
-	for (i = 0; i < MD_LENGTH; ++i) {
+	for (int i = 0; i < MD_LENGTH; ++i) {
 		char upper = _get_hex_from_upper_nibble(output[i]);
 		char lower = _get_hex_from_lower_nibble(output[i]);
 		printk("%c", upper);
