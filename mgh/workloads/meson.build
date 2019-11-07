@@ -50,6 +50,15 @@ executable(
     ],
 )
 
+executable(
+    'count-bits', # name
+    'src/count-bits.c', # source files
+    install: true,
+    include_directories: [
+
+    ],
+)
+
 
 # Run test through ninja install
 test_script = find_program('test.sh')
