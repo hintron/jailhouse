@@ -18,21 +18,9 @@ int main(int argc, char const *argv[])
 	strcpy(buffer_a, "testing");
 
 	(void) sha3_mgh(buffer_a, strlen(buffer_a), &buffer_b, MD_LENGTH);
-	// for (int i = 0; i < MD_LENGTH; ++i) {
-	// 	printf("%02hhx", buffer_b[i]);
-	// }
-	// printf("\n");
 	for (int i = 0; i < ITERATIONS_REAL; ++i) {
 		(void) sha3_mgh(buffer_b, MD_LENGTH, &buffer_a, MD_LENGTH);
-		// for (int i = 0; i < MD_LENGTH; ++i) {
-		// 	printf("%02hhx", buffer_a[i]);
-		// }
-		// printf("\n");
 		(void) sha3_mgh(buffer_a, MD_LENGTH, &buffer_b, MD_LENGTH);
-		// for (int i = 0; i < MD_LENGTH; ++i) {
-		// 	printf("%02hhx", buffer_b[i]);
-		// }
-		// printf("\n");
 	}
 	(void) sha3_mgh(buffer_b, MD_LENGTH, &buffer_a, MD_LENGTH);
 
