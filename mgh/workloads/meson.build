@@ -62,4 +62,6 @@ executable(
 
 # Run test through ninja install
 test_script = find_program('test.sh')
-test('Test mgh-sha3-512 against known test vectors and rhash', test_script)
+test('Test sha3-512 against known test vectors and rhash', test_script)
+test_script = find_program('test-profile.sh')
+test('Test sha3-512-profile', test_script)
