@@ -1,6 +1,8 @@
-#include "include/sha3_mgh.h"
 #include <stdio.h>
-#include <string.h>
+#include "include/sha3_mgh.h"
+
+// This silences compiler warnings over of #include <string.h>
+size_t strlen(const char *s);
 
 // A 512-bit hash is really 64 bytes x 8 bits/byte
 #define MD_LENGTH (512/8)
