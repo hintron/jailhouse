@@ -2,12 +2,12 @@ project('mgh-sha3-512', 'c')
 
 src = [
     '../../inmates/lib/sha3-mgh.c',
-    'src/main.c',
+    'src/sha3-512.c',
 ]
 
 profile_src = [
     '../../inmates/lib/sha3-mgh.c',
-    'src/profile_main.c',
+    'src/sha3-512-profile.c',
 ]
 
 inmate_x86_inc = include_directories(
@@ -27,7 +27,7 @@ jailhouse_x86_inc = include_directories(
 # default!
 
 executable(
-    'mgh-sha3-512', # name
+    'sha3-512', # name
     src, # source files
     install: true,
     include_directories: [
@@ -39,7 +39,7 @@ executable(
 )
 
 executable(
-    'profile-sha3-512', # name
+    'sha3-512-profile', # name
     profile_src, # source files
     install: true,
     include_directories: [

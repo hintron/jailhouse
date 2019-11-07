@@ -2,6 +2,7 @@
 cd "${BASH_SOURCE%/*}" || exit
 
 # Compare my borrowed sha3 code to a 3rd-party tool (RHash)
+mgh_bin="./build/sha3-512"
 
 if hash rhash 2>/dev/null; then
     echo "rhash found"
@@ -10,15 +11,12 @@ else
     exit
 fi
 
-if [ -f ./build/mgh-sha3-512 ] ; then
-    echo "mgh-sha3-512 found"
+if [ -f $mgh_bin ] ; then
+    echo "$mgh_bin found"
 else
-    printf "mgh-sha3-512 not found. Build it with Meson:\n\n    meson build\n    ninja -C build\n\n"
+    printf "$mgh_bin not found. Build it with Meson:\n\n    meson build\n    ninja -C build\n\n"
     exit
 fi
-
-# Test the locally-built binary instead of what's on the path
-mgh_bin=./build/mgh-sha3-512
 
 function rhash_sha3_512 {
     # Remove trailing characters from rhash output

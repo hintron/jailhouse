@@ -4,7 +4,7 @@ cd "${BASH_SOURCE%/*}" || exit
 # Compare my borrowed sha3 code to a 3rd-party tool (RHash)
 
 # Test the locally-built binary instead of what's on the path
-mgh_bin=./build/profile-sha3-512
+mgh_bin=./build/sha3-512-profile
 
 if hash rhash 2>/dev/null; then
     echo "rhash found"
