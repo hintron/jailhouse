@@ -61,7 +61,9 @@ executable(
 
 
 # Run test through ninja install
-test_script = find_program('test.sh')
+test_script = find_program('test-sha3-512.sh')
 test('Test sha3-512 against known test vectors and rhash', test_script)
-test_script = find_program('test-profile.sh')
+test_script = find_program('test-sha3-512-profile.sh')
 test('Test sha3-512-profile', test_script)
+test_script = find_program('test-count-bits.sh')
+test('Test count-bits', test_script)

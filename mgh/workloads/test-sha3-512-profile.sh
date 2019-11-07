@@ -5,6 +5,7 @@ cd "${BASH_SOURCE%/*}" || exit
 
 # Test the locally-built binary instead of what's on the path
 mgh_bin=./build/sha3-512-profile
+RET_CODE=0
 
 if hash rhash 2>/dev/null; then
     echo "rhash found"
@@ -19,8 +20,6 @@ else
     printf "$mgh_bin not found. Build it with Meson:\n\n    meson build\n    ninja -C build\n\n"
     exit
 fi
-
-
 
 function rhash_sha3_512_hex {
     # Remove trailing characters from rhash output
@@ -58,8 +57,9 @@ if [ "$RHASH_A" != "$MGH_OUT" ]; then
     echo "FAILURE: rhash and mgh differ!:"
     echo "    rhash: $RHASH_A"
     echo "    mgh  : $MGH_OUT"
-    # Assume we are the ones to blame
-    MGH_FAILED="FAILED"
+    RET_CODE=1
 else
     echo "rhash and mgh match"
 fi
+
+exit $RET_CODE
