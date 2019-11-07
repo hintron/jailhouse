@@ -12,10 +12,8 @@ int main(int argc, char const *argv[])
 	int i;
 
 	if (argc != 2) {
-		printf("mgh-sha3-512 test program v0.1\n");
-		printf("Written by Michael Hinton.\n");
 		printf("Usage:\n");
-		printf("    mgh-sha3-512 \"input\"\n");
+		printf("    sha3-512 \"input\"\n");
 		printf("    \n");
 		printf("    This program will take an input string and calculate the sha3 of the input\n");
 		return 1;
