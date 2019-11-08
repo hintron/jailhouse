@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "include/sha3_mgh.h"
+#include "include/workloads.h"
 
 // This silences compiler warnings over of #include <string.h>
 size_t strlen(const char *s);

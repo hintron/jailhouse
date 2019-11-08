@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdlib.h>
-#include "include/sha3_mgh.h"
+#include "include/workloads.h"
 
 #define MAX_INPUT_PRINT 50
 
