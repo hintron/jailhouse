@@ -365,8 +365,10 @@ static void pollute_cache(char *mem, unsigned long size)
 }
 
 /* Calculate sha3 of input and store in output */
-static void calculate_sha3(char *input, unsigned long input_len, char *output)
+static void calculate_sha3(char *input, unsigned long input_len, char *output,
+			   unsigned long *output_len)
 {
+	*output_len = MD_LENGTH;
 	if (!sha3_mgh(input, (int)input_len, output, MD_LENGTH)) {
 		printk("ERROR: SHA3 failed!\n");
 		return;
@@ -700,8 +702,7 @@ static void workload(char *input, unsigned long len, char *output,
 
 	switch (WORKLOAD_MODE) {
 	case SHA3:
-		calculate_sha3(input, len, output);
-		*output_len = MD_LENGTH;
+		calculate_sha3(input, len, output, output_len);
 		break;
 	case CACHE_ANALYSIS:
 		cache_analysis(input, len, output, output_len);
