@@ -65,9 +65,10 @@ def main(args):
     # shmem = bytearray.fromhex('deadbeef')
 
     # Test read
-    print("Shmem content (first 30 bytes): '%s'" % shmem.read(30))
-    print("Poll speed: %f" % args.poll)
-    print("Data region size (input/output max size): %d" % DATA_SIZE)
+    print("Reading from inmate...")
+    # print("Shmem content (first 30 bytes): '%s'" % shmem.read(30))
+    # print("Poll speed: %f" % args.poll)
+    # print("Data region size (input/output max size): %d" % DATA_SIZE)
 
     # Check to make sure inmate is ready
     while not is_inmate_ready(shmem):
@@ -96,26 +97,34 @@ def main(args):
         stop = datetime.datetime.now()
         duration = (stop-start)
 
-        # Read the 64-byte (512-bit) sha3 output
-        inmate_output = read_output(shmem, 64).hex()
+        output_len = read_len(shmem)
+        inmate_output = read_output(shmem, output_len)
         # print('Inmate start (python): %d s %d us' % (start.second, start.microsecond))
         # print('Inmate stop (python): %d s %d us' % (stop.second, stop.microsecond))
         # Note: just because the resolution is in us, the accuracy is more in
         # the seconds range due to how slow Python is
         print('Inmate duration (python): %d s %d us' % (duration.seconds, duration.microseconds))
-        print('Inmate output: %s' % inmate_output)
+        print('Inmate output length: %s' % output_len)
 
-        if args.file:
-            rhash_output = file_to_sha3(args.input)
-        else:
-            rhash_output = str_to_sha3(input_data)
-        # TODO: Use this when taking in input files instead
+        # Only check output if it's a SHA3 (64 byte output is likely SHA3)
+        if output_len == 64:
+            inmate_output_hex = inmate_output.hex()
+            print('Inmate output: SHA3: %s' % inmate_output_hex)
+            if args.file:
+                rhash_output = file_to_sha3(args.input)
+            else:
+                rhash_output = str_to_sha3(input_data)
+            # TODO: Use this when taking in input files instead
 
-        # Check to make sure the hash calculated by the inmate is accurate
-        if inmate_output == rhash_output:
-            print("\nOutput is correct")
-        else:
-            print("\nOutput **DOES NOT** match rhash!...\n%s" % rhash_output)
+            # Check to make sure the hash calculated by the inmate is accurate
+            if inmate_output_hex == rhash_output:
+                print("\nOutput is correct")
+            else:
+                print("\nOutput **DOES NOT** match rhash!...\n%s" % rhash_output)
+        elif output_len == 4:
+            inmate_output_int = int.from_bytes(inmate_output[0:4], byteorder='little')
+            # Assume this is count set bits
+            print('Inmate output: set bits count: %s' % inmate_output_int)
 
         if (args.demo and not args.file):
             input_data = "%s+" % (input_data)
@@ -130,6 +139,7 @@ def main(args):
 
     f.close()
     shmem.close()
+    print("***************FINISHED*******************")
 
 # # Waits on an interrupt from the inmate to know the sha3 is complete
 def is_inmate_ready(shmem):
@@ -216,6 +226,14 @@ def file_to_sha3(file, str_mode=True):
 def read_output(shmem, size):
     # Append an extra +1 to account for python's slice syntax
     return shmem[OFFSET_DATA:(OFFSET_DATA+(size-1))+1]
+
+def read_len(shmem):
+    shmem.seek(OFFSET_LEN)
+    len_str = shmem.read(4)
+    length = int.from_bytes(len_str, byteorder='little')
+    # Append an extra +1 to account for python's slice syntax
+    return length
+
 
 ################################################################################
 # ARGS
