@@ -81,9 +81,10 @@ static throttle_mode_t THROTTLE_MODE = ALTERNATING;
 typedef enum {
 	SHA3,
 	CACHE_ANALYSIS,
+	COUNT_SET_BITS,
 } workload_t;
 
-static workload_t WORKLOAD_MODE = SHA3;
+static workload_t WORKLOAD_MODE = COUNT_SET_BITS;
 
 #define CACHE_ANALYSIS_SIZE_MB 20
 #define CACHE_ANALYSIS_POLLUTE_CACHE false
@@ -378,6 +379,7 @@ static void calculate_sha3(char *input, unsigned long input_len, char *output)
 	printk("\n");
 }
 
+// TODO: Actually make this useful?
 static void cache_analysis(char *input, unsigned long input_len, char *output,
 			   unsigned long *output_len)
 {
@@ -423,6 +425,24 @@ static void cache_analysis(char *input, unsigned long input_len, char *output,
 	buffer[buffer_size-1] = (2 * buffer[buffer_size-1]) + 1;
 
 	free_heap_all();
+}
+
+static void count_set_bits(char *input, unsigned long input_len, char *output,
+			   unsigned long *output_len)
+{
+	int result = 0;
+	int *output_int = (int *)output;
+	// mode = 0 (slow), 1 (less slow), or 2 (fast)
+	int mode = 0;
+
+	result = count_set_bits_mgh((unsigned char *)input, (int)input_len,
+				    mode);
+
+	// Copy int to output (assume little-endian order)
+	*output_int = result;
+
+	// Store # of bytes of result
+	*output_len = sizeof(result);
 }
 
 static void irq_handler(void)
@@ -680,6 +700,9 @@ static void workload(char *input, unsigned long len, char *output,
 		break;
 	case CACHE_ANALYSIS:
 		cache_analysis(input, len, output, output_len);
+		break;
+	case COUNT_SET_BITS:
+		count_set_bits(input, len, output, output_len);
 		break;
 	default:
 		printk("MGH: Error: Unknown workload mode\n");

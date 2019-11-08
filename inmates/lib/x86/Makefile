@@ -44,7 +44,8 @@ TARGETS := cpu-features.o excp.o header-common.o int.o ioapic.o printk.o
 TARGETS += setup.o uart.o
 TARGETS += ../alloc.o ../pci.o ../string.o ../cmdline.o ../setup.o ../test.o
 TARGETS += ../uart-8250.o ../printk.o
-TARGETS += ../sha3-mgh.o
+TARGETS += ../mgh-sha3.o
+TARGETS += ../mgh-count-set-bits.o
 TARGETS_32_ONLY := header-32.o
 TARGETS_64_ONLY := mem.o pci.o smp.o timing.o header-64.o
 
