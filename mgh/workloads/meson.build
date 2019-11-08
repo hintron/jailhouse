@@ -1,12 +1,12 @@
 project('mgh-sha3-512', 'c')
 
 src = [
-    '../../inmates/lib/sha3-mgh.c',
+    '../../inmates/lib/mgh-sha3.c',
     'src/sha3-512.c',
 ]
 
 profile_src = [
-    '../../inmates/lib/sha3-mgh.c',
+    '../../inmates/lib/mgh-sha3.c',
     'src/sha3-512-profile.c',
 ]
 
@@ -51,8 +51,8 @@ executable(
 )
 
 executable(
-    'count-bits', # name
-    ['src/count-bits.c', '../../inmates/lib/count-set-bits-mgh.c',],
+    'count-set-bits', # name
+    ['src/count-set-bits.c', '../../inmates/lib/mgh-count-set-bits.c',],
     install: true,
     include_directories: [
         inmate_x86_inc,
@@ -68,5 +68,5 @@ test_script = find_program('test-sha3-512.sh')
 test('Test sha3-512 against known test vectors and rhash', test_script)
 test_script = find_program('test-sha3-512-profile.sh')
 test('Test sha3-512-profile', test_script)
-test_script = find_program('test-count-bits.sh')
-test('Test count-bits', test_script)
+test_script = find_program('test-count-set-bits.sh')
+test('Test count-set-bits', test_script)
