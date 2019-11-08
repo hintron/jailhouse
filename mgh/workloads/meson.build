@@ -52,10 +52,13 @@ executable(
 
 executable(
     'count-bits', # name
-    'src/count-bits.c', # source files
+    ['src/count-bits.c', '../../inmates/lib/count-set-bits-mgh.c',],
     install: true,
     include_directories: [
-
+        inmate_x86_inc,
+        inmate_common_inc,
+        jailhouse_inc,
+        jailhouse_x86_inc
     ],
 )
 

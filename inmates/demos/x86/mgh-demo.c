@@ -378,8 +378,8 @@ static void calculate_sha3(char *input, unsigned long input_len, char *output)
 	printk("\n");
 }
 
-
-static void cache_analysis(char *input, unsigned long input_len, char *output)
+static void cache_analysis(char *input, unsigned long input_len, char *output,
+			   unsigned long *output_len)
 {
 	unsigned char *buffer = NULL;
 	unsigned long buffer_size = CACHE_ANALYSIS_SIZE_MB*MB;
@@ -679,9 +679,7 @@ static void workload(char *input, unsigned long len, char *output,
 		*output_len = MD_LENGTH;
 		break;
 	case CACHE_ANALYSIS:
-		cache_analysis(input, len, output);
-		// No output so far
-		*output_len = 0;
+		cache_analysis(input, len, output, output_len);
 		break;
 	default:
 		printk("MGH: Error: Unknown workload mode\n");
