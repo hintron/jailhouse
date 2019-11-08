@@ -141,7 +141,6 @@ extern int count_set_bits_mgh(unsigned char *input, int input_len, int mode)
             count += lut[input[i]];
             break;
         }
-
     }
     return count;
 }
