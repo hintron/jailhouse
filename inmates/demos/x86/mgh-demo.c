@@ -86,6 +86,13 @@ typedef enum {
 
 static workload_t WORKLOAD_MODE = COUNT_SET_BITS;
 
+typedef enum {
+	SLOW = 0, // right shift each bit of a byte into mask 0x1
+	FASTER = 1, // AND each bit of a byte with separate dedicated mask
+	FASTEST = 2, // Look-up table
+} csb_mode_t;
+static csb_mode_t COUNT_SET_BITS_MODE = FASTEST;
+
 #define CACHE_ANALYSIS_SIZE_MB 20
 #define CACHE_ANALYSIS_POLLUTE_CACHE false
 #define CACHE_ANALYSIS_USE_INPUT false
@@ -432,11 +439,9 @@ static void count_set_bits(char *input, unsigned long input_len, char *output,
 {
 	int result = 0;
 	int *output_int = (int *)output;
-	// mode = 0 (slow), 1 (less slow), or 2 (fast)
-	int mode = 0;
 
 	result = count_set_bits_mgh((unsigned char *)input, (int)input_len,
-				    mode);
+				    COUNT_SET_BITS_MODE);
 
 	// Copy int to output (assume little-endian order)
 	*output_int = result;
