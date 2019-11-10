@@ -2,7 +2,7 @@
 cd "${BASH_SOURCE%/*}" || exit
 
 # Compare my borrowed sha3 code to a 3rd-party tool (RHash)
-bin="./build/count-bits"
+bin="./build/count-set-bits"
 
 # Give it a good 100 million random bytes to process (to see the time difference
 # between the methods!). On Bazooka, this takes about 5 seconds, 4 seconds, and
