@@ -6,46 +6,47 @@
 #include <stdlib.h>
 #include "include/workloads.h"
 
+int strncmp(const char *s1, const char *s2, size_t n);
+
 #define MAX_INPUT_PRINT 50
 
-static int _count_set_bits(unsigned char *input, int input_len, int mode)
+const char *help_string =
+"Usage:\n"
+"    count-set-bits <input-file> [<mode=2>] [verbose]\n\n"
+
+"Print to stderr the number of 1s in an input file's binary data.\n\n"
+"    <input-file>: Required. The input file to use.\n\n"
+
+"    <mode>: Optional. Defaults to 2. Specifies the algorithm used.\n"
+"            Can be 0, 1, or 2. 0 is the slowest and 2 is the fastest.\n\n"
+
+"    verbose: Optional. If specified, additional information is printed to\n"
+"             stdout.\n\n"
+;
+
+static int _count_set_bits(unsigned char *input, int input_len, int mode,
+			   int verbose)
 {
 	int print = 0;
 
-	if (input_len <= MAX_INPUT_PRINT) {
-		print = 1;
-		printf("Input Bytes:\n");
-	} else {
-		printf("Input is too large to print out (> %d bytes)\n",
-		       MAX_INPUT_PRINT);
+	if (verbose) {
+		if (input_len <= MAX_INPUT_PRINT) {
+			print = 1;
+			printf("Input Bytes:\n");
+		} else {
+			printf("Input is too large to print out (> %d bytes)\n",
+			       MAX_INPUT_PRINT);
+		}
 	}
 
 	// Loop through each byte
-	for (int i = 0; i < input_len; ++i) {
-		if (print)
+	if (print) {
+		for (int i = 0; i < input_len; ++i) {
 			printf("0x%0x\n", input[i]);
+		}
 	}
 
 	return count_set_bits_mgh(input, input_len, mode);
-
-}
-
-static int count_set_bits_0(unsigned char *input, int input_len)
-{
-	printf("%s\n", __func__);
-	return _count_set_bits(input, input_len, 0);
-}
-
-static int count_set_bits_1(unsigned char *input, int input_len)
-{
-	printf("%s\n", __func__);
-	return _count_set_bits(input, input_len, 1);
-}
-
-static int count_set_bits_2(unsigned char *input, int input_len)
-{
-	printf("%s\n", __func__);
-	return _count_set_bits(input, input_len, 2);
 }
 
 int main(int argc, char const *argv[])
@@ -54,16 +55,29 @@ int main(int argc, char const *argv[])
 	struct stat file_info;
 	int input_len = 0;
 	void *input_buffer = NULL;
-	int result0 = 0;
-	int result1 = 0;
-	int result2 = 0;
+	int result = 0;
+	int mode = 2;
+	int verbose = 0;
 
-	if (argc != 2) {
-		printf("Usage:\n");
-		printf("    count-bits <input-file>\n");
-		printf("    \n");
-		printf("This program counts how many 1s there are in the input file's binary data.\n");
+	if (argc <= 1 || argc > 4) {
+		printf("%s", help_string);
 		return 1;
+	}
+
+	if (argc > 2) {
+		if (strncmp(argv[2], "verbose", 7) == 0) {
+			verbose = 1;
+		} else {
+			mode = atoi(argv[2]);
+		}
+	}
+
+	if (argc > 3) {
+		if (!verbose && (strncmp(argv[3], "verbose", 7) == 0)) {
+			verbose = 1;
+		} else {
+			mode = atoi(argv[3]);
+		}
 	}
 
 	fd = open(argv[1], O_RDONLY);
@@ -79,10 +93,12 @@ int main(int argc, char const *argv[])
 
 	// Count how many bytes are in the file
 	input_len = (int)file_info.st_size;
-	if (input_len == 1) {
-		printf("Input file is 1 byte\n");
-	} else {
-		printf("Input file is %d bytes\n", input_len);
+	if (verbose) {
+		if (input_len == 1) {
+			printf("Input file is 1 byte\n");
+		} else {
+			printf("Input file is %d bytes\n", input_len);
+		}
 	}
 
 	// Malloc count bytes of memory to hold the contents
@@ -97,25 +113,37 @@ int main(int argc, char const *argv[])
 		return 1;
 	}
 
-	// Count the number of 1's in the input_buffer's binary data and return
-	result0 = count_set_bits_0(input_buffer, input_len);
-	result1 = count_set_bits_1(input_buffer, input_len);
-	result2 = count_set_bits_2(input_buffer, input_len);
-
-	if (result0 != result1 || result0 != result2) {
-		printf("ERROR: result0 (%d), result1 (%d), and result2 (%d) differ\n",
-		       result0, result1, result2);
-		return 1;
-	} else {
-		printf("result0, result1, and result2 all match\n");
+	switch(mode){
+	default:
+		if (verbose) {
+			printf("ERROR: Mode could not be determined. Defaulting to 2.\n");
+		}
+		mode = 2;
+		/* Fall through */
+	case 0:
+	case 1:
+	case 2:
+		if (verbose) {
+			printf("Input mode=%d\n", mode);
+		}
+		// Count the number of 1's in the input_buffer's binary data and return
+		result = _count_set_bits(input_buffer, input_len, mode,
+					 verbose);
+		break;
 	}
 
-	if (result0 == 1) {
-		printf("There is 1 set bit in the input file\n");
+	// Let outside tools compare the results of different modes, if wanted.
+
+	if (verbose) {
+		if (result == 1) {
+			printf("There is 1 set bit in the input file\n");
+		} else {
+			printf("There are %d set bits in the input file\n", result);
+		}
 	} else {
-		printf("There are %d set bits in the input file\n", result0);
+		printf("%d\n", result);
 	}
 
-	// Success
+	// Return the result
 	return 0;
 }

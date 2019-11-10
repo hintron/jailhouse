@@ -9,8 +9,25 @@ bin="./build/count-set-bits"
 # 1 second for mode 0, 1, and 2, respectively.
 head -c 100000000 < /dev/urandom > tmp.txt
 
-$bin tmp.txt
-RET_CODE=$?
+mode0_result=$($bin tmp.txt 0)
+mode1_result=$($bin tmp.txt 1)
+mode2_result=$($bin tmp.txt 2)
+default_mode_result=$($bin tmp.txt)
+
+RET_CODE=1
+if [ "$mode0_result" != "$mode0_result" ] ||
+   [ "$mode0_result" != "$mode1_result" ] ||
+   [ "$mode0_result" != "$mode2_result" ] ||
+   [ "$mode0_result" != "$default_mode_result" ]; then
+    echo "Different modes gave different results!"
+    echo "mode       0: $mode0_result"
+    echo "mode       1: $mode1_result"
+    echo "mode       2: $mode2_result"
+    echo "mode default: $default_mode_result"
+else
+    # Everything checks out
+    RET_CODE=0
+fi
 
 rm tmp.txt
 
