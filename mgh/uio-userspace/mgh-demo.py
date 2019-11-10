@@ -125,6 +125,10 @@ def main(args):
             inmate_output_int = int.from_bytes(inmate_output[0:4], byteorder='little')
             # Assume this is count set bits
             print('Inmate output: set bits count: %s' % inmate_output_int)
+            if args.file:
+                validate_bits_set(args.input, inmate_output_int)
+            else:
+                print('Inmate output checking not supported for non-file input to %s:' % os.path.basename(__file__))
 
         if (args.demo and not args.file):
             input_data = "%s+" % (input_data)
@@ -221,6 +225,30 @@ def file_to_sha3(file, str_mode=True):
     if str_mode:
         output = output.decode("utf-8")
     return output
+
+def validate_bits_set(file, inmate_count):
+    # Get the bits-set-count executable relative to this file
+    script_dir = os.path.dirname(os.path.realpath(__file__))
+    count_set_bits_bin = "%s/../workloads/build/count-set-bits" % script_dir
+    cmd = "%s %s" % (count_set_bits_bin, file)
+    result = subprocess.run(cmd, shell=True, check=True, stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE)
+    linux_count = int(result.stdout.decode("utf-8"))
+    # For debugging
+    # print("script_dir: %s" % script_dir)
+    # print("file: %s" % file)
+    # print("count_set_bits_bin: %s" % count_set_bits_bin)
+    # print("cmd: %s" % cmd)
+    # print("Output: %s" % linux_count)
+    if linux_count == inmate_count:
+        print("Output is correct!")
+    else:
+        print("ERROR: Output is incorrect...")
+        print("Inmate output: %s" % inmate_count)
+        print("Linux output: %s" % linux_count)
+
+    # For debugging
+    # time.sleep(5)
 
 # Waits on an interrupt from the inmate to know the sha3 is complete
 def read_output(shmem, size):
