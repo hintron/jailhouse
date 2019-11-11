@@ -1,5 +1,3 @@
 #!/bin/bash
-cd "${BASH_SOURCE%/*}" || exit
-VERSION=$(../../tools/jailhouse --version)
-echo "MGH: Starting $VERSION in QEMU"
-sudo ../../tools/jailhouse enable ../../configs/x86/qemu-mgh.cell
+source ./common.sh
+start_root ../../configs/x86/qemu-mgh.cell

@@ -1,3 +1,3 @@
 #!/bin/bash
 source ./common.sh
-load_drivers
+end_inmate
