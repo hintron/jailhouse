@@ -1,5 +1,20 @@
 #!/bin/bash
-cd "${BASH_SOURCE%/*}" || exit
-sudo ../../tools/jailhouse cell create ../../configs/x86/inspiron-inmate.cell
-sudo ../../tools/jailhouse cell load inspiron-inmate ../../inmates/demos/x86/mgh-demo.bin
-sudo ../../tools/jailhouse cell start inspiron-inmate
+source ./common.sh
+################################################################################
+# Set inputs here
+################################################################################
+################################################################################
+INMATE_CELL=../../configs/x86/inspiron-inmate.cell
+INMATE_NAME=inspiron-inmate
+INMATE_PROGRAM=../../inmates/demos/x86/mgh-demo.bin
+################################################################################
+# DEBUG_MODE="true"
+# LOCAL_BUFFER="true"
+# THROTTLE_MODE=$TM_DEADLINE
+# WORKLOAD_MODE=$WM_SHA3
+# COUNT_SET_BITS_MODE=$CSBM_SLOW
+# POLLUTE_CACHE="true"
+# Generate command line arguments based on input
+INMATE_CMDLINE=$(set_cmdline)
+################################################################################
+start_inmate $INMATE_CELL $INMATE_NAME $INMATE_PROGRAM "$INMATE_CMDLINE"

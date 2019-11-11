@@ -4,17 +4,8 @@ source ./common.sh
 # Set inputs here
 ################################################################################
 ################################################################################
-INMATE_CELL=../../configs/x86/mgh-demo.cell
-INMATE_NAME=mgh-demo
-INMATE_PROGRAM=../../inmates/demos/x86/mgh-demo.bin
-################################################################################
-# DEBUG_MODE="true"
-# LOCAL_BUFFER="true"
-# THROTTLE_MODE=$TM_DEADLINE
-# WORKLOAD_MODE=$WM_SHA3
-# COUNT_SET_BITS_MODE=$CSBM_SLOW
-# POLLUTE_CACHE="true"
-# Generate command line arguments based on input
-INMATE_CMDLINE=$(set_cmdline)
+INMATE_CELL=../../configs/x86/apic-demo.cell
+INMATE_NAME=apic-demo
+INMATE_PROGRAM=../../inmates/demos/x86/apic-demo.bin
 ################################################################################
 start_inmate $INMATE_CELL $INMATE_NAME $INMATE_PROGRAM "$INMATE_CMDLINE"
