@@ -50,16 +50,6 @@ static unsigned long cpu_cache_line_size = 64;
 
 /* NOTE: The stack size is the same size as a page (4 kb) */
 
-/*
- * If true, then the input data will be copied into a local buffer before
- * passing to the workload. Then, a local output buffer will also be passed into
- * the workload. This is important, since the input originates in
- * a shared memory region which could introduce interference from other CPUs
- * if accessed throughout the workload.
- * NOTE: For now, keep disabled, because it hurts performance rather than helps.
- */
-#define LOCAL_BUFFER	false
-
 static bool is_throttle_enabled = false;
 static char str[32] = "Hello From MGH      ";
 
@@ -72,34 +62,35 @@ static char str[32] = "Hello From MGH      ";
 #define POLL_DELAY_US 1000
 
 typedef enum {
-	ALTERNATING,
-	DEADLINE,
+	ALTERNATING = 0,
+	DEADLINE = 1,
 } throttle_mode_t;
 
-static throttle_mode_t THROTTLE_MODE = ALTERNATING;
-
 typedef enum {
-	SHA3,
-	CACHE_ANALYSIS,
-	COUNT_SET_BITS,
+	SHA3 = 0,
+	CACHE_ANALYSIS = 1,
+	COUNT_SET_BITS = 2,
 } workload_t;
-
-static workload_t WORKLOAD_MODE = COUNT_SET_BITS;
 
 typedef enum {
 	SLOW = 0, // right shift each bit of a byte into mask 0x1
 	FASTER = 1, // AND each bit of a byte with separate dedicated mask
 	FASTEST = 2, // Look-up table
 } csb_mode_t;
-static csb_mode_t COUNT_SET_BITS_MODE = FASTEST;
+
+#define DEFAULT_DEBUG_MODE		false
+#define DEFAULT_LOCAL_BUFFER		false
+#define DEFAULT_THROTTLE_MODE		ALTERNATING
+#define DEFAULT_WORKLOAD_MODE		COUNT_SET_BITS
+#define DEFAULT_COUNT_SET_BITS_MODE	FASTEST
 
 #define CACHE_ANALYSIS_SIZE_MB 20
-#define CACHE_ANALYSIS_POLLUTE_CACHE false
 #define CACHE_ANALYSIS_USE_INPUT false
 
 /* Change to false to disable print statements during regular operation. */
-#define MGH_DEBUG_MODE	true
-// #define MGH_DEBUG_MODE	false
+static bool MGH_DEBUG_MODE = DEFAULT_DEBUG_MODE;
+static csb_mode_t COUNT_SET_BITS_MODE = DEFAULT_COUNT_SET_BITS_MODE;
+static bool CACHE_ANALYSIS_POLLUTE_CACHE = false;
 
 // # of bytes for the sha3-512 message digest output
 #define MD_LENGTH 	64
@@ -125,7 +116,6 @@ static void *alloc_heap(unsigned long size)
 	return alloc(size, PAGE_SIZE);
 }
 
-
 /*
  * Effectively "free" all memory allocated via alloc_heap() by resetting the
  * heap position.
@@ -134,7 +124,6 @@ static void free_heap_all(void)
 {
 	heap_pos = MGH_HEAP_BASE;
 }
-
 
 static u64 query_max_freq_ratio(void)
 {
@@ -458,7 +447,30 @@ static void irq_handler(void)
 	printk("MGH DEMO: got interrupt ... %d\n", irq_counter++);
 }
 
+static void command_line_params(bool *local_buffer,
+				throttle_mode_t *throttle_mode,
+				workload_t *workload_mode)
+{
+	*local_buffer = cmdline_parse_bool("lb",
+					   DEFAULT_LOCAL_BUFFER);
+	*throttle_mode = cmdline_parse_int("tm",
+					   DEFAULT_THROTTLE_MODE);
+	*workload_mode = cmdline_parse_int("wm",
+					   DEFAULT_WORKLOAD_MODE);
+	MGH_DEBUG_MODE = cmdline_parse_bool("debug", DEFAULT_DEBUG_MODE);
+	COUNT_SET_BITS_MODE = cmdline_parse_int("csbm",
+						DEFAULT_COUNT_SET_BITS_MODE);
+	CACHE_ANALYSIS_POLLUTE_CACHE = cmdline_parse_bool("pc",
+						CACHE_ANALYSIS_POLLUTE_CACHE);
 
+	printk("MGH: local_buffer=%d\n", *local_buffer);
+	printk("MGH: throttle_mode=%d\n", *throttle_mode);
+	printk("MGH: workload_mode=%d\n", *workload_mode);
+	printk("MGH: MGH_DEBUG_MODE=%d\n", MGH_DEBUG_MODE);
+	printk("MGH: COUNT_SET_BITS_MODE=%d\n", COUNT_SET_BITS_MODE);
+	printk("MGH: CACHE_ANALYSIS_POLLUTE_CACHE=%d\n",
+	       CACHE_ANALYSIS_POLLUTE_CACHE);
+}
 /*
  * Returns true if hardware setup was successful.
  */
@@ -688,7 +700,7 @@ static char *get_inout(volatile char *shmem)
  * of output while also setting output_len.
  */
 static void workload(char *input, unsigned long len, char *output,
-		     unsigned long *output_len)
+		     unsigned long *output_len, workload_t workload_mode)
 {
 	if (MGH_DEBUG_MODE)
 		printk("MGH DEBUG: Input data length: %lu\n", len);
@@ -700,7 +712,7 @@ static void workload(char *input, unsigned long len, char *output,
 		return;
 	}
 
-	switch (WORKLOAD_MODE) {
+	switch (workload_mode) {
 	case SHA3:
 		calculate_sha3(input, len, output, output_len);
 		break;
@@ -737,6 +749,21 @@ void inmate_main(void)
 	char *buffer;
 	struct ivshmem_dev_data devs[MAX_NDEV];
 	unsigned long workload_counter = 0;
+	throttle_mode_t throttle_mode = DEFAULT_THROTTLE_MODE;
+	workload_t workload_mode = DEFAULT_WORKLOAD_MODE;
+	/*
+	 * If true, then the input data will be copied into a local buffer
+	 * before passing to the workload. Then, a local output buffer will also
+	 * be passed into the workload. This is important, since the input
+	 * originates in a shared memory region which could introduce
+	 * interference from other CPUs if accessed throughout the workload.
+	 * NOTE: For now, keep disabled, because it hurts performance rather
+	 * than helps.
+	 */
+	bool local_buffer = DEFAULT_LOCAL_BUFFER;
+
+	/* Process custom command line parameters for inmate */
+	command_line_params(&local_buffer, &throttle_mode, &workload_mode);
 
 	if (!hardware_setup())
 		return;
@@ -767,7 +794,7 @@ void inmate_main(void)
 	/* Make sure MGH_HEAP address space is initialized */
 	expand_memory();
 
-	if (LOCAL_BUFFER) {
+	if (local_buffer) {
 		buffer = (char *)MGH_HEAP_BASE;
 		if (MGH_DEBUG_MODE) {
 			printk("MGH DEBUG: buffer addr: %p\n",
@@ -803,7 +830,7 @@ void inmate_main(void)
 		if (check_shutdown())
 			return;
 
-		switch (THROTTLE_MODE) {
+		switch (throttle_mode) {
 		case ALTERNATING:
 			check_alternating_throttle();
 			break;
@@ -831,7 +858,7 @@ void inmate_main(void)
 		/* Completely copy the input from shmem to a local buffer.
 		 * We want to avoid constantly reading from shared memory during
 		 * calculations, since that might slow things down. */
-		if (LOCAL_BUFFER) {
+		if (local_buffer) {
 			start = tsc_read_ns();
 			memcpy(buffer, inout, input_len);
 			/* Point workload input and output to local buffers */
@@ -846,7 +873,7 @@ void inmate_main(void)
 		freq2 = query_freq();
 
 		start = tsc_read_ns();
-		workload(inout, input_len, inout, &output_len);
+		workload(inout, input_len, inout, &output_len, workload_mode);
 		workload_counter++;
 		end = tsc_read_ns();
 
@@ -855,7 +882,7 @@ void inmate_main(void)
 
 		freq3 = query_freq();
 
-		if (LOCAL_BUFFER) {
+		if (local_buffer) {
 			start = tsc_read_ns();
 			inout = get_inout(shmem);
 			memcpy(inout, buffer, MD_LENGTH);
