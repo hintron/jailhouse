@@ -99,6 +99,8 @@ function rm_uio_driver {
 }
 
 function rm_drivers {
+    # End any existing console processes
+    end_jailhouse_processes
     rm_jailhouse_driver
     rm_uio_driver
 }
@@ -190,12 +192,20 @@ function clean_jailhouse {
     cd "$cur_dir"
 }
 
+# End any Jailhouse Linux processes (sudo jailhouse console -f), since anything
+# pending on the Jailhouse console will prevent unloading the driver.
+function end_jailhouse_processes {
+    echo 'sudo killall -e "jailhouse"'
+    sudo killall -e "jailhouse"
+    # Give it some time to kill stuff
+    sleep 1
+}
+
 # Try to unload and stop everything
-# Note that if a process is blocking on the console file Jailhouse won't stop
 function end_jailhouse {
-    # try ending inmate if running
+    # Try ending inmate if running
     end_inmate
-    # try ending root if running
+    # Try ending root if running
     end_root
 }
 
