@@ -159,7 +159,93 @@ function end_root {
     sudo $JAILHOUSE_BIN disable
 }
 
+# Combine start_root and start_inmate
+function start_jailhouse {
+    start_root "$1"
+    start_inmate "$2" "$3" "$4" "$5"
+}
+
 # End the inmate cell at position 1
 function show_cells {
     sudo $JAILHOUSE_BIN cell list
+}
+
+function build_jailhouse {
+    cur_dir=$(pwd)
+    cd ../..
+    make CC=gcc-7 > /dev/null
+    sudo make install CC=gcc-7 > /dev/null
+    cd mgh/uio-kernel-module
+    make > /dev/null
+    sudo make install > /dev/null
+    cd "$cur_dir"
+}
+
+function clean_jailhouse {
+    cur_dir=$(pwd)
+    cd ../..
+    make clean
+    cd mgh/uio-kernel-module
+    make clean
+    cd "$cur_dir"
+}
+
+# Try to unload and stop everything
+# Note that if a process is blocking on the console file Jailhouse won't stop
+function end_jailhouse {
+    # try ending inmate if running
+    end_inmate
+    # try ending root if running
+    end_root
+}
+
+# Stop everything, rebuild, and reload drivers
+function reset_jailhouse_all {
+    # Stop root and inmate
+    end_jailhouse
+    # try removing drivers
+    rm_drivers
+    build_jailhouse
+    load_drivers
+}
+
+function create_random_file_max {
+    file="$1"
+    # Create the maximum-sized input possible
+    # Current max size is (1 MB - 8)
+    size=$((2**20 - 8))
+    create_random_file $size $file
+}
+
+# 1: Size in bytes
+# 2: file name to overwrite
+function create_random_file {
+    size="$1"
+    file="$2"
+
+    if [ -z $file ]; then
+        file="__tmp.txt"
+    fi
+
+    # echo "head -c $size < /dev/urandom > $file"
+    head -c $size < /dev/urandom > $file
+}
+# See https://unix.stackexchange.com/questions/33629/how-can-i-populate-a-file-with-random-data
+
+# Send input to the inmate via file
+function send_inmate_input {
+    input_file="$1"
+
+    if [ -z $input_file ]; then
+        echo "error: no input file"
+        return
+    fi
+
+    # Send input to inmate
+    sudo ../uio-userspace/mgh-demo.py -f $input_file
+}
+
+# https://stackoverflow.com/questions/17066250/create-timestamp-variable-in-bash-script
+function timestamp {
+    date +"%Y-%m-%d_%H-%M-%S"
 }
