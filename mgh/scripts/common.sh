@@ -12,9 +12,9 @@ TMODE_ALTERNATING=0 # default
 TMODE_DEADLINE=1
 
 # Throttle mechanism values
-TMECH_SPIN=0 # default
-TMECH_CLOCK=1
-TMECH_PAUSE=2
+TMECH_CLOCK=0
+TMECH_SPIN=1 # default
+TMECH_PAUSE=2 # Not yet implemented
 
 # Workload mode values
 WM_SHA3=0
