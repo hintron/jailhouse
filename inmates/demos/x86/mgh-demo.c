@@ -67,6 +67,12 @@ typedef enum {
 } throttle_mode_t;
 
 typedef enum {
+	CLOCK = 0,
+	SPIN = 1,
+	PAUSE = 2, // Not yet implemented
+} throttle_t;
+
+typedef enum {
 	SHA3 = 0,
 	CACHE_ANALYSIS = 1,
 	COUNT_SET_BITS = 2,
@@ -81,6 +87,7 @@ typedef enum {
 #define DEFAULT_DEBUG_MODE		false
 #define DEFAULT_LOCAL_BUFFER		false
 #define DEFAULT_THROTTLE_MODE		ALTERNATING
+#define DEFAULT_THROTTLE_MECHANISM	SPIN
 #define DEFAULT_WORKLOAD_MODE		COUNT_SET_BITS
 #define DEFAULT_COUNT_SET_BITS_MODE	FASTEST
 
@@ -449,12 +456,15 @@ static void irq_handler(void)
 
 static void command_line_params(bool *local_buffer,
 				throttle_mode_t *throttle_mode,
-				workload_t *workload_mode)
+				workload_t *workload_mode,
+				throttle_t *throttle_mechanism)
 {
 	*local_buffer = cmdline_parse_bool("lb",
 					   DEFAULT_LOCAL_BUFFER);
-	*throttle_mode = cmdline_parse_int("tm",
+	*throttle_mode = cmdline_parse_int("tmode",
 					   DEFAULT_THROTTLE_MODE);
+	*throttle_mechanism = cmdline_parse_int("tmech",
+					   DEFAULT_THROTTLE_MECHANISM);
 	*workload_mode = cmdline_parse_int("wm",
 					   DEFAULT_WORKLOAD_MODE);
 	MGH_DEBUG_MODE = cmdline_parse_bool("debug", DEFAULT_DEBUG_MODE);
@@ -465,6 +475,7 @@ static void command_line_params(bool *local_buffer,
 
 	printk("MGH: local_buffer=%d\n", *local_buffer);
 	printk("MGH: throttle_mode=%d\n", *throttle_mode);
+	printk("MGH: throttle_mechanism=%d\n", *throttle_mechanism);
 	printk("MGH: workload_mode=%d\n", *workload_mode);
 	printk("MGH: MGH_DEBUG_MODE=%d\n", MGH_DEBUG_MODE);
 	printk("MGH: COUNT_SET_BITS_MODE=%d\n", COUNT_SET_BITS_MODE);
@@ -555,13 +566,28 @@ static bool device_setup(struct ivshmem_dev_data *devs)
 	return true;
 }
 
-static void enable_throttle(void)
+static void enable_throttle(throttle_t throttle_mechanism)
 {
 	/* Communicate to the hypervisor via the Jailhouse
 	 * communication region of this cell */
-	jailhouse_send_msg_to_cell(comm_region,
-			JAILHOUSE_MSG_START_THROTTLING);
-	printk("MGH DEMO: Sent enable throttle request\n");
+	switch (throttle_mechanism) {
+	case PAUSE:
+		printk("MGH: Error: PAUSE throttle mechanism not yet implemented. Defaulting to SPIN.\n");
+		/* Fall through */
+	case SPIN:
+		jailhouse_send_msg_to_cell(comm_region,
+						JAILHOUSE_MSG_THROTTLE_SPIN);
+		printk("MGH: Sent enable throttle request (spin)\n");
+		break;
+	case CLOCK:
+		jailhouse_send_msg_to_cell(comm_region,
+						JAILHOUSE_MSG_THROTTLE_CLOCK);
+		printk("MGH: Sent enable throttle request (clock)\n");
+		break;
+	default:
+		printk("MGH: Error: Invalid throttle mechanism requested\n");
+		break;
+	}
 }
 
 static void disable_throttle(void)
@@ -577,7 +603,7 @@ static void disable_throttle(void)
  * workload. Use this throttle mode to measure the impact of throttling with a
  * sustained root userspace workload.
  */
-static void check_alternating_throttle(void)
+static void check_alternating_throttle(throttle_t throttle_mechanism)
 {
 	static unsigned long start = 0;
 	static bool throttled = false;
@@ -605,7 +631,7 @@ static void check_alternating_throttle(void)
 		disable_throttle();
 		throttled = false;
 	} else {
-		enable_throttle();
+		enable_throttle(throttle_mechanism);
 		throttled = true;
 	}
 
@@ -617,7 +643,8 @@ static void check_alternating_throttle(void)
  * Turn on throttling if deadlines were not met during the last workload. Run
  * this check before every workload.
  */
-static void check_deadline_throttle(unsigned long ns_per_byte)
+static void check_deadline_throttle(unsigned long ns_per_byte,
+				    throttle_t throttle_mechanism)
 {
 	// static int now = 0;
 	// static int previous = 0;
@@ -643,7 +670,7 @@ static void check_deadline_throttle(unsigned long ns_per_byte)
 		disable_throttle();
 		is_throttle_enabled = false;
 	} else if (!meeting_deadlines && !is_throttle_enabled) {
-		enable_throttle();
+		enable_throttle(throttle_mechanism);
 		is_throttle_enabled = true;
 	}
 
@@ -750,6 +777,7 @@ void inmate_main(void)
 	struct ivshmem_dev_data devs[MAX_NDEV];
 	unsigned long workload_counter = 0;
 	throttle_mode_t throttle_mode = DEFAULT_THROTTLE_MODE;
+	throttle_t throttle_mechanism = DEFAULT_THROTTLE_MECHANISM;
 	workload_t workload_mode = DEFAULT_WORKLOAD_MODE;
 	/*
 	 * If true, then the input data will be copied into a local buffer
@@ -763,7 +791,8 @@ void inmate_main(void)
 	bool local_buffer = DEFAULT_LOCAL_BUFFER;
 
 	/* Process custom command line parameters for inmate */
-	command_line_params(&local_buffer, &throttle_mode, &workload_mode);
+	command_line_params(&local_buffer, &throttle_mode, &workload_mode,
+			    &throttle_mechanism);
 
 	if (!hardware_setup())
 		return;
@@ -838,10 +867,11 @@ void inmate_main(void)
 
 		switch (throttle_mode) {
 		case ALTERNATING:
-			check_alternating_throttle();
+			check_alternating_throttle(throttle_mechanism);
 			break;
 		case DEADLINE:
-			check_deadline_throttle(ns_per_byte);
+			check_deadline_throttle(ns_per_byte,
+						throttle_mechanism);
 			break;
 		default:
 			printk("MGH: Error: unknown throttle mode\n");

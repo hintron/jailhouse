@@ -33,10 +33,10 @@
 // MGH: Set a relatively high max CPU count
 #define CPUS_THROTTLED_COUNT	256
 
-typedef enum throttle_type {
+typedef enum {
 	CLOCK,
 	SPIN,
-	PAUSE
+	PAUSE,
 } throttle_t;
 
 static bool spin_loop_throttle = false;
@@ -49,8 +49,6 @@ static bool spin_loop_throttle = false;
 // This seems to mostly freeze everything (can't see prints)
 // #define SPIN_LOOP_ITERATIONS	1000000
 
-// #define THROTTLE_MECHANISM	CLOCK
-#define THROTTLE_MECHANISM	SPIN
 
 static const struct segment invalid_seg = {
 	.access_rights = 0x10000
@@ -938,7 +936,7 @@ void vcpu_vendor_reset(unsigned int sipi_vector)
  * Returns 1 if throttle needs to be turned OFF
  * Returns 0 if no action should be taken
  */
-static int check_throttle_request(int cpu_id)
+static int check_throttle_request(int cpu_id, throttle_t *throttle_mechanism)
 {
 	bool throttle_now = 0;
 	struct cell *cell;
@@ -951,9 +949,18 @@ static int check_throttle_request(int cpu_id)
 		 * from the inmate in order to know whether to start or stop
 		 * throttling */
 		switch (comm_region->msg_to_cell) {
-		case JAILHOUSE_MSG_START_THROTTLING:
+		case JAILHOUSE_MSG_THROTTLE_SPIN:
+			*throttle_mechanism = SPIN;
 			throttle_now = 2;
-			printk("MGH: CPU %2d: Enable throttling request from cell %s\n",
+			printk("MGH: CPU %2d: Enable throttling request (spin) from cell %s\n",
+			       cpu_id, cell->config->name);
+			jailhouse_send_reply_from_cell(comm_region,
+						       JAILHOUSE_MSG_REQUEST_APPROVED);
+			break;
+		case JAILHOUSE_MSG_THROTTLE_CLOCK:
+			*throttle_mechanism = CLOCK;
+			throttle_now = 2;
+			printk("MGH: CPU %2d: Enable throttling request (clock) from cell %s\n",
 			       cpu_id, cell->config->name);
 			jailhouse_send_reply_from_cell(comm_region,
 						       JAILHOUSE_MSG_REQUEST_APPROVED);
@@ -1110,6 +1117,7 @@ static void preemption_timer_handler_mgh(void)
 	static bool inmate_started = false;
 	// MGH: A bitmask indicating which CPUs are currently being throttled
 	static unsigned int cpus_throtted[CPUS_THROTTLED_COUNT];
+	static throttle_t throttle_mechanism = SPIN;
 
 	struct per_cpu *cpu_data = this_cpu_data();
 	int cpu_id = cpu_data->public.cpu_id;
@@ -1141,7 +1149,7 @@ static void preemption_timer_handler_mgh(void)
 		// The inmate was shut down! Undo any leftover throttling
 		if (cpus_throtted[cpu_id] == 1) {
 			cpus_throtted[cpu_id] = 0;
-			disable_throttling(THROTTLE_MECHANISM);
+			disable_throttling(throttle_mechanism);
 		}
 
 		// Check if there are any more CPUs to disable throttling for
@@ -1185,14 +1193,14 @@ static void preemption_timer_handler_mgh(void)
 
 	/* MGH: Throttle the root cell if the real-time VM is struggling
 	 * to meet deadlines */
-	switch(check_throttle_request(cpu_id)) {
+	switch(check_throttle_request(cpu_id, &throttle_mechanism)) {
 	case 2:
 		cpus_throtted[cpu_id] = 1;
-		enable_throttling(THROTTLE_MECHANISM);
+		enable_throttling(throttle_mechanism);
 		break;
 	case 1:
 		cpus_throtted[cpu_id] = 0;
-		disable_throttling(THROTTLE_MECHANISM);
+		disable_throttling(throttle_mechanism);
 		break;
 	case 0:
 	default:

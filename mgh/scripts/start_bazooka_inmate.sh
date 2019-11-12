@@ -13,7 +13,8 @@ INMATE_PROGRAM=../../inmates/demos/x86/mgh-demo.bin
 ################################################################################
 # DEBUG_MODE="true"
 # LOCAL_BUFFER="true"
-# THROTTLE_MODE=$TM_DEADLINE
+# THROTTLE_MODE=$TMODE_DEADLINE
+# THROTTLE_MECHANISM=$TMECH_CLOCK
 WORKLOAD_MODE=$WM_COUNT_SET_BITS
 # WORKLOAD_MODE=$WM_SHA3
 # COUNT_SET_BITS_MODE=$CSBM_SLOW

@@ -8,8 +8,13 @@ CMDLINE_OFFSET=0x1000
 JAILHOUSE_BIN=../../tools/jailhouse
 
 # Throttle mode values
-TM_ALTERNATING=0 # default
-TM_DEADLINE=1
+TMODE_ALTERNATING=0 # default
+TMODE_DEADLINE=1
+
+# Throttle mechanism values
+TMECH_SPIN=0 # default
+TMECH_CLOCK=1
+TMECH_PAUSE=2
 
 # Workload mode values
 WM_SHA3=0
@@ -24,7 +29,8 @@ CSBM_FASTEST=2 # default
 # Parameters:
 #   DEBUG_MODE=["true", "false"]
 #   LOCAL_BUFFER=["true", "false"]
-#   THROTTLE_MODE=[TM_ALTERNATING=0,TM_DEADLINE=1]
+#   THROTTLE_MODE=[TMODE_ALTERNATING=0,TMODE_DEADLINE=1]
+#   THROTTLE_MECHANISM=[TMECH_SPIN=0,TMECH_CLOCK=1,TMECH_PAUSE=2]
 #   WORKLOAD_MODE=[WM_SHA3=0,WM_CACHE_ANALYSIS=1,WM_COUNT_SET_BITS=2]
 #   COUNT_SET_BITS_MODE=[CSBM_SLOW=0,CSBM_FASTER=1,CSBM_FASTEST=2]
 #   POLLUTE_CACHE=["true", "false"]
@@ -41,7 +47,10 @@ function set_cmdline {
         CMDLINE="${CMDLINE} lb=$LOCAL_BUFFER"
     fi
     if [ ! -z $THROTTLE_MODE ]; then
-        CMDLINE="${CMDLINE} tm=$THROTTLE_MODE"
+        CMDLINE="${CMDLINE} tmode=$THROTTLE_MODE"
+    fi
+    if [ ! -z $THROTTLE_MECHANISM ]; then
+        CMDLINE="${CMDLINE} tmech=$THROTTLE_MECHANISM"
     fi
     if [ ! -z $WORKLOAD_MODE ]; then
         CMDLINE="${CMDLINE} wm=$WORKLOAD_MODE"

@@ -44,7 +44,8 @@ echo "tailf_pid: $tailf_pid" >> $EXPERIMENT_OUTPUT_FILE
 ################################################################################
 # DEBUG_MODE="true"
 # LOCAL_BUFFER="true"
-# THROTTLE_MODE=$TM_DEADLINE
+# THROTTLE_MODE=$TMODE_DEADLINE
+# THROTTLE_MECHANISM=$TMECH_CLOCK
 # WORKLOAD_MODE=$WM_COUNT_SET_BITS
 # COUNT_SET_BITS_MODE=$CSBM_FASTEST
 # POLLUTE_CACHE="true"
