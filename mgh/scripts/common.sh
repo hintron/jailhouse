@@ -259,3 +259,28 @@ function send_inmate_input {
 function timestamp {
     date +"%Y-%m-%d_%H-%M-%S"
 }
+
+function grep_freq_data {
+    in_file="$1"
+    out_file="$2"
+    grep_token "MGHFREQ:" $in_file $out_file
+}
+
+function grep_output_data {
+    in_file="$1"
+    out_file="$2"
+    grep_token "MGHOUT:" $in_file $out_file
+}
+
+# Grep a file for all lines with a token, remove that token from the output,
+# remove additional carriage returns (since grep puts a single carriage return
+# at the start, then adds carriage returns to all newlines), and store the
+# output in a file.
+function grep_token {
+    token="$1"
+    in_file="$2"
+    out_file="$3"
+
+    echo "grep \"$token\" $in_file | sed \"s/${token}//\""
+    grep "$token" $in_file | sed "s/${token}//" | sed "s/\r//" > $out_file
+}

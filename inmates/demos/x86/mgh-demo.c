@@ -197,7 +197,7 @@ static u64 query_freq(void)
 	// freq = (tsc_freq * aperf) / mperf;
 	freq = (max_freq * aperf) / mperf;
 
-	printk("MGH: %6llu: freq:%llu max_freq:%llu aperf:%llu mperf:%llu\n",
+	printk("MGHFREQ:%llu,%llu,%llu,%llu,%llu\n",
 	       counter, freq, max_freq, aperf, mperf);
 
 	if (freq < max_freq) {
@@ -771,6 +771,9 @@ void inmate_main(void)
 	if (!device_setup(devs))
 		return;
 
+	// Print out column headers for the subsequent frequency data
+	printk("MGHFREQ:counter,freq,max_freq,aperf,mperf\n");
+
 	(void) query_freq();
 
 	/* Initialize better (?) exception reporting */
@@ -811,6 +814,9 @@ void inmate_main(void)
 	shmem[OFFSET_SYNC] = 1;
 
 	(void) query_freq();
+
+	// Print out column headers for the subsequent data
+	printk("MGHOUT:workload_counter,input_len,total_duration,copy_duration,workload_duration,avg_freq,ns_per_byte\n");
 
 	// Continuously wait on userspace for a workload
 	while (1) {
@@ -874,7 +880,6 @@ void inmate_main(void)
 
 		start = tsc_read_ns();
 		workload(inout, input_len, inout, &output_len, workload_mode);
-		workload_counter++;
 		end = tsc_read_ns();
 
 		set_data_length(shmem, output_len);
@@ -899,9 +904,11 @@ void inmate_main(void)
 		total_duration = copy_duration + workload_duration;
 		ns_per_byte = total_duration / input_len;
 
-		printk("MGHOUT:%ld|%ld,%ld(%ld+%ld),%llu,%lu\n", workload_counter,
-		       input_len, total_duration, copy_duration,
-		       workload_duration, avg_freq, ns_per_byte);
+		printk("MGHOUT:%ld,%ld,%ld,%ld,%ld,%llu,%lu\n",
+		       workload_counter, input_len, total_duration,
+		       copy_duration, workload_duration, avg_freq, ns_per_byte);
+
+		workload_counter++;
 
 		// Indicate that we are done
 		shmem[OFFSET_SYNC] = 1;

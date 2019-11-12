@@ -12,11 +12,12 @@ INMATE_PROGRAM=../../inmates/demos/x86/mgh-demo.bin
 ################################################################################
 ITERATIONS=20
 # ITERATIONS=100
-# TODO: Get a timestamp?
 experiment_time="$(timestamp)"
 INPUT_FILE="input/input_${experiment_time}.txt"
 JAILHOUSE_OUTPUT_FILE="output/jailhouse_${experiment_time}.txt"
 EXPERIMENT_OUTPUT_FILE="output/experiment_${experiment_time}.txt"
+OUTPUT_DATA_FILE="output/data_${experiment_time}.csv"
+OUTPUT_FREQ_FILE="output/freq_${experiment_time}.csv"
 ################################################################################
 # Experiment-wide setup
 ################################################################################
@@ -90,3 +91,9 @@ sudo kill $tailf_pid >> $EXPERIMENT_OUTPUT_FILE 2>&1
 
 end_inmate >> $EXPERIMENT_OUTPUT_FILE 2>&1
 end_root >> $EXPERIMENT_OUTPUT_FILE 2>&1
+
+# Let's catch our breath
+sleep 1
+
+grep_output_data $JAILHOUSE_OUTPUT_FILE $OUTPUT_DATA_FILE >> $EXPERIMENT_OUTPUT_FILE 2>&1
+grep_freq_data $JAILHOUSE_OUTPUT_FILE $OUTPUT_FREQ_FILE >> $EXPERIMENT_OUTPUT_FILE 2>&1
