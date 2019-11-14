@@ -144,6 +144,5 @@ int main(int argc, char const *argv[])
 		printf("%d\n", result);
 	}
 
-	// Return the result
 	return 0;
 }
