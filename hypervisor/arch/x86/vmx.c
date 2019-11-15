@@ -313,7 +313,7 @@ static int vmx_check_features(void)
 	/* MGH: Require CPU clock modulation (frequency scaling).
 	 * (CPUID.01H:EDX[Bit 22] == 1) - Intel SDM vol. 4 table 2-2 */
 	if ((cpuid_edx(0x01, 0) & X86_FEATURE_CLOCK_MODULATION) == 0) {
-		printk("MGH: Failed to find clock modulation on CPU\n");
+		printk("MGH HYPER: Failed to find clock modulation on CPU\n");
 		return trace_error(-EIO);
 	}
 
@@ -321,7 +321,7 @@ static int vmx_check_features(void)
 	 * (CPUID.06H:EAX[Bit 5] == 1) - Intel SDM vol. 4 table 2-2 and
 	 * vol. 3b 14.7.3.1 */
 	if ((cpuid_eax(0x06, 0) & X86_FEATURE_EXTENDED_DUTY_CYCLE) == 0) {
-		printk("MGH: Failed to find extended duty cycle on CPU\n");
+		printk("MGH HYPER: Failed to find extended duty cycle on CPU\n");
 		return trace_error(-EIO);
 	}
 
@@ -956,27 +956,27 @@ static throttle_cmd_t check_throttle_request(int cpu_id)
 		switch (comm_region->msg_to_cell) {
 		case JAILHOUSE_MSG_THROTTLE_SPIN:
 			throttle_req = SPIN;
-			printk("MGH: CPU %2d: Enable throttling request (spin) from cell %s\n",
+			printk("MGH HYPER: CPU %2d: Enable throttling request (spin) from cell %s\n",
 			       cpu_id, cell->config->name);
 			jailhouse_send_reply_from_cell(comm_region,
 						       JAILHOUSE_MSG_REQUEST_APPROVED);
 			break;
 		case JAILHOUSE_MSG_THROTTLE_CLOCK:
 			throttle_req = CLOCK;
-			printk("MGH: CPU %2d: Enable throttling request (clock) from cell %s\n",
+			printk("MGH HYPER: CPU %2d: Enable throttling request (clock) from cell %s\n",
 			       cpu_id, cell->config->name);
 			jailhouse_send_reply_from_cell(comm_region,
 						       JAILHOUSE_MSG_REQUEST_APPROVED);
 			break;
 		case JAILHOUSE_MSG_STOP_THROTTLING:
 			throttle_req = STOP;
-			printk("MGH: CPU %2d: Disable throttling request from cell %s\n",
+			printk("MGH HYPER: CPU %2d: Disable throttling request from cell %s\n",
 			       cpu_id, cell->config->name);
 			jailhouse_send_reply_from_cell(comm_region,
 						       JAILHOUSE_MSG_REQUEST_APPROVED);
 			break;
 		case JAILHOUSE_MSG_NONE:
-			// printk("MGH: CPU %2d: No message found", cpu_id);
+			// printk("MGH HYPER: CPU %2d: No message found", cpu_id);
 			break;
 		default:
 			jailhouse_send_reply_from_cell(comm_region,
@@ -996,14 +996,14 @@ static void enable_throttle_spin_loop(void)
 {
 	if (!spin_loop_throttle) {
 		spin_loop_throttle = true;
-		printk("MGH: CPU %2d: Enabling spin loop throttle\n",
+		printk("MGH HYPER: CPU %2d: Enabling spin loop throttle\n",
 		       this_cpu_id());
 	}
 }
 
 static void enable_throttle_pause(void)
 {
-	printk("MGH: CPU %2d: TODO: Implement enable pause instruction throttle\n",
+	printk("MGH HYPER: CPU %2d: TODO: Implement enable pause instruction throttle\n",
 	       this_cpu_id());
 }
 
@@ -1023,7 +1023,7 @@ static void enable_throttle_clock_modulation(void)
 	// Enable clock modulation, if not already
 
 	if (!(feature_ctrl & CLOCK_MODULATION_ENABLE)) {
-		printk("MGH: CPU %2d: Enabling clock modulation throttling\n",
+		printk("MGH HYPER: CPU %2d: Enabling clock modulation throttling\n",
 		       this_cpu_id());
 		feature_ctrl |= CLOCK_MODULATION_ENABLE;
 		/* Commit the changes */
@@ -1037,14 +1037,14 @@ static void disable_throttle_spin_loop(void)
 {
 	if (spin_loop_throttle) {
 		spin_loop_throttle = false;
-		printk("MGH: CPU %2d: Disabling spin loop throttle\n",
+		printk("MGH HYPER: CPU %2d: Disabling spin loop throttle\n",
 		       this_cpu_id());
 	}
 }
 
 static void disable_throttle_pause(void)
 {
-	printk("MGH: CPU %2d: TODO: Implement disable pause instruction throttle\n",
+	printk("MGH HYPER: CPU %2d: TODO: Implement disable pause instruction throttle\n",
 	       this_cpu_id());
 }
 
@@ -1053,7 +1053,7 @@ static void disable_throttle_clock_modulation(void)
 	unsigned long feature_ctrl = read_msr(MSR_IA32_CLOCK_MODULATION);
 	// Disable clock modulation, if not already
 	if (feature_ctrl & CLOCK_MODULATION_ENABLE) {
-		printk("MGH: CPU %2d: Disabling clock modulation throttling\n",
+		printk("MGH HYPER: CPU %2d: Disabling clock modulation throttling\n",
 		       this_cpu_id());
 		feature_ctrl &= ~CLOCK_MODULATION_ENABLE;
 		/* Commit the changes */
@@ -1078,7 +1078,7 @@ static void disable_throttling(throttle_cmd_t type)
 		break;
 	case NONE:
 	default:
-		printk("MGH: CPU %2d: ERROR: Throttling mechanism not specified\n",
+		printk("MGH HYPER: CPU %2d: ERROR: Throttling mechanism not specified\n",
 		       this_cpu_id());
 		break;
 	}
@@ -1116,24 +1116,24 @@ static void preemption_timer_handler_mgh(void)
 
 	// Make sure this never runs when it isn't supposed to
 	if (cpu_data->vmx_state != VMCS_READY) {
-		printk("MGH: VMCS is not yet ready, so returning early from preemption_timer_handler_mgh()");
+		printk("MGH HYPER: VMCS is not yet ready, so returning early from preemption_timer_handler_mgh()");
 		return;
 	}
 
 	if (cycle_count == 0)
-		printk("MGH: CPU %2d: TSC bit %d being monitored\n", cpu_id,
+		printk("MGH HYPER: CPU %2d: TSC bit %d being monitored\n", cpu_id,
 		       get_preemption_tsc_bit());
 	cycle_count++;
 
-	// printk("MGH: CPU %2d: (%d) Running special preemption timer handler\n",
+	// printk("MGH HYPER: CPU %2d: (%d) Running special preemption timer handler\n",
 	//        cpu_id, cycle_count);
 
 	// NOTE: BAD. This doesn't work. Use the Jailhouse communication region instead
 	// // Try to access the ivshmem data
-	// // printk("MGH: CPU %2d: Accessing IVSHMEM\n", cpu_id);
+	// // printk("MGH HYPER: CPU %2d: Accessing IVSHMEM\n", cpu_id);
 	// char *ivshmem_ptr = (char *)0x3f101000;
 	// ivshmem_ptr[50] = '\0';
-	// printk("MGH: CPU %2d: ivshmem_ptr: [%p] -> %s\n", cpu_id, ivshmem_ptr,
+	// printk("MGH HYPER: CPU %2d: ivshmem_ptr: [%p] -> %s\n", cpu_id, ivshmem_ptr,
 	//        ivshmem_ptr);
 
 	if (inmate_started && !inmate_exists()) {
@@ -1149,7 +1149,7 @@ static void preemption_timer_handler_mgh(void)
 				/* There are still other CPUs that need to
 				 * disable throttling. Wait for them to do it
 				 * on their own */
-				printk("MGH: CPU %2d: There are still other CPUs (like CPU %d) that need throttling turned off\n",
+				printk("MGH HYPER: CPU %2d: There are still other CPUs (like CPU %d) that need throttling turned off\n",
 				       cpu_id, i);
 				return;
 			}
@@ -1163,7 +1163,7 @@ static void preemption_timer_handler_mgh(void)
 	// If it's the inmate's CPU, don't throttle it
 	if (cell != &root_cell) {
 		if (!print_inmate_cpu) {
-			printk("MGH: CPU %2d: This is the inmate's CPU!\n",
+			printk("MGH HYPER: CPU %2d: This is the inmate's CPU!\n",
 			       cpu_id);
 			print_inmate_cpu = true;
 		}
@@ -1185,7 +1185,7 @@ static void preemption_timer_handler_mgh(void)
 		cpus_throtted[cpu_id] = 1;
 		if (throttle_mechanism == NONE) {
 			throttle_mechanism = CLOCK;
-			printk("MGH: CPU %2d: Setting throttle mechanism to clock\n",
+			printk("MGH HYPER: CPU %2d: Setting throttle mechanism to clock\n",
 			       cpu_id);
 		}
 		enable_throttle_clock_modulation();
@@ -1194,7 +1194,7 @@ static void preemption_timer_handler_mgh(void)
 		cpus_throtted[cpu_id] = 1;
 		if (throttle_mechanism == NONE) {
 			throttle_mechanism = SPIN;
-			printk("MGH: CPU %2d: Setting throttle mechanism to spin\n",
+			printk("MGH HYPER: CPU %2d: Setting throttle mechanism to spin\n",
 			       cpu_id);
 		}
 		enable_throttle_spin_loop();
@@ -1203,7 +1203,7 @@ static void preemption_timer_handler_mgh(void)
 		cpus_throtted[cpu_id] = 1;
 		if (throttle_mechanism == NONE) {
 			throttle_mechanism = PAUSE;
-			printk("MGH: CPU %2d: Setting throttle mechanism to pause\n",
+			printk("MGH HYPER: CPU %2d: Setting throttle mechanism to pause\n",
 			       cpu_id);
 		}
 		enable_throttle_pause();
@@ -1235,7 +1235,7 @@ void vcpu_nmi_handler(void)
 	struct per_cpu *cpu_data = this_cpu_data();
 
 	cpu_data->public.stats[JAILHOUSE_CPU_STAT_VMEXITS_MANAGEMENT]++;
-	// printk("MGH: CPU %2d: vcpu_nmi_handler()\n", this_cpu_id());
+	// printk("MGH HYPER: CPU %2d: vcpu_nmi_handler()\n", this_cpu_id());
 	if (cpu_data->vmx_state == VMCS_READY) {
 		// Set timer to 0
 		vmcs_write32(VMX_PREEMPTION_TIMER_VALUE, 0);
@@ -1285,7 +1285,7 @@ static void vmx_check_events(void)
 	 * Do it this way to avoid issues with non-atomic checking of
 	 * immediate_exit (in case an NMI happens to come right now!). */
 	vmcs_write32(VMX_PREEMPTION_TIMER_VALUE, PREEMPTION_TIMEOUT);
-	// printk("MGH: CPU %2d: Setting preemption timer to %d\n", cpu_data->public.cpu_id, PREEMPTION_TIMEOUT);
+	// printk("MGH HYPER: CPU %2d: Setting preemption timer to %d\n", cpu_data->public.cpu_id, PREEMPTION_TIMEOUT);
 	if (cpu_data->immediate_exit > 0) {
 		/* Undo setting the timeout to return the value to 0 to trigger
 		 * the preemption timer immediately on next vm entry */
@@ -1298,9 +1298,9 @@ static void vmx_handle_exception_nmi(void)
 	struct public_per_cpu *cpu_public = &this_cpu_data()->public;
 	u32 intr_info = vmcs_read32(VM_EXIT_INTR_INFO);
 
-	// printk("MGH: CPU %2d: vmx_handle_exception_nmi\n", cpu_public->cpu_id);
+	// printk("MGH HYPER: CPU %2d: vmx_handle_exception_nmi\n", cpu_public->cpu_id);
 	if ((intr_info & INTR_INFO_INTR_TYPE_MASK) == INTR_TYPE_NMI_INTR) {
-		// printk("MGH: CPU %2d: Calling nmi interrupt handler via the `int` instruction\n", cpu_public->cpu_id);
+		// printk("MGH HYPER: CPU %2d: Calling nmi interrupt handler via the `int` instruction\n", cpu_public->cpu_id);
 		asm volatile("int %0" : : "i" (NMI_VECTOR));
 	} else {
 		cpu_public->stats[JAILHOUSE_CPU_STAT_VMEXITS_EXCEPTION]++;
