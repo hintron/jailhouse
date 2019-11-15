@@ -1,14 +1,13 @@
 #!/bin/bash
-cd "${BASH_SOURCE%/*}" || exit
+source ./common.sh
 
 # https://stackoverflow.com/a/19954510
-TIMESTAMP=$(date +%s)
+TIMESTAMP=$(timestamp)
 
 INPUT="/home/hintron/Videos/sources/i_am_legend.m2ts"
 OUTPUT="/home/hintron/Videos/jailhouse_outputs/run_$TIMESTAMP"
 
-
-HandBrakeCLI -i $INPUT -o $OUTPUT
+start_handbrake $INPUT $OUTPUT
 
 # Delete output?
 

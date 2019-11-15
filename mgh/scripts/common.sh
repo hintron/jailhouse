@@ -293,3 +293,10 @@ function grep_token {
     echo "grep \"$token\" $in_file | sed \"s/${token}//\""
     grep "$token" $in_file | sed "s/${token}//" | sed "s/\r//" > $out_file
 }
+
+function start_handbrake {
+    INPUT="$1"
+    OUTPUT="$2"
+
+    HandBrakeCLI -i $INPUT -o $OUTPUT
+}
