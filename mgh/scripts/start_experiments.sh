@@ -10,8 +10,8 @@ INMATE_PROGRAM=../../inmates/demos/x86/mgh-demo.bin
 ################################################################################
 # Experiment-wide inputs here
 ################################################################################
-ITERATIONS=20
-# ITERATIONS=100
+# ITERATIONS=20
+ITERATIONS=100
 experiment_time="$(timestamp)"
 INPUT_FILE="input/input_${experiment_time}.txt"
 JAILHOUSE_OUTPUT_FILE="output/jailhouse_${experiment_time}.txt"
@@ -42,11 +42,11 @@ echo "tailf_pid: $tailf_pid" >> $EXPERIMENT_OUTPUT_FILE
 ################################################################################
 # Inmate inputs
 ################################################################################
-# DEBUG_MODE="true"
+DEBUG_MODE="true"
 # LOCAL_BUFFER="true"
 # THROTTLE_MODE=$TMODE_DEADLINE
 # THROTTLE_MECHANISM=$TMECH_CLOCK
-# WORKLOAD_MODE=$WM_COUNT_SET_BITS
+WORKLOAD_MODE=$WM_RANDOM_ACCESS
 # COUNT_SET_BITS_MODE=$CSBM_FASTEST
 # POLLUTE_CACHE="true"
 # Generate command line arguments based on input
@@ -58,6 +58,8 @@ echo "*******************************************************" >> $JAILHOUSE_OUT
 echo "Experiment 1" >> $JAILHOUSE_OUTPUT_FILE
 echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
 start_jailhouse $ROOT_CELL $INMATE_CELL $INMATE_NAME $INMATE_PROGRAM "$INMATE_CMDLINE" >> $EXPERIMENT_OUTPUT_FILE 2>&1
+
+
 
 # Run X ITERATIONS from 1 to X
 for ((i = 0 ; i < $ITERATIONS ; i++)); do

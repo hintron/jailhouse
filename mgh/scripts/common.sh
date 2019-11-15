@@ -20,6 +20,7 @@ TMECH_PAUSE=2 # Not yet implemented
 WM_SHA3=0
 WM_CACHE_ANALYSIS=1
 WM_COUNT_SET_BITS=2 # default
+WM_RANDOM_ACCESS=3 # default
 
 # Count Set Bits Mode values
 CSBM_SLOW=0

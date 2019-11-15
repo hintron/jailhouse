@@ -76,6 +76,7 @@ typedef enum {
 	SHA3 = 0,
 	CACHE_ANALYSIS = 1,
 	COUNT_SET_BITS = 2,
+	RANDOM_ACCESS = 3,
 } workload_t;
 
 typedef enum {
@@ -448,6 +449,21 @@ static void count_set_bits(char *input, unsigned long input_len, char *output,
 	*output_len = sizeof(result);
 }
 
+static void random_access(char *input, unsigned long input_len, char *output,
+			  unsigned long *output_len)
+{
+	u64 result = 0;
+	int *output_int = (int *)output;
+
+	result = random_access_mgh((unsigned char *)input, (int)input_len);
+
+	// Copy int to output (assume little-endian order)
+	*output_int = (int)result;
+
+	// Store # of bytes of result
+	*output_len = sizeof(result);
+}
+
 static void irq_handler(void)
 {
 	static int irq_counter = 0;
@@ -748,6 +764,9 @@ static void workload(char *input, unsigned long len, char *output,
 		break;
 	case COUNT_SET_BITS:
 		count_set_bits(input, len, output, output_len);
+		break;
+	case RANDOM_ACCESS:
+		random_access(input, len, output, output_len);
 		break;
 	default:
 		printk("MGH: Error: Unknown workload mode\n");
