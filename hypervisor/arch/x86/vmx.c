@@ -37,7 +37,12 @@ typedef enum {
 	CLOCK,
 	SPIN,
 	PAUSE,
-} throttle_t;
+	STOP,
+	NONE,
+	STOP_CLOCK,
+	STOP_SPIN,
+	STOP_PAUSE,
+} throttle_cmd_t;
 
 static bool spin_loop_throttle = false;
 
@@ -932,13 +937,13 @@ void vcpu_vendor_reset(unsigned int sipi_vector)
 }
 
 /*
- * Returns 2 if throttle needs to be turned ON
- * Returns 1 if throttle needs to be turned OFF
- * Returns 0 if no action should be taken
+ * Returns SPIN, CLOCK, or PAUSE if throttle needs to be turned ON
+ * Returns STOP if throttle needs to be turned OFF
+ * Returns NONE if no action should be taken
  */
-static int check_throttle_request(int cpu_id, throttle_t *throttle_mechanism)
+static throttle_cmd_t check_throttle_request(int cpu_id)
 {
-	bool throttle_now = 0;
+	throttle_cmd_t throttle_req = NONE;
 	struct cell *cell;
 	struct jailhouse_comm_region *comm_region;
 
@@ -950,23 +955,21 @@ static int check_throttle_request(int cpu_id, throttle_t *throttle_mechanism)
 		 * throttling */
 		switch (comm_region->msg_to_cell) {
 		case JAILHOUSE_MSG_THROTTLE_SPIN:
-			*throttle_mechanism = SPIN;
-			throttle_now = 2;
+			throttle_req = SPIN;
 			printk("MGH: CPU %2d: Enable throttling request (spin) from cell %s\n",
 			       cpu_id, cell->config->name);
 			jailhouse_send_reply_from_cell(comm_region,
 						       JAILHOUSE_MSG_REQUEST_APPROVED);
 			break;
 		case JAILHOUSE_MSG_THROTTLE_CLOCK:
-			*throttle_mechanism = CLOCK;
-			throttle_now = 2;
+			throttle_req = CLOCK;
 			printk("MGH: CPU %2d: Enable throttling request (clock) from cell %s\n",
 			       cpu_id, cell->config->name);
 			jailhouse_send_reply_from_cell(comm_region,
 						       JAILHOUSE_MSG_REQUEST_APPROVED);
 			break;
 		case JAILHOUSE_MSG_STOP_THROTTLING:
-			throttle_now = 1;
+			throttle_req = STOP;
 			printk("MGH: CPU %2d: Disable throttling request from cell %s\n",
 			       cpu_id, cell->config->name);
 			jailhouse_send_reply_from_cell(comm_region,
@@ -981,19 +984,21 @@ static int check_throttle_request(int cpu_id, throttle_t *throttle_mechanism)
 			break;
 		}
 
-		/* Make a throttle enable trump any other request if there are
+		/* Make a throttle disable trump any other request if there are
 		 * multiple inmates */
-		if (throttle_now == 2)
+		if (throttle_req == STOP)
 			break;
 	}
-	return throttle_now;
+	return throttle_req;
 }
 
 static void enable_throttle_spin_loop(void)
 {
-	spin_loop_throttle = true;
-	printk("MGH: CPU %2d: Enabling spin loop throttle\n",
-	       this_cpu_id());
+	if (!spin_loop_throttle) {
+		spin_loop_throttle = true;
+		printk("MGH: CPU %2d: Enabling spin loop throttle\n",
+		       this_cpu_id());
+	}
 }
 
 static void enable_throttle_pause(void)
@@ -1001,6 +1006,10 @@ static void enable_throttle_pause(void)
 	printk("MGH: CPU %2d: TODO: Implement enable pause instruction throttle\n",
 	       this_cpu_id());
 }
+
+/* NOTE: Clock modulation will fail in QEMU/KVM and cause a #GP fault UNLESS
+ * kvm.ignore_msrs=1 is set in /etc/default/grub. If set, all
+ * unimplemented MSRs will be ignored (writes are no-ops, reads return 0). */
 
 // // TODO: Change the default clock modulation setting?
 // if ((feature_ctrl & CLOCK_MODULATION_DUTY_CYCLE) != NEW_SETTING)
@@ -1012,6 +1021,7 @@ static void enable_throttle_clock_modulation(void)
 {
 	unsigned long feature_ctrl = read_msr(MSR_IA32_CLOCK_MODULATION);
 	// Enable clock modulation, if not already
+
 	if (!(feature_ctrl & CLOCK_MODULATION_ENABLE)) {
 		printk("MGH: CPU %2d: Enabling clock modulation throttling\n",
 		       this_cpu_id());
@@ -1023,41 +1033,19 @@ static void enable_throttle_clock_modulation(void)
 	}
 }
 
-/**
- * Enable throttling on the current CPU
- */
-static void enable_throttling(throttle_t type)
-{
-	switch(type) {
-	case SPIN:
-		enable_throttle_spin_loop();
-		break;
-	case PAUSE:
-		enable_throttle_pause();
-		break;
-	case CLOCK:
-		enable_throttle_clock_modulation();
-		break;
-	default:
-		printk("MGH: CPU %2d: ERROR: Throttling mechanism not specified\n",
-		       this_cpu_id());
-		break;
-	}
-}
-
 static void disable_throttle_spin_loop(void)
 {
-	spin_loop_throttle = false;
-	printk("MGH: CPU %2d: Disabling spin loop throttle\n",
-	       this_cpu_id());
-
+	if (spin_loop_throttle) {
+		spin_loop_throttle = false;
+		printk("MGH: CPU %2d: Disabling spin loop throttle\n",
+		       this_cpu_id());
+	}
 }
 
 static void disable_throttle_pause(void)
 {
 	printk("MGH: CPU %2d: TODO: Implement disable pause instruction throttle\n",
 	       this_cpu_id());
-
 }
 
 static void disable_throttle_clock_modulation(void)
@@ -1076,7 +1064,7 @@ static void disable_throttle_clock_modulation(void)
 /**
  * Disable throttling on the current CPU
  */
-static void disable_throttling(throttle_t type)
+static void disable_throttling(throttle_cmd_t type)
 {
 	switch(type) {
 	case SPIN:
@@ -1088,6 +1076,7 @@ static void disable_throttling(throttle_t type)
 	case CLOCK:
 		disable_throttle_clock_modulation();
 		break;
+	case NONE:
 	default:
 		printk("MGH: CPU %2d: ERROR: Throttling mechanism not specified\n",
 		       this_cpu_id());
@@ -1117,7 +1106,9 @@ static void preemption_timer_handler_mgh(void)
 	static bool inmate_started = false;
 	// MGH: A bitmask indicating which CPUs are currently being throttled
 	static unsigned int cpus_throtted[CPUS_THROTTLED_COUNT];
-	static throttle_t throttle_mechanism = SPIN;
+	/* Remember which throttling mechanism is used for all cores so we can
+	 * turn it off later */
+	static throttle_cmd_t throttle_mechanism = NONE;
 
 	struct per_cpu *cpu_data = this_cpu_data();
 	int cpu_id = cpu_data->public.cpu_id;
@@ -1166,6 +1157,7 @@ static void preemption_timer_handler_mgh(void)
 		// Reset
 		inmate_started = false;
 		print_inmate_cpu = false;
+		throttle_mechanism = NONE;
 	}
 
 	// If it's the inmate's CPU, don't throttle it
@@ -1187,22 +1179,40 @@ static void preemption_timer_handler_mgh(void)
 		return;
 	}
 
-	/* NOTE: This will fail in QEMU/KVM and cause a #GP fault UNLESS
-	 * kvm.ignore_msrs=1 is set in /etc/default/grub. If set, all
-	 * unimplemented MSRs will be ignored (whatever that means). */
-
-	/* MGH: Throttle the root cell if the real-time VM is struggling
-	 * to meet deadlines */
-	switch(check_throttle_request(cpu_id, &throttle_mechanism)) {
-	case 2:
+	/* MGH: Throttle the root cell */
+	switch(check_throttle_request(cpu_id)) {
+	case CLOCK:
 		cpus_throtted[cpu_id] = 1;
-		enable_throttling(throttle_mechanism);
+		if (throttle_mechanism == NONE) {
+			throttle_mechanism = CLOCK;
+			printk("MGH: CPU %2d: Setting throttle mechanism to clock\n",
+			       cpu_id);
+		}
+		enable_throttle_clock_modulation();
 		break;
-	case 1:
+	case SPIN:
+		cpus_throtted[cpu_id] = 1;
+		if (throttle_mechanism == NONE) {
+			throttle_mechanism = SPIN;
+			printk("MGH: CPU %2d: Setting throttle mechanism to spin\n",
+			       cpu_id);
+		}
+		enable_throttle_spin_loop();
+		break;
+	case PAUSE:
+		cpus_throtted[cpu_id] = 1;
+		if (throttle_mechanism == NONE) {
+			throttle_mechanism = PAUSE;
+			printk("MGH: CPU %2d: Setting throttle mechanism to pause\n",
+			       cpu_id);
+		}
+		enable_throttle_pause();
+		break;
+	case STOP:
 		cpus_throtted[cpu_id] = 0;
 		disable_throttling(throttle_mechanism);
 		break;
-	case 0:
+	case NONE:
 	default:
 		// Do nothing
 		break;
