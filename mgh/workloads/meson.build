@@ -62,8 +62,20 @@ executable(
     ],
 )
 
+executable(
+    'random-access', # name
+    ['src/random-access.c', '../../inmates/lib/mgh-random-access.c',],
+    install: true,
+    include_directories: [
+        inmate_x86_inc,
+        inmate_common_inc,
+        jailhouse_inc,
+        jailhouse_x86_inc
+    ],
+)
 
 # Run test through ninja install
-test('Test sha3-512', find_program('test-sha3-512.sh'))
-test('Test sha3-512-profile', find_program('test-sha3-512-profile.sh'))
-test('Test count-set-bits', find_program('test-count-set-bits.sh'))
+test('sha3-512', find_program('test-sha3-512.sh'))
+test('sha3-512-profile', find_program('test-sha3-512-profile.sh'))
+test('count-set-bits', find_program('test-count-set-bits.sh'))
+test('random-access', find_program('test-random-access.sh'))

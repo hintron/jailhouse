@@ -3,3 +3,4 @@
 
 void *sha3_mgh(const void *, int, void *, int);
 int count_set_bits_mgh(unsigned char *, int, int);
+unsigned long long random_access_mgh(unsigned char *, int);

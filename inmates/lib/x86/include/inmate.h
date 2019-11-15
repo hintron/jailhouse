@@ -263,6 +263,7 @@ void pci_msix_set_vector(u16 bdf, unsigned int vector, u32 index);
 // MGH: Add workloads
 int sha3_mgh(const void *, int, void *, int);
 int count_set_bits_mgh(unsigned char *, int, int);
+u64 random_access_mgh(unsigned char *, int);
 
 extern volatile u32 smp_num_cpus;
 extern u8 smp_cpu_ids[SMP_MAX_CPUS];
