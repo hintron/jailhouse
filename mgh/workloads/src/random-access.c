@@ -62,7 +62,6 @@ int main(int argc, char const *argv[])
 			printf("Input file is %d bytes\n", input_len);
 		}
 	}
-	// return 1;
 
 	// Malloc count bytes of memory to hold the contents
 	input_buffer = (unsigned char *)malloc(input_len);
