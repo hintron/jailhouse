@@ -45,8 +45,8 @@ MB = 1 << 20 # 2^20 = 1048576 = 1 MB
 SYNC_SIZE = 1
 RESERVED_SIZE = 3
 LEN_SIZE = 4
-# The entire IVSHMEM region is 1 MB. Data gets the rest of the space.
-DATA_SIZE = MB - (SYNC_SIZE + RESERVED_SIZE + LEN_SIZE)
+# The entire IVSHMEM region is 40 MB. Data gets the rest of the space.
+DATA_SIZE = (40 * MB) - (SYNC_SIZE + RESERVED_SIZE + LEN_SIZE)
 
 OFFSET_SYNC = 0
 OFFSET_RESERVED = OFFSET_SYNC + SYNC_SIZE

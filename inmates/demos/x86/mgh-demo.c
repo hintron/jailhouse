@@ -42,9 +42,6 @@ static u64 max_freq = 0;
 #define MSR_IA32_APERF		0xe8
 #define MSR_PLATFORM_INFO	0xce
 
-#define MGH_HEAP_BASE		0x00200000
-#define MGH_HEAP_SiZE_MB	30
-
 #define EXPECTED_CPU_CACHE_LINE_SIZE 64
 static unsigned long cpu_cache_line_size = 64;
 
@@ -108,8 +105,11 @@ static bool CACHE_ANALYSIS_POLLUTE_CACHE = false;
 #define SYNC_SIZE 	1
 #define RESERVED_SIZE	3
 #define LEN_SIZE	4
-// The entire IVSHMEM region is 1 MB. Data gets the rest of the space.
-#define DATA_SIZE	(MB - (SYNC_SIZE + RESERVED_SIZE + LEN_SIZE))
+// The entire IVSHMEM region is 40 MB. Data gets the rest of the space.
+#define DATA_SIZE	((40 * MB) - (SYNC_SIZE + RESERVED_SIZE + LEN_SIZE))
+
+#define MGH_HEAP_BASE		0x00200000
+#define MGH_HEAP_SIZE		(35 * MB)
 
 #define OFFSET_SYNC 	0
 #define OFFSET_RESERVED	(OFFSET_SYNC + SYNC_SIZE)
@@ -782,10 +782,10 @@ static void workload(char *input, unsigned long len, char *output,
  */
 static void expand_memory(void)
 {
-	map_range((char *)MGH_HEAP_BASE, MGH_HEAP_SiZE_MB*MB, MAP_UNCACHED);
+	map_range((char *)MGH_HEAP_BASE, MGH_HEAP_SIZE, MAP_UNCACHED);
 
 	/* Set heap_pos to point to MGH_HEAP_BASE, instead of right after the
-	 * inmate's stack, so alloc() can allocated more than 1 MB. */
+	 * inmate's stack, so alloc() can allocate more than 1 MB. */
 	heap_pos = MGH_HEAP_BASE;
 }
 

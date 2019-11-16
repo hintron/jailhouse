@@ -232,8 +232,8 @@ function reset_jailhouse_all {
 function create_random_file_max {
     file="$1"
     # Create the maximum-sized input possible
-    # Current max size is (1 MB - 8)
-    size=$((2**20 - 8))
+    # Current max size is (40 MB - 8)
+    size=$(((2**20 * 40)- 8))
     create_random_file $size $file
 }
 
