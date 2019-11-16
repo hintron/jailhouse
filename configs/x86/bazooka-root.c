@@ -478,14 +478,14 @@ struct {
 		{
 			.phys_start = 0x3a600000,
 			.virt_start = 0x3a600000,
-			.size = 0x4b00000, // 75 MB
+			.size = 0x2400000, // 36 MB
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE,
 		},
 		/* MGH Added: IVSHMEM shared memory region (index N-1)*/
 		{
-			.phys_start = 0x3f100000,
-			.virt_start = 0x3f100000,
-			.size = 0x100000, // 1 MB
+			.phys_start = 0x3ca00000,
+			.virt_start = 0x3ca00000,
+			.size = 0x2800000, // 40 MB
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE,
 		},
 	},

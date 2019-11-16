@@ -77,28 +77,26 @@ struct {
 		},
 		/* MGH: IVSHMEM shared memory region */
 		{
-			.phys_start = 0x3f100000,
-			.virt_start = 0x3f100000,
-			// Create 1 MB of shared memory
-			.size = 0x00100000,
+			/* MGH: Having the virtual address be the same as the
+			 * the physical address is for convenience */
+			.phys_start = 0x3ca00000,
+			.virt_start = 0x3ca00000,
+			// Create 40 MB of shared memory
+			.size = 0x02800000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_ROOTSHARED,
-			/* MGH: I think virt_start could be set to 0x00101000.
-			 * However, then the virtual address would be different
-			 * than the physical address for no good reason. Being
-			 * the same is a convenience */
 		},
 		/* MGH: RAM - Heap */
 		{
-			/* MGH: We have 75 MB of memory allocated to the inmate
+			/* MGH: We have 36 MB of memory allocated to the inmate
 			 * in the root config, but are only using 1 MB for the
 			 * inmate's stack and program. So create an additional
-			 * "heap" area with the other 74 MB to allow the program
+			 * "heap" area with the other 35 MB to allow the program
 			 * more memory to work with. */
 			.phys_start = 0x3a700000,
 			.virt_start = 0x00200000,
-			// 74 MB (3a7 + 4a = 3f1)
-			.size = 0x04a00000,
+			// 35 MB (3a7 + 23 = 3ca)
+			.size = 0x02300000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_EXECUTE | JAILHOUSE_MEM_LOADABLE,
 		},
