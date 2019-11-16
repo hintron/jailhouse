@@ -40,13 +40,15 @@ device_file = '/dev/uio0'
 
 PAGE_SIZE = 4096
 MB = 1 << 20 # 2^20 = 1048576 = 1 MB
+# The entire IVSHMEM region is 40 MB
+IVSHMEM_SIZE = 40 * MB
 
 # Map out shared memory (define the sizes)
 SYNC_SIZE = 1
 RESERVED_SIZE = 3
 LEN_SIZE = 4
-# The entire IVSHMEM region is 40 MB. Data gets the rest of the space.
-DATA_SIZE = (40 * MB) - (SYNC_SIZE + RESERVED_SIZE + LEN_SIZE)
+# Data gets the rest of the space.
+DATA_SIZE = (IVSHMEM_SIZE) - (SYNC_SIZE + RESERVED_SIZE + LEN_SIZE)
 
 OFFSET_SYNC = 0
 OFFSET_RESERVED = OFFSET_SYNC + SYNC_SIZE
@@ -61,7 +63,7 @@ def main(args):
         input_data = args.input
 
     f = open(device_file, 'r+b')
-    shmem = mmap.mmap(f.fileno(), MB, offset=PAGE_SIZE)
+    shmem = mmap.mmap(f.fileno(), IVSHMEM_SIZE, offset=PAGE_SIZE)
     # shmem = bytearray.fromhex('deadbeef')
 
     # Test read
