@@ -108,8 +108,8 @@ static bool CACHE_ANALYSIS_POLLUTE_CACHE = false;
 // The entire IVSHMEM region is 40 MB. Data gets the rest of the space.
 #define DATA_SIZE	((40 * MB) - (SYNC_SIZE + RESERVED_SIZE + LEN_SIZE))
 
-#define MGH_HEAP_BASE		0x00200000
-#define MGH_HEAP_SIZE		(35 * MB)
+#define MGH_HEAP_BASE	0x00200000
+#define MGH_HEAP_SIZE	(35 * MB)
 
 #define OFFSET_SYNC 	0
 #define OFFSET_RESERVED	(OFFSET_SYNC + SYNC_SIZE)
