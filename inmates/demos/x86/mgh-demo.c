@@ -57,7 +57,7 @@ static char str[32] = "Hello From MGH      ";
 #define ALTERNATING_PERIOD 15000000000
 /* Delay 1 ms between each poll of the workload input */
 #define POLL_DELAY_US 1000
-#define THROTTLE_ITERATIONS 10
+#define THROTTLE_ITERATIONS 2
 typedef enum {
 	ALTERNATING = 0,
 	DEADLINE = 1,
@@ -725,15 +725,25 @@ static void check_alternating_throttle(throttle_t throttle_mechanism)
  * workload. Use this throttle mode to measure the impact of throttling with a
  * sustained root userspace workload.
  */
-static void check_iteration_throttle(throttle_t throttle_mechanism)
+static void check_iteration_throttle(throttle_t throttle_mechanism,
+				     unsigned long workload_counter)
 {
-	static unsigned long iterations = 0;
 	static bool throttled = false;
+	static bool toggled = false;
 
-	iterations++;
-	if (iterations <= THROTTLE_ITERATIONS) {
+	/* Toggle throttle once every THROTTLE_ITERATIONS */
+	if (workload_counter &&
+	    workload_counter % THROTTLE_ITERATIONS != 0) {
+		/* Reset toggle tracker */
+		if (toggled)
+			toggled = false;
+		return;
+	} else if (toggled) {
+		/* We already toggled the throttle, but haven't finished the
+		 * next workload */
 		return;
 	}
+
 	/* Toggle the throttling mechanism on or off */
 	if (throttled) {
 		disable_throttle();
@@ -743,8 +753,8 @@ static void check_iteration_throttle(throttle_t throttle_mechanism)
 		throttled = true;
 	}
 
-	/* Reset to 1 so further iterations remain balanced */
-	iterations = 1;
+	/* Don't keep toggling */
+	toggled = true;
 }
 
 /*
@@ -985,7 +995,8 @@ void inmate_main(void)
 						throttle_mechanism);
 			break;
 		case ITERATION:
-			check_iteration_throttle(throttle_mechanism);
+			check_iteration_throttle(throttle_mechanism,
+						 workload_counter);
 			break;
 		default:
 			printk("MGH: Error: unknown throttle mode\n");
