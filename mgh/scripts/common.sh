@@ -10,6 +10,7 @@ JAILHOUSE_BIN=../../tools/jailhouse
 # Throttle mode values
 TMODE_ALTERNATING=0 # default
 TMODE_DEADLINE=1
+TMODE_ITERATION=2
 
 # Throttle mechanism values
 TMECH_CLOCK=0
@@ -28,13 +29,13 @@ CSBM_FASTER=1
 CSBM_FASTEST=2 # default
 
 # Parameters:
-#   DEBUG_MODE=["true", "false"]
-#   LOCAL_BUFFER=["true", "false"]
-#   THROTTLE_MODE=[TMODE_ALTERNATING=0,TMODE_DEADLINE=1]
-#   THROTTLE_MECHANISM=[TMECH_SPIN=0,TMECH_CLOCK=1,TMECH_PAUSE=2]
-#   WORKLOAD_MODE=[WM_SHA3=0,WM_CACHE_ANALYSIS=1,WM_COUNT_SET_BITS=2]
-#   COUNT_SET_BITS_MODE=[CSBM_SLOW=0,CSBM_FASTER=1,CSBM_FASTEST=2]
-#   POLLUTE_CACHE=["true", "false"]
+#   DEBUG_MODE
+#   LOCAL_BUFFER
+#   THROTTLE_MODE
+#   THROTTLE_MECHANISM
+#   WORKLOAD_MODE
+#   COUNT_SET_BITS_MODE
+#   POLLUTE_CACHE
 #
 # Do `CMDLINE=$(set_cmdline)` to capture the output of this function
 # Make sure to use " " later whenever using $CMDLINE, or else only first item

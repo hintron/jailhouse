@@ -57,10 +57,11 @@ static char str[32] = "Hello From MGH      ";
 #define ALTERNATING_PERIOD 15000000000
 /* Delay 1 ms between each poll of the workload input */
 #define POLL_DELAY_US 1000
-
+#define THROTTLE_ITERATIONS 10
 typedef enum {
 	ALTERNATING = 0,
 	DEADLINE = 1,
+	ITERATION = 2,
 } throttle_mode_t;
 
 typedef enum {
@@ -484,19 +485,82 @@ static void command_line_params(bool *local_buffer,
 	*workload_mode = cmdline_parse_int("wm",
 					   DEFAULT_WORKLOAD_MODE);
 	MGH_DEBUG_MODE = cmdline_parse_bool("debug", DEFAULT_DEBUG_MODE);
-	COUNT_SET_BITS_MODE = cmdline_parse_int("csbm",
-						DEFAULT_COUNT_SET_BITS_MODE);
-	CACHE_ANALYSIS_POLLUTE_CACHE = cmdline_parse_bool("pc",
-						CACHE_ANALYSIS_POLLUTE_CACHE);
 
 	printk("MGH: local_buffer=%d\n", *local_buffer);
-	printk("MGH: throttle_mode=%d\n", *throttle_mode);
-	printk("MGH: throttle_mechanism=%d\n", *throttle_mechanism);
-	printk("MGH: workload_mode=%d\n", *workload_mode);
 	printk("MGH: MGH_DEBUG_MODE=%d\n", MGH_DEBUG_MODE);
-	printk("MGH: COUNT_SET_BITS_MODE=%d\n", COUNT_SET_BITS_MODE);
-	printk("MGH: CACHE_ANALYSIS_POLLUTE_CACHE=%d\n",
-	       CACHE_ANALYSIS_POLLUTE_CACHE);
+	switch(*throttle_mode){
+	case ALTERNATING:
+		printk("MGH: throttle_mode=ALTERNATING\n");
+		break;
+	case DEADLINE:
+		printk("MGH: throttle_mode=DEADLINE\n");
+		break;
+	case ITERATION:
+		printk("MGH: throttle_mode=ITERATION\n");
+		break;
+	default:
+		printk("MGH: throttle_mode=?\n");
+		break;
+	}
+
+	switch(*throttle_mechanism){
+	case CLOCK:
+		printk("MGH: throttle_mechanism=CLOCK\n");
+		break;
+	case SPIN:
+		printk("MGH: throttle_mechanism=SPIN\n");
+		break;
+	case PAUSE:
+		printk("MGH: throttle_mechanism=PAUSE\n");
+		break;
+	default:
+		printk("MGH: throttle_mechanism=?\n");
+		break;
+	}
+
+	switch(*workload_mode){
+	case SHA3:
+		printk("MGH: workload_mode=SHA3\n");
+		break;
+	case CACHE_ANALYSIS:
+		printk("MGH: workload_mode=CACHE_ANALYSIS\n");
+		break;
+	case COUNT_SET_BITS:
+		printk("MGH: workload_mode=COUNT_SET_BITS\n");
+		break;
+	case RANDOM_ACCESS:
+		printk("MGH: workload_mode=RANDOM_ACCESS\n");
+		break;
+	default:
+		printk("MGH: workload_mode=?\n");
+		break;
+	}
+
+	if (*workload_mode == COUNT_SET_BITS) {
+		COUNT_SET_BITS_MODE = cmdline_parse_int("csbm",
+			DEFAULT_COUNT_SET_BITS_MODE);
+		switch(COUNT_SET_BITS_MODE){
+		case SLOW:
+			printk("MGH: COUNT_SET_BITS_MODE=SLOW\n");
+			break;
+		case FASTER:
+			printk("MGH: COUNT_SET_BITS_MODE=FASTER\n");
+			break;
+		case FASTEST:
+			printk("MGH: COUNT_SET_BITS_MODE=FASTEST\n");
+			break;
+		default:
+			printk("MGH: COUNT_SET_BITS_MODE=?\n");
+			break;
+		}
+	}
+
+	if (*workload_mode == CACHE_ANALYSIS) {
+		CACHE_ANALYSIS_POLLUTE_CACHE = cmdline_parse_bool("pc",
+						CACHE_ANALYSIS_POLLUTE_CACHE);
+		printk("MGH: CACHE_ANALYSIS_POLLUTE_CACHE=%d\n",
+		       CACHE_ANALYSIS_POLLUTE_CACHE);
+	}
 }
 /*
  * Returns true if hardware setup was successful.
@@ -653,6 +717,34 @@ static void check_alternating_throttle(throttle_t throttle_mechanism)
 
 	/* Reset timer */
 	start = tsc_read_ns();
+}
+
+/*
+ * Toggle the throttling mechanism on or off if it has been ALTERNATING_PERIOD
+ * nanoseconds since the last throttle toggle. Run this check before every
+ * workload. Use this throttle mode to measure the impact of throttling with a
+ * sustained root userspace workload.
+ */
+static void check_iteration_throttle(throttle_t throttle_mechanism)
+{
+	static unsigned long iterations = 0;
+	static bool throttled = false;
+
+	iterations++;
+	if (iterations <= THROTTLE_ITERATIONS) {
+		return;
+	}
+	/* Toggle the throttling mechanism on or off */
+	if (throttled) {
+		disable_throttle();
+		throttled = false;
+	} else {
+		enable_throttle(throttle_mechanism);
+		throttled = true;
+	}
+
+	/* Reset to 1 so further iterations remain balanced */
+	iterations = 1;
 }
 
 /*
@@ -891,6 +983,9 @@ void inmate_main(void)
 		case DEADLINE:
 			check_deadline_throttle(ns_per_byte,
 						throttle_mechanism);
+			break;
+		case ITERATION:
+			check_iteration_throttle(throttle_mechanism);
 			break;
 		default:
 			printk("MGH: Error: unknown throttle mode\n");
