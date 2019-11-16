@@ -910,6 +910,12 @@ void inmate_main(void)
 
 		freq1 = query_freq();
 
+		/* Don't exceed heap when copying input into local buffer */
+		if (local_buffer && input_len > MGH_HEAP_SIZE) {
+			printk("MGH: WARNING: Inmate input > %d B (heap size), so can't copy input into local buffer.\n", MGH_HEAP_SIZE);
+			local_buffer = false;
+		}
+
 		/* Completely copy the input from shmem to a local buffer.
 		 * We want to avoid constantly reading from shared memory during
 		 * calculations, since that might slow things down. */
