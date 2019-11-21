@@ -500,6 +500,7 @@ static void command_line_params(bool *local_buffer,
 		*throttle_iterations = cmdline_parse_int("throttleiter",
 						DEFAULT_THROTTLE_ITERATIONS);
 		printk("MGH: throttle_mode=ITERATION\n");
+		printk("MGH: throttle_iterations=%d\n", *throttle_iterations);
 		break;
 	default:
 		printk("MGH: throttle_mode=?\n");
