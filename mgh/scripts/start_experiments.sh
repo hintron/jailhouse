@@ -45,12 +45,12 @@ echo "tailf_pid: $tailf_pid" >> $EXPERIMENT_OUTPUT_FILE
 ################################################################################
 DEBUG_MODE="true"
 # LOCAL_BUFFER="true"
-# THROTTLE_MODE=$TMODE_ITERATION
+THROTTLE_MODE=$TMODE_ITERATION
 # THROTTLE_MECHANISM=$TMECH_CLOCK
 WORKLOAD_MODE=$WM_RANDOM_ACCESS
 # COUNT_SET_BITS_MODE=$CSBM_FASTEST
 # POLLUTE_CACHE="true"
-# THROTTLE_ITERATIONS=2
+THROTTLE_ITERATIONS=5
 # Generate command line arguments based on input
 INMATE_CMDLINE=$(set_cmdline) >> $EXPERIMENT_OUTPUT_FILE 2>&1
 ################################################################################
