@@ -63,6 +63,9 @@ function set_cmdline {
     if [ ! -z $POLLUTE_CACHE ]; then
         CMDLINE="${CMDLINE} pc=$POLLUTE_CACHE"
     fi
+    if [ ! -z $THROTTLE_ITERATIONS ]; then
+        CMDLINE="${CMDLINE} throttleiter=$THROTTLE_ITERATIONS"
+    fi
 
     # Remove leading whitespace
     # https://stackoverflow.com/questions/369758/how-to-trim-whitespace-from-a-bash-variable

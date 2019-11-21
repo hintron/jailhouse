@@ -57,7 +57,6 @@ static char str[32] = "Hello From MGH      ";
 #define ALTERNATING_PERIOD 15000000000
 /* Delay 1 ms between each poll of the workload input */
 #define POLL_DELAY_US 1000
-#define THROTTLE_ITERATIONS 2
 typedef enum {
 	ALTERNATING = 0,
 	DEADLINE = 1,
@@ -89,6 +88,7 @@ typedef enum {
 #define DEFAULT_THROTTLE_MECHANISM	SPIN
 #define DEFAULT_WORKLOAD_MODE		COUNT_SET_BITS
 #define DEFAULT_COUNT_SET_BITS_MODE	FASTEST
+#define DEFAULT_THROTTLE_ITERATIONS	5
 
 #define CACHE_ANALYSIS_SIZE_MB 20
 #define CACHE_ANALYSIS_USE_INPUT false
@@ -474,7 +474,8 @@ static void irq_handler(void)
 static void command_line_params(bool *local_buffer,
 				throttle_mode_t *throttle_mode,
 				workload_t *workload_mode,
-				throttle_t *throttle_mechanism)
+				throttle_t *throttle_mechanism,
+				int *throttle_iterations)
 {
 	*local_buffer = cmdline_parse_bool("lb",
 					   DEFAULT_LOCAL_BUFFER);
@@ -496,6 +497,8 @@ static void command_line_params(bool *local_buffer,
 		printk("MGH: throttle_mode=DEADLINE\n");
 		break;
 	case ITERATION:
+		*throttle_iterations = cmdline_parse_int("throttleiter",
+						DEFAULT_THROTTLE_ITERATIONS);
 		printk("MGH: throttle_mode=ITERATION\n");
 		break;
 	default:
@@ -726,14 +729,15 @@ static void check_alternating_throttle(throttle_t throttle_mechanism)
  * sustained root userspace workload.
  */
 static void check_iteration_throttle(throttle_t throttle_mechanism,
-				     unsigned long workload_counter)
+				     unsigned long workload_counter,
+				     int throttle_iterations)
 {
 	static bool throttled = false;
 	static bool toggled = false;
 
-	/* Toggle throttle once every THROTTLE_ITERATIONS */
+	/* Toggle throttle once every throttle_iterations */
 	if (workload_counter &&
-	    workload_counter % THROTTLE_ITERATIONS != 0) {
+	    workload_counter % throttle_iterations != 0) {
 		/* Reset toggle tracker */
 		if (toggled)
 			toggled = false;
@@ -900,6 +904,7 @@ void inmate_main(void)
 	throttle_mode_t throttle_mode = DEFAULT_THROTTLE_MODE;
 	throttle_t throttle_mechanism = DEFAULT_THROTTLE_MECHANISM;
 	workload_t workload_mode = DEFAULT_WORKLOAD_MODE;
+	int throttle_iterations = DEFAULT_THROTTLE_ITERATIONS;
 	/*
 	 * If true, then the input data will be copied into a local buffer
 	 * before passing to the workload. Then, a local output buffer will also
@@ -913,7 +918,7 @@ void inmate_main(void)
 
 	/* Process custom command line parameters for inmate */
 	command_line_params(&local_buffer, &throttle_mode, &workload_mode,
-			    &throttle_mechanism);
+			    &throttle_mechanism, &throttle_iterations);
 
 	if (!hardware_setup())
 		return;
@@ -996,7 +1001,8 @@ void inmate_main(void)
 			break;
 		case ITERATION:
 			check_iteration_throttle(throttle_mechanism,
-						 workload_counter);
+						 workload_counter,
+						 throttle_iterations);
 			break;
 		default:
 			printk("MGH: Error: unknown throttle mode\n");
