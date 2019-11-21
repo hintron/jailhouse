@@ -10,8 +10,9 @@ INMATE_PROGRAM=../../inmates/demos/x86/mgh-demo.bin
 ################################################################################
 # Experiment-wide inputs here
 ################################################################################
+ITERATIONS=10
 # ITERATIONS=20
-ITERATIONS=100
+# ITERATIONS=100
 experiment_time="$(timestamp)"
 INPUT_FILE="input/input_${experiment_time}.txt"
 JAILHOUSE_OUTPUT_FILE="output/jailhouse_${experiment_time}.txt"
@@ -79,6 +80,9 @@ done
 # ################################################################################
 # Final Cleanup
 # ################################################################################
+
+# Let's wait for the last iteration to print everything
+sleep 5
 
 # Flush any buffers
 echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
