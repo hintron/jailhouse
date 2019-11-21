@@ -71,8 +71,9 @@ echo "Experiment 1" >> $JAILHOUSE_OUTPUT_FILE
 echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
 start_jailhouse $ROOT_CELL $INMATE_CELL $INMATE_NAME $INMATE_PROGRAM "$INMATE_CMDLINE" >> $EXPERIMENT_OUTPUT_FILE 2>&1
 
-input_sizes=(1000000 5000000 10000000)
-for input_size in "${input_sizes[@]}"; do
+# input_sizes=(1000000 5000000 10000000)
+# for input_size in "${input_sizes[@]}"; do
+for ((input_size = 1000000 ; i < 11000000 ; i += 1000000)); do
     echo "Input Size=$input_size" >> $EXPERIMENT_OUTPUT_FILE
     echo "---------------------------------------------------------" >> $EXPERIMENT_OUTPUT_FILE
     # Run X ITERATIONS from 1 to X
