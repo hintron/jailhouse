@@ -19,7 +19,7 @@ JAILHOUSE_OUTPUT_FILE="output/jailhouse_${experiment_time}.txt"
 EXPERIMENT_OUTPUT_FILE="output/experiment_${experiment_time}.txt"
 OUTPUT_DATA_FILE="output/data_${experiment_time}.csv"
 OUTPUT_FREQ_FILE="output/freq_${experiment_time}.csv"
-HANDBRAKE_FILE="output/handbrake_${experiment_time}.csv"
+INTERFERENCE_WORKLOAD_OUTPUT="output/interference_${experiment_time}.txt"
 ################################################################################
 # Experiment-wide setup
 ################################################################################
@@ -59,7 +59,7 @@ INMATE_CMDLINE=$(set_cmdline) >> $EXPERIMENT_OUTPUT_FILE 2>&1
 # Start recording experiment output
 
 # Put process in the background and kill it once done
-start_handbrake_demo >> $HANDBRAKE_FILE 2>&1 &
+start_handbrake_demo >> $INTERFERENCE_WORKLOAD_OUTPUT 2>&1 &
 handbrake_pid=$!
 
 echo "Wait 10 seconds for handbrake (pid=$handbrake_pid) to spin up" >> $EXPERIMENT_OUTPUT_FILE
