@@ -1023,6 +1023,12 @@ void inmate_main(void)
 		// Indicate that we are now working on sha3
 		shmem[OFFSET_SYNC] = 3;
 		input_len = get_data_length(shmem);
+
+		if (input_len == 0) {
+			printk("MGH: ERROR: Inmate input is 0. Exiting...\n");
+			return;
+		}
+
 		inout = get_inout(shmem);
 
 		freq1 = query_freq();
