@@ -73,7 +73,7 @@ start_jailhouse $ROOT_CELL $INMATE_CELL $INMATE_NAME $INMATE_PROGRAM "$INMATE_CM
 
 # input_sizes=(1000000 5000000 10000000)
 # for input_size in "${input_sizes[@]}"; do
-for ((input_size = 1000000 ; i < 11000000 ; i += 1000000)); do
+for ((input_size = 1000000 ; input_size < 11000000 ; input_size += 1000000)); do
     echo "Input Size=$input_size" >> $EXPERIMENT_OUTPUT_FILE
     echo "---------------------------------------------------------" >> $EXPERIMENT_OUTPUT_FILE
     # Run X ITERATIONS from 1 to X
