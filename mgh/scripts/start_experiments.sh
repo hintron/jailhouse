@@ -10,8 +10,8 @@ INMATE_PROGRAM=../../inmates/demos/x86/mgh-demo.bin
 ################################################################################
 # Experiment-wide inputs here
 ################################################################################
-ITERATIONS=10
-# ITERATIONS=20
+# ITERATIONS=10
+ITERATIONS=20
 # ITERATIONS=100
 experiment_time="$(timestamp)"
 INPUT_FILE="input/input_${experiment_time}.txt"
@@ -47,10 +47,11 @@ DEBUG_MODE="true"
 # LOCAL_BUFFER="true"
 THROTTLE_MODE=$TMODE_ITERATION
 # THROTTLE_MECHANISM=$TMECH_CLOCK
-WORKLOAD_MODE=$WM_RANDOM_ACCESS
+WORKLOAD_MODE=$SHA3
+# WORKLOAD_MODE=$WM_RANDOM_ACCESS
 # COUNT_SET_BITS_MODE=$CSBM_FASTEST
 # POLLUTE_CACHE="true"
-THROTTLE_ITERATIONS=5
+THROTTLE_ITERATIONS=10
 # Generate command line arguments based on input
 INMATE_CMDLINE=$(set_cmdline) >> $EXPERIMENT_OUTPUT_FILE 2>&1
 ################################################################################
