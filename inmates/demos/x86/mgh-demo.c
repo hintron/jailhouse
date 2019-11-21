@@ -736,9 +736,12 @@ static void check_iteration_throttle(throttle_t throttle_mechanism,
 	static bool throttled = false;
 	static bool toggled = false;
 
+	/* Do nothing on the first workload run */
+	if (workload_counter == 0)
+		return;
+
 	/* Toggle throttle once every throttle_iterations */
-	if (workload_counter &&
-	    workload_counter % throttle_iterations != 0) {
+	if (workload_counter % throttle_iterations == 0) {
 		/* Reset toggle tracker */
 		if (toggled)
 			toggled = false;
@@ -747,19 +750,19 @@ static void check_iteration_throttle(throttle_t throttle_mechanism,
 		/* We already toggled the throttle, but haven't finished the
 		 * next workload */
 		return;
-	}
-
-	/* Toggle the throttling mechanism on or off */
-	if (throttled) {
-		disable_throttle();
-		throttled = false;
 	} else {
-		enable_throttle(throttle_mechanism);
-		throttled = true;
-	}
+		/* Toggle the throttling mechanism on or off */
+		if (throttled) {
+			disable_throttle();
+			throttled = false;
+		} else {
+			enable_throttle(throttle_mechanism);
+			throttled = true;
+		}
 
-	/* Don't keep toggling */
-	toggled = true;
+		/* Don't keep toggling */
+		toggled = true;
+	}
 }
 
 /*
