@@ -55,6 +55,14 @@ THROTTLE_ITERATIONS=$(($ITERATIONS / 2))
 # Generate command line arguments based on input
 INMATE_CMDLINE=$(set_cmdline) >> $EXPERIMENT_OUTPUT_FILE 2>&1
 ################################################################################
+# Start recording experiment output
+
+# Put process in the background and kill it once done
+start_handbrake_demo >> $JAILHOUSE_OUTPUT_FILE &
+handbrake_pid=$!
+
+echo "Wait 10 seconds for handbrake (pid=$handbrake_pid) to spin up" >> $EXPERIMENT_OUTPUT_FILE
+sleep 10
 
 end_jailhouse >> $EXPERIMENT_OUTPUT_FILE 2>&1
 echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
@@ -62,14 +70,21 @@ echo "Experiment 1" >> $JAILHOUSE_OUTPUT_FILE
 echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
 start_jailhouse $ROOT_CELL $INMATE_CELL $INMATE_NAME $INMATE_PROGRAM "$INMATE_CMDLINE" >> $EXPERIMENT_OUTPUT_FILE 2>&1
 
-
-
-# Run X ITERATIONS from 1 to X
-for ((i = 0 ; i < $ITERATIONS ; i++)); do
-    echo "Iteration $i" >> $EXPERIMENT_OUTPUT_FILE
-    create_random_file_max $INPUT_FILE >> $EXPERIMENT_OUTPUT_FILE 2>&1
-    send_inmate_input $INPUT_FILE >> $EXPERIMENT_OUTPUT_FILE 2>&1
+input_sizes=(1000000, 5000000, 10000000)
+for input_size in "${input_sizes[@]}"; do
+    echo "Input Size=$input_size" >> $EXPERIMENT_OUTPUT_FILE
+    echo "---------------------------------------------------------" >> $EXPERIMENT_OUTPUT_FILE
+    # Run X ITERATIONS from 1 to X
+    for ((i = 0 ; i < $ITERATIONS ; i++)); do
+        echo "Iteration $i: Input Size=$input_size" >> $EXPERIMENT_OUTPUT_FILE
+        create_random_file $input_size $INPUT_FILE >> $EXPERIMENT_OUTPUT_FILE 2>&1
+        send_inmate_input $INPUT_FILE >> $EXPERIMENT_OUTPUT_FILE 2>&1
+    done
 done
+
+echo "sudo kill $handbrake_pid" >> $EXPERIMENT_OUTPUT_FILE
+sudo kill $handbrake_pid >> $EXPERIMENT_OUTPUT_FILE 2>&1
+
 
 # ################################################################################
 # ################################################################################
