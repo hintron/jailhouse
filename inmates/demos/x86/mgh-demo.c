@@ -489,7 +489,7 @@ static void command_line_params(bool *local_buffer,
 
 	printk("MGH: local_buffer=%d\n", *local_buffer);
 	printk("MGH: MGH_DEBUG_MODE=%d\n", MGH_DEBUG_MODE);
-	switch(*throttle_mode){
+	switch (*throttle_mode) {
 	case ALTERNATING:
 		printk("MGH: throttle_mode=ALTERNATING\n");
 		break;
@@ -506,7 +506,7 @@ static void command_line_params(bool *local_buffer,
 		break;
 	}
 
-	switch(*throttle_mechanism){
+	switch (*throttle_mechanism) {
 	case CLOCK:
 		printk("MGH: throttle_mechanism=CLOCK\n");
 		break;
@@ -521,7 +521,7 @@ static void command_line_params(bool *local_buffer,
 		break;
 	}
 
-	switch(*workload_mode){
+	switch (*workload_mode) {
 	case SHA3:
 		printk("MGH: workload_mode=SHA3\n");
 		break;
@@ -542,7 +542,7 @@ static void command_line_params(bool *local_buffer,
 	if (*workload_mode == COUNT_SET_BITS) {
 		COUNT_SET_BITS_MODE = cmdline_parse_int("csbm",
 			DEFAULT_COUNT_SET_BITS_MODE);
-		switch(COUNT_SET_BITS_MODE){
+		switch (COUNT_SET_BITS_MODE) {
 		case SLOW:
 			printk("MGH: COUNT_SET_BITS_MODE=SLOW\n");
 			break;
