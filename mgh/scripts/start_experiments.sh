@@ -60,7 +60,7 @@ INMATE_CMDLINE=$(set_cmdline) >> $EXPERIMENT_OUTPUT_FILE 2>&1
 
 # Put process in the background and kill it once done
 start_handbrake_demo >> $INTERFERENCE_WORKLOAD_OUTPUT 2>&1 &
-handbrake_pid=$!
+# NOTE: $! doesn't get the proper PID of HandBrakeCLI, so just kill it by name
 
 echo "Wait 10 seconds for handbrake (pid=$handbrake_pid) to spin up" >> $EXPERIMENT_OUTPUT_FILE
 sleep 10
@@ -84,8 +84,8 @@ for ((input_size = 1000000 ; input_size < 11000000 ; input_size += 1000000)); do
     done
 done
 
-echo "sudo kill $handbrake_pid" >> $EXPERIMENT_OUTPUT_FILE
-sudo kill $handbrake_pid >> $EXPERIMENT_OUTPUT_FILE 2>&1
+echo "sudo killall HandBrakeCLI" >> $EXPERIMENT_OUTPUT_FILE 2>&1
+sudo killall HandBrakeCLI >> $EXPERIMENT_OUTPUT_FILE 2>&1
 
 
 # ################################################################################
