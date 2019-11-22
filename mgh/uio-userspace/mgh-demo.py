@@ -250,10 +250,10 @@ def read_len(shmem):
 parser = argparse.ArgumentParser(
     description='Userspace tool to send workloads to a Jailhouse inmate over an IVSHMEM PCI device.',
 )
-parser.add_argument('-i', '--input', dest='input', type=str, help='An input string to send to the inmate.')
-parser.add_argument('-f', '--file', dest='file', type=str, help='An input file to send to the inmate. The input will be taken from the binary contents of the file.')
-parser.add_argument('-p', '--poll-speed', dest='poll', type=float, default=0.1, help='How frequently to check on the inmate while waiting for the inmate workload to complete. Defaults to 0.1 (100 ms)')
 parser.add_argument('-c', '--clear', dest='clear', action='store_true', help='If specified, the sync byte of the shared memory region is cleared to 0 and the program exits. Used to clear away any leftover state from previous runs.')
+parser.add_argument('-f', '--file', dest='file', type=str, help='An input file to send to the inmate. The input will be taken from the binary contents of the file.')
+parser.add_argument('-i', '--input', dest='input', type=str, help='An input string to send to the inmate.')
+parser.add_argument('-p', '--poll-speed', dest='poll', type=float, default=0.1, help='How frequently to check on the inmate while waiting for the inmate workload to complete. Defaults to 0.1 (100 ms)')
 
 args = parser.parse_args()
 
