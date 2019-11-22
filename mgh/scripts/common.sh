@@ -28,6 +28,11 @@ CSBM_SLOW=0
 CSBM_FASTER=1
 CSBM_FASTEST=2 # default
 
+# Interference Workloads
+INTF_HANDBRAKE=0
+INTF_RANDOM=1
+
+
 # Parameters:
 #   DEBUG_MODE
 #   LOCAL_BUFFER
@@ -319,3 +324,33 @@ function start_handbrake_demo {
     # Specify chapters with -c? Doesn't seem to work...
 }
 
+function start_random_demo {
+    echo "TODO: Need to implement start_random_demo"
+}
+
+function stop_handbrake {
+    echo "sudo killall HandBrakeCLI"
+    sudo killall HandBrakeCLI
+    # NOTE: $! doesn't get the proper PID of HandBrakeCLI, so kill it by name
+}
+
+function stop_random_demo {
+    echo "TODO: Need to implement stop_random_demo"
+    # TODO: Killall on a program name?
+}
+
+function start_interference_workload {
+    if [ "$1" == $INTF_HANDBRAKE ]; then
+        start_handbrake_demo
+    elif [ "$1" == $INTF_RANDOM ]; then
+        start_random_access_demo
+    fi
+}
+
+function stop_interference_workload {
+    if [ "$1" == $INTF_HANDBRAKE ]; then
+        stop_handbrake
+    elif [ "$1" == $INTF_RANDOM ]; then
+        stop_random_demo
+    fi
+}

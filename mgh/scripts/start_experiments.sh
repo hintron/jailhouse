@@ -52,17 +52,20 @@ THROTTLE_MODE=$TMODE_ITERATION
 # WORKLOAD_MODE=$WM_RANDOM_ACCESS
 # COUNT_SET_BITS_MODE=$CSBM_FASTEST
 # POLLUTE_CACHE="true"
+################################################################################
+# Other parameters
+################################################################################
 THROTTLE_ITERATIONS=$(($ITERATIONS / 2))
+INTERFERENCE_WORKLOAD=$INTF_HANDBRAKE
+# INTERFERENCE_WORKLOAD=$INTF_RANDOM
 # Generate command line arguments based on input
 INMATE_CMDLINE=$(set_cmdline) >> $EXPERIMENT_OUTPUT_FILE 2>&1
 ################################################################################
 # Start recording experiment output
 
-# Put process in the background and kill it once done
-start_handbrake_demo >> $INTERFERENCE_WORKLOAD_OUTPUT 2>&1 &
-# NOTE: $! doesn't get the proper PID of HandBrakeCLI, so just kill it by name
+start_interference_workload $INTERFERENCE_WORKLOAD >> $INTERFERENCE_WORKLOAD_OUTPUT 2>&1 &
 
-echo "Wait 10 seconds for handbrake (pid=$handbrake_pid) to spin up" >> $EXPERIMENT_OUTPUT_FILE
+echo "Wait 10 seconds for handbrake to spin up" >> $EXPERIMENT_OUTPUT_FILE
 sleep 10
 
 end_jailhouse >> $EXPERIMENT_OUTPUT_FILE 2>&1
@@ -84,9 +87,7 @@ for ((input_size = 1000000 ; input_size < 11000000 ; input_size += 1000000)); do
     done
 done
 
-echo "sudo killall HandBrakeCLI" >> $EXPERIMENT_OUTPUT_FILE 2>&1
-sudo killall HandBrakeCLI >> $EXPERIMENT_OUTPUT_FILE 2>&1
-
+stop_interference_workload $INTERFERENCE_WORKLOAD >> $EXPERIMENT_OUTPUT_FILE 2>&1
 
 # ################################################################################
 # ################################################################################
