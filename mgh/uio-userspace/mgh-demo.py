@@ -279,7 +279,7 @@ def read_len(shmem):
 ################################################################################
 
 parser = argparse.ArgumentParser(
-    description='Userspace tool to send workloads to a Jailhouse inmate over a IVSHMEM PCI device.',
+    description='Userspace tool to send workloads to a Jailhouse inmate over an IVSHMEM PCI device.',
 )
 parser.add_argument('-i', '--input', dest='input', type=str, help='An input string to send to the inmate.')
 parser.add_argument('-f', '--file', dest='file', type=str, help='An input file to send to the inmate. The input will be taken from the binary contents of the file.')
