@@ -58,7 +58,12 @@ OFFSET_DATA = OFFSET_LEN + LEN_SIZE
 def main(args):
     f = open(device_file, 'r+b')
     shmem = mmap.mmap(f.fileno(), IVSHMEM_SIZE, offset=PAGE_SIZE)
+
+    # Test read
     # shmem = bytearray.fromhex('deadbeef')
+    # print("Shmem content (first 30 bytes): '%s'" % shmem.read(30))
+    # print("Poll speed: %f" % args.poll)
+    # print("Data region size (input/output max size): %d" % DATA_SIZE)
 
     if args.clear:
         print("Setting sync byte in shmem to 0")
@@ -74,87 +79,64 @@ def main(args):
         print("Error: no input specified!")
         return
 
-
-    # Test read
-    print("Reading from inmate...")
-    # print("Shmem content (first 30 bytes): '%s'" % shmem.read(30))
-    # print("Poll speed: %f" % args.poll)
-    # print("Data region size (input/output max size): %d" % DATA_SIZE)
-
     # Check to make sure inmate is ready
     while not is_inmate_ready(shmem):
         time.sleep(1)
 
     count = 0
-    while True:
-        if args.loop or (args.demo and not args.file):
-            print("\nIteration %d" % count)
-            print("***************************************************************")
 
-        # Place input in shared memory
+    # Place input in shared memory
+    if args.file:
+        write_input_binary(shmem, input_data)
+    else:
+        write_input_str(shmem, input_data)
+
+    # Keep track of how long inmate takes (roughly)
+    start = datetime.datetime.now()
+
+    # Tell inmate to calculate it
+    signal_inmate(shmem)
+    # Block on inmate until it is done
+    pend_inmate_poll(shmem, args.poll)
+
+    stop = datetime.datetime.now()
+    duration = (stop - start)
+
+    output_len = read_len(shmem)
+    inmate_output = read_output(shmem, output_len)
+    # print('Inmate start (python): %d s %d us' % (start.second, start.microsecond))
+    # print('Inmate stop (python): %d s %d us' % (stop.second, stop.microsecond))
+    # Note: just because the resolution is in us, the accuracy is more in
+    # the seconds range due to how slow Python is
+    print('Inmate duration (python): %d s %d us' % (duration.seconds, duration.microseconds))
+    print('Inmate output length: %s' % output_len)
+
+    # Only check output if it's a SHA3 (64 byte output is likely SHA3)
+    if output_len == 64:
+        inmate_output_hex = inmate_output.hex()
+        print('Inmate output: SHA3: %s' % inmate_output_hex)
         if args.file:
-            write_input_binary(shmem, input_data)
+            rhash_output = file_to_sha3(input_data)
         else:
-            write_input_str(shmem, input_data)
+            rhash_output = str_to_sha3(input_data)
+        # TODO: Use this when taking in input files instead
 
-        # Keep track of how long inmate takes (roughly)
-        start = datetime.datetime.now()
-
-        # Tell inmate to calculate it
-        signal_inmate(shmem)
-        # Block on inmate until it is done
-        pend_inmate_poll(shmem, args.poll)
-
-        stop = datetime.datetime.now()
-        duration = (stop - start)
-
-        output_len = read_len(shmem)
-        inmate_output = read_output(shmem, output_len)
-        # print('Inmate start (python): %d s %d us' % (start.second, start.microsecond))
-        # print('Inmate stop (python): %d s %d us' % (stop.second, stop.microsecond))
-        # Note: just because the resolution is in us, the accuracy is more in
-        # the seconds range due to how slow Python is
-        print('Inmate duration (python): %d s %d us' % (duration.seconds, duration.microseconds))
-        print('Inmate output length: %s' % output_len)
-
-        # Only check output if it's a SHA3 (64 byte output is likely SHA3)
-        if output_len == 64:
-            inmate_output_hex = inmate_output.hex()
-            print('Inmate output: SHA3: %s' % inmate_output_hex)
-            if args.file:
-                rhash_output = file_to_sha3(input_data)
-            else:
-                rhash_output = str_to_sha3(input_data)
-            # TODO: Use this when taking in input files instead
-
-            # Check to make sure the hash calculated by the inmate is accurate
-            if inmate_output_hex == rhash_output:
-                print("\nOutput is correct")
-            else:
-                print("\nOutput **DOES NOT** match rhash!...\n%s" % rhash_output)
-        elif output_len == 4:
-            inmate_output_int = int.from_bytes(inmate_output[0:4], byteorder='little')
-            # Assume this is count set bits
-            print('Inmate output: set bits count: %s' % inmate_output_int)
-            if args.file:
-                validate_bits_set(args.file, inmate_output_int)
-            else:
-                print('Inmate output checking not supported for non-file input to %s:' % os.path.basename(__file__))
-
-        if (args.demo and not args.file):
-            input_data = "%s+" % (input_data)
-
-        if args.loop or (args.demo and not args.file):
-            count += 1
-            if args.sleep:
-                print("sleep for %d", args.sleep)
-                time.sleep(args.speed)
+        # Check to make sure the hash calculated by the inmate is accurate
+        if inmate_output_hex == rhash_output:
+            print("\nOutput is correct")
         else:
-            break
+            print("\nOutput **DOES NOT** match rhash!...\n%s" % rhash_output)
+    elif output_len == 4:
+        inmate_output_int = int.from_bytes(inmate_output[0:4], byteorder='little')
+        # Assume this is count set bits
+        print('Inmate output: set bits count: %s' % inmate_output_int)
+        if args.file:
+            validate_bits_set(args.file, inmate_output_int)
+        else:
+            print('Inmate output checking not supported for non-file input to %s:' % os.path.basename(__file__))
 
     f.close()
     shmem.close()
-    print("***************FINISHED*******************")
 
 # # Waits on an interrupt from the inmate to know the sha3 is complete
 def is_inmate_ready(shmem):
@@ -199,7 +181,6 @@ def pend_inmate_poll(shmem, poll_speed):
         time.sleep(poll_speed)
         count += 1
 
-
     # print("Inmate is finished, with ping=%d" % shmem[OFFSET_SYNC])
     print("Inmate is finished (polled %d times at %0.3fs/poll)" % (count, poll_speed))
 
@@ -212,12 +193,9 @@ def pend_inmate_intr(device_file):
     print("interrupt #%s" % interrupt_count)
     os.close(fd)
 
-
 # Requires rhash to be installed on the system
 # `sudo apt install rhash`
 # See mgh/sha3/test.sh
-
-
 def str_to_sha3(string, str_mode=True):
     cmd = "printf %s | rhash --sha3-512 -" % string
     result = subprocess.run(cmd, shell=True, check=True, stdout=subprocess.PIPE,
@@ -245,21 +223,12 @@ def validate_bits_set(file, inmate_count):
     result = subprocess.run(cmd, shell=True, check=True, stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE)
     linux_count = int(result.stdout.decode("utf-8"))
-    # For debugging
-    # print("script_dir: %s" % script_dir)
-    # print("file: %s" % file)
-    # print("count_set_bits_bin: %s" % count_set_bits_bin)
-    # print("cmd: %s" % cmd)
-    # print("Output: %s" % linux_count)
     if linux_count == inmate_count:
         print("Output is correct!")
     else:
         print("ERROR: Output is incorrect...")
         print("Inmate output: %s" % inmate_count)
         print("Linux output: %s" % linux_count)
-
-    # For debugging
-    # time.sleep(5)
 
 # Waits on an interrupt from the inmate to know the sha3 is complete
 def read_output(shmem, size):
@@ -283,10 +252,7 @@ parser = argparse.ArgumentParser(
 )
 parser.add_argument('-i', '--input', dest='input', type=str, help='An input string to send to the inmate.')
 parser.add_argument('-f', '--file', dest='file', type=str, help='An input file to send to the inmate. The input will be taken from the binary contents of the file.')
-parser.add_argument('-d', '--demo', dest='demo', action='store_true', help='If True, and if INPUT is a string instead of a file, demo mode is activated. This will continuously append `+` to the string and repeat the workload every second. Defaults to False.')
-parser.add_argument('-l', '--loop', dest='loop', action='store_true', help='If True, continuously repeats the exact same workload every second. Defaults to False.')
-parser.add_argument('-s', '--loop-speed', dest='sleep', type=int, default=0, help='How many seconds to sleep between loops. 0 for no wait. Defaults to 0.')
-parser.add_argument('-p', '--poll-speed', dest='poll', type=float, default=0.1, help='How many seconds to sleep between loops. Defaults to 0.1 (100 ms)')
+parser.add_argument('-p', '--poll-speed', dest='poll', type=float, default=0.1, help='How frequently to check on the inmate while waiting for the inmate workload to complete. Defaults to 0.1 (100 ms)')
 parser.add_argument('-c', '--clear', dest='clear', action='store_true', help='If specified, the sync byte of the shared memory region is cleared to 0 and the program exits. Used to clear away any leftover state from previous runs.')
 
 args = parser.parse_args()
