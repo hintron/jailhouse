@@ -183,6 +183,8 @@ function end_root {
 # Combine start_root and start_inmate
 function start_jailhouse {
     start_root "$1"
+    # Clear the sync byte of shared memory to 0
+    clear_sync_byte_shmem
     start_inmate "$2" "$3" "$4" "$5"
 }
 
@@ -260,6 +262,10 @@ function create_random_file {
     head -c $size < /dev/urandom > $file
 }
 # See https://unix.stackexchange.com/questions/33629/how-can-i-populate-a-file-with-random-data
+
+function clear_sync_byte_shmem {
+    sudo ../uio-userspace/mgh-demo.py -c
+}
 
 # Send input to the inmate via file
 function send_inmate_input {

@@ -56,15 +56,24 @@ OFFSET_LEN = OFFSET_RESERVED + RESERVED_SIZE
 OFFSET_DATA = OFFSET_LEN + LEN_SIZE
 
 def main(args):
-    if args.file:
-        with open(args.input, 'rb') as f:
-            input_data = f.read()
-    else:
-        input_data = args.input
-
     f = open(device_file, 'r+b')
     shmem = mmap.mmap(f.fileno(), IVSHMEM_SIZE, offset=PAGE_SIZE)
     # shmem = bytearray.fromhex('deadbeef')
+
+    if args.clear:
+        print("Setting sync byte in shmem to 0")
+        shmem[OFFSET_SYNC] = 0
+        return
+
+    if args.file:
+        with open(args.file, 'rb') as f:
+            input_data = f.read()
+    elif args.input:
+        input_data = args.input
+    else:
+        print("Error: no input specified!")
+        return
+
 
     # Test read
     print("Reading from inmate...")
@@ -113,7 +122,7 @@ def main(args):
             inmate_output_hex = inmate_output.hex()
             print('Inmate output: SHA3: %s' % inmate_output_hex)
             if args.file:
-                rhash_output = file_to_sha3(args.input)
+                rhash_output = file_to_sha3(input_data)
             else:
                 rhash_output = str_to_sha3(input_data)
             # TODO: Use this when taking in input files instead
@@ -128,7 +137,7 @@ def main(args):
             # Assume this is count set bits
             print('Inmate output: set bits count: %s' % inmate_output_int)
             if args.file:
-                validate_bits_set(args.input, inmate_output_int)
+                validate_bits_set(args.file, inmate_output_int)
             else:
                 print('Inmate output checking not supported for non-file input to %s:' % os.path.basename(__file__))
 
@@ -272,12 +281,13 @@ def read_len(shmem):
 parser = argparse.ArgumentParser(
     description='Userspace tool to send workloads to a Jailhouse inmate over a IVSHMEM PCI device.',
 )
-parser.add_argument('input', metavar='INPUT', type=str, help='The input data to send to the inmate. If -f/--file is specified, INPUT is a filename with the input taken from the contents of the file. Otherwise, INPUT is interpreted as a string containing the input data.')
-parser.add_argument('-f', '--file', dest='file', action='store_true', help='If True, INPUT is interpreted as a filename instead of a string. Defaults to False.')
+parser.add_argument('-i', '--input', dest='input', type=str, help='An input string to send to the inmate.')
+parser.add_argument('-f', '--file', dest='file', type=str, help='An input file to send to the inmate. The input will be taken from the binary contents of the file.')
 parser.add_argument('-d', '--demo', dest='demo', action='store_true', help='If True, and if INPUT is a string instead of a file, demo mode is activated. This will continuously append `+` to the string and repeat the workload every second. Defaults to False.')
 parser.add_argument('-l', '--loop', dest='loop', action='store_true', help='If True, continuously repeats the exact same workload every second. Defaults to False.')
 parser.add_argument('-s', '--loop-speed', dest='sleep', type=int, default=0, help='How many seconds to sleep between loops. 0 for no wait. Defaults to 0.')
 parser.add_argument('-p', '--poll-speed', dest='poll', type=float, default=0.1, help='How many seconds to sleep between loops. Defaults to 0.1 (100 ms)')
+parser.add_argument('-c', '--clear', dest='clear', action='store_true', help='If specified, the sync byte of the shared memory region is cleared to 0 and the program exits. Used to clear away any leftover state from previous runs.')
 
 args = parser.parse_args()
 
