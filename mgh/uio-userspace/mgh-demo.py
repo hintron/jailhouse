@@ -70,13 +70,20 @@ def main(args):
         shmem[OFFSET_SYNC] = 0
         return
 
+    is_file = False
     if args.file:
+        is_file = True
         with open(args.file, 'rb') as f:
             input_data = f.read()
     elif args.input:
         input_data = args.input
     else:
-        print("Error: no input specified!")
+        sys.exit("Error: no input specified!")
+
+    if args.validate:
+        expected_value = get_expected_value(input_data, args.validate, is_file)
+        # Only print the expected value so we can capture it in scripts
+        print(expected_value)
         return
 
     # Check to make sure inmate is ready
@@ -112,31 +119,42 @@ def main(args):
     print('Inmate output length: %s' % output_len)
 
     # Only check output if it's a SHA3 (64 byte output is likely SHA3)
-    if output_len == 64:
-        inmate_output_hex = inmate_output.hex()
-        print('Inmate output: SHA3: %s' % inmate_output_hex)
-        if args.file:
-            rhash_output = file_to_sha3(input_data)
-        else:
-            rhash_output = str_to_sha3(input_data)
-        # TODO: Use this when taking in input files instead
-
-        # Check to make sure the hash calculated by the inmate is accurate
-        if inmate_output_hex == rhash_output:
-            print("\nOutput is correct")
-        else:
-            print("\nOutput **DOES NOT** match rhash!...\n%s" % rhash_output)
-    elif output_len == 4:
-        inmate_output_int = int.from_bytes(inmate_output[0:4], byteorder='little')
+    if output_len <= 4:
+        print('Assuming output is an int (little-endian)')
+        inmate_output_int = int.from_bytes(inmate_output[0:output_len], byteorder='little')
         # Assume this is count set bits
-        print('Inmate output: set bits count: %s' % inmate_output_int)
-        if args.file:
-            validate_bits_set(args.file, inmate_output_int)
-        else:
-            print('Inmate output checking not supported for non-file input to %s:' % os.path.basename(__file__))
+        print('Inmate output: %s' % inmate_output_int)
+    else:
+        print('Assuming output is hex data')
+        inmate_output_hex = inmate_output.hex()
+        print('Inmate output: %s' % inmate_output_hex)
 
     f.close()
     shmem.close()
+
+def get_expected_value(input_data, workload_mode, is_file):
+    expected_value = "?"
+    if workload_mode == "sha3":
+        expected_value = validate_sha3(input_data, is_file)
+    elif workload_mode == "csb":
+        expected_value = validate_count_set_bits(input_data, is_file)
+    elif workload_mode == "ra":
+        sys.exit("Random Access validation not yet supported")
+    else:
+        sys.exit("Unknown workload_mode")
+    return expected_value
+
+def validate_sha3(input_data, is_file):
+    if is_file:
+        return file_to_sha3(input_data)
+    else:
+        return str_to_sha3(input_data)
+
+def validate_count_set_bits(input_data, is_file):
+    if is_file:
+        return validate_bits_set(input_data)
+    else:
+        sys.exit('Inmate output checking not supported for non-file input to %s:' % os.path.basename(__file__))
 
 # # Waits on an interrupt from the inmate to know the sha3 is complete
 def is_inmate_ready(shmem):
@@ -215,7 +233,7 @@ def file_to_sha3(file, str_mode=True):
         output = output.decode("utf-8")
     return output
 
-def validate_bits_set(file, inmate_count):
+def validate_bits_set(input_data):
     # Get the bits-set-count executable relative to this file
     script_dir = os.path.dirname(os.path.realpath(__file__))
     count_set_bits_bin = "%s/../workloads/build/count-set-bits" % script_dir
@@ -254,6 +272,7 @@ parser.add_argument('-c', '--clear', dest='clear', action='store_true', help='If
 parser.add_argument('-f', '--file', dest='file', type=str, help='An input file to send to the inmate. The input will be taken from the binary contents of the file.')
 parser.add_argument('-i', '--input', dest='input', type=str, help='An input string to send to the inmate.')
 parser.add_argument('-p', '--poll-speed', dest='poll', type=float, default=0.1, help='How frequently to check on the inmate while waiting for the inmate workload to complete. Defaults to 0.1 (100 ms)')
+parser.add_argument('-v', '--validate', dest='validate', type=str, help='If set, instead of passing input to the inmate to run for a workload, instead print out the expected value calculated locally on Linux. Use to validate future inmate runs. Set the value to either csb` (count-set-bits), `sha3`, or `ra` (random access).')
 
 args = parser.parse_args()
 
