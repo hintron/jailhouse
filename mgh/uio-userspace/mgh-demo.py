@@ -106,7 +106,7 @@ def main(args):
         pend_inmate_poll(shmem, args.poll)
 
         stop = datetime.datetime.now()
-        duration = (stop-start)
+        duration = (stop - start)
 
         output_len = read_len(shmem)
         inmate_output = read_output(shmem, output_len)
@@ -184,7 +184,7 @@ def write_input_binary(shmem, input_bytes):
     shmem.seek(OFFSET_LEN)
     shmem.write(input_len.to_bytes(4, "little"))
     # Append an extra +1 to account for python's slice syntax
-    shmem[OFFSET_DATA:(OFFSET_DATA+(input_len-1))+1] = input_bytes
+    shmem[OFFSET_DATA:(OFFSET_DATA + (input_len - 1)) + 1] = input_bytes
 
 # The inmate will wait until we write 2 to byte 0 of shmem
 def signal_inmate(shmem):
@@ -264,7 +264,7 @@ def validate_bits_set(file, inmate_count):
 # Waits on an interrupt from the inmate to know the sha3 is complete
 def read_output(shmem, size):
     # Append an extra +1 to account for python's slice syntax
-    return shmem[OFFSET_DATA:(OFFSET_DATA+(size-1))+1]
+    return shmem[OFFSET_DATA:(OFFSET_DATA + (size - 1)) + 1]
 
 def read_len(shmem):
     shmem.seek(OFFSET_LEN)
