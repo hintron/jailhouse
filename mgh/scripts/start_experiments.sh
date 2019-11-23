@@ -55,9 +55,6 @@ function main {
 
     experiment_counter=1
 
-    echo "################################################################################" >> $EXPERIMENT_OUTPUT_FILE
-    echo "# Experiment $experiment_counter" >> $EXPERIMENT_OUTPUT_FILE
-    echo "################################################################################" >> $EXPERIMENT_OUTPUT_FILE
     ################################################################################
     # Inmate inputs
     ################################################################################
@@ -74,9 +71,15 @@ function main {
     start_experiment $experiment_counter
     experiment_counter=$(($experiment_counter + 1))
 
-    echo "################################################################################" >> $EXPERIMENT_OUTPUT_FILE
-    echo "# Experiment $experiment_counter" >> $EXPERIMENT_OUTPUT_FILE
-    echo "################################################################################" >> $EXPERIMENT_OUTPUT_FILE
+    ################################################################################
+    # Inmate inputs
+    ##################################################################################
+    WORKLOAD_MODE=$WM_SHA3
+    INMATE_CMDLINE=$(set_cmdline) >> $EXPERIMENT_OUTPUT_FILE 2>&1
+    ##################################################################################
+    start_experiment $experiment_counter
+    experiment_counter=$(($experiment_counter + 1))
+
     ################################################################################
     # Inmate inputs
     ##################################################################################
@@ -86,18 +89,6 @@ function main {
     start_experiment $experiment_counter
     experiment_counter=$(($experiment_counter + 1))
 
-
-    echo "################################################################################" >> $EXPERIMENT_OUTPUT_FILE
-    echo "# Experiment $experiment_counter" >> $EXPERIMENT_OUTPUT_FILE
-    echo "################################################################################" >> $EXPERIMENT_OUTPUT_FILE
-    ################################################################################
-    # Inmate inputs
-    ##################################################################################
-    WORKLOAD_MODE=$WM_SHA3
-    INMATE_CMDLINE=$(set_cmdline) >> $EXPERIMENT_OUTPUT_FILE 2>&1
-    ##################################################################################
-    start_experiment $experiment_counter
-    experiment_counter=$(($experiment_counter + 1))
 
     # ################################################################################
     # Final Cleanup
@@ -130,6 +121,10 @@ function main {
 # globals
 function start_experiment {
     experiment_count="$1"
+
+    echo "################################################################################" >> $EXPERIMENT_OUTPUT_FILE
+    echo "# Experiment $experiment_counter" >> $EXPERIMENT_OUTPUT_FILE
+    echo "################################################################################" >> $EXPERIMENT_OUTPUT_FILE
 
     # Start recording experiment output
     end_jailhouse >> $EXPERIMENT_OUTPUT_FILE 2>&1
