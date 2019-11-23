@@ -149,7 +149,7 @@ function start_experiment {
     for ((i = 0 ; i < $input_sizes_count ; i++)); do
         for ((j = 0 ; j < $ITERATIONS ; j++)); do
             # flatten 2d (i,j) index into a single flat index
-            index=$(($i * $input_sizes_count + $j))
+            index=$(($i * $ITERATIONS + $j))
             input_file="${INPUT_FILE_BASE}_${index}.bin"
             # echo "$input_file" >> $EXPERIMENT_OUTPUT_FILE 2>&1
             create_random_file ${input_sizes[$i]} $input_file >> $EXPERIMENT_OUTPUT_FILE 2>&1
@@ -169,7 +169,7 @@ function start_experiment {
         echo "*********************************************************" >> $EXPERIMENT_OUTPUT_FILE
         for ((j = 0 ; j < $ITERATIONS ; j++)); do
             # flatten 2d (i,j) index into a single flat index
-            index=$(($i * $input_sizes_count + $j))
+            index=$(($i * $ITERATIONS + $j))
             if [ "$j" != "0" ]; then
                 echo "---------------------------------------------------------" >> $EXPERIMENT_OUTPUT_FILE
             fi
