@@ -339,8 +339,7 @@ function grep_token_in_file_to_file {
     in_file="$2"
     out_file="$3"
 
-    output=$(grep_token_in_file $token $in_file)
-    echo $output > $out_file
+    grep_token_in_file $token $in_file > $out_file
 }
 
 function grep_token_in_file {
