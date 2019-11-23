@@ -70,18 +70,14 @@ def main(args):
         shmem[OFFSET_SYNC] = 0
         return
 
-    is_file = False
-    if args.file:
-        is_file = True
-        with open(args.file, 'rb') as f:
-            input_data = f.read()
-    elif args.input:
-        input_data = args.input
-    else:
+    if not args.file and not args.input:
         sys.exit("Error: no input specified!")
 
     if args.validate:
-        expected_value = get_expected_value(input_data, args.validate, is_file)
+        if args.file:
+            expected_value = get_expected_value(args.file, args.validate, True)
+        else:
+            expected_value = get_expected_value(args.input, args.validate, False)
         # Only print the expected value so we can capture it in scripts
         print(expected_value)
         return
@@ -94,9 +90,10 @@ def main(args):
 
     # Place input in shared memory
     if args.file:
-        write_input_binary(shmem, input_data)
+        with open(args.file, 'rb') as input_file:
+            write_input_binary(shmem, input_file.read())
     else:
-        write_input_str(shmem, input_data)
+        write_input_str(shmem, args.input)
 
     # Keep track of how long inmate takes (roughly)
     start = datetime.datetime.now()
@@ -152,7 +149,7 @@ def validate_sha3(input_data, is_file):
 
 def validate_count_set_bits(input_data, is_file):
     if is_file:
-        return validate_bits_set(input_data)
+        return count_set_bits(input_data)
     else:
         sys.exit('Inmate output checking not supported for non-file input to %s:' % os.path.basename(__file__))
 
@@ -228,25 +225,21 @@ def file_to_sha3(file, str_mode=True):
     cmd = "rhash --sha3-512 %s" % file
     result = subprocess.run(cmd, shell=True, check=True, stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE)
+    # Remove the trailing "  (stdin)"
     output = result.stdout.split()[0]
     if str_mode:
         output = output.decode("utf-8")
     return output
 
-def validate_bits_set(input_data):
+def count_set_bits(file):
     # Get the bits-set-count executable relative to this file
     script_dir = os.path.dirname(os.path.realpath(__file__))
     count_set_bits_bin = "%s/../workloads/build/count-set-bits" % script_dir
     cmd = "%s %s" % (count_set_bits_bin, file)
     result = subprocess.run(cmd, shell=True, check=True, stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE)
-    linux_count = int(result.stdout.decode("utf-8"))
-    if linux_count == inmate_count:
-        print("Output is correct!")
-    else:
-        print("ERROR: Output is incorrect...")
-        print("Inmate output: %s" % inmate_count)
-        print("Linux output: %s" % linux_count)
+    count = int(result.stdout.decode("utf-8"))
+    return count
 
 # Waits on an interrupt from the inmate to know the sha3 is complete
 def read_output(shmem, size):

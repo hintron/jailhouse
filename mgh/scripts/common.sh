@@ -263,6 +263,31 @@ function create_random_file {
 }
 # See https://unix.stackexchange.com/questions/33629/how-can-i-populate-a-file-with-random-data
 
+# $1: Input file to work on
+# $2: (optional) The workload mode. Defaults to Count Set Bits.
+function get_expected_output {
+    if [ "$2" == $WM_SHA3 ]; then
+        validate_sha3 "$1"
+    elif [ "$2" == $WM_RANDOM_ACCESS ]; then
+        validate_ra "$1"
+    else
+        # This is the default
+        validate_csb "$1"
+    fi
+}
+
+function validate_sha3 {
+    sudo ../uio-userspace/mgh-demo.py -f "$1" -v sha3
+}
+
+function validate_csb {
+    sudo ../uio-userspace/mgh-demo.py -f "$1" -v csb
+}
+
+function validate_ra {
+    sudo ../uio-userspace/mgh-demo.py -f "$1" -v ra
+}
+
 function clear_sync_byte_shmem {
     sudo ../uio-userspace/mgh-demo.py -c
 }

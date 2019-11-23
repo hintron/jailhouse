@@ -14,7 +14,7 @@ ITERATIONS=10
 # ITERATIONS=20
 # ITERATIONS=100
 experiment_time="$(timestamp)"
-INPUT_FILE="input/input_${experiment_time}.txt"
+INPUT_FILE_BASE="input/input_${experiment_time}"
 JAILHOUSE_OUTPUT_FILE="output/jailhouse_${experiment_time}.txt"
 EXPERIMENT_OUTPUT_FILE="output/experiment_${experiment_time}.txt"
 OUTPUT_DATA_FILE="output/data_${experiment_time}.csv"
@@ -75,18 +75,50 @@ echo "*******************************************************" >> $JAILHOUSE_OUT
 
 start_jailhouse $ROOT_CELL $INMATE_CELL $INMATE_NAME $INMATE_PROGRAM "$INMATE_CMDLINE" >> $EXPERIMENT_OUTPUT_FILE 2>&1
 
-# input_sizes=(1000000 5000000 10000000)
-# for input_size in "${input_sizes[@]}"; do
-for ((input_size = 1000000 ; input_size < 11000000 ; input_size += 1000000)); do
-    echo "Input Size=$input_size" >> $EXPERIMENT_OUTPUT_FILE
-    echo "---------------------------------------------------------" >> $EXPERIMENT_OUTPUT_FILE
-    # Run X ITERATIONS from 1 to X
-    for ((i = 0 ; i < $ITERATIONS ; i++)); do
-        echo "Iteration $i: Input Size=$input_size" >> $EXPERIMENT_OUTPUT_FILE
-        create_random_file $input_size $INPUT_FILE >> $EXPERIMENT_OUTPUT_FILE 2>&1
-        send_inmate_input $INPUT_FILE >> $EXPERIMENT_OUTPUT_FILE 2>&1
+# Pre-generate all input sizes and random inputs as well as the expected outputs before
+# throttling kicks in and makes things slow!
+
+input_sizes=()
+for ((input_size = 1000000; input_size < 11000000; input_size += 1000000)); do
+    input_sizes+=($input_size)
+done
+
+input_sizes_count=${#input_sizes[@]}
+# This will in effect be a 2d array of input files with pregenerated random data
+random_inputs=()
+expected_outputs=()
+for ((i = 0 ; i < $input_sizes_count ; i++)); do
+    for ((j = 0 ; j < $ITERATIONS ; j++)); do
+        # flatten 2d (i,j) index into a single flat index
+        index=$(($i * $input_sizes_count + $j))
+        input_file="${INPUT_FILE_BASE}_${index}.bin"
+        echo "$input_file" >> $EXPERIMENT_OUTPUT_FILE 2>&1
+        create_random_file ${input_sizes[$i]} $input_file >> $EXPERIMENT_OUTPUT_FILE 2>&1
+        random_inputs+=($input_file)
+        # Calculate and capture expected outputs to compare with inmate outputs
+        # later
+        expected_output=$(get_expected_output $input_file $WORKLOAD_MODE)
+        echo "expected_output $index: $expected_output" >> $EXPERIMENT_OUTPUT_FILE 2>&1
+        expected_outputs+=($expected_output)
     done
 done
+
+# # for input_size in "${input_sizes[@]}"; do
+# # for ((input_size = 1000000 ; input_size < 11000000 ; input_size += 1000000)); do
+#     echo "Input Size=$input_size" >> $EXPERIMENT_OUTPUT_FILE
+#     echo "*********************************************************" >> $EXPERIMENT_OUTPUT_FILE
+#     # Run X ITERATIONS from 1 to X
+#     # for ((i = 0 ; i < $ITERATIONS ; i++)); do
+#     for ((i = 0 ; i < 2 ; i++)); do
+#         if [ "$i" != "0" ]; then
+#             echo "---------------------------------------------------------" >> $EXPERIMENT_OUTPUT_FILE
+#         fi
+#         echo "Iteration $i: Input Size=$input_size" >> $EXPERIMENT_OUTPUT_FILE
+#         create_random_file $input_size $INPUT_FILE >> $EXPERIMENT_OUTPUT_FILE 2>&1
+#         send_inmate_input $INPUT_FILE >> $EXPERIMENT_OUTPUT_FILE 2>&1
+#         # TODO: Validate inmate output against pre-calculated values
+#     done
+# # done
 
 stop_interference_workload $INTERFERENCE_WORKLOAD >> $EXPERIMENT_OUTPUT_FILE 2>&1
 
@@ -109,9 +141,11 @@ echo "*******************************************************" >> $JAILHOUSE_OUT
 echo "End Experiments" >> $JAILHOUSE_OUTPUT_FILE
 echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
 
-# The input is just random data, so really no sense in keeping it around rn
-echo "sudo rm $INPUT_FILE" >> $EXPERIMENT_OUTPUT_FILE
-sudo rm $INPUT_FILE >> $EXPERIMENT_OUTPUT_FILE 2>&1
+for input_file in ${random_inputs[@]}; do
+    # The input is just random data, so really no sense in keeping it around rn
+    echo "sudo rm $input_file" >> $EXPERIMENT_OUTPUT_FILE
+    sudo rm $input_file >> $EXPERIMENT_OUTPUT_FILE 2>&1
+done
 
 echo "sudo kill $tailf_pid" >> $EXPERIMENT_OUTPUT_FILE
 sudo kill $tailf_pid >> $EXPERIMENT_OUTPUT_FILE 2>&1
