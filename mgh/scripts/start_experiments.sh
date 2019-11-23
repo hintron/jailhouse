@@ -173,7 +173,7 @@ function start_experiment {
             if [ "$j" != "0" ]; then
                 echo "---------------------------------------------------------" >> $EXPERIMENT_OUTPUT_FILE
             fi
-            echo "Iteration $j:" >> $EXPERIMENT_OUTPUT_FILE
+            echo "Iteration $j ($index):" >> $EXPERIMENT_OUTPUT_FILE
 
             input_file=${random_inputs[$index]}
             inmate_output=$(send_inmate_input $input_file)
