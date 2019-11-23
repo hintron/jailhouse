@@ -10,7 +10,8 @@ INMATE_PROGRAM=../../inmates/demos/x86/mgh-demo.bin
 ################################################################################
 # Experiment-wide inputs here
 ################################################################################
-ITERATIONS=10
+ITERATIONS=2
+# ITERATIONS=10
 # ITERATIONS=20
 # ITERATIONS=100
 experiment_time="$(timestamp)"
@@ -48,7 +49,7 @@ DEBUG_MODE="true"
 # LOCAL_BUFFER="true"
 THROTTLE_MODE=$TMODE_ITERATION
 # THROTTLE_MECHANISM=$TMECH_CLOCK
-# WORKLOAD_MODE=$WM_SHA3
+WORKLOAD_MODE=$WM_SHA3
 # WORKLOAD_MODE=$WM_RANDOM_ACCESS
 # COUNT_SET_BITS_MODE=$CSBM_FASTEST
 # POLLUTE_CACHE="true"
@@ -57,6 +58,10 @@ THROTTLE_MODE=$TMODE_ITERATION
 ################################################################################
 THROTTLE_ITERATIONS=$(($ITERATIONS / 2))
 INTERFERENCE_WORKLOAD=$INTF_HANDBRAKE
+INPUT_SIZE_START=1000000
+INPUT_SIZE_END=3000000
+INPUT_SIZE_STEP=1000000
+
 # INTERFERENCE_WORKLOAD=$INTF_RANDOM
 # Generate command line arguments based on input
 INMATE_CMDLINE=$(set_cmdline) >> $EXPERIMENT_OUTPUT_FILE 2>&1
@@ -79,7 +84,7 @@ start_jailhouse $ROOT_CELL $INMATE_CELL $INMATE_NAME $INMATE_PROGRAM "$INMATE_CM
 # throttling kicks in and makes things slow!
 
 input_sizes=()
-for ((input_size = 1000000; input_size < 11000000; input_size += 1000000)); do
+for ((input_size = $INPUT_SIZE_START; input_size < $INPUT_SIZE_END; input_size += $INPUT_SIZE_STEP)); do
     input_sizes+=($input_size)
 done
 
@@ -92,33 +97,48 @@ for ((i = 0 ; i < $input_sizes_count ; i++)); do
         # flatten 2d (i,j) index into a single flat index
         index=$(($i * $input_sizes_count + $j))
         input_file="${INPUT_FILE_BASE}_${index}.bin"
-        echo "$input_file" >> $EXPERIMENT_OUTPUT_FILE 2>&1
+        # echo "$input_file" >> $EXPERIMENT_OUTPUT_FILE 2>&1
         create_random_file ${input_sizes[$i]} $input_file >> $EXPERIMENT_OUTPUT_FILE 2>&1
         random_inputs+=($input_file)
         # Calculate and capture expected outputs to compare with inmate outputs
         # later
         expected_output=$(get_expected_output $input_file $WORKLOAD_MODE)
-        echo "expected_output $index: $expected_output" >> $EXPERIMENT_OUTPUT_FILE 2>&1
+        # echo "expected_output $index: $expected_output" >> $EXPERIMENT_OUTPUT_FILE 2>&1
         expected_outputs+=($expected_output)
     done
 done
 
-# # for input_size in "${input_sizes[@]}"; do
-# # for ((input_size = 1000000 ; input_size < 11000000 ; input_size += 1000000)); do
-#     echo "Input Size=$input_size" >> $EXPERIMENT_OUTPUT_FILE
-#     echo "*********************************************************" >> $EXPERIMENT_OUTPUT_FILE
-#     # Run X ITERATIONS from 1 to X
-#     # for ((i = 0 ; i < $ITERATIONS ; i++)); do
-#     for ((i = 0 ; i < 2 ; i++)); do
-#         if [ "$i" != "0" ]; then
-#             echo "---------------------------------------------------------" >> $EXPERIMENT_OUTPUT_FILE
-#         fi
-#         echo "Iteration $i: Input Size=$input_size" >> $EXPERIMENT_OUTPUT_FILE
-#         create_random_file $input_size $INPUT_FILE >> $EXPERIMENT_OUTPUT_FILE 2>&1
-#         send_inmate_input $INPUT_FILE >> $EXPERIMENT_OUTPUT_FILE 2>&1
-#         # TODO: Validate inmate output against pre-calculated values
-#     done
-# # done
+for ((i = 0 ; i < $input_sizes_count ; i++)); do
+    input_size=${input_sizes[$i]}
+    echo "*********************************************************" >> $EXPERIMENT_OUTPUT_FILE
+    echo "Input Size=$input_size" >> $EXPERIMENT_OUTPUT_FILE
+    echo "*********************************************************" >> $EXPERIMENT_OUTPUT_FILE
+    # Run X ITERATIONS from 1 to X
+    for ((j = 0 ; j < $ITERATIONS ; j++)); do
+        # flatten 2d (i,j) index into a single flat index
+        index=$(($i * $input_sizes_count + $j))
+        if [ "$j" != "0" ]; then
+            echo "---------------------------------------------------------" >> $EXPERIMENT_OUTPUT_FILE
+        fi
+        echo "Iteration $j:" >> $EXPERIMENT_OUTPUT_FILE
+
+        input_file=${random_inputs[$index]}
+        inmate_output=$(send_inmate_input $input_file)
+        echo "$inmate_output" >> $EXPERIMENT_OUTPUT_FILE 2>&1
+        inmate_output_value=$(grep_token_in_str "Inmate output: " "$inmate_output")
+        expected_output_value="${expected_outputs[$index]}"
+
+        # Validate inmate output against pre-calculated values
+        if [ "$inmate_output_value" != "$expected_output_value" ]; then
+            echo "Error: inmate output != expected!" >> $EXPERIMENT_OUTPUT_FILE 2>&1
+            echo "    inmate_output_value  : $inmate_output_value" >> $EXPERIMENT_OUTPUT_FILE 2>&1
+            echo "    expected_output_value: $expected_output_value" >> $EXPERIMENT_OUTPUT_FILE 2>&1
+        else
+            echo "Inmate output matches expected output" >> $EXPERIMENT_OUTPUT_FILE 2>&1
+        fi
+    done
+done
+echo "*********************************************************" >> $EXPERIMENT_OUTPUT_FILE
 
 stop_interference_workload $INTERFERENCE_WORKLOAD >> $EXPERIMENT_OUTPUT_FILE 2>&1
 

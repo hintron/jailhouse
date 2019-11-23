@@ -313,26 +313,41 @@ function timestamp {
 function grep_freq_data {
     in_file="$1"
     out_file="$2"
-    grep_token "MGHFREQ:" $in_file $out_file
+    grep_token_in_file_to_file "MGHFREQ:" $in_file $out_file
 }
 
 function grep_output_data {
     in_file="$1"
     out_file="$2"
-    grep_token "MGHOUT:" $in_file $out_file
+    grep_token_in_file_to_file "MGHOUT:" $in_file $out_file
 }
 
 # Grep a file for all lines with a token, remove that token from the output,
 # remove additional carriage returns (since grep puts a single carriage return
 # at the start, then adds carriage returns to all newlines), and store the
 # output in a file.
-function grep_token {
+function grep_token_in_file_to_file {
     token="$1"
     in_file="$2"
     out_file="$3"
 
-    echo "grep \"$token\" $in_file | sed \"s/${token}//\""
-    grep "$token" $in_file | sed "s/${token}//" | sed "s/\r//" > $out_file
+    output=$(grep_token_in_file $token $in_file)
+    echo $output > $out_file
+}
+
+function grep_token_in_file {
+    token="$1"
+    in_file="$2"
+
+    echo "grep \"$token\" $in_file | sed \"s/${token}//\" | sed \"s/\r//\""
+    grep "$token" $in_file | sed "s/${token}//" | sed "s/\r//"
+}
+
+function grep_token_in_str {
+    token="$1"
+    str="$2"
+
+    echo "$str" | grep "$token" | sed "s/${token}//" | sed "s/\r//"
 }
 
 function start_handbrake {
