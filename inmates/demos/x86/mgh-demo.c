@@ -263,7 +263,7 @@ static void map_shmem_and_bars(struct ivshmem_dev_data *d)
 	int cap = pci_find_cap(d->bdf, PCI_CAP_MSIX);
 
 	if (cap < 0) {
-		printk("MGH DEMO ERROR: device is not MSI-X capable\n");
+		printk("MGH: ERROR: device is not MSI-X capable\n");
 		return;
 	}
 
@@ -271,21 +271,21 @@ static void map_shmem_and_bars(struct ivshmem_dev_data *d)
 	d->shmem = (void *)pci_cfg_read64(d->bdf, IVSHMEM_CFG_SHMEM_PTR);
 
 	if (MGH_DEBUG_MODE)
-		printk("MGH DEMO: shmem is at %p\n", d->shmem);
+		printk("MGH: shmem is at %p\n", d->shmem);
 
 	d->registers = (u32 *)((u64)(d->shmem + d->shmemsz + PAGE_SIZE - 1)
 		& PAGE_MASK);
 	pci_cfg_write64(d->bdf, PCI_CFG_BAR, (u64)d->registers);
 
 	if (MGH_DEBUG_MODE)
-		printk("MGH DEMO: bar0 is at %p\n", d->registers);
+		printk("MGH: bar0 is at %p\n", d->registers);
 
 	d->bar2sz = get_bar_sz(d->bdf, 2);
 	d->msix_table = (u32 *)((u64)d->registers + PAGE_SIZE);
 	pci_cfg_write64(d->bdf, PCI_CFG_BAR + 16, (u64)d->msix_table);
 
 	if (MGH_DEBUG_MODE)
-		printk("MGH DEMO: bar2 is at %p\n", d->msix_table);
+		printk("MGH: bar2 is at %p\n", d->msix_table);
 
 	pci_write_config(d->bdf, PCI_CFG_COMMAND,
 			 (PCI_CMD_MEM | PCI_CMD_MASTER), 2);
@@ -303,7 +303,7 @@ static int get_ivpos(struct ivshmem_dev_data *d)
 // TODO: Get this working? Do I need this?
 // static void send_irq(struct ivshmem_dev_data *d)
 // {
-// 	printk("MGH DEMO: %02x:%02x.%x sending IRQ; Shared: %s\n",
+// 	printk("MGH: %02x:%02x.%x sending IRQ; Shared: %s\n",
 // 	       d->bdf >> 8, (d->bdf >> 3) & 0x1f, d->bdf & 0x3, (char *)d->shmem);
 // 	// Write to the doorbell register (3 * u32 = 12 bytes)
 // 	mmio_write32(d->registers + 3, 1);
@@ -319,7 +319,7 @@ static char _get_hex_from_lower_nibble(char in)
 	} else if (in > 9 && in <= 15) {
 		out = in + 'a' - 10;
 	} else {
-		printk("MGH DEMO: Warning: Could not convert '%d' to hex\n", in);
+		printk("MGH: WARNING: Could not convert '%d' to hex\n", in);
 	}
 	return out;
 }
@@ -469,7 +469,7 @@ static void random_access(char *input, unsigned long input_len, char *output,
 static void irq_handler(void)
 {
 	static int irq_counter = 0;
-	printk("MGH DEMO: got interrupt ... %d\n", irq_counter++);
+	printk("MGH: got interrupt ... %d\n", irq_counter++);
 }
 
 static void command_line_params(bool *local_buffer,
@@ -575,12 +575,12 @@ static bool hardware_setup(void)
 	// Set up the Time Stamp Counter (TSC)
 	tsc_freq = tsc_init();
 	if (tsc_freq == 0) {
-		printk("MGH DEMO: TSC was not initialized successfully (frequency == 0).\n");
+		printk("MGH: TSC was not initialized successfully (frequency == 0).\n");
 		return false;
 	}
 
 	if (MGH_DEBUG_MODE)
-		printk("MGH DEMO: TSC frequency is %lu Hz.\n", tsc_freq);
+		printk("MGH: TSC frequency is %lu Hz.\n", tsc_freq);
 
 	// Set the cache line size
 	init_cache_line_size();
@@ -611,7 +611,7 @@ static bool device_setup(struct ivshmem_dev_data *devs)
 	while ((ndevices < MAX_NDEV) &&
 	       (-1 != (bdf = pci_find_device(VENDORID, DEVICEID, bdf)))) {
 	       	if (MGH_DEBUG_MODE)
-			printk("MGH DEMO: Found %04x:%04x at %02x:%02x.%x\n",
+			printk("MGH: Found %04x:%04x at %02x:%02x.%x\n",
 			       pci_read_config(bdf, PCI_CFG_VENDOR_ID, 2),
 			       pci_read_config(bdf, PCI_CFG_DEVICE_ID, 2),
 			       bdf >> 8, (bdf >> 3) & 0x1f, bdf & 0x3);
@@ -619,7 +619,7 @@ static bool device_setup(struct ivshmem_dev_data *devs)
 		class_rev = pci_read_config(bdf, 0x8, 4);
 		if (class_rev != (PCI_DEV_CLASS_OTHER << 24 |
 				  JAILHOUSE_SHMEM_PROTO_UNDEFINED << 8)) {
-			printk("MGH DEMO: class/revision %08x, not supported "
+			printk("MGH: class/revision %08x, not supported "
 			       "skipping device\n", class_rev);
 			bdf++;
 			continue;
@@ -628,7 +628,7 @@ static bool device_setup(struct ivshmem_dev_data *devs)
 		dev->bdf = bdf;
 		map_shmem_and_bars(dev);
 		if (MGH_DEBUG_MODE)
-			printk("MGH DEMO: mapped the bars got position %d\n",
+			printk("MGH: mapped the bars got position %d\n",
 			       get_ivpos(dev));
 
 		memcpy(dev->shmem, str, 32);
@@ -640,12 +640,12 @@ static bool device_setup(struct ivshmem_dev_data *devs)
 	}
 
 	if (ndevices <= 0) {
-		printk("MGH DEMO: No PCI devices found! Nothing to do\n");
+		printk("MGH: No PCI devices found! Nothing to do\n");
 		return false;
 	}
 
 	if (ndevices > 1) {
-		printk("MGH DEMO: More than one PCI device found!\n");
+		printk("MGH: More than one PCI device found!\n");
 	}
 
 	return true;
@@ -657,7 +657,7 @@ static void enable_throttle(throttle_t throttle_mechanism)
 	 * communication region of this cell */
 	switch (throttle_mechanism) {
 	case PAUSE:
-		printk("MGH: Error: PAUSE throttle mechanism not yet implemented. Defaulting to SPIN.\n");
+		printk("MGH: ERROR: PAUSE throttle mechanism not yet implemented. Defaulting to SPIN.\n");
 		/* Fall through */
 	case SPIN:
 		jailhouse_send_msg_to_cell(comm_region,
@@ -670,7 +670,7 @@ static void enable_throttle(throttle_t throttle_mechanism)
 		printk("MGH: Sent enable throttle request (clock)\n");
 		break;
 	default:
-		printk("MGH: Error: Invalid throttle mechanism requested\n");
+		printk("MGH: ERROR: Invalid throttle mechanism requested\n");
 		break;
 	}
 }
@@ -679,7 +679,7 @@ static void disable_throttle(void)
 {
 	jailhouse_send_msg_to_cell(comm_region,
 			JAILHOUSE_MSG_STOP_THROTTLING);
-	printk("MGH DEMO: Sent disable throttle request\n");
+	printk("MGH: Sent disable throttle request\n");
 }
 
 /*
@@ -817,7 +817,7 @@ static bool check_shutdown(void)
 	bool ret = false;
 	switch (comm_region->msg_to_cell) {
 	case JAILHOUSE_MSG_SHUTDOWN_REQUEST:
-		printk("MGH DEMO: Allowing inmate to be shut down\n");
+		printk("MGH: Allowing inmate to be shut down\n");
 		comm_region->cell_state = JAILHOUSE_CELL_SHUT_DOWN;
 		ret = true;
 		break;
@@ -862,7 +862,7 @@ static void workload(char *input, unsigned long len, char *output,
 
 	// Account for space needed to tack on NULL character
 	if (len > DATA_SIZE) {
-		printk("MGH DEMO: Input data max length exceeded (%lu > %u)\n",
+		printk("MGH: Input data max length exceeded (%lu > %u)\n",
 		       len, DATA_SIZE);
 		return;
 	}
@@ -881,7 +881,7 @@ static void workload(char *input, unsigned long len, char *output,
 		random_access(input, len, output, output_len);
 		break;
 	default:
-		printk("MGH: Error: Unknown workload mode\n");
+		printk("MGH: ERROR: Unknown workload mode\n");
 		break;
 	}
 }
@@ -1012,7 +1012,7 @@ void inmate_main(void)
 						 throttle_iterations);
 			break;
 		default:
-			printk("MGH: Error: unknown throttle mode\n");
+			printk("MGH: ERROR: unknown throttle mode\n");
 			break;
 		}
 
