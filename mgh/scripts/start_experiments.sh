@@ -27,6 +27,17 @@ INTERFERENCE_WORKLOAD=$INTF_HANDBRAKE
 # INTERFERENCE_WORKLOAD=$INTF_RANDOM
 INTERFERENCE_RAMPUP_TIME=15
 
+################################################################################
+# Experiment-wide inmate inputs
+################################################################################
+THROTTLE_MODE=$TMODE_ITERATION
+# DEBUG_MODE="true"
+# LOCAL_BUFFER="true"
+# THROTTLE_MECHANISM=$TMECH_CLOCK
+# WORKLOAD_MODE=$WM_COUNT_SET_BITS
+# COUNT_SET_BITS_MODE=$CSBM_FASTEST
+# POLLUTE_CACHE="true"
+
 function main {
     ################################################################################
     # Script-wide setup
@@ -59,13 +70,7 @@ function main {
     ################################################################################
     # Inmate inputs
     ################################################################################
-    # DEBUG_MODE="true"
-    # LOCAL_BUFFER="true"
-    THROTTLE_MODE=$TMODE_ITERATION
-    # THROTTLE_MECHANISM=$TMECH_CLOCK
-    # WORKLOAD_MODE=$WM_COUNT_SET_BITS
-    # COUNT_SET_BITS_MODE=$CSBM_FASTEST
-    # POLLUTE_CACHE="true"
+    # WORKLOAD_MODE defaults to CSB
     # Generate command line arguments based on input above
     INMATE_CMDLINE=$(set_cmdline) >> $EXPERIMENT_OUTPUT_FILE 2>&1
     ################################################################################
