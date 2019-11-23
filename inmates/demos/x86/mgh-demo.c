@@ -210,7 +210,7 @@ static u64 query_freq(void)
 		printk("MGHFREQ:%llu,%llu,%llu,%llu,%llu\n",
 		       counter, freq, max_freq, aperf, mperf);
 
-	if (freq < max_freq) {
+	if (MGH_DEBUG_MODE && freq < max_freq) {
 		printk("MGH: WARNING: %6llu: Actual CPU frequency less than max!\n",
 		       counter);
 	}
