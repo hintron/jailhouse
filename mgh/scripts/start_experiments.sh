@@ -25,6 +25,7 @@ INTERFERENCE_WORKLOAD_OUTPUT="output/interference_${experiment_time}.txt"
 # TODO: Make this experiment-dependent later
 INTERFERENCE_WORKLOAD=$INTF_HANDBRAKE
 # INTERFERENCE_WORKLOAD=$INTF_RANDOM
+INTERFERENCE_RAMPUP_TIME=15
 
 function main {
     ################################################################################
@@ -129,8 +130,9 @@ function start_experiment {
     # Start recording experiment output
     end_jailhouse >> $EXPERIMENT_OUTPUT_FILE 2>&1
 
-    echo "Wait for handbrake to ramp up" >> $EXPERIMENT_OUTPUT_FILE
     start_interference_workload $INTERFERENCE_WORKLOAD >> $INTERFERENCE_WORKLOAD_OUTPUT 2>&1 &
+    echo "Wait $INTERFERENCE_RAMPUP_TIME seconds for handbrake to ramp up" >> $EXPERIMENT_OUTPUT_FILE
+    sleep $INTERFERENCE_RAMPUP_TIME
 
     echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
     echo "Experiment $experiment_count" >> $JAILHOUSE_OUTPUT_FILE

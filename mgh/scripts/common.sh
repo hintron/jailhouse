@@ -394,8 +394,6 @@ function stop_random_demo {
 
 function start_interference_workload {
     if [ "$1" == $INTF_HANDBRAKE ]; then
-        # Wait for handbrake to ramp up
-        sleep 10
         start_handbrake_demo
     elif [ "$1" == $INTF_RANDOM ]; then
         start_random_access_demo
