@@ -116,7 +116,7 @@ def main(args):
     print('Inmate output length: %s' % output_len)
 
     # Only check output if it's a SHA3 (64 byte output is likely SHA3)
-    if output_len <= 4:
+    if output_len <= 8:
         print('Assuming output is an int (little-endian)')
         inmate_output_int = int.from_bytes(inmate_output[0:output_len], byteorder='little')
         # Assume this is count set bits
@@ -136,7 +136,7 @@ def get_expected_value(input_data, workload_mode, is_file):
     elif workload_mode == "csb":
         expected_value = validate_count_set_bits(input_data, is_file)
     elif workload_mode == "ra":
-        sys.exit("Random Access validation not yet supported")
+        expected_value = validate_random_access(input_data, is_file)
     else:
         sys.exit("Unknown workload_mode")
     return expected_value
@@ -151,7 +151,13 @@ def validate_count_set_bits(input_data, is_file):
     if is_file:
         return count_set_bits(input_data)
     else:
-        sys.exit('Inmate output checking not supported for non-file input to %s:' % os.path.basename(__file__))
+        sys.exit('Count set bits Linux program supports only file inputs')
+
+def validate_random_access(input_data, is_file):
+    if is_file:
+        return random_access(input_data)
+    else:
+        sys.exit('Random access Linux program supports only file inputs')
 
 # # Waits on an interrupt from the inmate to know the sha3 is complete
 def is_inmate_ready(shmem):
@@ -231,15 +237,27 @@ def file_to_sha3(file, str_mode=True):
         output = output.decode("utf-8")
     return output
 
-def count_set_bits(file):
-    # Get the bits-set-count executable relative to this file
+def count_set_bits(input_file):
+    return run_workload_linux(input_file, True)
+
+def random_access(input_file):
+    return run_workload_linux(input_file, False)
+
+def run_workload_linux(input_file, is_csb):
+    # Get the workload executable relative to this file
     script_dir = os.path.dirname(os.path.realpath(__file__))
-    count_set_bits_bin = "%s/../workloads/build/count-set-bits" % script_dir
-    cmd = "%s %s" % (count_set_bits_bin, file)
+    if is_csb:
+        workload = "count-set-bits"
+    else:
+        workload = "random-access"
+
+    workload_bin = "%s/../workloads/build/%s" % (script_dir, workload)
+    cmd = "%s %s" % (workload_bin, input_file)
     result = subprocess.run(cmd, shell=True, check=True, stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE)
-    count = int(result.stdout.decode("utf-8"))
-    return count
+    result = result.stdout.decode("utf-8")
+    result = int(result)
+    return result
 
 # Waits on an interrupt from the inmate to know the sha3 is complete
 def read_output(shmem, size):

@@ -454,12 +454,12 @@ static void random_access(char *input, unsigned long input_len, char *output,
 			  unsigned long *output_len)
 {
 	u64 result = 0;
-	int *output_int = (int *)output;
+	u64 *output_int = (u64 *)output;
 
 	result = random_access_mgh((unsigned char *)input, (int)input_len);
 
 	// Copy int to output (assume little-endian order)
-	*output_int = (int)result;
+	*output_int = result;
 
 	// Store # of bytes of result
 	*output_len = sizeof(result);
