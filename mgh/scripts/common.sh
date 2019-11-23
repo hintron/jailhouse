@@ -4,6 +4,7 @@ cd "${BASH_SOURCE%/*}"
 # Note that the inmate libraries assume that the cmdline string will be stored
 # at 0x1000 and will have a size of CMDLINE_BUFFER_SIZE.
 CMDLINE_OFFSET=0x1000
+MiB=$((2 ** 20))
 
 JAILHOUSE_BIN=../../tools/jailhouse
 
@@ -267,24 +268,25 @@ function create_random_file {
 # $2: (optional) The workload mode. Defaults to Count Set Bits.
 function get_expected_output {
     if [ "$2" == $WM_SHA3 ]; then
-        validate_sha3 "$1"
+        sha3_linux "$1"
     elif [ "$2" == $WM_RANDOM_ACCESS ]; then
-        validate_ra "$1"
+        random_access_linux "$1"
     else
         # This is the default
-        validate_csb "$1"
+        count_set_bits_linux "$1"
     fi
 }
 
-function validate_sha3 {
+# TODO: It's unnecessary to go out to python just to call an external program!
+function sha3_linux {
     sudo ../uio-userspace/mgh-demo.py -f "$1" -v sha3
 }
 
-function validate_csb {
+function count_set_bits_linux {
     sudo ../uio-userspace/mgh-demo.py -f "$1" -v csb
 }
 
-function validate_ra {
+function random_access_linux {
     sudo ../uio-userspace/mgh-demo.py -f "$1" -v ra
 }
 
@@ -370,8 +372,8 @@ function start_handbrake_demo {
     # Specify chapters with -c? Doesn't seem to work...
 }
 
-function start_random_demo {
-    echo "TODO: Need to implement start_random_demo"
+function start_random_access_demo {
+    echo "TODO: Need to implement start_random_access_demo"
 }
 
 function stop_handbrake {
@@ -387,6 +389,8 @@ function stop_random_demo {
 
 function start_interference_workload {
     if [ "$1" == $INTF_HANDBRAKE ]; then
+        # Wait for handbrake to ramp up
+        sleep 10
         start_handbrake_demo
     elif [ "$1" == $INTF_RANDOM ]; then
         start_random_access_demo

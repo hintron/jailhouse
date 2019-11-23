@@ -10,10 +10,13 @@ INMATE_PROGRAM=../../inmates/demos/x86/mgh-demo.bin
 ################################################################################
 # Experiment-wide inputs here
 ################################################################################
-ITERATIONS=2
-# ITERATIONS=10
-# ITERATIONS=20
-# ITERATIONS=100
+ITERATIONS=10
+THROTTLE_ITERATIONS=$(($ITERATIONS / 2))
+INPUT_SIZE_START=$MiB
+# INPUT_SIZE_END=$((40*$INPUT_SIZE_START))
+INPUT_SIZE_END=$((2*$INPUT_SIZE_START))
+INPUT_SIZE_STEP=$((1*$INPUT_SIZE_START))
+# We have up to 40 MiB, which is 41.9E6 bytes
 experiment_time="$(timestamp)"
 INPUT_FILE_BASE="input/input_${experiment_time}"
 JAILHOUSE_OUTPUT_FILE="output/jailhouse_${experiment_time}.txt"
@@ -24,9 +27,8 @@ INTERFERENCE_WORKLOAD_OUTPUT="output/interference_${experiment_time}.txt"
 ################################################################################
 # Experiment-wide setup
 ################################################################################
-touch $JAILHOUSE_OUTPUT_FILE
-touch $EXPERIMENT_OUTPUT_FILE
-echo "MGH: Experiments" >> $EXPERIMENT_OUTPUT_FILE
+echo "Starting experiments at $experiment_time" >> $EXPERIMENT_OUTPUT_FILE
+echo "=======================================================" >> $EXPERIMENT_OUTPUT_FILE
 
 reset_jailhouse_all >> $EXPERIMENT_OUTPUT_FILE 2>&1
 
@@ -40,55 +42,50 @@ tailf_pid=$!
 
 echo "tailf_pid: $tailf_pid" >> $EXPERIMENT_OUTPUT_FILE
 
+# Pre-generate all input sizes beforehand
+
+input_sizes=()
+for ((input_size = $INPUT_SIZE_START; input_size < $INPUT_SIZE_END; input_size += $INPUT_SIZE_STEP)); do
+    input_sizes+=($input_size)
+done
+input_sizes_count=${#input_sizes[@]}
+
 ################################################################################
 # Experiment 1
 ################################################################################
 # Inmate inputs
 ################################################################################
-DEBUG_MODE="true"
+# DEBUG_MODE="true"
 # LOCAL_BUFFER="true"
 THROTTLE_MODE=$TMODE_ITERATION
 # THROTTLE_MECHANISM=$TMECH_CLOCK
-WORKLOAD_MODE=$WM_SHA3
-# WORKLOAD_MODE=$WM_RANDOM_ACCESS
+# WORKLOAD_MODE=$WM_SHA3
+WORKLOAD_MODE=$WM_RANDOM_ACCESS
 # COUNT_SET_BITS_MODE=$CSBM_FASTEST
 # POLLUTE_CACHE="true"
 ################################################################################
 # Other parameters
 ################################################################################
-THROTTLE_ITERATIONS=$(($ITERATIONS / 2))
 INTERFERENCE_WORKLOAD=$INTF_HANDBRAKE
-INPUT_SIZE_START=1000000
-INPUT_SIZE_END=3000000
-INPUT_SIZE_STEP=1000000
-
 # INTERFERENCE_WORKLOAD=$INTF_RANDOM
 # Generate command line arguments based on input
 INMATE_CMDLINE=$(set_cmdline) >> $EXPERIMENT_OUTPUT_FILE 2>&1
 ################################################################################
-# Start recording experiment output
 
+# TODO: Pull out into separate function, so I can easily run more experiments!
+
+# Start recording experiment output
+end_jailhouse >> $EXPERIMENT_OUTPUT_FILE 2>&1
+
+echo "Wait for handbrake to ramp up" >> $EXPERIMENT_OUTPUT_FILE
 start_interference_workload $INTERFERENCE_WORKLOAD >> $INTERFERENCE_WORKLOAD_OUTPUT 2>&1 &
 
-echo "Wait 10 seconds for handbrake to spin up" >> $EXPERIMENT_OUTPUT_FILE
-sleep 10
-
-end_jailhouse >> $EXPERIMENT_OUTPUT_FILE 2>&1
 echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
 echo "Experiment 1" >> $JAILHOUSE_OUTPUT_FILE
 echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
 
 start_jailhouse $ROOT_CELL $INMATE_CELL $INMATE_NAME $INMATE_PROGRAM "$INMATE_CMDLINE" >> $EXPERIMENT_OUTPUT_FILE 2>&1
 
-# Pre-generate all input sizes and random inputs as well as the expected outputs before
-# throttling kicks in and makes things slow!
-
-input_sizes=()
-for ((input_size = $INPUT_SIZE_START; input_size < $INPUT_SIZE_END; input_size += $INPUT_SIZE_STEP)); do
-    input_sizes+=($input_size)
-done
-
-input_sizes_count=${#input_sizes[@]}
 # This will in effect be a 2d array of input files with pregenerated random data
 random_inputs=()
 expected_outputs=()
@@ -113,7 +110,6 @@ for ((i = 0 ; i < $input_sizes_count ; i++)); do
     echo "*********************************************************" >> $EXPERIMENT_OUTPUT_FILE
     echo "Input Size=$input_size" >> $EXPERIMENT_OUTPUT_FILE
     echo "*********************************************************" >> $EXPERIMENT_OUTPUT_FILE
-    # Run X ITERATIONS from 1 to X
     for ((j = 0 ; j < $ITERATIONS ; j++)); do
         # flatten 2d (i,j) index into a single flat index
         index=$(($i * $input_sizes_count + $j))
@@ -142,6 +138,12 @@ echo "*********************************************************" >> $EXPERIMENT_
 
 stop_interference_workload $INTERFERENCE_WORKLOAD >> $EXPERIMENT_OUTPUT_FILE 2>&1
 
+for input_file in ${random_inputs[@]}; do
+    # The input is just random data, so really no sense in keeping it around rn
+    echo "sudo rm $input_file" >> $EXPERIMENT_OUTPUT_FILE
+    sudo rm $input_file >> $EXPERIMENT_OUTPUT_FILE 2>&1
+done
+
 # ################################################################################
 # ################################################################################
 # # Experiment 2
@@ -161,11 +163,6 @@ echo "*******************************************************" >> $JAILHOUSE_OUT
 echo "End Experiments" >> $JAILHOUSE_OUTPUT_FILE
 echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
 
-for input_file in ${random_inputs[@]}; do
-    # The input is just random data, so really no sense in keeping it around rn
-    echo "sudo rm $input_file" >> $EXPERIMENT_OUTPUT_FILE
-    sudo rm $input_file >> $EXPERIMENT_OUTPUT_FILE 2>&1
-done
 
 echo "sudo kill $tailf_pid" >> $EXPERIMENT_OUTPUT_FILE
 sudo kill $tailf_pid >> $EXPERIMENT_OUTPUT_FILE 2>&1
@@ -178,4 +175,5 @@ end_root >> $EXPERIMENT_OUTPUT_FILE 2>&1
 sleep 1
 
 grep_output_data $JAILHOUSE_OUTPUT_FILE $OUTPUT_DATA_FILE >> $EXPERIMENT_OUTPUT_FILE 2>&1
-grep_freq_data $JAILHOUSE_OUTPUT_FILE $OUTPUT_FREQ_FILE >> $EXPERIMENT_OUTPUT_FILE 2>&1
+# TODO: Enable once I am convinced it's accurate and useful
+# grep_freq_data $JAILHOUSE_OUTPUT_FILE $OUTPUT_FREQ_FILE >> $EXPERIMENT_OUTPUT_FILE 2>&1
