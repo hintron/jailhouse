@@ -268,26 +268,32 @@ function create_random_file {
 # $2: (optional) The workload mode. Defaults to Count Set Bits.
 function get_expected_output {
     if [ "$2" == $WM_SHA3 ]; then
-        sha3_linux "$1"
+        sha3_linux_file "$1"
     elif [ "$2" == $WM_RANDOM_ACCESS ]; then
-        random_access_linux "$1"
+        random_access_linux_file "$1"
     else
         # This is the default
-        count_set_bits_linux "$1"
+        count_set_bits_linux_file "$1"
     fi
 }
 
-# TODO: It's unnecessary to go out to python just to call an external program!
-function sha3_linux {
-    sudo ../uio-userspace/mgh-demo.py -f "$1" -v sha3
+# Requires rhash to be installed on the system
+# `sudo apt install rhash`
+# See mgh/sha3/test.sh
+function sha3_linux_file {
+    rhash --sha3-512 "$1" | cut -f 1 -d " "
 }
 
-function count_set_bits_linux {
-    sudo ../uio-userspace/mgh-demo.py -f "$1" -v csb
+function sha3_linux_str {
+    printf "$1" | rhash --sha3-512 - | cut -f 1 -d " "
 }
 
-function random_access_linux {
-    sudo ../uio-userspace/mgh-demo.py -f "$1" -v ra
+function count_set_bits_linux_file {
+    ../workloads/build/count-set-bits "$1"
+}
+
+function random_access_linux_file {
+    ../workloads/build/random-access "$1"
 }
 
 function clear_sync_byte_shmem {

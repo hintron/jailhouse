@@ -73,15 +73,6 @@ def main(args):
     if not args.file and not args.input:
         sys.exit("Error: no input specified!")
 
-    if args.validate:
-        if args.file:
-            expected_value = get_expected_value(args.file, args.validate, True)
-        else:
-            expected_value = get_expected_value(args.input, args.validate, False)
-        # Only print the expected value so we can capture it in scripts
-        print(expected_value)
-        return
-
     # Check to make sure inmate is ready
     while not is_inmate_ready(shmem):
         time.sleep(1)
@@ -128,36 +119,6 @@ def main(args):
 
     f.close()
     shmem.close()
-
-def get_expected_value(input_data, workload_mode, is_file):
-    expected_value = "?"
-    if workload_mode == "sha3":
-        expected_value = validate_sha3(input_data, is_file)
-    elif workload_mode == "csb":
-        expected_value = validate_count_set_bits(input_data, is_file)
-    elif workload_mode == "ra":
-        expected_value = validate_random_access(input_data, is_file)
-    else:
-        sys.exit("Unknown workload_mode")
-    return expected_value
-
-def validate_sha3(input_data, is_file):
-    if is_file:
-        return file_to_sha3(input_data)
-    else:
-        return str_to_sha3(input_data)
-
-def validate_count_set_bits(input_data, is_file):
-    if is_file:
-        return count_set_bits(input_data)
-    else:
-        sys.exit('Count set bits Linux program supports only file inputs')
-
-def validate_random_access(input_data, is_file):
-    if is_file:
-        return random_access(input_data)
-    else:
-        sys.exit('Random access Linux program supports only file inputs')
 
 # # Waits on an interrupt from the inmate to know the sha3 is complete
 def is_inmate_ready(shmem):
@@ -214,51 +175,6 @@ def pend_inmate_intr(device_file):
     print("interrupt #%s" % interrupt_count)
     os.close(fd)
 
-# Requires rhash to be installed on the system
-# `sudo apt install rhash`
-# See mgh/sha3/test.sh
-def str_to_sha3(string, str_mode=True):
-    cmd = "printf %s | rhash --sha3-512 -" % string
-    result = subprocess.run(cmd, shell=True, check=True, stdout=subprocess.PIPE,
-                            stderr=subprocess.PIPE)
-    # Remove the trailing "  (stdin)"
-    output = result.stdout.split()[0]
-    if str_mode:
-        output = output.decode("utf-8")
-    return output
-
-def file_to_sha3(file, str_mode=True):
-    cmd = "rhash --sha3-512 %s" % file
-    result = subprocess.run(cmd, shell=True, check=True, stdout=subprocess.PIPE,
-                            stderr=subprocess.PIPE)
-    # Remove the trailing "  (stdin)"
-    output = result.stdout.split()[0]
-    if str_mode:
-        output = output.decode("utf-8")
-    return output
-
-def count_set_bits(input_file):
-    return run_workload_linux(input_file, True)
-
-def random_access(input_file):
-    return run_workload_linux(input_file, False)
-
-def run_workload_linux(input_file, is_csb):
-    # Get the workload executable relative to this file
-    script_dir = os.path.dirname(os.path.realpath(__file__))
-    if is_csb:
-        workload = "count-set-bits"
-    else:
-        workload = "random-access"
-
-    workload_bin = "%s/../workloads/build/%s" % (script_dir, workload)
-    cmd = "%s %s" % (workload_bin, input_file)
-    result = subprocess.run(cmd, shell=True, check=True, stdout=subprocess.PIPE,
-                            stderr=subprocess.PIPE)
-    result = result.stdout.decode("utf-8")
-    result = int(result)
-    return result
-
 # Waits on an interrupt from the inmate to know the sha3 is complete
 def read_output(shmem, size):
     # Append an extra +1 to account for python's slice syntax
@@ -283,7 +199,6 @@ parser.add_argument('-c', '--clear', dest='clear', action='store_true', help='If
 parser.add_argument('-f', '--file', dest='file', type=str, help='An input file to send to the inmate. The input will be taken from the binary contents of the file.')
 parser.add_argument('-i', '--input', dest='input', type=str, help='An input string to send to the inmate.')
 parser.add_argument('-p', '--poll-speed', dest='poll', type=float, default=0.1, help='How frequently to check on the inmate while waiting for the inmate workload to complete. Defaults to 0.1 (100 ms)')
-parser.add_argument('-v', '--validate', dest='validate', type=str, help='If set, instead of passing input to the inmate to run for a workload, instead print out the expected value calculated locally on Linux. Use to validate future inmate runs. Set the value to either csb` (count-set-bits), `sha3`, or `ra` (random access).')
 
 args = parser.parse_args()
 
