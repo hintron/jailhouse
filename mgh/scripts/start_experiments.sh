@@ -7,12 +7,12 @@ ROOT_CELL=../../configs/x86/bazooka-root.cell
 INMATE_CELL=../../configs/x86/bazooka-inmate.cell
 INMATE_NAME=bazooka-inmate
 INMATE_PROGRAM=../../inmates/demos/x86/mgh-demo.bin
-# ITERATIONS=10
-ITERATIONS=2
+ITERATIONS=10
+# ITERATIONS=2
 THROTTLE_ITERATIONS=$(($ITERATIONS / 2))
 INPUT_SIZE_START=$MiB
-# INPUT_SIZE_END=$((40*$INPUT_SIZE_START))
-INPUT_SIZE_END=$((2*$INPUT_SIZE_START))
+INPUT_SIZE_END=$((40*$INPUT_SIZE_START))
+# INPUT_SIZE_END=$((2*$INPUT_SIZE_START))
 INPUT_SIZE_STEP=$((1*$INPUT_SIZE_START))
 # We have up to 40 MiB, which is 41.9E6 bytes
 experiment_time="$(timestamp)"
