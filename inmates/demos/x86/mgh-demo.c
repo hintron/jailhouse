@@ -206,8 +206,9 @@ static u64 query_freq(void)
 	// freq = (tsc_freq * aperf) / mperf;
 	freq = (max_freq * aperf) / mperf;
 
-	printk("MGHFREQ:%llu,%llu,%llu,%llu,%llu\n",
-	       counter, freq, max_freq, aperf, mperf);
+	if (MGH_DEBUG_MODE)
+		printk("MGHFREQ:%llu,%llu,%llu,%llu,%llu\n",
+		       counter, freq, max_freq, aperf, mperf);
 
 	if (freq < max_freq) {
 		printk("MGH: WARNING: %6llu: Actual CPU frequency less than max!\n",
@@ -932,7 +933,8 @@ void inmate_main(void)
 		return;
 
 	// Print out column headers for the subsequent frequency data
-	printk("MGHFREQ:counter,freq,max_freq,aperf,mperf\n");
+	if (MGH_DEBUG_MODE)
+		printk("MGHFREQ:counter,freq,max_freq,aperf,mperf\n");
 
 	(void) query_freq();
 
