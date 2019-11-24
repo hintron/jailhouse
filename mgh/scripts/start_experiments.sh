@@ -104,8 +104,9 @@ function main {
     sleep 5
 
     # Flush any buffers
+    end_time="$(timestamp)"
     echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
-    echo "End Experiments" >> $JAILHOUSE_OUTPUT_FILE
+    echo "Ending experiments at $end_time" >> $JAILHOUSE_OUTPUT_FILE
     echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
 
     echo "sudo kill $tailf_pid" >> $EXPERIMENT_OUTPUT_FILE
@@ -114,6 +115,8 @@ function main {
 
     end_inmate >> $EXPERIMENT_OUTPUT_FILE 2>&1
     end_root >> $EXPERIMENT_OUTPUT_FILE 2>&1
+
+    echo "Ending experiments at $end_time" >> $EXPERIMENT_OUTPUT_FILE
 
     # Let's catch our breath
     sleep 1
