@@ -1084,7 +1084,7 @@ void inmate_main(void)
 		total_duration = copy_duration + workload_duration;
 		ns_per_byte = total_duration / input_len;
 
-		printk("MGHOUT:%ld,%ld,%ld,%ld,%ld,%llu,%lu\n",
+		printk("MGHOUT:%lu,%lu,%lu,%lu,%lu,%llu,%lu\n",
 		       workload_counter, input_len, total_duration,
 		       copy_duration, workload_duration, avg_freq, ns_per_byte);
 
