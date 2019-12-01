@@ -702,7 +702,7 @@ static void check_alternating_throttle(throttle_t throttle_mechanism)
 
 	current = tsc_read_ns();
 	if (current < start) {
-		printk("MGH: ERROR: TSC underflow (current=%ld, start=%ld\n",
+		printk("MGH: ERROR: TSC underflow (current=%lu, start=%lu\n",
 		       current, start);
 		return;
 	}
