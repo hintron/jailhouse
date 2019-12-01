@@ -1109,6 +1109,11 @@ void inmate_main(void)
 		end = tsc_read_ns();
 
 		set_data_length(shmem, output_len);
+
+		if (start > end)
+			printk("MGH: ERROR: Timer overflow during workload (start=%lu > end=%lu)\n",
+			       start, end);
+
 		workload_duration = end - start;
 
 		freq3 = query_freq();
