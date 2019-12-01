@@ -170,6 +170,7 @@ function start_experiment {
         input_size=${input_sizes[$i]}
         echo "*********************************************************" >> $EXPERIMENT_OUTPUT_FILE
         echo "Input Size=$input_size" >> $EXPERIMENT_OUTPUT_FILE
+        echo "Time=$(timestamp)" >> $EXPERIMENT_OUTPUT_FILE
         echo "*********************************************************" >> $EXPERIMENT_OUTPUT_FILE
         for ((j = 0 ; j < $ITERATIONS ; j++)); do
             # flatten 2d (i,j) index into a single flat index
