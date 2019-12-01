@@ -338,12 +338,12 @@ static void init_cache_line_size(void)
 	cpu_cache_line_size = (ebx & 0xff00) >> 5;
 
 	if (MGH_DEBUG_MODE)
-		printk("MGH DEBUG: cache_line_size = %lu\n",
+		printk("MGH: cache_line_size = %lu\n",
 		       cpu_cache_line_size);
 
 	/* The cache line size should always be 64 B on Intel x86-64 */
 	if (cpu_cache_line_size != EXPECTED_CPU_CACHE_LINE_SIZE)
-		printk("MGH DEBUG: Error: Actual cache line size is %lu B\n",
+		printk("MGH: ERROR: Actual cache line size is %lu B\n",
 		       cpu_cache_line_size);
 }
 
