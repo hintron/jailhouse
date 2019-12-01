@@ -40,6 +40,12 @@ struct {
 		.num_pci_devices = ARRAY_SIZE(config.pci_devices),
 		.num_pci_caps = ARRAY_SIZE(config.pci_caps),
 
+		// TODO: Does this work? How long should it be?
+		// /* If inmate does not respond to shutdown request from the root
+		//  * within 1000 calls to cpu_relax(), then continue on with
+		//  * the shutdown to prevent root from freezing. */
+		// .msg_reply_timeout = 1000,
+
 		.console = {
 			.type = JAILHOUSE_CON_TYPE_8250,
 			.flags = JAILHOUSE_CON_ACCESS_PIO,
