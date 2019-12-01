@@ -5,6 +5,7 @@ cd "${BASH_SOURCE%/*}"
 # at 0x1000 and will have a size of CMDLINE_BUFFER_SIZE.
 CMDLINE_OFFSET=0x1000
 MiB=$((2 ** 20))
+KiB=$((2 ** 10))
 
 JAILHOUSE_BIN=../../tools/jailhouse
 
