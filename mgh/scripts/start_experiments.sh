@@ -10,10 +10,9 @@ INMATE_PROGRAM=../../inmates/demos/x86/mgh-demo.bin
 ITERATIONS=10
 # ITERATIONS=2
 THROTTLE_ITERATIONS=$(($ITERATIONS / 2))
-INPUT_SIZE_START=$MiB
-INPUT_SIZE_END=$((40*$INPUT_SIZE_START))
-# INPUT_SIZE_END=$((2*$INPUT_SIZE_START))
-INPUT_SIZE_STEP=$((1*$INPUT_SIZE_START))
+INPUT_SIZE_START=$((1 * $MiB))
+INPUT_SIZE_END=$((40 * $MiB))
+INPUT_SIZE_STEP=$((1 * $MiB))
 # We have up to 40 MiB, which is 41.9E6 bytes
 experiment_time="$(timestamp)"
 INPUT_FILE_BASE="input/input_${experiment_time}"
