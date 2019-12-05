@@ -3,19 +3,22 @@ source ./common.sh
 ################################################################################
 # Script-wide inputs here
 ################################################################################
+RUN_ON_LINUX=0
+
 ROOT_CELL=../../configs/x86/bazooka-root.cell
 INMATE_CELL=../../configs/x86/bazooka-inmate.cell
 INMATE_NAME=bazooka-inmate
 INMATE_PROGRAM=../../inmates/demos/x86/mgh-demo.bin
-ITERATIONS=10
-# ITERATIONS=2
+# ITERATIONS=10
+ITERATIONS=4
 THROTTLE_ITERATIONS=$(($ITERATIONS / 2))
-INPUT_SIZE_START=$((1 * $MiB))
+INPUT_SIZE_START=$((14 * $MiB))
+# INPUT_SIZE_END=$((16 * $MiB))
 INPUT_SIZE_END=$((40 * $MiB))
 INPUT_SIZE_STEP=$((1 * $MiB))
+# INPUT_SIZE_STEP=$((100 * $KiB))
 # We have up to 40 MiB, which is 41.9E6 bytes
 experiment_time="$(timestamp)"
-INPUT_FILE_BASE="input/input_${experiment_time}"
 OUTPUT_DIR="output/${experiment_time}"
 JAILHOUSE_OUTPUT_FILE="$OUTPUT_DIR/jailhouse_${experiment_time}.txt"
 EXPERIMENT_OUTPUT_FILE="$OUTPUT_DIR/experiment_${experiment_time}.txt"
@@ -32,7 +35,7 @@ INTERFERENCE_RAMPUP_TIME=15
 # Experiment-wide inmate inputs
 ################################################################################
 THROTTLE_MODE=$TMODE_ITERATION
-# DEBUG_MODE="true"
+DEBUG_MODE="true"
 # LOCAL_BUFFER="true"
 # THROTTLE_MECHANISM=$TMECH_CLOCK
 # WORKLOAD_MODE=$WM_COUNT_SET_BITS
@@ -43,11 +46,11 @@ function main {
     ################################################################################
     # Script-wide setup
     ################################################################################
-    echo "Starting experiments at $experiment_time" >> $EXPERIMENT_OUTPUT_FILE
-    echo "=======================================================" >> $EXPERIMENT_OUTPUT_FILE
-
     # make output folder if it doesn't already exist
     mkdir -p $OUTPUT_DIR
+
+    echo "Starting experiments at $experiment_time" >> $EXPERIMENT_OUTPUT_FILE
+    echo "=======================================================" >> $EXPERIMENT_OUTPUT_FILE
 
     reset_jailhouse_all >> $EXPERIMENT_OUTPUT_FILE 2>&1
 
@@ -62,36 +65,41 @@ function main {
     echo "tailf_pid: $tailf_pid" >> $EXPERIMENT_OUTPUT_FILE
 
     # Pre-generate all input sizes beforehand
+    generate_input_size_range
 
-    input_sizes=()
-    for ((input_size = $INPUT_SIZE_START; input_size < $INPUT_SIZE_END; input_size += $INPUT_SIZE_STEP)); do
-        input_sizes+=($input_size)
-    done
-    input_sizes_count=${#input_sizes[@]}
+    # ################################################################################
+    # # Inmate inputs
+    # ################################################################################
+    # WORKLOAD_MODE=$WM_COUNT_SET_BITS
+    # INTERFERENCE_WORKLOAD_ENABLE=1
+    # ################################################################################
+    # start_experiment_jailhouse
 
-    
+    # ################################################################################
+    # # Inmate inputs
+    # ##################################################################################
+    # WORKLOAD_MODE=$WM_SHA3
+    # INTERFERENCE_WORKLOAD_ENABLE=1
+    # ##################################################################################
+    # start_experiment_jailhouse
+
+    # ################################################################################
+    # # Inmate inputs
+    # ##################################################################################
+    # WORKLOAD_MODE=$WM_RANDOM_ACCESS
+    # INTERFERENCE_WORKLOAD_ENABLE=1
+    # ##################################################################################
+    # start_experiment_jailhouse
+
 
     ################################################################################
-    # Inmate inputs
-    ################################################################################
-    # WORKLOAD_MODE defaults to CSB
-    # Generate command line arguments based on input above
-    ################################################################################
-    start_experiment
-
-    ################################################################################
-    # Inmate inputs
-    ##################################################################################
-    WORKLOAD_MODE=$WM_SHA3
-    ##################################################################################
-    start_experiment
-
-    ################################################################################
-    # Inmate inputs
+    # Linux inputs
     ##################################################################################
     WORKLOAD_MODE=$WM_RANDOM_ACCESS
+    INTERFERENCE_WORKLOAD_ENABLE=0
+    RUN_ON_LINUX=1
     ##################################################################################
-    start_experiment
+    start_experiment_jailhouse
 
 
     # ################################################################################
@@ -119,54 +127,121 @@ function main {
     # Let's catch our breath
     sleep 1
 
-    grep_output_data $JAILHOUSE_OUTPUT_FILE $OUTPUT_DATA_FILE >> $EXPERIMENT_OUTPUT_FILE 2>&1
-    # TODO: Enable once I am convinced it's accurate and useful
-    # grep_freq_data $JAILHOUSE_OUTPUT_FILE $OUTPUT_FREQ_FILE >> $EXPERIMENT_OUTPUT_FILE 2>&1
+    post_process_data
 }
 
-# The only param passed in is the experiment number. All other inputs are
-# globals
-experiment_counter=1
-function start_experiment {
-    echo "################################################################################" >> $EXPERIMENT_OUTPUT_FILE
-    echo "# Experiment $experiment_counter" >> $EXPERIMENT_OUTPUT_FILE
-    echo "################################################################################" >> $EXPERIMENT_OUTPUT_FILE
+# Calculates the input sizes
+# IN: $INPUT_SIZE_START
+# IN: $INPUT_SIZE_END
+# IN: $INPUT_SIZE_STEP
+# OUT: $input_sizes
+# OUT: $input_sizes_count
+function generate_input_size_range {
+    input_sizes=()
+    for ((input_size = $INPUT_SIZE_START; input_size < $INPUT_SIZE_END; input_size += $INPUT_SIZE_STEP)); do
+        input_sizes+=($input_size)
+    done
+    input_sizes_count=${#input_sizes[@]}
+}
 
+# Generates random inputs and stores them in random_inputs
+# IN: $input_sizes
+# IN: $input_sizes_count
+# IN: $ITERATIONS
+# OUT: $random_inputs
+function generate_random_inputs {
+    INPUT_FILE_BASE="input/input_${experiment_time}"
+    # This will in effect be a 2d array of input files with pregenerated random data
+    random_inputs=()
+    for ((i = 0 ; i < $input_sizes_count ; i++)); do
+        for ((j = 0 ; j < $ITERATIONS ; j++)); do
+            # flatten 2d (i,j) index into a single flat index
+            index=$(($i * $ITERATIONS + $j))
+            input_file="${INPUT_FILE_BASE}_${index}.bin"
+            create_random_file ${input_sizes[$i]} $input_file
+            random_inputs+=($input_file)
+        done
+    done
+}
+
+# IN: $WORKLOAD_MODE
+# IN: $ITERATIONS
+# IN: $input_sizes_count
+# IN: $random_inputs
+# OUT: $expected_outputs
+# OUT: $expected_output_times_ms
+function generate_expected_outputs {
+    expected_outputs=()
+    expected_output_times_ms=()
+    # This will in effect be a 2d array of expected output strings
+    for ((i = 0 ; i < $input_sizes_count ; i++)); do
+        for ((j = 0 ; j < $ITERATIONS ; j++)); do
+            # flatten 2d (i,j) index into a single flat index
+            index=$(($i * $ITERATIONS + $j))
+            # Calculate and capture expected outputs
+            start_time_ns=$(date +%s%N)
+            expected_output=$(get_expected_output ${random_inputs[$index]} $WORKLOAD_MODE)
+            end_time_ns=$(date +%s%N)
+            duration_ns=$(($end_time_ns-$start_time_ns))
+            duration_us=$(($duration_ns/1000))
+            duration_ms=$(($duration_us/1000))
+            expected_outputs+=($expected_output)
+            expected_output_times_ms+=($duration_ms)
+        done
+    done
+}
+
+
+
+
+function post_process_data {
+    grep_output_data $JAILHOUSE_OUTPUT_FILE $OUTPUT_DATA_FILE >> $EXPERIMENT_OUTPUT_FILE 2>&1
+    # TODO: Post-process data into the two different graphs for easy import
+    grep_freq_data $JAILHOUSE_OUTPUT_FILE $OUTPUT_FREQ_FILE >> $EXPERIMENT_OUTPUT_FILE 2>&1
+}
+
+function start_experiment_linux {
+    generate_random_inputs
+
+}
+
+function prep_experiment_jailhouse {
     INMATE_CMDLINE=$(set_cmdline) >> $EXPERIMENT_OUTPUT_FILE 2>&1
 
     # Start recording experiment output
     end_jailhouse >> $EXPERIMENT_OUTPUT_FILE 2>&1
+
+    start_jailhouse $ROOT_CELL $INMATE_CELL $INMATE_NAME $INMATE_PROGRAM "$INMATE_CMDLINE" >> $EXPERIMENT_OUTPUT_FILE 2>&1
+}
+
+function prep_experiment_linux {
+    echo "TODO: prep_experiment_linux"
+}
+
+experiment_counter=1
+function start_experiment_jailhouse {
+    echo "################################################################################" >> $EXPERIMENT_OUTPUT_FILE
+    echo "# Experiment $experiment_counter" >> $EXPERIMENT_OUTPUT_FILE
+    echo "################################################################################" >> $EXPERIMENT_OUTPUT_FILE
+
+    echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
+    echo "Experiment $experiment_counter" >> $JAILHOUSE_OUTPUT_FILE
+    echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
+
+    if [ "$RUN_ON_LINUX" == 1 ]; then
+        prep_experiment_linux
+    else
+        prep_experiment_jailhouse
+    fi
+
+    generate_random_inputs
+    generate_expected_outputs
 
     if [ "$INTERFERENCE_WORKLOAD_ENABLE" == 1 ]; then
         start_interference_workload $INTERFERENCE_WORKLOAD >> $INTERFERENCE_WORKLOAD_OUTPUT 2>&1 &
         echo "Wait $INTERFERENCE_RAMPUP_TIME seconds for handbrake to ramp up" >> $EXPERIMENT_OUTPUT_FILE
         sleep $INTERFERENCE_RAMPUP_TIME
     fi
-
-    echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
-    echo "Experiment $experiment_counter" >> $JAILHOUSE_OUTPUT_FILE
-    echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
-
-    start_jailhouse $ROOT_CELL $INMATE_CELL $INMATE_NAME $INMATE_PROGRAM "$INMATE_CMDLINE" >> $EXPERIMENT_OUTPUT_FILE 2>&1
-
-    # This will in effect be a 2d array of input files with pregenerated random data
-    random_inputs=()
-    expected_outputs=()
-    for ((i = 0 ; i < $input_sizes_count ; i++)); do
-        for ((j = 0 ; j < $ITERATIONS ; j++)); do
-            # flatten 2d (i,j) index into a single flat index
-            index=$(($i * $ITERATIONS + $j))
-            input_file="${INPUT_FILE_BASE}_${index}.bin"
-            # echo "$input_file" >> $EXPERIMENT_OUTPUT_FILE 2>&1
-            create_random_file ${input_sizes[$i]} $input_file >> $EXPERIMENT_OUTPUT_FILE 2>&1
-            random_inputs+=($input_file)
-            # Calculate and capture expected outputs to compare with inmate outputs
-            # later
-            expected_output=$(get_expected_output $input_file $WORKLOAD_MODE)
-            # echo "expected_output $index: $expected_output" >> $EXPERIMENT_OUTPUT_FILE 2>&1
-            expected_outputs+=($expected_output)
-        done
-    done
 
     for ((i = 0 ; i < $input_sizes_count ; i++)); do
         input_size=${input_sizes[$i]}
@@ -183,18 +258,30 @@ function start_experiment {
             echo "Iteration $j ($index):" >> $EXPERIMENT_OUTPUT_FILE
 
             input_file=${random_inputs[$index]}
-            inmate_output=$(send_inmate_input $input_file)
-            echo "$inmate_output" >> $EXPERIMENT_OUTPUT_FILE 2>&1
-            inmate_output_value=$(grep_token_in_str "Inmate output: " "$inmate_output")
             expected_output_value="${expected_outputs[$index]}"
 
-            # Validate inmate output against pre-calculated values
-            if [ "$inmate_output_value" != "$expected_output_value" ]; then
-                echo "Error: inmate output != expected!" >> $EXPERIMENT_OUTPUT_FILE 2>&1
-                echo "    inmate_output_value  : $inmate_output_value" >> $EXPERIMENT_OUTPUT_FILE 2>&1
-                echo "    expected_output_value: $expected_output_value" >> $EXPERIMENT_OUTPUT_FILE 2>&1
+            if [ "$RUN_ON_LINUX" == 1 ]; then
+                # On Linux, the workload output is just the expected value
+                # already calculated
+                workload_output_duration=${expected_output_times_ms[$index]}
+                echo "Linux input size: $input_size" >> $EXPERIMENT_OUTPUT_FILE 2>&1
+                echo "Linux output: $expected_output_value" >> $EXPERIMENT_OUTPUT_FILE 2>&1
+                echo "Linux output duration: $workload_output_duration" >> $EXPERIMENT_OUTPUT_FILE 2>&1
+                # Put Linux workload timing data into jailhouse output file
+                echo "MGHOUT:$index,$input_size,$workload_output_duration" >> $JAILHOUSE_OUTPUT_FILE
             else
-                echo "Inmate output matches expected output" >> $EXPERIMENT_OUTPUT_FILE 2>&1
+                workload_output=$(send_inmate_input $input_file)
+                echo "$workload_output" >> $EXPERIMENT_OUTPUT_FILE 2>&1
+                workload_output_value=$(grep_token_in_str "Inmate output: " "$workload_output")
+
+                # Validate workload output against pre-calculated values
+                if [ "$workload_output_value" != "$expected_output_value" ]; then
+                    echo "Error: workload output != expected!" >> $EXPERIMENT_OUTPUT_FILE 2>&1
+                    echo "    workload_output_value  : $workload_output_value" >> $EXPERIMENT_OUTPUT_FILE 2>&1
+                    echo "    expected_output_value: $expected_output_value" >> $EXPERIMENT_OUTPUT_FILE 2>&1
+                else
+                    echo "Workload output matches expected output" >> $EXPERIMENT_OUTPUT_FILE 2>&1
+                fi
             fi
         done
     done
