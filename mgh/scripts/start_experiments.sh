@@ -69,7 +69,7 @@ function main {
     done
     input_sizes_count=${#input_sizes[@]}
 
-    experiment_counter=1
+    
 
     ################################################################################
     # Inmate inputs
@@ -77,24 +77,21 @@ function main {
     # WORKLOAD_MODE defaults to CSB
     # Generate command line arguments based on input above
     ################################################################################
-    start_experiment $experiment_counter
-    experiment_counter=$(($experiment_counter + 1))
+    start_experiment
 
     ################################################################################
     # Inmate inputs
     ##################################################################################
     WORKLOAD_MODE=$WM_SHA3
     ##################################################################################
-    start_experiment $experiment_counter
-    experiment_counter=$(($experiment_counter + 1))
+    start_experiment
 
     ################################################################################
     # Inmate inputs
     ##################################################################################
     WORKLOAD_MODE=$WM_RANDOM_ACCESS
     ##################################################################################
-    start_experiment $experiment_counter
-    experiment_counter=$(($experiment_counter + 1))
+    start_experiment
 
 
     # ################################################################################
@@ -129,9 +126,8 @@ function main {
 
 # The only param passed in is the experiment number. All other inputs are
 # globals
+experiment_counter=1
 function start_experiment {
-    experiment_count="$1"
-
     echo "################################################################################" >> $EXPERIMENT_OUTPUT_FILE
     echo "# Experiment $experiment_counter" >> $EXPERIMENT_OUTPUT_FILE
     echo "################################################################################" >> $EXPERIMENT_OUTPUT_FILE
@@ -148,7 +144,7 @@ function start_experiment {
     fi
 
     echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
-    echo "Experiment $experiment_count" >> $JAILHOUSE_OUTPUT_FILE
+    echo "Experiment $experiment_counter" >> $JAILHOUSE_OUTPUT_FILE
     echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
 
     start_jailhouse $ROOT_CELL $INMATE_CELL $INMATE_NAME $INMATE_PROGRAM "$INMATE_CMDLINE" >> $EXPERIMENT_OUTPUT_FILE 2>&1
@@ -213,6 +209,8 @@ function start_experiment {
         echo "sudo rm $input_file" >> $EXPERIMENT_OUTPUT_FILE
         sudo rm $input_file >> $EXPERIMENT_OUTPUT_FILE 2>&1
     done
+
+    experiment_counter=$(($experiment_counter + 1))
 }
 
 # Call main here to allow for forward declaration (like Python)
