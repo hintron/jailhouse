@@ -21,6 +21,7 @@ JAILHOUSE_OUTPUT_FILE="$OUTPUT_DIR/jailhouse_${experiment_time}.txt"
 EXPERIMENT_OUTPUT_FILE="$OUTPUT_DIR/experiment_${experiment_time}.txt"
 OUTPUT_DATA_FILE="$OUTPUT_DIR/data_${experiment_time}.csv"
 OUTPUT_FREQ_FILE="$OUTPUT_DIR/freq_${experiment_time}.csv"
+INTERFERENCE_WORKLOAD_ENABLE=0
 INTERFERENCE_WORKLOAD_OUTPUT="$OUTPUT_DIR/interference_${experiment_time}.txt"
 # TODO: Make this experiment-dependent later
 INTERFERENCE_WORKLOAD=$INTF_HANDBRAKE
@@ -141,9 +142,11 @@ function start_experiment {
     # Start recording experiment output
     end_jailhouse >> $EXPERIMENT_OUTPUT_FILE 2>&1
 
-    start_interference_workload $INTERFERENCE_WORKLOAD >> $INTERFERENCE_WORKLOAD_OUTPUT 2>&1 &
-    echo "Wait $INTERFERENCE_RAMPUP_TIME seconds for handbrake to ramp up" >> $EXPERIMENT_OUTPUT_FILE
-    sleep $INTERFERENCE_RAMPUP_TIME
+    if [ "$INTERFERENCE_WORKLOAD_ENABLE" == 1 ]; then
+        start_interference_workload $INTERFERENCE_WORKLOAD >> $INTERFERENCE_WORKLOAD_OUTPUT 2>&1 &
+        echo "Wait $INTERFERENCE_RAMPUP_TIME seconds for handbrake to ramp up" >> $EXPERIMENT_OUTPUT_FILE
+        sleep $INTERFERENCE_RAMPUP_TIME
+    fi
 
     echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
     echo "Experiment $experiment_count" >> $JAILHOUSE_OUTPUT_FILE
@@ -202,7 +205,9 @@ function start_experiment {
     done
     echo "*********************************************************" >> $EXPERIMENT_OUTPUT_FILE
 
-    stop_interference_workload $INTERFERENCE_WORKLOAD >> $EXPERIMENT_OUTPUT_FILE 2>&1
+    if [ "$INTERFERENCE_WORKLOAD_ENABLE" == 1 ]; then
+        stop_interference_workload $INTERFERENCE_WORKLOAD >> $EXPERIMENT_OUTPUT_FILE 2>&1
+    fi
 
     for input_file in ${random_inputs[@]}; do
         # The input is just random data, so really no sense in keeping it around rn
