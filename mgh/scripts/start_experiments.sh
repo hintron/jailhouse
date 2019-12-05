@@ -16,11 +16,12 @@ INPUT_SIZE_STEP=$((1 * $MiB))
 # We have up to 40 MiB, which is 41.9E6 bytes
 experiment_time="$(timestamp)"
 INPUT_FILE_BASE="input/input_${experiment_time}"
-JAILHOUSE_OUTPUT_FILE="output/jailhouse_${experiment_time}.txt"
-EXPERIMENT_OUTPUT_FILE="output/experiment_${experiment_time}.txt"
-OUTPUT_DATA_FILE="output/data_${experiment_time}.csv"
-OUTPUT_FREQ_FILE="output/freq_${experiment_time}.csv"
-INTERFERENCE_WORKLOAD_OUTPUT="output/interference_${experiment_time}.txt"
+OUTPUT_DIR="output/${experiment_time}"
+JAILHOUSE_OUTPUT_FILE="$OUTPUT_DIR/jailhouse_${experiment_time}.txt"
+EXPERIMENT_OUTPUT_FILE="$OUTPUT_DIR/experiment_${experiment_time}.txt"
+OUTPUT_DATA_FILE="$OUTPUT_DIR/data_${experiment_time}.csv"
+OUTPUT_FREQ_FILE="$OUTPUT_DIR/freq_${experiment_time}.csv"
+INTERFERENCE_WORKLOAD_OUTPUT="$OUTPUT_DIR/interference_${experiment_time}.txt"
 # TODO: Make this experiment-dependent later
 INTERFERENCE_WORKLOAD=$INTF_HANDBRAKE
 # INTERFERENCE_WORKLOAD=$INTF_RANDOM
@@ -43,6 +44,9 @@ function main {
     ################################################################################
     echo "Starting experiments at $experiment_time" >> $EXPERIMENT_OUTPUT_FILE
     echo "=======================================================" >> $EXPERIMENT_OUTPUT_FILE
+
+    # make output folder if it doesn't already exist
+    mkdir -p $OUTPUT_DIR
 
     reset_jailhouse_all >> $EXPERIMENT_OUTPUT_FILE 2>&1
 
