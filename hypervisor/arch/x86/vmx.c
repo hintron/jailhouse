@@ -949,7 +949,7 @@ static throttle_cmd_t check_throttle_request(int cpu_id)
 
 	// For now, there is only one inmate to iterate over
 	for_each_non_root_cell(cell) {
-	 	comm_region = &(cell->comm_page.comm_region);
+		comm_region = &(cell->comm_page.comm_region);
 		/* Check for and process any pending messages to the root cell
 		 * from the inmate in order to know whether to start or stop
 		 * throttling */
