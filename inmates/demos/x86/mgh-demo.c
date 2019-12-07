@@ -28,6 +28,9 @@
 // MGH Section
 //
 
+/* Uncomment the following line to enable timing debug code only*/
+// #define TIMING_DEBUG
+
 /*
  * This is the frequency the TSC is guaranteed to tick at, as well as the CPU's
  * advertised frequency.
@@ -932,51 +935,53 @@ void inmate_main(void)
 	if (!device_setup(devs))
 		return;
 
-	// /* Debug inmate code - use to debug some mechanics in the inmate */
-	// unsigned long start = 0;
-	// unsigned long end = 0;
-	// int delay_count = 0;
-	// unsigned long duration = 0;
-	// start = tsc_read_ns();
-	// printk("MGH: start: %lu\n", start);
-	// while (1) {
-	// 	// Check for shutdown request
-	// 	if (check_shutdown())
-	// 		return;
+#ifdef TIMING_DEBUG
+	/* Debug inmate code - use to debug some mechanics in the inmate */
+	unsigned long start = 0;
+	unsigned long end = 0;
+	int delay_count = 0;
+	unsigned long duration = 0;
+	start = tsc_read_ns();
+	printk("MGH: start: %lu\n", start);
+	while (1) {
+		// Check for shutdown request
+		if (check_shutdown())
+			return;
 
-	// 	duration = 0;
-	// 	delay_us(1);
-	// 	delay_count++;
+		duration = 0;
+		delay_us(1);
+		delay_count++;
 
-	// 	end = tsc_read_ns();
-	// 	duration = end - start;
-	// 	if (delay_count % 10000 == 1) {
-	// 		printk("MGH: lu(us %d) start: %lu; end: %lu; duration:%lu\n",
-	// 		       delay_count, start, end, duration);
-	// 		printk("MGH: ld(us %d) start: %ld; end: %ld; duration:%ld\n",
-	// 		       delay_count, start, end, duration);
-	// 	}
+		end = tsc_read_ns();
+		duration = end - start;
+		if (delay_count % 10000 == 1) {
+			printk("MGH: lu(us %d) start: %lu; end: %lu; duration:%lu\n",
+			       delay_count, start, end, duration);
+			printk("MGH: ld(us %d) start: %ld; end: %ld; duration:%ld\n",
+			       delay_count, start, end, duration);
+		}
 
-	// 	if (end < start) {
-	// 		printk("MGH: lu(us %d) Overflow! end=%lu > start=%lu; duration=%lu\n",
-	// 		       delay_count, end, start, duration);
-	// 		printk("MGH: ld(us %d) Overflow! end=%ld > start=%ld; duration=%ld\n",
-	// 		       delay_count, end, start, duration);
-	// 		break;
-	// 	}
+		if (end < start) {
+			printk("MGH: lu(us %d) Overflow! end=%lu > start=%lu; duration=%lu\n",
+			       delay_count, end, start, duration);
+			printk("MGH: ld(us %d) Overflow! end=%ld > start=%ld; duration=%ld\n",
+			       delay_count, end, start, duration);
+			break;
+		}
 
-	// 	// // Quit after a certain amount of seconds
-	// 	// if (duration > 30000000000) {
-	// 	// 	printk("MGH: Finish\n");
-	// 	// 	break;
-	// 	// }
-	// }
-	// while (1) {
-	// 	// Wait for shutdown request
-	// 	if (check_shutdown())
-	// 		return;
-	// }
-	// /* End Debug inmate code */
+		// // Quit after a certain amount of seconds
+		// if (duration > 30000000000) {
+		// 	printk("MGH: Finish\n");
+		// 	break;
+		// }
+	}
+	while (1) {
+		// Wait for shutdown request
+		if (check_shutdown())
+			return;
+	}
+	/* End Debug inmate code */
+#endif
 
 	// Print out column headers for the subsequent frequency data
 	if (MGH_DEBUG_MODE)
