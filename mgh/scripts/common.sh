@@ -13,6 +13,7 @@ JAILHOUSE_BIN=../../tools/jailhouse
 TMODE_ALTERNATING=0 # default
 TMODE_DEADLINE=1
 TMODE_ITERATION=2
+TMODE_DISABLED=3
 
 # Throttle mechanism values
 TMECH_CLOCK=0

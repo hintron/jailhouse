@@ -64,6 +64,7 @@ typedef enum {
 	ALTERNATING = 0,
 	DEADLINE = 1,
 	ITERATION = 2,
+	DISABLED = 3,
 } throttle_mode_t;
 
 typedef enum {
@@ -505,6 +506,9 @@ static void command_line_params(bool *local_buffer,
 						DEFAULT_THROTTLE_ITERATIONS);
 		printk("MGH: throttle_mode=ITERATION\n");
 		printk("MGH: throttle_iterations=%d\n", *throttle_iterations);
+		break;
+	case DISABLED:
+		printk("MGH: throttle_mode=DISABLED\n");
 		break;
 	default:
 		printk("MGH: throttle_mode=?\n");
@@ -1061,6 +1065,8 @@ void inmate_main(void)
 			check_iteration_throttle(throttle_mechanism,
 						 workload_counter,
 						 throttle_iterations);
+			break;
+		case DISABLED:
 			break;
 		default:
 			printk("MGH: ERROR: unknown throttle mode\n");

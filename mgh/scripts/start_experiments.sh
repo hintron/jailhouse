@@ -35,6 +35,7 @@ INTERFERENCE_RAMPUP_TIME=15
 # Experiment-wide inmate inputs
 ################################################################################
 THROTTLE_MODE=$TMODE_ITERATION
+# THROTTLE_MODE=$TMODE_DISABLED
 DEBUG_MODE="true"
 # LOCAL_BUFFER="true"
 # THROTTLE_MECHANISM=$TMECH_CLOCK
