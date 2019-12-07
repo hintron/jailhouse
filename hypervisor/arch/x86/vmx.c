@@ -30,6 +30,9 @@
 
 #define PIO_BITMAP_PAGES	2
 
+/* Comment the following line to remove throttling code from Jailhouse */
+#define THROTTLE_CAPABILITY
+#ifdef THROTTLE_CAPABILITY
 // MGH: Set a relatively high max CPU count
 #define CPUS_THROTTLED_COUNT	256
 
@@ -53,7 +56,7 @@ static bool spin_loop_throttle = false;
 // #define SPIN_LOOP_ITERATIONS	100000
 // This seems to mostly freeze everything (can't see prints)
 // #define SPIN_LOOP_ITERATIONS	1000000
-
+#endif
 
 static const struct segment invalid_seg = {
 	.access_rights = 0x10000
@@ -594,10 +597,13 @@ static bool vmcs_setup(void)
 
 	val = read_msr(MSR_IA32_VMX_PINBASED_CTLS);
 	val |= PIN_BASED_NMI_EXITING;
+#ifdef THROTTLE_CAPABILITY
 	/* MGH: Enable the preemption timer from the beginning */
 	val |= PIN_BASED_VMX_PREEMPTION_TIMER;
+#endif
 	ok &= vmcs_write32(PIN_BASED_VM_EXEC_CONTROL, val);
 
+#ifdef THROTTLE_CAPABILITY
 	/* MGH: There is no harm in making it go off as soon as possible */
 	ok &= vmcs_write32(VMX_PREEMPTION_TIMER_VALUE, 0);
 
@@ -605,6 +611,7 @@ static bool vmcs_setup(void)
 	// NOTE: preemption_enabled is currently unused
 	cpu_data->preemption_enabled = false;
 	cpu_data->immediate_exit = 0;
+#endif
 
 	val = read_msr(MSR_IA32_VMX_PROCBASED_CTLS);
 	val |= CPU_BASED_USE_IO_BITMAPS | CPU_BASED_USE_MSR_BITMAPS |
@@ -632,11 +639,13 @@ static bool vmcs_setup(void)
 	val = read_msr(MSR_IA32_VMX_EXIT_CTLS);
 	val |= VM_EXIT_HOST_ADDR_SPACE_SIZE |
 		VM_EXIT_SAVE_IA32_PAT | VM_EXIT_LOAD_IA32_PAT |
+#ifdef THROTTLE_CAPABILITY
 		/* MGH: If VM_EXIT_SAVE_PREEMPTION_TIME is set, the actual value
 		 * of the timer will be saved to the timer value field used on
 		 * VM entry. This makes it so the timer value doesn't get reset
 		 * on every unrelated VM exit. */
 		VM_EXIT_SAVE_PREEMPTION_TIME |
+#endif
 		VM_EXIT_SAVE_IA32_EFER | VM_EXIT_LOAD_IA32_EFER;
 	ok &= vmcs_write32(VM_EXIT_CONTROLS, val);
 
@@ -656,6 +665,7 @@ static bool vmcs_setup(void)
 	return ok;
 }
 
+#ifdef THROTTLE_CAPABILITY
 /*
  * MGH: Get the TSC bit that the VMX preemption timer monitors for change. When
  * this bit changes, the preemption timer counter value decrements.
@@ -665,6 +675,7 @@ static bool vmcs_setup(void)
 static int get_preemption_tsc_bit(void) {
 	return (read_msr(MSR_IA32_VMX_MISC) & VMX_MISC_PREEMPTION_TSC_BIT);
 }
+#endif
 
 int vcpu_init(struct per_cpu *cpu_data)
 {
@@ -936,6 +947,7 @@ void vcpu_vendor_reset(unsigned int sipi_vector)
 	}
 }
 
+#ifdef THROTTLE_CAPABILITY
 /*
  * Returns SPIN, CLOCK, or PAUSE if throttle needs to be turned ON
  * Returns STOP if throttle needs to be turned OFF
@@ -1227,11 +1239,23 @@ static void preemption_timer_handler_mgh(void)
 		while (count++ < SPIN_LOOP_ITERATIONS)
 			cpu_relax();
 	}
-
 }
+#else
+static void vmx_preemption_timer_set_enable(bool enable)
+{
+	u32 pin_based_ctrl = vmcs_read32(PIN_BASED_VM_EXEC_CONTROL);
+
+	if (enable)
+		pin_based_ctrl |= PIN_BASED_VMX_PREEMPTION_TIMER;
+	else
+		pin_based_ctrl &= ~PIN_BASED_VMX_PREEMPTION_TIMER;
+	vmcs_write32(PIN_BASED_VM_EXEC_CONTROL, pin_based_ctrl);
+}
+#endif
 
 void vcpu_nmi_handler(void)
 {
+#ifdef THROTTLE_CAPABILITY
 	struct per_cpu *cpu_data = this_cpu_data();
 
 	cpu_data->public.stats[JAILHOUSE_CPU_STAT_VMEXITS_MANAGEMENT]++;
@@ -1242,6 +1266,10 @@ void vcpu_nmi_handler(void)
 		// Set immediate_exit to true
 		cpu_data->immediate_exit++;
 	}
+#else
+	if (this_cpu_data()->vmx_state == VMCS_READY)
+		vmx_preemption_timer_set_enable(true);
+#endif
 }
 
 void vcpu_park(void)
@@ -1265,6 +1293,7 @@ void vcpu_skip_emulated_instruction(unsigned int inst_len)
 
 static void vmx_check_events(void)
 {
+#ifdef THROTTLE_CAPABILITY
 	struct per_cpu *cpu_data = this_cpu_data();
 	if (cpu_data->immediate_exit > 0) {
 		// Service the NMI
@@ -1291,6 +1320,10 @@ static void vmx_check_events(void)
 		 * the preemption timer immediately on next vm entry */
 		vmcs_write32(VMX_PREEMPTION_TIMER_VALUE, 0);
 	}
+#else
+	vmx_preemption_timer_set_enable(false);
+	x86_check_events();
+#endif
 }
 
 static void vmx_handle_exception_nmi(void)
@@ -1300,6 +1333,9 @@ static void vmx_handle_exception_nmi(void)
 
 	// printk("MGH HYPER: CPU %2d: vmx_handle_exception_nmi\n", cpu_public->cpu_id);
 	if ((intr_info & INTR_INFO_INTR_TYPE_MASK) == INTR_TYPE_NMI_INTR) {
+#ifndef THROTTLE_CAPABILITY
+		cpu_public->stats[JAILHOUSE_CPU_STAT_VMEXITS_MANAGEMENT]++;
+#endif
 		// printk("MGH HYPER: CPU %2d: Calling nmi interrupt handler via the `int` instruction\n", cpu_public->cpu_id);
 		asm volatile("int %0" : : "i" (NMI_VECTOR));
 	} else {
@@ -1531,6 +1567,9 @@ void vcpu_handle_exit(struct per_cpu *cpu_data)
 		vmx_handle_exception_nmi();
 		return;
 	case EXIT_REASON_PREEMPTION_TIMER:
+#ifndef THROTTLE_CAPABILITY
+		stats[JAILHOUSE_CPU_STAT_VMEXITS_MANAGEMENT]++;
+#endif
 		vmx_check_events();
 		return;
 	case EXIT_REASON_CPUID:
