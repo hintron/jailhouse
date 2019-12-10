@@ -30,7 +30,8 @@
 
 #define PIO_BITMAP_PAGES	2
 
-/* Comment the following line to remove throttling code from Jailhouse */
+/* Comment the following line to remove throttling code from Jailhouse. This
+ * reverts the preemption timer behavior to what it was originally */
 #define THROTTLE_CAPABILITY
 #ifdef THROTTLE_CAPABILITY
 // MGH: Set a relatively high max CPU count
