@@ -943,41 +943,38 @@ void inmate_main(void)
 	/* Debug inmate code - use to debug some mechanics in the inmate */
 	unsigned long start = 0;
 	unsigned long end = 0;
-	int delay_count = 0;
+	unsigned long delay_start_us = 1162000;
+	unsigned long delay_step_us = 1;
+	unsigned long delay_max_us = 3000000;
+	unsigned long delay_count = delay_start_us;
 	unsigned long duration = 0;
-	start = tsc_read_ns();
-	printk("MGH: start: %lu\n", start);
+	unsigned long prev_duration = 0;
+
 	while (1) {
 		// Check for shutdown request
 		if (check_shutdown())
 			return;
 
-		duration = 0;
-		delay_us(1);
-		delay_count++;
-
+		start = tsc_read_ns();
+		delay_us(delay_count);
 		end = tsc_read_ns();
+
+		delay_count += delay_step_us;
+
 		duration = end - start;
-		if (delay_count % 10000 == 1) {
-			printk("MGH: lu(us %d) start: %lu; end: %lu; duration:%lu\n",
-			       delay_count, start, end, duration);
-			printk("MGH: ld(us %d) start: %ld; end: %ld; duration:%ld\n",
-			       delay_count, start, end, duration);
+		printk("MGH: delay_count (us): %lu start (ns): %lu; end (ns): %lu; duration (ns):%lu\n",
+		       delay_count, start, end, duration);
+
+		if (duration < prev_duration) {
+			printk("MGH: wrap-around!\n");
 		}
 
-		if (end < start) {
-			printk("MGH: lu(us %d) Overflow! end=%lu > start=%lu; duration=%lu\n",
-			       delay_count, end, start, duration);
-			printk("MGH: ld(us %d) Overflow! end=%ld > start=%ld; duration=%ld\n",
-			       delay_count, end, start, duration);
+		// Quit after a certain amount of seconds
+		if (delay_count > delay_max_us) {
+			printk("MGH: Finish\n");
 			break;
 		}
-
-		// // Quit after a certain amount of seconds
-		// if (duration > 30000000000) {
-		// 	printk("MGH: Finish\n");
-		// 	break;
-		// }
+		prev_duration = duration;
 	}
 	while (1) {
 		// Wait for shutdown request
