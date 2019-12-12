@@ -1025,17 +1025,6 @@ void inmate_main(void)
 	// Get the first PCI device, which should be the IVSHMEM device
 	shmem = devs[0].shmem;
 
-	if (MGH_DEBUG_MODE) {
-		printk("MGH DEBUG: is_throttle_enabled addr: %p\n",
-		       &is_throttle_enabled);
-		printk("MGH DEBUG: str addr: %p\n", str);
-		printk("MGH DEBUG: devs addr: %p\n", devs);
-		printk("MGH DEBUG: workload_counter addr: %p\n",
-		       &workload_counter);
-		printk("MGH DEBUG: comm_region addr: %p\n", comm_region);
-		printk("MGH DEBUG: shmem addr: %p\n", shmem);
-	}
-
 	/* Make sure MGH_HEAP address space is initialized */
 	expand_memory();
 
