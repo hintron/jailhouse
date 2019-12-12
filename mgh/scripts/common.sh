@@ -349,7 +349,7 @@ function grep_token_in_file {
     token="$1"
     in_file="$2"
 
-    echo "grep \"$token\" $in_file | sed \"s/${token}//\" | sed \"s/\r//\""
+    # echo "grep \"$token\" $in_file | sed \"s/${token}//\" | sed \"s/\r//\""
     grep "$token" $in_file | sed "s/${token}//" | sed "s/\r//"
 }
 
