@@ -244,6 +244,7 @@ void ioapic_pin_set_vector(unsigned int pin,
 
 unsigned long long pm_timer_read(void);
 
+u64 rdtsc(void);
 unsigned long tsc_read_ns(void);
 unsigned long tsc_init(void);
 

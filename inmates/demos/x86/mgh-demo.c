@@ -895,12 +895,15 @@ static void workload(char *input, unsigned long len, char *output,
 }
 
 /* Debug inmate code - use to debug some mechanics in the inmate */
-void inmate_debug(void)
+static void inmate_debug(void)
 {
+	unsigned long start_tsc = 0;
+	unsigned long end_tsc = 0;
+	unsigned long cycles = 0;
 	unsigned long start = 0;
 	unsigned long end = 0;
 	unsigned long delay_start_us = 1162000;
-	unsigned long delay_step_us = 10000;
+	unsigned long delay_step_us = 100000;
 	unsigned long delay_max_us = 3000000;
 	unsigned long delay_count = delay_start_us;
 	unsigned long duration = 0;
@@ -912,17 +915,31 @@ void inmate_debug(void)
 			return;
 
 		start = tsc_read_ns();
+		start_tsc = rdtsc();
 		delay_us(delay_count);
+		end_tsc = rdtsc();
 		end = tsc_read_ns();
 
 		delay_count += delay_step_us;
 
 		duration = end - start;
+		cycles = end_tsc - start_tsc;
+
 		printk("MGH: delay_count (us): %lu start (ns): %lu; end (ns): %lu; duration (ns):%lu\n",
 		       delay_count, start, end, duration);
+		printk("MGH: delay_count (us): %lu start (tsc): %lu; end (tsc): %lu; cycles (tsc):%lu\n",
+		       delay_count, start_tsc, end_tsc, cycles);
 
 		if (duration < prev_duration) {
-			printk("MGH: wrap-around!\n");
+			printk("MGH: Duration is shorter than last run!\n");
+		}
+
+		if (end < start) {
+			printk("MGH: Timer wrap-around!\n");
+		}
+
+		if (end_tsc < start_tsc) {
+			printk("MGH: TSC wrap-around!\n");
 		}
 
 		// Quit after a certain amount of seconds
@@ -1020,15 +1037,6 @@ void inmate_main(void)
 
 	if (local_buffer) {
 		buffer = (char *)MGH_HEAP_BASE;
-		if (MGH_DEBUG_MODE) {
-			printk("MGH DEBUG: buffer addr: %p\n",
-				buffer);
-			buffer[0] = 'M';
-			buffer[1] = 'G';
-			buffer[2] = 'H';
-			buffer[3] = '\0';
-			printk("MGH DEBUG: buffer: %s\n", buffer);
-		}
 	}
 
 	// Indicate to userspace that we are up and running
@@ -1037,10 +1045,13 @@ void inmate_main(void)
 	(void) query_freq();
 
 	// Print out column headers for the subsequent data
-	printk("MGHOUT:workload_counter,input_len,total_duration,copy_duration,workload_duration,avg_freq,ns_per_byte\n");
+	printk("MGHOUT:workload_counter,input_len,workload_cycles,avg_freq\n");
 
 	// Continuously wait on userspace for a workload
 	while (1) {
+		unsigned long start_tsc = 0;
+		unsigned long end_tsc = 0;
+		unsigned long workload_cycles = 0;
 		unsigned long start = 0;
 		unsigned long end = 0;
 		unsigned long input_len = 0;
@@ -1120,15 +1131,22 @@ void inmate_main(void)
 		freq2 = query_freq();
 
 		start = tsc_read_ns();
+		start_tsc = rdtsc();
 		workload(inout, input_len, inout, &output_len, workload_mode);
+		end_tsc = rdtsc();
 		end = tsc_read_ns();
 
 		set_data_length(shmem, output_len);
 
 		if (start > end)
-			printk("MGH: ERROR: Timer overflow during workload (start=%lu > end=%lu)\n",
+			printk("MGH: Warning: Timer overflow during workload (start=%lu > end=%lu)\n",
 			       start, end);
 
+		if (start_tsc > end_tsc)
+			printk("MGH: ERROR: start_tsc=%lu > end_tsc=%lu!\n",
+			       start_tsc, end_tsc);
+
+		workload_cycles = end_tsc - start_tsc;
 		workload_duration = end - start;
 
 		freq3 = query_freq();
@@ -1150,9 +1168,8 @@ void inmate_main(void)
 		total_duration = copy_duration + workload_duration;
 		ns_per_byte = total_duration / input_len;
 
-		printk("MGHOUT:%lu,%lu,%lu,%lu,%lu,%llu,%lu\n",
-		       workload_counter, input_len, total_duration,
-		       copy_duration, workload_duration, avg_freq, ns_per_byte);
+		printk("MGHOUT:%lu,%lu,%lu,%llu\n", workload_counter, input_len,
+		       workload_cycles, avg_freq);
 
 		workload_counter++;
 

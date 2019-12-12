@@ -57,7 +57,7 @@ static unsigned long tsc_last[SMP_MAX_CPUS];
 static unsigned long tsc_overflows[SMP_MAX_CPUS];
 static bool tsc_deadline;
 
-static u64 rdtsc(void)
+u64 rdtsc(void)
 {
 #ifdef __x86_64__
 	u32 lo, hi;
