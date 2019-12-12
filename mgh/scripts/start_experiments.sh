@@ -31,9 +31,15 @@ INTERFERENCE_WORKLOAD=$INTF_HANDBRAKE
 # INTERFERENCE_WORKLOAD=$INTF_RANDOM
 INTERFERENCE_RAMPUP_TIME=15
 
+
 ################################################################################
 # Experiment-wide inmate inputs
 ################################################################################
+# If true, just start the inmate and listen to the output. Don't generate and
+# send inputs.
+# INMATE_DEBUG=0
+INMATE_DEBUG=1
+
 THROTTLE_MODE=$TMODE_ITERATION
 # THROTTLE_MODE=$TMODE_DISABLED
 DEBUG_MODE="true"
@@ -44,9 +50,9 @@ DEBUG_MODE="true"
 # POLLUTE_CACHE="true"
 
 function main {
-    ################################################################################
+    ############################################################################
     # Script-wide setup
-    ################################################################################
+    ############################################################################
     # make output folder if it doesn't already exist
     mkdir -p $OUTPUT_DIR
 
@@ -62,53 +68,81 @@ function main {
     # Put process in the background and kill it once done
     sudo jailhouse console -f >> $JAILHOUSE_OUTPUT_FILE 2>&1 &
     tailf_pid=$!
-
     echo "tailf_pid: $tailf_pid" >> $EXPERIMENT_OUTPUT_FILE
 
-    # Pre-generate all input sizes beforehand
-    generate_input_size_range
+    # Return early if just running tests in inmate with no inputs
+    if [ "$INMATE_DEBUG" == 1 ]; then
+        WORKLOAD_MODE=$WM_INMATE_DEBUG
+        prep_experiment
 
-    # ################################################################################
-    # # Inmate inputs
-    # ################################################################################
-    # WORKLOAD_MODE=$WM_COUNT_SET_BITS
-    # INTERFERENCE_WORKLOAD_ENABLE=1
-    # ################################################################################
-    # start_experiment_jailhouse
+        result=1
+        count=0
+        max_count=15
+        while [ "$result" == 1 ]; do
+            echo "$count seconds: running..." >> $EXPERIMENT_OUTPUT_FILE
+            grep "MGH: Finish" $JAILHOUSE_OUTPUT_FILE >> $EXPERIMENT_OUTPUT_FILE 2>&1
+            result=$!
+            sleep 5
+            count=$((count + 5))
+            if [ $count > $max_count ]; then
+                echo "Timed out: count:$count > max_count:$max_count" >> $EXPERIMENT_OUTPUT_FILE
+                result=1
+            fi
+        done
+        echo "$count s: Finished!" >> $EXPERIMENT_OUTPUT_FILE
+    else
+        # Pre-generate all input sizes beforehand
+        generate_input_size_range
 
-    # ################################################################################
-    # # Inmate inputs
-    # ##################################################################################
-    # WORKLOAD_MODE=$WM_SHA3
-    # INTERFERENCE_WORKLOAD_ENABLE=1
-    # ##################################################################################
-    # start_experiment_jailhouse
+        ######################################################################
+        # Inmate inputs
+        ######################################################################
+        WORKLOAD_MODE=$WM_COUNT_SET_BITS
+        INTERFERENCE_WORKLOAD_ENABLE=1
+        ######################################################################
+        start_experiment_jailhouse
 
-    # ################################################################################
-    # # Inmate inputs
-    # ##################################################################################
-    # WORKLOAD_MODE=$WM_RANDOM_ACCESS
-    # INTERFERENCE_WORKLOAD_ENABLE=1
-    # ##################################################################################
-    # start_experiment_jailhouse
+        ######################################################################
+        # Inmate inputs
+        ######################################################################
+        WORKLOAD_MODE=$WM_SHA3
+        INTERFERENCE_WORKLOAD_ENABLE=1
+        ######################################################################
+        start_experiment_jailhouse
 
+        ######################################################################
+        # Inmate inputs
+        ######################################################################
+        WORKLOAD_MODE=$WM_RANDOM_ACCESS
+        INTERFERENCE_WORKLOAD_ENABLE=1
+        ######################################################################
+        start_experiment_jailhouse
 
-    ################################################################################
-    # Linux inputs
-    ##################################################################################
-    WORKLOAD_MODE=$WM_RANDOM_ACCESS
-    INTERFERENCE_WORKLOAD_ENABLE=0
-    RUN_ON_LINUX=1
-    ##################################################################################
-    start_experiment_jailhouse
+        ######################################################################
+        # Linux inputs
+        ######################################################################
+        WORKLOAD_MODE=$WM_RANDOM_ACCESS
+        INTERFERENCE_WORKLOAD_ENABLE=0
+        RUN_ON_LINUX=1
+        ######################################################################
+        start_experiment_jailhouse
 
+        ########################################################################
+        # Inmate inputs
+        ########################################################################
+        WORKLOAD_MODE=$WM_COUNT_SET_BITS
+        THROTTLE_MODE=$TMODE_DISABLED
+        INTERFERENCE_WORKLOAD_ENABLE=0
+        ########################################################################
+        start_experiment_jailhouse
 
-    # ################################################################################
+        # Let's wait for the last iteration to print everything
+        sleep 5
+    fi
+
+    # ##########################################################################
     # Final Cleanup
-    # ################################################################################
-
-    # Let's wait for the last iteration to print everything
-    sleep 5
+    # ##########################################################################
 
     # Flush any buffers
     end_time="$(timestamp)"
@@ -125,10 +159,9 @@ function main {
 
     echo "Ending experiments at $end_time" >> $EXPERIMENT_OUTPUT_FILE
 
-    # Let's catch our breath
-    sleep 1
-
-    post_process_data
+    if [ "$INMATE_DEBUG" == 0 ]; then
+        post_process_data
+    fi
 }
 
 # Calculates the input sizes
@@ -192,9 +225,6 @@ function generate_expected_outputs {
     done
 }
 
-
-
-
 function post_process_data {
     grep_output_data $JAILHOUSE_OUTPUT_FILE $OUTPUT_DATA_FILE >> $EXPERIMENT_OUTPUT_FILE 2>&1
     # TODO: Post-process data into the two different graphs for easy import
@@ -203,15 +233,10 @@ function post_process_data {
 
 function start_experiment_linux {
     generate_random_inputs
-
 }
 
 function prep_experiment_jailhouse {
     INMATE_CMDLINE=$(set_cmdline) >> $EXPERIMENT_OUTPUT_FILE 2>&1
-
-    # Start recording experiment output
-    end_jailhouse >> $EXPERIMENT_OUTPUT_FILE 2>&1
-
     start_jailhouse $ROOT_CELL $INMATE_CELL $INMATE_NAME $INMATE_PROGRAM "$INMATE_CMDLINE" >> $EXPERIMENT_OUTPUT_FILE 2>&1
 }
 
@@ -220,7 +245,14 @@ function prep_experiment_linux {
 }
 
 experiment_counter=1
-function start_experiment_jailhouse {
+function prep_experiment {
+    # Start recording experiment output
+    end_jailhouse >> $EXPERIMENT_OUTPUT_FILE 2>&1
+
+    # Flush jailhouse output
+    sleep 3
+    echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
+
     echo "################################################################################" >> $EXPERIMENT_OUTPUT_FILE
     echo "# Experiment $experiment_counter" >> $EXPERIMENT_OUTPUT_FILE
     echo "################################################################################" >> $EXPERIMENT_OUTPUT_FILE
@@ -234,7 +266,10 @@ function start_experiment_jailhouse {
     else
         prep_experiment_jailhouse
     fi
+}
 
+function start_experiment_jailhouse {
+    prep_experiment
     generate_random_inputs
     generate_expected_outputs
 

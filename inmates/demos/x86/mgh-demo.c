@@ -28,9 +28,6 @@
 // MGH Section
 //
 
-/* Uncomment the following line to enable timing debug code only*/
-// #define TIMING_DEBUG
-
 /*
  * This is the frequency the TSC is guaranteed to tick at, as well as the CPU's
  * advertised frequency.
@@ -78,6 +75,7 @@ typedef enum {
 	CACHE_ANALYSIS = 1,
 	COUNT_SET_BITS = 2,
 	RANDOM_ACCESS = 3,
+	INMATE_DEBUG = 4,
 } workload_t;
 
 typedef enum {
@@ -543,6 +541,9 @@ static void command_line_params(bool *local_buffer,
 	case RANDOM_ACCESS:
 		printk("MGH: workload_mode=RANDOM_ACCESS\n");
 		break;
+	case INMATE_DEBUG:
+		printk("MGH: workload_mode=INMATE_DEBUG\n");
+		break;
 	default:
 		printk("MGH: workload_mode=?\n");
 		break;
@@ -893,6 +894,52 @@ static void workload(char *input, unsigned long len, char *output,
 	}
 }
 
+/* Debug inmate code - use to debug some mechanics in the inmate */
+void inmate_debug(void)
+{
+	unsigned long start = 0;
+	unsigned long end = 0;
+	unsigned long delay_start_us = 1162000;
+	unsigned long delay_step_us = 10000;
+	unsigned long delay_max_us = 3000000;
+	unsigned long delay_count = delay_start_us;
+	unsigned long duration = 0;
+	unsigned long prev_duration = 0;
+
+	while (1) {
+		// Check for shutdown request
+		if (check_shutdown())
+			return;
+
+		start = tsc_read_ns();
+		delay_us(delay_count);
+		end = tsc_read_ns();
+
+		delay_count += delay_step_us;
+
+		duration = end - start;
+		printk("MGH: delay_count (us): %lu start (ns): %lu; end (ns): %lu; duration (ns):%lu\n",
+		       delay_count, start, end, duration);
+
+		if (duration < prev_duration) {
+			printk("MGH: wrap-around!\n");
+		}
+
+		// Quit after a certain amount of seconds
+		if (delay_count > delay_max_us) {
+			printk("MGH: Finish\n");
+			break;
+		}
+		prev_duration = duration;
+	}
+
+	while (1) {
+		// Wait for shutdown request
+		if (check_shutdown())
+			return;
+	}
+}
+
 /*
  * MGH: By default, x86 inmates only map the first 2 MB of virtual memory, even
  * when more memory is configured. So map configured memory pages behind the
@@ -939,50 +986,10 @@ void inmate_main(void)
 	if (!device_setup(devs))
 		return;
 
-#ifdef TIMING_DEBUG
-	/* Debug inmate code - use to debug some mechanics in the inmate */
-	unsigned long start = 0;
-	unsigned long end = 0;
-	unsigned long delay_start_us = 1162000;
-	unsigned long delay_step_us = 1;
-	unsigned long delay_max_us = 3000000;
-	unsigned long delay_count = delay_start_us;
-	unsigned long duration = 0;
-	unsigned long prev_duration = 0;
-
-	while (1) {
-		// Check for shutdown request
-		if (check_shutdown())
-			return;
-
-		start = tsc_read_ns();
-		delay_us(delay_count);
-		end = tsc_read_ns();
-
-		delay_count += delay_step_us;
-
-		duration = end - start;
-		printk("MGH: delay_count (us): %lu start (ns): %lu; end (ns): %lu; duration (ns):%lu\n",
-		       delay_count, start, end, duration);
-
-		if (duration < prev_duration) {
-			printk("MGH: wrap-around!\n");
-		}
-
-		// Quit after a certain amount of seconds
-		if (delay_count > delay_max_us) {
-			printk("MGH: Finish\n");
-			break;
-		}
-		prev_duration = duration;
+	if (workload_mode == INMATE_DEBUG) {
+		inmate_debug();
+		return;
 	}
-	while (1) {
-		// Wait for shutdown request
-		if (check_shutdown())
-			return;
-	}
-	/* End Debug inmate code */
-#endif
 
 	// Print out column headers for the subsequent frequency data
 	if (MGH_DEBUG_MODE)
