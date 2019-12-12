@@ -47,7 +47,6 @@ static unsigned long cpu_cache_line_size = 64;
 
 /* NOTE: The stack size is the same size as a page (4 kb) */
 
-static bool is_throttle_enabled = false;
 static char str[32] = "Hello From MGH      ";
 
 /*
@@ -695,8 +694,10 @@ static void disable_throttle(void)
  * nanoseconds since the last throttle toggle. Run this check before every
  * workload. Use this throttle mode to measure the impact of throttling with a
  * sustained root userspace workload.
+ *
+ * If the throttle is enabled, returns true. If it is disabled, returns false.
  */
-static void check_alternating_throttle(throttle_t throttle_mechanism)
+static bool check_alternating_throttle(throttle_t throttle_mechanism)
 {
 	static unsigned long start = 0;
 	static bool throttled = false;
@@ -705,19 +706,19 @@ static void check_alternating_throttle(throttle_t throttle_mechanism)
 	/* If 0, it means we haven't initialized the timer yet */
 	if (start == 0) {
 		start = tsc_read_ns();
-		return;
+		return throttled;
 	}
 
 	current = tsc_read_ns();
 	if (current < start) {
 		printk("MGH: ERROR: TSC underflow (current=%lu, start=%lu)\n",
 		       current, start);
-		return;
+		return throttled;
 	}
 
 	duration = current - start;
 	if (duration < ALTERNATING_PERIOD)
-		return;
+		return throttled;
 
 	/* Toggle the throttling mechanism on or off */
 	if (throttled) {
@@ -730,6 +731,7 @@ static void check_alternating_throttle(throttle_t throttle_mechanism)
 
 	/* Reset timer */
 	start = tsc_read_ns();
+	return throttled;
 }
 
 /*
@@ -737,8 +739,10 @@ static void check_alternating_throttle(throttle_t throttle_mechanism)
  * nanoseconds since the last throttle toggle. Run this check before every
  * workload. Use this throttle mode to measure the impact of throttling with a
  * sustained root userspace workload.
+ *
+ * If the throttle is enabled, returns true. If it is disabled, returns false.
  */
-static void check_iteration_throttle(throttle_t throttle_mechanism,
+static bool check_iteration_throttle(throttle_t throttle_mechanism,
 				     unsigned long workload_counter,
 				     int throttle_iterations)
 {
@@ -747,7 +751,7 @@ static void check_iteration_throttle(throttle_t throttle_mechanism,
 
 	/* Do nothing on the first workload run */
 	if (workload_counter == 0)
-		return;
+		return throttled;
 
 	/* Toggle throttle once every throttle_iterations */
 	if (workload_counter % throttle_iterations == 0) {
@@ -763,25 +767,25 @@ static void check_iteration_throttle(throttle_t throttle_mechanism,
 
 			/* Don't keep toggling */
 			toggled = true;
-		} else {
-			/* Already toggled once */
-			return;
 		}
 	} else {
 		/* Reset toggle tracker */
 		if (toggled)
 			toggled = false;
-		return;
 	}
+	return throttled;
 }
 
 /*
  * Turn on throttling if deadlines were not met during the last workload. Run
  * this check before every workload.
+ *
+ * If the throttle is enabled, returns true. If it is disabled, returns false.
  */
-static void check_deadline_throttle(unsigned long ns_per_byte,
+static bool check_deadline_throttle(unsigned long ns_per_byte,
 				    throttle_t throttle_mechanism)
 {
+	static bool throttled = false;
 	// static int now = 0;
 	// static int previous = 0;
 	static int MAX_NS_PER_BYTE = 120;
@@ -789,7 +793,7 @@ static void check_deadline_throttle(unsigned long ns_per_byte,
 
 	/* If we haven't run yet, we don't know if we need to throttle or not */
 	if (ns_per_byte == 0)
-		return;
+		return throttled;
 
 	if (ns_per_byte > MAX_NS_PER_BYTE) {
 		// Throttle!
@@ -802,17 +806,17 @@ static void check_deadline_throttle(unsigned long ns_per_byte,
 	// and forth between throttle and no throttle
 
 	// If we are meeting deadlines, and we are throttling, stop throttling
-	if (meeting_deadlines && is_throttle_enabled) {
+	if (meeting_deadlines && throttled) {
 		disable_throttle();
-		is_throttle_enabled = false;
-	} else if (!meeting_deadlines && !is_throttle_enabled) {
+		throttled = false;
+	} else if (!meeting_deadlines && !throttled) {
 		enable_throttle(throttle_mechanism);
-		is_throttle_enabled = true;
+		throttled = true;
 	}
-
 	// TODO: Have the root cell automatically throttle itself,
 	// rather than wait for the root to request it (is there shared
 	// read-only memory it could monitor?)
+	return throttled;
 }
 
 /*
@@ -1045,7 +1049,7 @@ void inmate_main(void)
 	(void) query_freq();
 
 	// Print out column headers for the subsequent data
-	printk("MGHOUT:workload_counter,input_len,workload_cycles,avg_freq\n");
+	printk("MGHOUT:is_throttled,workload_counter,input_len,workload_cycles,avg_freq\n");
 
 	// Continuously wait on userspace for a workload
 	while (1) {
@@ -1061,6 +1065,7 @@ void inmate_main(void)
 		unsigned long total_duration = 0;
 		unsigned long ns_per_byte = 0;
 		u64 freq1, freq2, freq3, freq4, avg_freq;
+		bool is_throttled = false;
 
 		char *inout = NULL;
 
@@ -1070,20 +1075,22 @@ void inmate_main(void)
 
 		switch (throttle_mode) {
 		case ALTERNATING:
-			check_alternating_throttle(throttle_mechanism);
+			is_throttled = check_alternating_throttle(throttle_mechanism);
 			break;
 		case DEADLINE:
-			check_deadline_throttle(ns_per_byte,
-						throttle_mechanism);
+			is_throttled = check_deadline_throttle(ns_per_byte,
+							       throttle_mechanism);
 			break;
 		case ITERATION:
-			check_iteration_throttle(throttle_mechanism,
-						 workload_counter,
-						 throttle_iterations);
+			is_throttled = check_iteration_throttle(throttle_mechanism,
+								workload_counter,
+								throttle_iterations);
 			break;
 		case DISABLED:
+			is_throttled = false;
 			break;
 		default:
+			is_throttled = false;
 			printk("MGH: ERROR: unknown throttle mode\n");
 			break;
 		}
@@ -1168,8 +1175,8 @@ void inmate_main(void)
 		total_duration = copy_duration + workload_duration;
 		ns_per_byte = total_duration / input_len;
 
-		printk("MGHOUT:%lu,%lu,%lu,%llu\n", workload_counter, input_len,
-		       workload_cycles, avg_freq);
+		printk("MGHOUT:%d,%lu,%lu,%lu,%llu\n", is_throttled,
+		       workload_counter, input_len, workload_cycles, avg_freq);
 
 		workload_counter++;
 
