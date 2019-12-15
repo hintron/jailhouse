@@ -103,43 +103,11 @@ function main {
         ######################################################################
         # Inmate inputs
         ######################################################################
-        WORKLOAD_MODE=$WM_COUNT_SET_BITS
-        INTERFERENCE_WORKLOAD_ENABLE=1
+        WORKLOAD_MODE=${1:-$WM_COUNT_SET_BITS}
+        INTERFERENCE_WORKLOAD_ENABLE=${2:-1}
+        RUN_ON_LINUX=${3:-0}
+        THROTTLE_MODE=${4:-$TMODE_ITERATION}
         ######################################################################
-        start_experiment_jailhouse
-
-        ######################################################################
-        # Inmate inputs
-        ######################################################################
-        WORKLOAD_MODE=$WM_SHA3
-        INTERFERENCE_WORKLOAD_ENABLE=1
-        ######################################################################
-        start_experiment_jailhouse
-
-        ######################################################################
-        # Inmate inputs
-        ######################################################################
-        WORKLOAD_MODE=$WM_RANDOM_ACCESS
-        INTERFERENCE_WORKLOAD_ENABLE=1
-        ######################################################################
-        start_experiment_jailhouse
-
-        ######################################################################
-        # Linux inputs
-        ######################################################################
-        WORKLOAD_MODE=$WM_RANDOM_ACCESS
-        INTERFERENCE_WORKLOAD_ENABLE=0
-        RUN_ON_LINUX=1
-        ######################################################################
-        start_experiment_jailhouse
-
-        ########################################################################
-        # Inmate inputs
-        ########################################################################
-        WORKLOAD_MODE=$WM_COUNT_SET_BITS
-        THROTTLE_MODE=$TMODE_DISABLED
-        INTERFERENCE_WORKLOAD_ENABLE=0
-        ########################################################################
         start_experiment_jailhouse
 
         # Let's wait for the last iteration to print everything
