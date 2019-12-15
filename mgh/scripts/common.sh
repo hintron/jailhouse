@@ -1,5 +1,8 @@
 #!/bin/bash
-cd "${BASH_SOURCE%/*}"
+if [ -d "${BASH_SOURCE%/*}" ]; then
+    echo "cd ${BASH_SOURCE%/*}"
+    cd "${BASH_SOURCE%/*}"
+fi
 
 # Note that the inmate libraries assume that the cmdline string will be stored
 # at 0x1000 and will have a size of CMDLINE_BUFFER_SIZE.
