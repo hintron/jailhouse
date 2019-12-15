@@ -9,8 +9,8 @@ ROOT_CELL=../../configs/x86/bazooka-root.cell
 INMATE_CELL=../../configs/x86/bazooka-inmate.cell
 INMATE_NAME=bazooka-inmate
 INMATE_PROGRAM=../../inmates/demos/x86/mgh-demo.bin
-# ITERATIONS=10
-ITERATIONS=4
+ITERATIONS=10
+# ITERATIONS=4
 THROTTLE_ITERATIONS=$(($ITERATIONS / 2))
 INPUT_SIZE_START=$((14 * $MiB))
 # INPUT_SIZE_END=$((16 * $MiB))
@@ -43,8 +43,8 @@ INTERFERENCE_RAMPUP_TIME=15
 ################################################################################
 # If true, just start the inmate and listen to the output. Don't generate and
 # send inputs.
-# INMATE_DEBUG=0
-INMATE_DEBUG=1
+INMATE_DEBUG=0
+# INMATE_DEBUG=1
 
 THROTTLE_MODE=$TMODE_ITERATION
 # THROTTLE_MODE=$TMODE_DISABLED
