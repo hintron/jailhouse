@@ -1,6 +1,6 @@
 #!/bin/bash
 if [ -d "${BASH_SOURCE%/*}" ]; then
-    echo "cd ${BASH_SOURCE%/*}"
+    # echo "cd ${BASH_SOURCE%/*}"
     cd "${BASH_SOURCE%/*}"
 fi
 
