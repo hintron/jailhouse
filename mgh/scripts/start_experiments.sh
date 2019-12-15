@@ -24,6 +24,10 @@ JAILHOUSE_OUTPUT_FILE="$OUTPUT_DIR/jailhouse_${experiment_time}.txt"
 EXPERIMENT_OUTPUT_FILE="$OUTPUT_DIR/experiment_${experiment_time}.txt"
 OUTPUT_DATA_FILE="$OUTPUT_DIR/data_${experiment_time}.csv"
 OUTPUT_FREQ_FILE="$OUTPUT_DIR/freq_${experiment_time}.csv"
+OUTPUT_DATA_THROTTLED_FILE="$OUTPUT_DIR/throttled_${experiment_time}.csv"
+OUTPUT_DATA_THROTTLED_AVG_FILE="$OUTPUT_DIR/throttled_avg_${experiment_time}.csv"
+OUTPUT_DATA_UNTHROTTLED_FILE="$OUTPUT_DIR/unthrottled_${experiment_time}.csv"
+OUTPUT_DATA_UNTHROTTLED_AVG_FILE="$OUTPUT_DIR/unthrottled_avg_${experiment_time}.csv"
 INTERFERENCE_WORKLOAD_ENABLE=0
 INTERFERENCE_WORKLOAD_OUTPUT="$OUTPUT_DIR/interference_${experiment_time}.txt"
 # TODO: Make this experiment-dependent later
@@ -226,9 +230,17 @@ function generate_expected_outputs {
 }
 
 function post_process_data {
-    grep_output_data $JAILHOUSE_OUTPUT_FILE $OUTPUT_DATA_FILE >> $EXPERIMENT_OUTPUT_FILE 2>&1
-    # TODO: Post-process data into the two different graphs for easy import
     grep_freq_data $JAILHOUSE_OUTPUT_FILE $OUTPUT_FREQ_FILE >> $EXPERIMENT_OUTPUT_FILE 2>&1
+
+    # Separate throttled and unthrottled data
+    grep_output_data_throttled $JAILHOUSE_OUTPUT_FILE > $OUTPUT_DATA_THROTTLED_FILE
+    grep_output_data_unthrottled $JAILHOUSE_OUTPUT_FILE > $OUTPUT_DATA_UNTHROTTLED_FILE
+
+    # Aggregate iterations for each input size
+    for input_size in "${input_sizes[@]}"; do
+        grep_token_columns_csv "$input_size" 2 3 $OUTPUT_DATA_THROTTLED_FILE >> $OUTPUT_DATA_THROTTLED_AVG_FILE
+        grep_token_columns_csv "$input_size" 2 3 $OUTPUT_DATA_UNTHROTTLED_FILE >> $OUTPUT_DATA_UNTHROTTLED_AVG_FILE
+    done
 }
 
 function start_experiment_linux {

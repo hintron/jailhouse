@@ -336,6 +336,45 @@ function grep_output_data {
     grep_token_in_file_to_file "MGHOUT:" $in_file $out_file
 }
 
+# Create a scratch function to easily test other functions interactively.
+function test_common_sh {
+    input_sizes=()
+    input_sizes+=(14680064)
+    input_sizes+=(15728640)
+
+    # for token in $tokens; do
+    for input_size in "${input_sizes[@]}"; do
+        # echo $input_size
+        grep_token_columns_csv "$input_size" 2 3 output/2019-12-14_13-31-44/unthrottled_2019-12-14_13-31-44.csv
+    done
+}
+
+# Use awk to get all lines of a csv where column $token_column == $token.
+# Then, grab the value in $output_column and append to a comma-separated list.
+# Output as "$token|$csv_list".
+function grep_token_columns_csv {
+    token="$1"
+    token_column="$2"
+    output_column="$3"
+    in_file="$4"
+
+    # Use awk to find the lines where $token_column == $token, use cut to get
+    # the column $output_column, replace all newlines with commas, replace the
+    # last comma with a newline, and prepend "$token|".
+    awk  -F ',' "\$$token_column == $token" $in_file | cut -f$output_column -d, | tr '\n' ',' | sed "s/.$/\n/" | sed "s/^/$token|/"
+}
+# https://stackoverflow.com/questions/26148546/grep-keeping-lines-that-has-specific-string-in-certain-column
+
+function grep_output_data_throttled {
+    in_file="$1"
+    grep_token_in_file_to_file "MGHOUT:is_throttled,\|MGHOUT:1," $in_file
+}
+
+function grep_output_data_unthrottled {
+    in_file="$1"
+    grep_token_in_file_to_file "MGHOUT:is_throttled,\|MGHOUT:0," $in_file
+}
+
 # Grep a file for all lines with a token, remove that token from the output,
 # remove additional carriage returns (since grep puts a single carriage return
 # at the start, then adds carriage returns to all newlines), and store the
@@ -343,9 +382,8 @@ function grep_output_data {
 function grep_token_in_file_to_file {
     token="$1"
     in_file="$2"
-    out_file="$3"
 
-    grep_token_in_file $token $in_file > $out_file
+    grep_token_in_file $token $in_file
 }
 
 function grep_token_in_file {
