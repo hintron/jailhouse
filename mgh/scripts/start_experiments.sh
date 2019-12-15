@@ -26,8 +26,10 @@ OUTPUT_DATA_FILE="$OUTPUT_DIR/data_${experiment_time}.csv"
 OUTPUT_FREQ_FILE="$OUTPUT_DIR/freq_${experiment_time}.csv"
 OUTPUT_DATA_THROTTLED_FILE="$OUTPUT_DIR/throttled_${experiment_time}.csv"
 OUTPUT_DATA_THROTTLED_AVG_FILE="$OUTPUT_DIR/throttled_avg_${experiment_time}.csv"
+OUTPUT_FREQ_THROTTLED_FILE="$OUTPUT_DIR/throttled_freq_${experiment_time}.csv"
 OUTPUT_DATA_UNTHROTTLED_FILE="$OUTPUT_DIR/unthrottled_${experiment_time}.csv"
 OUTPUT_DATA_UNTHROTTLED_AVG_FILE="$OUTPUT_DIR/unthrottled_avg_${experiment_time}.csv"
+OUTPUT_FREQ_UNTHROTTLED_FILE="$OUTPUT_DIR/unthrottled_freq_${experiment_time}.csv"
 INTERFERENCE_WORKLOAD_ENABLE=0
 INTERFERENCE_WORKLOAD_OUTPUT="$OUTPUT_DIR/interference_${experiment_time}.txt"
 # TODO: Make this experiment-dependent later
@@ -239,7 +241,9 @@ function post_process_data {
     # Aggregate iterations for each input size
     for input_size in "${input_sizes[@]}"; do
         grep_token_columns_csv "$input_size" 2 3 $OUTPUT_DATA_THROTTLED_FILE >> $OUTPUT_DATA_THROTTLED_AVG_FILE
+        grep_token_columns_csv "$input_size" 2 4 $OUTPUT_DATA_THROTTLED_FILE >> $OUTPUT_FREQ_THROTTLED_FILE
         grep_token_columns_csv "$input_size" 2 3 $OUTPUT_DATA_UNTHROTTLED_FILE >> $OUTPUT_DATA_UNTHROTTLED_AVG_FILE
+        grep_token_columns_csv "$input_size" 2 4 $OUTPUT_DATA_UNTHROTTLED_FILE >> $OUTPUT_FREQ_UNTHROTTLED_FILE
     done
 }
 
