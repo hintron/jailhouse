@@ -204,6 +204,7 @@ function generate_random_inputs {
     done
 }
 
+# TODO: Get these Linux workloads to run under Intel VTune
 # IN: $WORKLOAD_MODE
 # IN: $ITERATIONS
 # IN: $input_sizes_count
