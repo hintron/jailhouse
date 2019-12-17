@@ -313,9 +313,10 @@ function start_experiment_jailhouse {
         stop_interference_workload $INTERFERENCE_WORKLOAD >> $EXPERIMENT_OUTPUT_FILE 2>&1
     fi
 
+    echo "Removing all generated random input files..." >> $EXPERIMENT_OUTPUT_FILE
     for input_file in ${random_inputs[@]}; do
         # The input is just random data, so really no sense in keeping it around rn
-        echo "sudo rm $input_file" >> $EXPERIMENT_OUTPUT_FILE
+        # echo "sudo rm $input_file" >> $EXPERIMENT_OUTPUT_FILE
         sudo rm $input_file >> $EXPERIMENT_OUTPUT_FILE 2>&1
     done
 
