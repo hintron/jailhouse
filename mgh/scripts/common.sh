@@ -326,14 +326,7 @@ function timestamp {
 
 function grep_freq_data {
     in_file="$1"
-    out_file="$2"
-    grep_token_in_file_to_file "MGHFREQ:" $in_file $out_file
-}
-
-function grep_output_data {
-    in_file="$1"
-    out_file="$2"
-    grep_token_in_file_to_file "MGHOUT:" $in_file $out_file
+    grep_token_in_file_to_file "MGHFREQ:" $in_file
 }
 
 # Create a scratch function to easily test other functions interactively.
