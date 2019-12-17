@@ -202,7 +202,7 @@ function generate_expected_outputs {
 }
 
 function post_process_data {
-    grep_freq_data $JAILHOUSE_OUTPUT_FILE > $OUTPUT_FREQ_FILE
+    # Do not print out all MGHFREQ lines. Avg freq is already in MGHOUT
 
     # Separate throttled and unthrottled data
     grep_output_data_throttled $JAILHOUSE_OUTPUT_FILE > $OUTPUT_DATA_THROTTLED_FILE
