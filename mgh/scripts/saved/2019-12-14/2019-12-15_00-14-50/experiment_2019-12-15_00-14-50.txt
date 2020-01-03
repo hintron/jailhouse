@@ -1,0 +1,4438 @@
+Starting experiments at 2019-12-15_00-14-50
+=======================================================
+No inmate was running
+JAILHOUSE_DISABLE: Invalid argument
+sudo killall -e "jailhouse"
+At main.c:160:
+- SSL error:02001002:system library:fopen:No such file or directory: ../crypto/bio/bss_file.c:72
+- SSL error:2006D080:BIO routines:BIO_new_file:no such file: ../crypto/bio/bss_file.c:79
+sign-file: certs/signing_key.pem: No such file or directory
+Warning: modules_install: missing 'System.map' file. Skipping depmod.
+uio_ivshmem            16384  0
+uio                    20480  1 uio_ivshmem
+jailhouse              32768  0
+tailf_pid: 31019
+No inmate was running
+JAILHOUSE_DISABLE: Invalid argument
+################################################################################
+# Experiment 1
+################################################################################
+sudo ../../tools/jailhouse enable ../../configs/x86/bazooka-root.cell
+Setting sync byte in shmem to 0
+sudo ../../tools/jailhouse cell create ../../configs/x86/bazooka-inmate.cell
+sudo ../../tools/jailhouse cell load bazooka-inmate ../../inmates/demos/x86/mgh-demo.bin -s "debug=true tmode=2 wm=0 throttleiter=5" -a 0x1000
+sudo ../../tools/jailhouse cell start bazooka-inmate
+Wait 15 seconds for handbrake to ramp up
+*********************************************************
+Input Size=1048576
+Time=2019-12-15_00-17-29
+*********************************************************
+Iteration 0 (0):
+Inmate is ready!
+Input length: 1048576
+Signaling inmate...
+Inmate is finished (polled 11 times at 0.100s/poll)
+Inmate duration (python): 1 s 101330 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 4fecbc7385f7751f997eb2f8dc300aaa5350e2ef65f715b93ca715b7e0b6ea3a6e9cf8c808fb9a26571bd692f047b4186502ec5c0fc2397e927451d7756e6b09
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (1):
+Inmate is ready!
+Input length: 1048576
+Signaling inmate...
+Inmate is finished (polled 10 times at 0.100s/poll)
+Inmate duration (python): 1 s 1230 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 69031a88d495d3e657ad9ca629997ca842b431429e09a05d74620941380c6666ebb72a394ee47600e138b8ce6575f065aaeb2d24fb7d8733b5131b9541642c24
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (2):
+Inmate is ready!
+Input length: 1048576
+Signaling inmate...
+Inmate is finished (polled 10 times at 0.100s/poll)
+Inmate duration (python): 1 s 1224 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 8f90ccc79cc0e5b168a438ae433378766897e3c6d589cbbefbb0636a016054086346a0ff056ec75c6d52456ab1364a9ae6fc9f147a5dafd46d02a359df9a56db
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (3):
+Inmate is ready!
+Input length: 1048576
+Signaling inmate...
+Inmate is finished (polled 10 times at 0.100s/poll)
+Inmate duration (python): 1 s 1777 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 04a1ada70de1d4ddef2a2ca4bdaf7758ee32fe2dd1314b1b37fdb5393d9caf19749b892e088b0e0d9b22c544ecc2335db6ae795933d7ba9789e7839527bcc2fa
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (4):
+Inmate is ready!
+Input length: 1048576
+Signaling inmate...
+Inmate is finished (polled 10 times at 0.100s/poll)
+Inmate duration (python): 1 s 892279 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 0bd790a910fe94e1ff47b97de79411a9462e56b5d1ec7168773b518e901a8cb667d2caa8f1c413890a6a3258562cd441f61e14a91b472ebb71bae9cb3b047d35
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (5):
+Inmate is ready!
+Input length: 1048576
+Signaling inmate...
+Inmate is finished (polled 11 times at 0.100s/poll)
+Inmate duration (python): 1 s 116800 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 80bcae8d15afff79f9b44302c87356d16c92d801d52e7ce3d8551370531b81c39ae65e43b98f64b9e34f03b4355e535351d518456b60288aef5ca51f00ab8a65
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (6):
+Inmate is ready!
+Input length: 1048576
+Signaling inmate...
+Inmate is finished (polled 11 times at 0.100s/poll)
+Inmate duration (python): 1 s 114788 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 8a547d814a56caa0b2669482d5dd66540c302b7fb61333460a8eceb73ad7dc31f6a945dcf065d92ae80a5306fe97b203f204edef8f065fee4cb9e9defefdba2b
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (7):
+Inmate is ready!
+Input length: 1048576
+Signaling inmate...
+Inmate is finished (polled 11 times at 0.100s/poll)
+Inmate duration (python): 1 s 116811 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: a50879dc4cc9c200f9ecb2fdf72ddc0f60c22c4d97a5aa6b484d48f5fd9ec5f7f73f9d6e18cbee81b39b9fbc123ed482480aeb0562b100d1d2c68214608c1f66
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (8):
+Inmate is ready!
+Input length: 1048576
+Signaling inmate...
+Inmate is finished (polled 11 times at 0.100s/poll)
+Inmate duration (python): 1 s 116815 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 772f3e959150a502f3c058a183ec73e5d5e2618c8dcbf50d888fc1c59f61660d6d863bacd89e25a025bbd3a2ebac62b9733ab3ae1ea4ef0f1f0a23120ee838fd
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (9):
+Inmate is ready!
+Input length: 1048576
+Signaling inmate...
+Inmate is finished (polled 11 times at 0.100s/poll)
+Inmate duration (python): 1 s 597950 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 5f33625dc63872e23ae1349a560cb9efa6fea0840dcc277c2a890e7fb40fe674086c7e9143d1fd3ae40c9938b6640f7b8185c4ced65447261d94edbc5c985f15
+Workload output matches expected output
+*********************************************************
+Input Size=2097152
+Time=2019-12-15_00-18-06
+*********************************************************
+Iteration 0 (10):
+Inmate is ready!
+Input length: 2097152
+Signaling inmate...
+Inmate is finished (polled 13 times at 0.100s/poll)
+Inmate duration (python): 1 s 301619 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 13f60461adf2b418d839dda3087087db0aa3007b34d395496c6a8ad9ea6aa74be842cd8a8d253b216fb09dd03277446c381f147df42679242179709692895a65
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (11):
+Inmate is ready!
+Input length: 2097152
+Signaling inmate...
+Inmate is finished (polled 12 times at 0.100s/poll)
+Inmate duration (python): 1 s 201461 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 8ee09d7f4ca3c1af19f1174601e7bc0adf24aebfbd7e0ba3cebef37bcc2c331ed5bf81c3ec266ab8e4ffaefeaae3971443687297155bb1cbfc7916eb9162c6b9
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (12):
+Inmate is ready!
+Input length: 2097152
+Signaling inmate...
+Inmate is finished (polled 12 times at 0.100s/poll)
+Inmate duration (python): 1 s 201494 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 358cbaf0f9e75cc3f14fc0cae339bba8ffdfe0d483d75656b87853f71f652cea803f349806211e4685a468a7f695a737b1f04bcee68109375bff15b8b1d2f856
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (13):
+Inmate is ready!
+Input length: 2097152
+Signaling inmate...
+Inmate is finished (polled 12 times at 0.100s/poll)
+Inmate duration (python): 1 s 201451 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: af62f8453f33ac6fff58f537ec282a8b4aee55f83b3c9b5fa15fac8e79418cc28cac180ed209a7147c01f45265a3e320afb014d06ee970067697ae151057843c
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (14):
+Inmate is ready!
+Input length: 2097152
+Signaling inmate...
+Inmate is finished (polled 12 times at 0.100s/poll)
+Inmate duration (python): 1 s 549898 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 0a920ee9b71a63e91c8e8e3c33af4392a31ba5aea988d097c7b2408544f1e800c55ebadda06be5b8a2e55993a92caf6d1b435cfecbd92d95b816bf8aa01ff6ab
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (15):
+Inmate is ready!
+Input length: 2097152
+Signaling inmate...
+Inmate is finished (polled 12 times at 0.100s/poll)
+Inmate duration (python): 1 s 218146 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: e7fd39fdd7cb9c8d8a306ac9f7270ae2c81ebb9a4364b044de9160cc7c934064dabc89ee2296ac73a8c665ab24d61d34313bfa4b48ac5caae267f0674b5c1bf2
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (16):
+Inmate is ready!
+Input length: 2097152
+Signaling inmate...
+Inmate is finished (polled 12 times at 0.100s/poll)
+Inmate duration (python): 1 s 218144 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 11870fc4db125a2df9a78d882bb3f88e22a6a10713c3cc62bd075c7455e6399c8635420c85efbdf52dceed7c8485aec8322c451821559c24933dbca613214f03
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (17):
+Inmate is ready!
+Input length: 2097152
+Signaling inmate...
+Inmate is finished (polled 12 times at 0.100s/poll)
+Inmate duration (python): 1 s 218176 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 058c85a650d4fde3b9ce91012a216fd13ab098548b331f8bf0e422df49baa62906d97db0ef5ea7e9180fa72895cd8695ca3a77bb498a787a281aa1a18ccc7b4e
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (18):
+Inmate is ready!
+Input length: 2097152
+Signaling inmate...
+Inmate is finished (polled 12 times at 0.100s/poll)
+Inmate duration (python): 1 s 224240 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 9af3affa55a7ac8fb469186cd35235651eb23071a56e98b3b652cae1993069cac990e30b8a397e531411b5f9f8a3b2aaa5da991e428bf63624f888532574ee22
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (19):
+Inmate is ready!
+Input length: 2097152
+Signaling inmate...
+Inmate is finished (polled 12 times at 0.100s/poll)
+Inmate duration (python): 1 s 879993 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: d6513d7dcaadad6019c88c813b8c6073fe53b1256e5423cd66a071f53d1a02489e1d508c153c9db65be49b281494d56e93da1eedb70b2f89eccbe642d3e1ade8
+Workload output matches expected output
+*********************************************************
+Input Size=3145728
+Time=2019-12-15_00-18-57
+*********************************************************
+Iteration 0 (20):
+Inmate is ready!
+Input length: 3145728
+Signaling inmate...
+Inmate is finished (polled 13 times at 0.100s/poll)
+Inmate duration (python): 1 s 301603 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 3a46a4c0dafcb3f715031d67b6b0f7cca73c4af187cedc09b39795c073c9ab63fdcd1935d3e8a381d4b3e5b6e887d6de90c3473f8e1c0088e7787a267f9cc95a
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (21):
+Inmate is ready!
+Input length: 3145728
+Signaling inmate...
+Inmate is finished (polled 13 times at 0.100s/poll)
+Inmate duration (python): 1 s 301573 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 3c60794a4363531f8f5b6da58f0542fb6ae714719daa848de81c3f29d1cbafabaaa3ad70e9ec7bb892222b42d77b5c91eaf9e1f5dfeda640d6358ccc4f33cdfd
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (22):
+Inmate is ready!
+Input length: 3145728
+Signaling inmate...
+Inmate is finished (polled 13 times at 0.100s/poll)
+Inmate duration (python): 1 s 301565 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 00d0d19769b0ce903529a32fbfe4b9285982d235c811ed3542778ffd5ca6dad375af600142c0a33009cabdcc594d15874fd0b688cc2a4e314099866aee35d771
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (23):
+Inmate is ready!
+Input length: 3145728
+Signaling inmate...
+Inmate is finished (polled 13 times at 0.100s/poll)
+Inmate duration (python): 1 s 301465 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 199f7b3666e2d8bf6bc1084710c349612ea6c766742f66bda94ae493d5a92cbb9b14122c1c791cba755b7f09668088b4034a7156d5c4f82f29ced4f2dd049e30
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (24):
+Inmate is ready!
+Input length: 3145728
+Signaling inmate...
+Inmate is finished (polled 13 times at 0.100s/poll)
+Inmate duration (python): 1 s 993615 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 51461f051ffc36c9dfdb398e32da0d316a8db7cf955a76bafb2dc596213303ac7565f41020178b71e87c666ed36ad5c93edac0323d87586cdb2b53b14b34808d
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (25):
+Inmate is ready!
+Input length: 3145728
+Signaling inmate...
+Inmate is finished (polled 14 times at 0.100s/poll)
+Inmate duration (python): 1 s 417667 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: d5bf9d286086ca19b73a7588e5145332a2787f7b2fece87d65ac9a561a359fc1297fd90778527a56c04f4d23543cc3cba5b6e12691a1f326098bda5721c302c9
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (26):
+Inmate is ready!
+Input length: 3145728
+Signaling inmate...
+Inmate is finished (polled 14 times at 0.100s/poll)
+Inmate duration (python): 1 s 418090 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 3a5cf2fcd24061afc487d855f49d5d35f9306934db59cc46ff7919097e049b787eaa628b8cb0995f0db7089ba702844adcfd7a25a697e3e953609c30a6023332
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (27):
+Inmate is ready!
+Input length: 3145728
+Signaling inmate...
+Inmate is finished (polled 14 times at 0.100s/poll)
+Inmate duration (python): 1 s 420827 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 889e0c527a7b38585fea5e3a08787d7bd362b1c7ee5c73450a72898dfa9b659219c06dc4466623325d7dcaed5f74c2e0c9e9bf1e2842cc48ba522490ae7f0045
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (28):
+Inmate is ready!
+Input length: 3145728
+Signaling inmate...
+Inmate is finished (polled 14 times at 0.100s/poll)
+Inmate duration (python): 1 s 421347 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 8b270b49f5b4972a15e306e5cb96c2cdf0f81d559efa817611ded63245f4027431e3480941ef53d00e3904e2856c37851ba2a59b680c7094400caac97a66cfec
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (29):
+Inmate is ready!
+Input length: 3145728
+Signaling inmate...
+Inmate is finished (polled 14 times at 0.100s/poll)
+Inmate duration (python): 1 s 902146 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: ef4969287407ab6e20045591942c83b716fb36d35868aafd28770c3bbc40ae01534486e2e9df5c70c0c6fbfab0344c93bdff782ffbe62308bd02cf2401de9a5f
+Workload output matches expected output
+*********************************************************
+Input Size=4194304
+Time=2019-12-15_00-20-01
+*********************************************************
+Iteration 0 (30):
+Inmate is ready!
+Input length: 4194304
+Signaling inmate...
+Inmate is finished (polled 15 times at 0.100s/poll)
+Inmate duration (python): 1 s 501832 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 1857f6f1feb83e6e0f78d4c8a16274b32d04664814d54a667c242de00da8e1f1f30cbb7eddbc6f4008a0b8c992ceeddc8ffb08519168b3517943c7d068b4818c
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (31):
+Inmate is ready!
+Input length: 4194304
+Signaling inmate...
+Inmate is finished (polled 15 times at 0.100s/poll)
+Inmate duration (python): 1 s 502223 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 57be6fbe3788dab489e31c6e98ce6d0ca4aedd387e7f9769ede7ee3feb8634bd6636f322c177be4cff1b224eeb406e1de8499f0e5333cdc08a54395a4b145a8f
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (32):
+Inmate is ready!
+Input length: 4194304
+Signaling inmate...
+Inmate is finished (polled 15 times at 0.100s/poll)
+Inmate duration (python): 1 s 511987 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: e62714dea7a8d9a3ba60d2650bae81f0fd1583b56508e77f6acee79fdc2367f39571848a887b892102bbcdc3989384aa0a6a5da3a64b75ba7ed4127c7edb9ca9
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (33):
+Inmate is ready!
+Input length: 4194304
+Signaling inmate...
+Inmate is finished (polled 15 times at 0.100s/poll)
+Inmate duration (python): 1 s 506664 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 8f8ff4314907622b7f006621b64306723d908925e27c26495fc9b44889d6280115cbf6094a67e3b92f4341e37c59b4cc0f56719a13209375cfb0f7d5096f4d0b
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (34):
+Inmate is ready!
+Input length: 4194304
+Signaling inmate...
+Inmate is finished (polled 15 times at 0.100s/poll)
+Inmate duration (python): 1 s 722536 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: d771e583fc8b6ca7bab033a6ee3a9c42e9afa704ebf7c5de3ee998044c6ddda431aad427df5dc575f72cc592f80a2bd164ebea5abfff637b43cb9172fa4c6fc9
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (35):
+Inmate is ready!
+Input length: 4194304
+Signaling inmate...
+Inmate is finished (polled 15 times at 0.100s/poll)
+Inmate duration (python): 1 s 522179 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 2887722cc3f8bee74bb5e04ff6db1787477c977393ee4e9031d780e857b28505e664f5073befe0a970fe0aa7876d9f7eb20ea071de9cbbcef2c25307fe7ac726
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (36):
+Inmate is ready!
+Input length: 4194304
+Signaling inmate...
+Inmate is finished (polled 15 times at 0.100s/poll)
+Inmate duration (python): 1 s 528251 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 7432b5d17ff44c882e2e2971bdb008333367825a0763e98bc178ca4596e1edf59cb14e6ef133f1ed397b69af775a33aa3a60a0816853be5ddac33312a2d2d4bb
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (37):
+Inmate is ready!
+Input length: 4194304
+Signaling inmate...
+Inmate is finished (polled 15 times at 0.100s/poll)
+Inmate duration (python): 1 s 556472 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 1a149fabddbe1a03dddf3c0169cf4c0bb19d2f47b63b3f945dca37fcf05bc32b3db3219ee7a1d1724a75fc44928238f12d7a8331e3cecbba44fecdf1cf6c814b
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (38):
+Inmate is ready!
+Input length: 4194304
+Signaling inmate...
+Inmate is finished (polled 15 times at 0.100s/poll)
+Inmate duration (python): 1 s 521893 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: e0193d11796b7e19276090978bbe1851a4658e5205aa9abe29f6d1f213434aa0dae53340f5bea5ee092490ad87c6579a0b0d726d876e76b2fe21c2a44b8419e7
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (39):
+Inmate is ready!
+Input length: 4194304
+Signaling inmate...
+Inmate is finished (polled 15 times at 0.100s/poll)
+Inmate duration (python): 2 s 183154 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 8f89dc08ab2c653947cdae1b479d758893fa747c08257559ad43e87dd88e4386f190dff396cb8d0dcca2153da8756f40049bbf53478617c1eeb222192d1c6208
+Workload output matches expected output
+*********************************************************
+Input Size=5242880
+Time=2019-12-15_00-21-19
+*********************************************************
+Iteration 0 (40):
+Inmate is ready!
+Input length: 5242880
+Signaling inmate...
+Inmate is finished (polled 16 times at 0.100s/poll)
+Inmate duration (python): 1 s 601930 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 19369f2f3de66689e60652329dd231283c584e04c4c9abc88f55a8392cd8543bd13a6f68d0bca2be602eea5043ae4622deb0f02c9490d1151a68187538974b92
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (41):
+Inmate is ready!
+Input length: 5242880
+Signaling inmate...
+Inmate is finished (polled 16 times at 0.100s/poll)
+Inmate duration (python): 1 s 601918 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 89a67f1fbc96c53dc7e6d0e5edbd20b36074c2bc77d7522835662f0a818fbf09e4cd4ce70d6d9e6064918e6692e92c5104f15b9e5cad808e70ef055f9c5a1ffc
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (42):
+Inmate is ready!
+Input length: 5242880
+Signaling inmate...
+Inmate is finished (polled 16 times at 0.100s/poll)
+Inmate duration (python): 1 s 601926 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 12c3e4dd92c4b26ffd66e01e7e03459dd4ffd3f2c4dbaf8748189552acb61904cc041e5708da0a0d1de1069aa0951b87c36f790d0e984daac69794728bf10c2d
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (43):
+Inmate is ready!
+Input length: 5242880
+Signaling inmate...
+Inmate is finished (polled 16 times at 0.100s/poll)
+Inmate duration (python): 1 s 613355 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 5fd2d677262b8e284c4fe9203363db020121cf516039e2cfd675d35b0d08a31744d0e7eb8f89fe891c62cc40f603c7de849989e8f7d1d0285a9ed3110f5d802b
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (44):
+Inmate is ready!
+Input length: 5242880
+Signaling inmate...
+Inmate is finished (polled 16 times at 0.100s/poll)
+Inmate duration (python): 2 s 144998 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: f0ef4d81e9b4da02fe6cedd73475848b415e19669e8efdca04adc60d6ff506d019192e82c3c1c06aa4c2bcacaadc64066bc6e0d8a8dce0b9285c82d6b70a58f0
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (45):
+Inmate is ready!
+Input length: 5242880
+Signaling inmate...
+Inmate is finished (polled 17 times at 0.100s/poll)
+Inmate duration (python): 1 s 724843 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: dc75f0ab281c4c55a4b0e84c8d1b30fa3ce3a3860fb068ec9de98216e7d212792697c615511db93be1e30f886e5ecc8b62f3b10fd23a2cba958cf3f1d3583f6f
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (46):
+Inmate is ready!
+Input length: 5242880
+Signaling inmate...
+Inmate is finished (polled 16 times at 0.100s/poll)
+Inmate duration (python): 1 s 749296 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 61272d14dc7898600129512a82613940536db26c4352ddb9c4e481ce16c9bcf202b60253f4707192ab745faf89885c0674d96f8004abf6d024348f2255a0e81b
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (47):
+Inmate is ready!
+Input length: 5242880
+Signaling inmate...
+Inmate is finished (polled 17 times at 0.100s/poll)
+Inmate duration (python): 1 s 723634 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 04163a402749f17cd3ce5ccb3735c431ba1db8cd188b88a0cffef35caa45b01993e1c4f864d90c50e6e053427cd5242dfef87c1e58258fb23512be424e2f1bb4
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (48):
+Inmate is ready!
+Input length: 5242880
+Signaling inmate...
+Inmate is finished (polled 17 times at 0.100s/poll)
+Inmate duration (python): 1 s 725792 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 379ba11679cbd4135497428abb145be2183022904a3db61ed8e9c55b8be93044a246a56916b5371584102920a174f1f1162c17a547810d377538ede36bce3612
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (49):
+Inmate is ready!
+Input length: 5242880
+Signaling inmate...
+Inmate is finished (polled 17 times at 0.100s/poll)
+Inmate duration (python): 1 s 927605 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: b7a0502a3dd21699b1c3951088b43e3b9be88ad0a605704162a92e9d4a9a1b72e1fa59e322cdd6c4ebaee0cfb9153018733d302b194c50dd4e6f7f6c3e392dc3
+Workload output matches expected output
+*********************************************************
+Input Size=6291456
+Time=2019-12-15_00-22-48
+*********************************************************
+Iteration 0 (50):
+Inmate is ready!
+Input length: 6291456
+Signaling inmate...
+Inmate is finished (polled 19 times at 0.100s/poll)
+Inmate duration (python): 1 s 902265 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 66b454d8ff72c1dc316562d45d6607b6f0a30b6d1357c13e57c71c8b3a040b049d8ae43bcdcc2130ea56061691a74d3d01d79de2e1d00ad5355f7e1b76de0a91
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (51):
+Inmate is ready!
+Input length: 6291456
+Signaling inmate...
+Inmate is finished (polled 19 times at 0.100s/poll)
+Inmate duration (python): 1 s 902280 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 90b9f1d5f353f0ba41d5f707f7f1114065548aa81ebc80620f88e3f191e1095642412fe34ff7522a502b0daeaa225a6f310488649159ca32446e9182b9822a07
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (52):
+Inmate is ready!
+Input length: 6291456
+Signaling inmate...
+Inmate is finished (polled 19 times at 0.100s/poll)
+Inmate duration (python): 1 s 902281 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 938aff713167329759f480a3c62b041133ec5f7f278b9853b194d97ff403165b4b14795818b231fdc4e73ad24bcdfaf78385c3ab4ca5108b54ba215d93b03b39
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (53):
+Inmate is ready!
+Input length: 6291456
+Signaling inmate...
+Inmate is finished (polled 19 times at 0.100s/poll)
+Inmate duration (python): 1 s 903142 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: d0b2e7db6e6de4a12dd0a4763aa08f29d5f0dfbdc2257ad84f3f3403aae569a5ed0738668ee6b91ce343528f1ff15a81c01ccbc29bda36c29c6a18eb1678b38a
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (54):
+Inmate is ready!
+Input length: 6291456
+Signaling inmate...
+Inmate is finished (polled 19 times at 0.100s/poll)
+Inmate duration (python): 2 s 271989 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 74ff172308f23c6054c6e3778cdb69f84928ed6cbd44d7113f290ca71a0ee70132a1eb0f145fbbc49468a06e290cc92c86884529bd7ac7714e88e8db87c1b4aa
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (55):
+Inmate is ready!
+Input length: 6291456
+Signaling inmate...
+Inmate is finished (polled 19 times at 0.100s/poll)
+Inmate duration (python): 1 s 941865 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: d1f56f6c6e09bc01791f3c3d909fd5ac860957553c22454658b2eacd1cd6b4f421a122d7df4f949da2a5da353218b56bc9c42c8028f947380a40135a84307280
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (56):
+Inmate is ready!
+Input length: 6291456
+Signaling inmate...
+Inmate is finished (polled 19 times at 0.100s/poll)
+Inmate duration (python): 1 s 925508 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 763f4d57b5c385702b67ef73439e4b13168b80dc0422d8cfc9e9ca7207fa00489792740ed7b1871a6297ede0963b944c1aefefa0922b5678a1502734e796a06e
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (57):
+Inmate is ready!
+Input length: 6291456
+Signaling inmate...
+Inmate is finished (polled 19 times at 0.100s/poll)
+Inmate duration (python): 1 s 968757 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 5542d20683e1c11a5a8798da6420c21ddd3735e888e570c5cd00c22312adac7e953ad9c1631d9e95a00c9647f4ab6837f0cb4ea1fb0c8c3e1d4dcc3ef7c57a6e
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (58):
+Inmate is ready!
+Input length: 6291456
+Signaling inmate...
+Inmate is finished (polled 19 times at 0.100s/poll)
+Inmate duration (python): 1 s 926923 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 965a935236ca964df70ee6a489e23d0525b837d0c1f7ae3014ca00217563234968ac5c12581fd9834ea2db13f70292c45643262c1464cbc854d56dce0c1b0b9a
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (59):
+Inmate is ready!
+Input length: 6291456
+Signaling inmate...
+Inmate is finished (polled 19 times at 0.100s/poll)
+Inmate duration (python): 2 s 315286 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: f4b37533bd561b5e15b9d3515f758b813f043a1e508e24e945cf5b09cdfa283be273663ef4f5f2582033ffe53bf1d063600d273b4a763e7fe4ef7842eb95ab85
+Workload output matches expected output
+*********************************************************
+Input Size=7340032
+Time=2019-12-15_00-24-33
+*********************************************************
+Iteration 0 (60):
+Inmate is ready!
+Input length: 7340032
+Signaling inmate...
+Inmate is finished (polled 21 times at 0.100s/poll)
+Inmate duration (python): 2 s 103341 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 7525c733a107daa6df4a002d0b4c6d1b9a3cc230d88155a8f903ccbce31048dda61a0c0ec28f5c3454e5d08267790299a80dd559375c61d1bffe4da716c4a5bb
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (61):
+Inmate is ready!
+Input length: 7340032
+Signaling inmate...
+Inmate is finished (polled 20 times at 0.100s/poll)
+Inmate duration (python): 2 s 2444 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: c8286c6a1a42a89ccf5ff73be4fef8d1a2ee39e2abd736bd6e987a3310e03120377016e8db1baf6bb764860c95bb3b6c63a9ea9ff47af6c2ec4f55670b34bb5c
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (62):
+Inmate is ready!
+Input length: 7340032
+Signaling inmate...
+Inmate is finished (polled 20 times at 0.100s/poll)
+Inmate duration (python): 2 s 2424 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 14d990cd5b3739e95faabf996969d6d5a2f5feb53a52aaf0cc5069a34c996fb1d7fbbd1dd559bda3958b8af639a4f73a5389478c79801173179a4910a7e6adcd
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (63):
+Inmate is ready!
+Input length: 7340032
+Signaling inmate...
+Inmate is finished (polled 20 times at 0.100s/poll)
+Inmate duration (python): 2 s 9363 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: c70ef2425851fd4c7fe173d90abbed7afb544404b37dee2c691bb50ac198142d9b5ebfe6c33294d07fb2f7a64445a5c69d7bf9a2933b35fafbafa3c4675df780
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (64):
+Inmate is ready!
+Input length: 7340032
+Signaling inmate...
+Inmate is finished (polled 20 times at 0.100s/poll)
+Inmate duration (python): 2 s 808677 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 68d994921dd62766b4a0b058a08e28fedcd96777521d4d5d81924418321b30bdbe01f94eab25ad29b4f84b29ffaa1625113fafba25660bd371fe0805000c6925
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (65):
+Inmate is ready!
+Input length: 7340032
+Signaling inmate...
+Inmate is finished (polled 21 times at 0.100s/poll)
+Inmate duration (python): 2 s 128240 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 1a7398a75c487004529ce62e6df727c6da7ee4fe3ffbf9cabae5ee0509a6ed733e8a2ac6b1652114282699a3880047c67fa2489a637818ec85570ec57fe770fc
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (66):
+Inmate is ready!
+Input length: 7340032
+Signaling inmate...
+Inmate is finished (polled 21 times at 0.100s/poll)
+Inmate duration (python): 2 s 130237 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 240ce5218ccbb59d3a1f7f8dc38e8301ae637e5eac06eb81fb184acdadbf2eb4faed0bbe4be12913e425214a663587ff4960b3224a8403454938f49ad1174ee2
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (67):
+Inmate is ready!
+Input length: 7340032
+Signaling inmate...
+Inmate is finished (polled 20 times at 0.100s/poll)
+Inmate duration (python): 2 s 67141 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: ab3256cc99c3cd1d73d07b5a737a9fbaeb71aba983ea63c7ef1c6721daf74afabc20f351ac32a1543176cd0de18fd5981cd2342aeb4ed27b05b05f549fc2300c
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (68):
+Inmate is ready!
+Input length: 7340032
+Signaling inmate...
+Inmate is finished (polled 21 times at 0.100s/poll)
+Inmate duration (python): 2 s 136338 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 4ac85feb98e3aa2320be35a79505dc5025dd8cca3bcd501acc6ab399880beebd22af3e637f857cab282851774d32ffb2cbce2256ac5f85a27251f41975021d0b
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (69):
+Inmate is ready!
+Input length: 7340032
+Signaling inmate...
+Inmate is finished (polled 21 times at 0.100s/poll)
+Inmate duration (python): 2 s 600974 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: ba1ee24911c2ee2d3fc74dbe814dfa0cbd3d870d8643f34cfd59ebb9fe2845c423b3fbc527be17f4e315abff339a77a77df6d72ec879b2d440cad2d0b476a7c9
+Workload output matches expected output
+*********************************************************
+Input Size=8388608
+Time=2019-12-15_00-26-31
+*********************************************************
+Iteration 0 (70):
+Inmate is ready!
+Input length: 8388608
+Signaling inmate...
+Inmate is finished (polled 22 times at 0.100s/poll)
+Inmate duration (python): 2 s 210734 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: b37822c8f6f3fb000069d946833cdcec009af1002cddb928c09d898d2eca4c79562aa0e5ddeaf2178334c8790e1bc29e44e6fe4c391f4beaa07063aa5125ebfa
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (71):
+Inmate is ready!
+Input length: 8388608
+Signaling inmate...
+Inmate is finished (polled 22 times at 0.100s/poll)
+Inmate duration (python): 2 s 211515 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 4316d2927c1aef793d7b619bbb0defdbb527336324aafe907d1b8cc4ff0dc622d7c23fc1563fa9c05714517136df208c13ec450df38dd27380bf501cad6b7584
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (72):
+Inmate is ready!
+Input length: 8388608
+Signaling inmate...
+Inmate is finished (polled 22 times at 0.100s/poll)
+Inmate duration (python): 2 s 202606 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 0da9528f8d82b6fa719ecd16f33214d490e648d1c9484b96846955fc3850c85cb5071586b0f467ada21bb9457519fe7d87ec7eee20cc9f3e4e1e2d1b2ff2d76f
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (73):
+Inmate is ready!
+Input length: 8388608
+Signaling inmate...
+Inmate is finished (polled 22 times at 0.100s/poll)
+Inmate duration (python): 2 s 202591 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: e37ab9f59e4d7d68c39b0c7f3f955ab74f10ffd6da3057302e264293c7f88fc001d23077b80ec35ce9a9fe275352676cb6d48205902ad50acf3f855ee09816ca
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (74):
+Inmate is ready!
+Input length: 8388608
+Signaling inmate...
+Inmate is finished (polled 22 times at 0.100s/poll)
+Inmate duration (python): 2 s 561507 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 78f4195fab78750de7310611ce1574ffffc25577496ca008acf1de48b4757ecd935fd0f45152ac9d40e15507762a01e7ccc1d4fc853e3880f2674c2fd5cde25a
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (75):
+Inmate is ready!
+Input length: 8388608
+Signaling inmate...
+Inmate is finished (polled 22 times at 0.100s/poll)
+Inmate duration (python): 2 s 231577 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 437f2c10c9fc20564eff4264e4d12a91b572fe45bd19b0ef503e360765c4523be62cb86bbdfb4717648ffefb815739f5d2e5ebf95586a1f5f874bcf9b14fd3b2
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (76):
+Inmate is ready!
+Input length: 8388608
+Signaling inmate...
+Inmate is finished (polled 22 times at 0.100s/poll)
+Inmate duration (python): 2 s 229561 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: cbfb898384938546a815ade520b0987fc5448e55aa898cb7f2afe7530b9f6b4a7e430605042616a0a01a0d1ef4a7b8f8d4dbfff57cc41789922b241ead4bb38c
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (77):
+Inmate is ready!
+Input length: 8388608
+Signaling inmate...
+Inmate is finished (polled 22 times at 0.100s/poll)
+Inmate duration (python): 2 s 246459 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: df32331b0950a847765b03953e21c46186201b58a15880aa2e2e312be9824f4ad3ee06e21b0a1ac58d63a24ec37b831e807682107e45ee4f95b851d604629050
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (78):
+Inmate is ready!
+Input length: 8388608
+Signaling inmate...
+Inmate is finished (polled 22 times at 0.100s/poll)
+Inmate duration (python): 2 s 266880 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 0dc5a98c92d4c3f1224e2f1c0042a12736d4ad7228c620f9d9fc16a16f40720fe8d830baf30649d6c9d0cf1e9aa5a019f1d5c002cce6f12f41cbc76c7964920e
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (79):
+Inmate is ready!
+Input length: 8388608
+Signaling inmate...
+Inmate is finished (polled 22 times at 0.100s/poll)
+Inmate duration (python): 2 s 481217 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: fbd0908c5c4318b304dd9636352f25b8872c63dcf270de90376af39cd9ccafd3a81c2503de3640c8828370959be1f593104811e00e0d8cb399641873a875b66b
+Workload output matches expected output
+*********************************************************
+Input Size=9437184
+Time=2019-12-15_00-28-43
+*********************************************************
+Iteration 0 (80):
+Inmate is ready!
+Input length: 9437184
+Signaling inmate...
+Inmate is finished (polled 24 times at 0.100s/poll)
+Inmate duration (python): 2 s 402904 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: f017383fef881227bf11c47e2433cf9cbb736639957902d0120648a147bd4580f89951a49694e6413defb5711fc98ee51ec764953a0db9ef65b505c20aa349bf
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (81):
+Inmate is ready!
+Input length: 9437184
+Signaling inmate...
+Inmate is finished (polled 23 times at 0.100s/poll)
+Inmate duration (python): 2 s 304442 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 4d41a37dd9e77932b36bd2761ebd5f63c67aeff4f357e53762f870078822eeef462d67a5793a10b64bdae8286a6a9948dea84bbc10bfe16dab9db998db1747ad
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (82):
+Inmate is ready!
+Input length: 9437184
+Signaling inmate...
+Inmate is finished (polled 23 times at 0.100s/poll)
+Inmate duration (python): 2 s 302756 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 87baa662277e49c46184d5c00836e315f431a8db01fa13ec4b4688409766dd4685a54522a095808a5be2515f6ffc084a10508d960f510d26b8d33780e73ad9e4
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (83):
+Inmate is ready!
+Input length: 9437184
+Signaling inmate...
+Inmate is finished (polled 23 times at 0.100s/poll)
+Inmate duration (python): 2 s 304192 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: b2eea421acd4ee43e205bba130f587636f94dc6edf6d22b677d165e088cf688f81dbf0cc9054745d1c252d2c4e062b19e8272f05b6846c1066c4c0c8429fe90a
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (84):
+Inmate is ready!
+Input length: 9437184
+Signaling inmate...
+Inmate is finished (polled 23 times at 0.100s/poll)
+Inmate duration (python): 2 s 715146 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 228bd9af83ea5b8288d77976cdcda57a10d412c605ec63ce47cd3524e6b22c207b4350b16b763dc76e3f6f63275840e3b266e6b7a0de4f439939c2095545668d
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (85):
+Inmate is ready!
+Input length: 9437184
+Signaling inmate...
+Inmate is finished (polled 24 times at 0.100s/poll)
+Inmate duration (python): 2 s 441148 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: a61801309a6dc5610da273298c1341124966b242f260b89c0fb40593505ee652f2b3d116a0bf758dcea0d7fb1cc9d1e101d22a169bc8dd278005c4a02fecb63e
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (86):
+Inmate is ready!
+Input length: 9437184
+Signaling inmate...
+Inmate is finished (polled 24 times at 0.100s/poll)
+Inmate duration (python): 2 s 434275 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 6f35063ca779fa370160fa2ff471bcecef3e4bec0136d54b16639372ed8bb4af461bbad3ef101419c489a805aff111505fd224dcae47c167ca4456914632c936
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (87):
+Inmate is ready!
+Input length: 9437184
+Signaling inmate...
+Inmate is finished (polled 23 times at 0.100s/poll)
+Inmate duration (python): 2 s 401941 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: fe6b948f92de5959c2b33183011d24e40e62ad71394b048135b42b60ecf88285d5aa5310aaedfdacc55f705422a87b4bdca3b888965b432a29bbe24459e290b9
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (88):
+Inmate is ready!
+Input length: 9437184
+Signaling inmate...
+Inmate is finished (polled 24 times at 0.100s/poll)
+Inmate duration (python): 2 s 436335 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: c5caf9578c3fe03a896bf8e91d23f317341462e91d25eb0e5f09f87d7f57eff726486dd7d9cd8c01e5980f1e623b5f19ff5d638cc3e32ec9df5aa49db0281c16
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (89):
+Inmate is ready!
+Input length: 9437184
+Signaling inmate...
+Inmate is finished (polled 24 times at 0.100s/poll)
+Inmate duration (python): 2 s 764087 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 3258cb623e301e84be025b7d0a0b6b426315659a896c61f7aa542c6b7a7a614666daf33cbf8387c40324eb6ac2321c184edfe74edf2a806a63c24220b8c54a58
+Workload output matches expected output
+*********************************************************
+Input Size=10485760
+Time=2019-12-15_00-29-27
+*********************************************************
+Iteration 0 (90):
+Inmate is ready!
+Input length: 10485760
+Signaling inmate...
+Inmate is finished (polled 27 times at 0.100s/poll)
+Inmate duration (python): 2 s 703683 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 94fffc0eb04bb62a1b6aded31a8bec2519f2d603ce7323e223245cd3545495ffe5b930356f81b8f23eff2113dfbc3f0783debe73c3630b5ef3e404630e02bebe
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (91):
+Inmate is ready!
+Input length: 10485760
+Signaling inmate...
+Inmate is finished (polled 25 times at 0.100s/poll)
+Inmate duration (python): 2 s 502932 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: df598ab64dc5dc49530fde47b867c4d293ebb595146d3bac6cb9a8b0c7a77d789928ec079426069cc4276acc77d09fa6a024f63970fad01d3908efb072b78b64
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (92):
+Inmate is ready!
+Input length: 10485760
+Signaling inmate...
+Inmate is finished (polled 25 times at 0.100s/poll)
+Inmate duration (python): 2 s 503050 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 9a3162b0a3c1a65bdfa1ddfe797b257f59f69e1bd29a5f89469ac99e29548b11413e26dc2c85e2e070361434ed7fd012d60e9944d9300ac7c4e1dd6e7a7c6123
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (93):
+Inmate is ready!
+Input length: 10485760
+Signaling inmate...
+Inmate is finished (polled 25 times at 0.100s/poll)
+Inmate duration (python): 2 s 503009 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 11d0fa5ae7c19f4f5b8d033e0f7f5c30ebb2adb88b5e820d7e721659fa1c94414926571bfa886e689ca265ee4429862bdceafd1b45097d1cb738c6a375d34691
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (94):
+Inmate is ready!
+Input length: 10485760
+Signaling inmate...
+Inmate is finished (polled 25 times at 0.100s/poll)
+Inmate duration (python): 3 s 179794 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 8b9dcdbaafbdf71fadafbaa5284934bb18ffc949eb9ac25b122be11b625fc4a8b345d8520818d6b55a67aa20c6dd8cfd97a1cf0cf44c55b0e7c146803005af80
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (95):
+Inmate is ready!
+Input length: 10485760
+Signaling inmate...
+Inmate is finished (polled 25 times at 0.100s/poll)
+Inmate duration (python): 2 s 541700 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: fe55880e352b3badd25e5133ca590a7d4da38c031c6c2d2abf3de3f6c5fa32d16478398624e1c191a8f17f2cafc6c92b6a17a00ba0c40d087cb34662010dc663
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (96):
+Inmate is ready!
+Input length: 10485760
+Signaling inmate...
+Inmate is finished (polled 25 times at 0.100s/poll)
+Inmate duration (python): 2 s 596429 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 498d3b12f17fe90f3104bf55bff2d4764b9e398837544c739a56f414dd017188541a498601c0433b53191a83f8881f1f62d506d474e24031bd9da071e8c3cb05
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (97):
+Inmate is ready!
+Input length: 10485760
+Signaling inmate...
+Inmate is finished (polled 25 times at 0.100s/poll)
+Inmate duration (python): 2 s 558354 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 312d7a8d6df8a6d293488f9a16e6cc9e37f8f8770d5ebaa1568e773da077b603bc25ca0a67fcfb57eb9004fc2a5a7e6596606163331bc65b4a6d206d89735738
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (98):
+Inmate is ready!
+Input length: 10485760
+Signaling inmate...
+Inmate is finished (polled 25 times at 0.100s/poll)
+Inmate duration (python): 2 s 539720 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 64d5779d4ff340391a5e6dbbc374b8c4e038f8ec524c0a214796b4b23c37ea00c49752732383d7b2cb29776f2fc3d82066c498113d1bf8189ae917368e031a36
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (99):
+Inmate is ready!
+Input length: 10485760
+Signaling inmate...
+Inmate is finished (polled 25 times at 0.100s/poll)
+Inmate duration (python): 2 s 783250 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 07da8e2ce2d5e9617ac6825ca4aa9883cebbfe293e07a134559b9ae5c14a6cdcec9d8685e0532c811eb08ae1b908306a4fb23746b28e8e6f0027443d98ebcd54
+Workload output matches expected output
+*********************************************************
+Input Size=11534336
+Time=2019-12-15_00-30-12
+*********************************************************
+Iteration 0 (100):
+Inmate is ready!
+Input length: 11534336
+Signaling inmate...
+Inmate is finished (polled 26 times at 0.100s/poll)
+Inmate duration (python): 2 s 603137 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 0f68cc89da347a8e0dfef9041880a594e7f9aac759afe8d71862651e084e47a03b9c3d46a47423aaecfe7ebce070381605f70de5253fc82dc453dc6079dc12e8
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (101):
+Inmate is ready!
+Input length: 11534336
+Signaling inmate...
+Inmate is finished (polled 26 times at 0.100s/poll)
+Inmate duration (python): 2 s 612892 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 0562ffd9ac0d28e26f43832ae1313b7a72a3670100793b64c58d4f661eec5a820d4bdb1e7f06fbb71ba04262bc6c5fc2c9d02754be7df5818c5a7b16995a24b4
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (102):
+Inmate is ready!
+Input length: 11534336
+Signaling inmate...
+Inmate is finished (polled 26 times at 0.100s/poll)
+Inmate duration (python): 2 s 603048 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 727b4eb82d4da64360c28cf32c9631c69097668e40f05b0b5fa24c9cc71bc7702c9537d707a401c6da5f0c72d77f95fb338547b377e203338bf19f566d5a2911
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (103):
+Inmate is ready!
+Input length: 11534336
+Signaling inmate...
+Inmate is finished (polled 26 times at 0.100s/poll)
+Inmate duration (python): 2 s 605538 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 0a540ac74df500ada6fbf1e592bb47870bce5d0d5ac292a8fd6d69af0a70699ef68e3b9d6e6863f54a6175dba5c1107c4bc38ef31c57cb4c2067256eb5a582cc
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (104):
+Inmate is ready!
+Input length: 11534336
+Signaling inmate...
+Inmate is finished (polled 26 times at 0.100s/poll)
+Inmate duration (python): 3 s 39267 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: f6ac0b1350ee6d471e05b2b3b0f594cc292726794e4951adda39888f335a5ee98a339c942c24284e3248c5d84797e2001028237df7000c202af7ec6a077152fe
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (105):
+Inmate is ready!
+Input length: 11534336
+Signaling inmate...
+Inmate is finished (polled 26 times at 0.100s/poll)
+Inmate duration (python): 2 s 675469 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 688df42731f8f80a3243627300d9ff3c4507555b93ad009dd6355b30c8e71fc1533edd54577c73ddbaf2a733147be3ab0cb65011cac2c020b8760a4a34461b20
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (106):
+Inmate is ready!
+Input length: 11534336
+Signaling inmate...
+Inmate is finished (polled 27 times at 0.100s/poll)
+Inmate duration (python): 2 s 748536 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 714d0f8ff614706d2b07722f946e6c5da0aa1e6b5a26d07eb84ae6ede04dcc272f356b8f66c5ff15e2c2d1f11ae7c68c05cd4e5b4a1c298b1a93646f0ad074a1
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (107):
+Inmate is ready!
+Input length: 11534336
+Signaling inmate...
+Inmate is finished (polled 27 times at 0.100s/poll)
+Inmate duration (python): 2 s 738333 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 39af9c5912843e7d16e1fa544d0f2aa77c52e0e7181a840b5070cfd3a16cc332153d8cdd7b19627c78175e5591d17f5169874b62c4aafb1bc773194b9967a0d7
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (108):
+Inmate is ready!
+Input length: 11534336
+Signaling inmate...
+Inmate is finished (polled 27 times at 0.100s/poll)
+Inmate duration (python): 2 s 738264 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 3a48aaf119514a980d67ed288138c9c39c6dbce78855df800e02034235e02bbf06199c8e2f8375768eb333fc65842180ea5170f91c65e241657bcb6eda273939
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (109):
+Inmate is ready!
+Input length: 11534336
+Signaling inmate...
+Inmate is finished (polled 25 times at 0.100s/poll)
+Inmate duration (python): 2 s 933475 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: fa3f215b0e606198c74a7a368b8c8f83533a06df8acee075180aa9e8f724794f5acbf8b3c183f34d051c7244fb60aa3a4ae4f245d59631eec83e65adec71ca46
+Workload output matches expected output
+*********************************************************
+Input Size=12582912
+Time=2019-12-15_00-31-00
+*********************************************************
+Iteration 0 (110):
+Inmate is ready!
+Input length: 12582912
+Signaling inmate...
+Inmate is finished (polled 28 times at 0.100s/poll)
+Inmate duration (python): 2 s 803338 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 2c0f249d7b96704fd28a76305e539356d148a67c0a74f2a7f377112fe5580fd0a104a738b306c4129075dac0d8da5f8d14a3278f9401986f9aabcc78f7386a44
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (111):
+Inmate is ready!
+Input length: 12582912
+Signaling inmate...
+Inmate is finished (polled 28 times at 0.100s/poll)
+Inmate duration (python): 2 s 803273 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: dc3637edff3ab9c06760c01d1374d30228123d7db1d309d283b7b1a028b9234b84db7c798c967f7a4b2e1b4f5ea69449316146959e21253418ee096e7a740771
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (112):
+Inmate is ready!
+Input length: 12582912
+Signaling inmate...
+Inmate is finished (polled 28 times at 0.100s/poll)
+Inmate duration (python): 2 s 803273 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: bbd0dd246d4a594e69ad6a517d00a9d7a0a415d5e453ce2423c2e9738f004ef040de837867554b9deece5b8cca6056145e21edd3650ed26c3b8dfcae5ccbf51e
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (113):
+Inmate is ready!
+Input length: 12582912
+Signaling inmate...
+Inmate is finished (polled 28 times at 0.100s/poll)
+Inmate duration (python): 2 s 809051 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 5085a6601e9918381657dfaaec180952ceed84e9b9bec49fa18f6cc69957a7221ff2dce10ece58b39898c9dcd1e13d115add264649e172f20558856b871afdec
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (114):
+Inmate is ready!
+Input length: 12582912
+Signaling inmate...
+Inmate is finished (polled 28 times at 0.100s/poll)
+Inmate duration (python): 3 s 555048 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 8909e86b2a097aaa59bb7763cdbf413d8416ee68a0aac0d35fb72312d3d57101de8a4de5923f69553bbd7806f7b277b3bd9294b60cf7c5af0bf5833791deecc8
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (115):
+Inmate is ready!
+Input length: 12582912
+Signaling inmate...
+Inmate is finished (polled 28 times at 0.100s/poll)
+Inmate duration (python): 2 s 887963 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 46752d87e6df08fc335274e95be653adbc1304f0bcd94970ede2d5f48504114c4beaa83d33e00b1698beb93e6fa4647a9954694cf41fcba8e137fa5a4045664c
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (116):
+Inmate is ready!
+Input length: 12582912
+Signaling inmate...
+Inmate is finished (polled 28 times at 0.100s/poll)
+Inmate duration (python): 2 s 845759 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 19b4e7edfd4f8962f5110c6756165db7146740cc6aba910a304e701425e1e5f1be5b7ce87d018366f09af2325b156d55ad0e3092a9fa204a8e8109ab68ffedfb
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (117):
+Inmate is ready!
+Input length: 12582912
+Signaling inmate...
+Inmate is finished (polled 27 times at 0.100s/poll)
+Inmate duration (python): 2 s 827685 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: e523b2674d517dd8e4b8361bba9a2d216dcb13bc2927fe6586113860605f7d64f8f6269af7b54c91bb6c4f3eb250da3ee787f0d8a6621e6d5508f4e5ca554deb
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (118):
+Inmate is ready!
+Input length: 12582912
+Signaling inmate...
+Inmate is finished (polled 28 times at 0.100s/poll)
+Inmate duration (python): 2 s 839626 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 2271e91866f77d9c7cf6e1e29b542e311336c2bb287e55411bfdc39253a57f6a06c0843218466f21923943c92c87b1a022b7dd5d825c07d8a2a542b7aa21b425
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (119):
+Inmate is ready!
+Input length: 12582912
+Signaling inmate...
+Inmate is finished (polled 28 times at 0.100s/poll)
+Inmate duration (python): 3 s 76628 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: aefbff7f584bb6b16a8d34474b5c02cd5e1dc0ab4f75fef5440f04e4aa3d06e06d6b99ef1bdbb66b2e8d5fda283e83ad7394901ff6f66b7dfb0d85c3c59ddde2
+Workload output matches expected output
+*********************************************************
+Input Size=13631488
+Time=2019-12-15_00-31-48
+*********************************************************
+Iteration 0 (120):
+Inmate is ready!
+Input length: 13631488
+Signaling inmate...
+Inmate is finished (polled 31 times at 0.100s/poll)
+Inmate duration (python): 3 s 103890 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 8affd505a7be2f601fc6d817c3eca69a92eef8baabf5fadef51110a3721a16a5e6098dbd45ab72b919ea9c16f7c2c2dbe60c5afbc355fe4de088fa7481bda426
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (121):
+Inmate is ready!
+Input length: 13631488
+Signaling inmate...
+Inmate is finished (polled 29 times at 0.100s/poll)
+Inmate duration (python): 2 s 903456 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: b955a42fe2ab710f4b660005ffaa1839b349473ed075b66cc64eed0d0981af9ddafa5a7d1a706b413c72345177cfa972dbded9444c96094cfca041e0e56288ef
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (122):
+Inmate is ready!
+Input length: 13631488
+Signaling inmate...
+Inmate is finished (polled 29 times at 0.100s/poll)
+Inmate duration (python): 2 s 904262 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: f20073a6856575390e6de8a5c2ca3cdbc1036975b7136c2bbe5cd9c8e2a2543eb4353ebb7527cdb9bc360c83de4ec550e756e29bfcf55c8f5e882171c865fdf9
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (123):
+Inmate is ready!
+Input length: 13631488
+Signaling inmate...
+Inmate is finished (polled 29 times at 0.100s/poll)
+Inmate duration (python): 2 s 911402 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 3d3633d28c757c4456fb21f8e06a7a563370e4e90cacc4f64f030e290bd60e47b4653f3cbb9d7bb2ddc77c1119a10ea73ca5fa7f0f4e1661701e40f6545dc78e
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (124):
+Inmate is ready!
+Input length: 13631488
+Signaling inmate...
+Inmate is finished (polled 29 times at 0.100s/poll)
+Inmate duration (python): 3 s 174022 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 638ee54b3f04b3898aabee9084083a85f5445eb7aa0a88b3ee1f274152f67e59812d86ceba5fae3e8574a2a22d6659b61d5b8a6ddbbdec94c63b0ec627c9f5eb
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (125):
+Inmate is ready!
+Input length: 13631488
+Signaling inmate...
+Inmate is finished (polled 30 times at 0.100s/poll)
+Inmate duration (python): 3 s 42951 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 7e8dfc8c0dae608613aa7744450109e6f758a568e76c5bcd47a77f241917b224912d9a3789a11b68905c347f5174998493499114eff7affce95c44f9112238b0
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (126):
+Inmate is ready!
+Input length: 13631488
+Signaling inmate...
+Inmate is finished (polled 30 times at 0.100s/poll)
+Inmate duration (python): 3 s 44338 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: a7d1717bddab0d326d975655d683a4e47b6f4ed0721dc05a271f21ea6b163ad11a4171d744011b7c06868c1ab8ab51cb09319e738770f25c87cc3c516d4790ea
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (127):
+Inmate is ready!
+Input length: 13631488
+Signaling inmate...
+Inmate is finished (polled 29 times at 0.100s/poll)
+Inmate duration (python): 2 s 992267 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 42509e8fb64a1713491e314cfa1fd4752193624d390b0e87ae7f3f4d254f73750fe07434e79674566ab2c420494c71b2725491ea630e569e0fa41a3517047515
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (128):
+Inmate is ready!
+Input length: 13631488
+Signaling inmate...
+Inmate is finished (polled 30 times at 0.100s/poll)
+Inmate duration (python): 3 s 49354 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 9e4c632944f76fa429931aab18cb24d20c68b2855aca7ddbe18c50c49616a7bb0d2ab19676adb908b90c7becba97ed3bde3a51a769330363ba0db1d5b5a745d8
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (129):
+Inmate is ready!
+Input length: 13631488
+Signaling inmate...
+Inmate is finished (polled 29 times at 0.100s/poll)
+Inmate duration (python): 3 s 494373 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 859581e4c92dde1899f84c711c820b123d389ab5742def6ded5fe993278e7c9a828b4f5295ebc37f5c3f23627f0a20bde2a6a0f8add67f6c6c5e990a921af8eb
+Workload output matches expected output
+*********************************************************
+Input Size=14680064
+Time=2019-12-15_00-32-40
+*********************************************************
+Iteration 0 (130):
+Inmate is ready!
+Input length: 14680064
+Signaling inmate...
+Inmate is finished (polled 31 times at 0.100s/poll)
+Inmate duration (python): 3 s 103688 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: fdd1a54c3bf6c7f08a4c155f971daea94211ad1020a793f27c5794ff450d47d13745ec7db3c6ec91cfb5638cca7dd68f49a3125adc0d7e67e3a4bc08987c9649
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (131):
+Inmate is ready!
+Input length: 14680064
+Signaling inmate...
+Inmate is finished (polled 31 times at 0.100s/poll)
+Inmate duration (python): 3 s 103705 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 330f16cbe2123481474feb71888435394b9d3c51b5b89159ff9087ce26010c08f96eec8e48145614306d238af446cf948b40b111fb20fbdb18bfba99b1a8557a
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (132):
+Inmate is ready!
+Input length: 14680064
+Signaling inmate...
+Inmate is finished (polled 31 times at 0.100s/poll)
+Inmate duration (python): 3 s 104166 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 8c77c2f7eb66d9be73d531d70fa25233e8b91e62cc57ba55c415be6eeaa62562d137ee5948fc7a0c42ebd2ee61ac834a620f3de382b507cc1fbaad39b180be2c
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (133):
+Inmate is ready!
+Input length: 14680064
+Signaling inmate...
+Inmate is finished (polled 31 times at 0.100s/poll)
+Inmate duration (python): 3 s 104888 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 0970ae920dd04d6edbb376aced0944f5bbf9ee6a938692ac380fc7ec6f297ad7e3cf743aa35837dcb2c27e092a4bd08f3458258fd04e5a62549a04251dfd035f
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (134):
+Inmate is ready!
+Input length: 14680064
+Signaling inmate...
+Inmate is finished (polled 31 times at 0.100s/poll)
+Inmate duration (python): 3 s 611515 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 23cfdfb6fce05fbcfe1e9a960dac8fdd4f84297c4852b9f4d74373625b18e0ca461020e94f60f034c86a959b614412ac880f79109f6d711bb9776a9793c3d80c
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (135):
+Inmate is ready!
+Input length: 14680064
+Signaling inmate...
+Inmate is finished (polled 31 times at 0.100s/poll)
+Inmate duration (python): 3 s 145722 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 9fe7d01c86a809ffa647e48ea2df1d50e0ddfe576ec79ee1a492c842134ed01c2b0ed0c24be00d6a0547061c69405c4489654464e1c5551caad5179ccb5f9da5
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (136):
+Inmate is ready!
+Input length: 14680064
+Signaling inmate...
+Inmate is finished (polled 31 times at 0.100s/poll)
+Inmate duration (python): 3 s 163689 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 54595afe1486851686b0e0dd71572132eb461d814f2aa30c5afab8f00a0fb9451da7ffb60e5d30a6080f15865bba6af611119c2353abe2f73989c156390d0c2a
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (137):
+Inmate is ready!
+Input length: 14680064
+Signaling inmate...
+Inmate is finished (polled 31 times at 0.100s/poll)
+Inmate duration (python): 3 s 145706 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 40391b4592b4cb65ccd36fc708d4a998a757838857c3276a83020e898b177ab6cff9048fae7432c79ddf56501c20975b795bac869b03081f1da53befb7f25523
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (138):
+Inmate is ready!
+Input length: 14680064
+Signaling inmate...
+Inmate is finished (polled 30 times at 0.100s/poll)
+Inmate duration (python): 3 s 127540 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 80e34febb185c1bfa93b020696ee38a4849276b244e24db0c7c8de1ae0ea0912b89921c85b3d9330c97e548bf57c14025aaa14881efecfa8d09af171a5a8c93a
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (139):
+Inmate is ready!
+Input length: 14680064
+Signaling inmate...
+Inmate is finished (polled 31 times at 0.100s/poll)
+Inmate duration (python): 3 s 772501 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 980775f4e3d0e7527fe9a147174703e6e6beacde9a6296764120b9fc76bab86f99e4fa8e29cb5c026d5402c6d49e529b30690687137f01888d40fbc5a824027a
+Workload output matches expected output
+*********************************************************
+Input Size=15728640
+Time=2019-12-15_00-33-33
+*********************************************************
+Iteration 0 (140):
+Inmate is ready!
+Input length: 15728640
+Signaling inmate...
+Inmate is finished (polled 33 times at 0.100s/poll)
+Inmate duration (python): 3 s 304811 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: e033b86b6be6c9f9cef15022156436f11029e600724d63eba9eaf48e8711fbbc2aa5336f36807edee02ac09f57e1abb32555b2ff5d70b166ad7c467073310e43
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (141):
+Inmate is ready!
+Input length: 15728640
+Signaling inmate...
+Inmate is finished (polled 32 times at 0.100s/poll)
+Inmate duration (python): 3 s 203866 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 75ec6970940a6bb289195b4c25f0e7b372ac1ab87b1d6c6e4e962feeab31e971a12b59232d55dfeebfacc7ecbab3f6af0c8c631b97cbe969d9edac320e4dde49
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (142):
+Inmate is ready!
+Input length: 15728640
+Signaling inmate...
+Inmate is finished (polled 32 times at 0.100s/poll)
+Inmate duration (python): 3 s 204725 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 594075d911b5c4a34523d53306428b34848b245a9166393298ca52dda7af14a978b08bea5d86e37d3f18c200520391b1a60309a106fbab4507d79543f51e9fdf
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (143):
+Inmate is ready!
+Input length: 15728640
+Signaling inmate...
+Inmate is finished (polled 32 times at 0.100s/poll)
+Inmate duration (python): 3 s 224026 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 52df0128bee4d4ce367ff2b91ce03ce1b6083f7ad9271b92a434942bb44aabc533ad448b23450bfee060589db608abf61fbd08f38da3c53b7c2b4767722231c0
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (144):
+Inmate is ready!
+Input length: 15728640
+Signaling inmate...
+Inmate is finished (polled 32 times at 0.100s/poll)
+Inmate duration (python): 3 s 768781 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: ecbc368af032404e0c3cf652972d3a3b806f985f20c2fdb24e82dfc810efc4110b0ebdae7898bc2f65af145092acb34ae050624b80004950d3953b360ba667a2
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (145):
+Inmate is ready!
+Input length: 15728640
+Signaling inmate...
+Inmate is finished (polled 33 times at 0.100s/poll)
+Inmate duration (python): 3 s 350465 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 389992c9bbef2ddd36d245e8089a06e0ffb7a6cf427a026f3861dfb052bef8901d40264dcd442dbaebbbd918ee889a47e2145394fb23eeb862a64c9fef23481a
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (146):
+Inmate is ready!
+Input length: 15728640
+Signaling inmate...
+Inmate is finished (polled 33 times at 0.100s/poll)
+Inmate duration (python): 3 s 344607 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: e15bc5529abdd13ea25b375bc9c1eb17b2966d7c103174ecca892d834ce3ed49d0c9f13df0169fbd48e6020ac8d151d27cd2d0fe6a8d189281dd235fda1443e5
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (147):
+Inmate is ready!
+Input length: 15728640
+Signaling inmate...
+Inmate is finished (polled 33 times at 0.100s/poll)
+Inmate duration (python): 3 s 350442 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 0d2315658c6a5fce72dcbd4dec4db8d901b929d05cb78f24cc66fd64e29213a1f4d6cae2778b92c00b3a24af27f0e8fc4642b1a45cae33dc354a046abfc5726d
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (148):
+Inmate is ready!
+Input length: 15728640
+Signaling inmate...
+Inmate is finished (polled 33 times at 0.100s/poll)
+Inmate duration (python): 3 s 344351 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 798a37399d692a91715282ee95e5d833038352b54fe39392d496f136cdad5f39895b525d41822343cada18751fd23d771dac524908636adba5b77f561cdc3e76
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (149):
+Inmate is ready!
+Input length: 15728640
+Signaling inmate...
+Inmate is finished (polled 33 times at 0.100s/poll)
+Inmate duration (python): 3 s 654994 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: dcf718129193533c5dfa8ac564cf0bf9c8c794f790936974b196bb04c0b04c82898dc6037b382061e146a9710e1f0645abf150e3ce2bf3c564795ffc703e3ab6
+Workload output matches expected output
+*********************************************************
+Input Size=16777216
+Time=2019-12-15_00-34-29
+*********************************************************
+Iteration 0 (150):
+Inmate is ready!
+Input length: 16777216
+Signaling inmate...
+Inmate is finished (polled 34 times at 0.100s/poll)
+Inmate duration (python): 3 s 404018 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 835101b6c0491040474bd1d3f798f74e5b25052220dee66f8a9ba2ac9c25abc99a432a5f6884926188fa8c0011060421cb49dce053ecb91194ae2299ca773623
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (151):
+Inmate is ready!
+Input length: 16777216
+Signaling inmate...
+Inmate is finished (polled 34 times at 0.100s/poll)
+Inmate duration (python): 3 s 411680 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 0cab81c49bf2fb2946f84ab7bc771d0e245bef12ce348f85d493a9e75ddbc4043c80c49360bd44df8f14b8231f3352d04a4aee699622dfe8a212dfe5d5933dc8
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (152):
+Inmate is ready!
+Input length: 16777216
+Signaling inmate...
+Inmate is finished (polled 34 times at 0.100s/poll)
+Inmate duration (python): 3 s 404007 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 9a67dc33de6fba279682070b25f60fa147308219f73601d852da856b5c7c626460489a0099ac08347e1503b985e55eb8cfba0eba17d41f5da5cca0cfc8c9013f
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (153):
+Inmate is ready!
+Input length: 16777216
+Signaling inmate...
+Inmate is finished (polled 34 times at 0.100s/poll)
+Inmate duration (python): 3 s 403994 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 5a31082bd7b3cc724c04616fdb66e50cc488f02b20aabcee2362a5ceff2d0fce8c1eec9dc8305db8c1ee311d955abef5bb6cfc5231a5b7c582ba27290d095719
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (154):
+Inmate is ready!
+Input length: 16777216
+Signaling inmate...
+Inmate is finished (polled 34 times at 0.100s/poll)
+Inmate duration (python): 3 s 781418 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 50f6d7cbb8cbeae4bfdfc45f3e8a512452cf8dc16788f09890ec013fe2cf3adecb40b30785a24340a15135990dce685ab0e3f1a7470d3967c50f44aab1f75ae0
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (155):
+Inmate is ready!
+Input length: 16777216
+Signaling inmate...
+Inmate is finished (polled 34 times at 0.100s/poll)
+Inmate duration (python): 3 s 451745 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: a06386d157314dd60121527c9b8b866949af4c9dd41c2a6a7d95cfed907f5fc293a4cc7dd8aca3d6d0266cccfc7d9ec702eb300d84c58376c0812d85bcedd502
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (156):
+Inmate is ready!
+Input length: 16777216
+Signaling inmate...
+Inmate is finished (polled 34 times at 0.100s/poll)
+Inmate duration (python): 3 s 502588 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 9f2ba942b96719c77b5c438e34d4be0c281e57d24d0b6034f191fefd04594a2697727a81bb3cba6091b172e2f4f3c3faad4e075c346d38b06cd5207469066547
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (157):
+Inmate is ready!
+Input length: 16777216
+Signaling inmate...
+Inmate is finished (polled 34 times at 0.100s/poll)
+Inmate duration (python): 3 s 445655 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: cb51525363b7b2f5bc6671923c937fb4d34be1d5f4e2f940e00fdd4fa929824876f3456c274172023bad4080decccb949bc3333f7c4af95fa3989c8ba0830dff
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (158):
+Inmate is ready!
+Input length: 16777216
+Signaling inmate...
+Inmate is finished (polled 34 times at 0.100s/poll)
+Inmate duration (python): 3 s 447747 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 087601eedfa1ac0aad3ef7b462f9d6b02cba058aabf38a648d00f3f018ee827610dd383bad139fda839f8161758c7fc6a3a25db5096007455086725dc471facf
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (159):
+Inmate is ready!
+Input length: 16777216
+Signaling inmate...
+Inmate is finished (polled 34 times at 0.100s/poll)
+Inmate duration (python): 4 s 163806 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: ae6d5ee28bfa50661dec3febae25585f1ef1db0de1fc1d29df99a49c76f91d8d4676bdb73bd46235af6d20bd70dbb83658c90c3ae53cd08a1819a66941b02be0
+Workload output matches expected output
+*********************************************************
+Input Size=17825792
+Time=2019-12-15_00-35-26
+*********************************************************
+Iteration 0 (160):
+Inmate is ready!
+Input length: 17825792
+Signaling inmate...
+Inmate is finished (polled 35 times at 0.100s/poll)
+Inmate duration (python): 3 s 505105 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: d93d81c4bb368a4e69b5e90981b6b9b017f06190b8f71847993cf72fbb9db6eceaf1248f9a3f3177a5d80ff5024a4f901a66cf51015c0a01108687c7f30e3c57
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (161):
+Inmate is ready!
+Input length: 17825792
+Signaling inmate...
+Inmate is finished (polled 35 times at 0.100s/poll)
+Inmate duration (python): 3 s 512579 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 74e4be557beba6d652be860ea67b2d602796bc97626b97dc8a671f204a4b9943eeeb5dd323e8fb50a295270475acfb4df198b598f0a06520c56b728ae90741a9
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (162):
+Inmate is ready!
+Input length: 17825792
+Signaling inmate...
+Inmate is finished (polled 35 times at 0.100s/poll)
+Inmate duration (python): 3 s 505116 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 0bbacdb982d353f39aef6804926196e510f655e4fe6170d4080d114aa8b02ffcc50567069667442c58052b148ff9e48d2fe24b2b9fd5c46f830f8dbfaa384986
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (163):
+Inmate is ready!
+Input length: 17825792
+Signaling inmate...
+Inmate is finished (polled 36 times at 0.100s/poll)
+Inmate duration (python): 3 s 605122 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: f0a38b42fb03ac7b34aa21e8ac3d4a9a432812e22db9d8c07324d29ffca70c0be58f4b7bdd8a4fbd601b4c28c8ed30adab3c345b727d8d3cbb710df3ce117cb7
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (164):
+Inmate is ready!
+Input length: 17825792
+Signaling inmate...
+Inmate is finished (polled 35 times at 0.100s/poll)
+Inmate duration (python): 4 s 253780 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 167e938f6daa6c13e7ed11c2eb34df917bc9347138d2ee43651ec85a32981519d047ce060a3b897d9c5bf589e373a3c5f824f676c18128313a869b64af52031e
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (165):
+Inmate is ready!
+Input length: 17825792
+Signaling inmate...
+Inmate is finished (polled 35 times at 0.100s/poll)
+Inmate duration (python): 3 s 642292 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 17b6df2fef3c949b178793a2196ed92c881b7d1f952b24727bbd861a266655fcaebbcd8f5767216e6e9173fce315217f0c11319f4d03ef0f82515dc7e46af531
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (166):
+Inmate is ready!
+Input length: 17825792
+Signaling inmate...
+Inmate is finished (polled 35 times at 0.100s/poll)
+Inmate duration (python): 3 s 600438 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 72e907685ef7f48f717165d88dbb0300305865d9d6790c20f1070ccb02f82e55cfdd380048e6971cd951a52d4c9c816fd1284bb626a9943c75b6513ff852507f
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (167):
+Inmate is ready!
+Input length: 17825792
+Signaling inmate...
+Inmate is finished (polled 35 times at 0.100s/poll)
+Inmate duration (python): 3 s 562545 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: ed865e7d19dbe0c3083ff2ea08b0bdd66a8aa9b9857d8e7a3beed7f6945812a770728b5fe14b5480e496b4ff253f177ff3e95213c6398717abe04439662a143c
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (168):
+Inmate is ready!
+Input length: 17825792
+Signaling inmate...
+Inmate is finished (polled 35 times at 0.100s/poll)
+Inmate duration (python): 3 s 601277 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: b1cb3c4e7fa3ccf8dcf8b3cdab817b71ec5a6223b8c3c3c2640765e5e8f4b951f0bffa2209f14def244cff11a8394b00c987b9aee15497bec7948c2f6efbf255
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (169):
+Inmate is ready!
+Input length: 17825792
+Signaling inmate...
+Inmate is finished (polled 35 times at 0.100s/poll)
+Inmate duration (python): 4 s 221074 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: ddd1248e769de762ea2c0714bc7da61689a450a6041e755a7f60fb82baad34f765edb0237e88525da95e1d41ce7b937a6df3dd9c5f5459f095d4a5a7ec3837fa
+Workload output matches expected output
+*********************************************************
+Input Size=18874368
+Time=2019-12-15_00-36-25
+*********************************************************
+Iteration 0 (170):
+Inmate is ready!
+Input length: 18874368
+Signaling inmate...
+Inmate is finished (polled 38 times at 0.100s/poll)
+Inmate duration (python): 3 s 808250 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: aa532096a32e74351adeff25bdf57fd336c6b6510ba365a06f0cae39491caa674d6b600e19313faba64b4176caf1d6216539d2f61d2484aeebc2c51e36bdc027
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (171):
+Inmate is ready!
+Input length: 18874368
+Signaling inmate...
+Inmate is finished (polled 37 times at 0.100s/poll)
+Inmate duration (python): 3 s 704474 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 27c4a10d97bc158fe33cb938f8c7857f39e2fe2550a56edd96e60f6576179e19d513bf770ef138d5c31c87593b4e20f21ede7aad58e1fc761889051adbf2d9f8
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (172):
+Inmate is ready!
+Input length: 18874368
+Signaling inmate...
+Inmate is finished (polled 37 times at 0.100s/poll)
+Inmate duration (python): 3 s 706411 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 5c1be75020ebaea1ea9a2dfa60295d5db49c32932d905aebc0b6ce3692a059fe750e233f850897b0ba1cdbc0bdd2892923713962a390a740c5bcd5f059a89995
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (173):
+Inmate is ready!
+Input length: 18874368
+Signaling inmate...
+Inmate is finished (polled 37 times at 0.100s/poll)
+Inmate duration (python): 3 s 705774 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: c9c4408c29b56171a1217b6021417a8d059358d3d004c78e18d6a50d117295a38ce342e2d65bd30906962a2f76a7bb4e28664e7ad5707b1c75cd5321440d96c3
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (174):
+Inmate is ready!
+Input length: 18874368
+Signaling inmate...
+Inmate is finished (polled 37 times at 0.100s/poll)
+Inmate duration (python): 4 s 237444 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 123972b5abf3b6bd266c69df472c4c4e19fa01f8c307dd334d8e8f2749073c36af7e1a9222d3a09571113d3bfb3d73e16405f19fa56ae5fb75f37f4fd5d5f27c
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (175):
+Inmate is ready!
+Input length: 18874368
+Signaling inmate...
+Inmate is finished (polled 37 times at 0.100s/poll)
+Inmate duration (python): 3 s 768387 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 5aba33df895c28aafaa4e1510961480c2ea2d18d7bcc207e3258a48cfdebe586ab64b83902ee32e1120fef6d05508a13cae69bd3a72fb328fc7743698d6803d6
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (176):
+Inmate is ready!
+Input length: 18874368
+Signaling inmate...
+Inmate is finished (polled 36 times at 0.100s/poll)
+Inmate duration (python): 3 s 760523 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: bc4021be41f043c10e43626ec47d7c7e35f8e97a9bfffee5505f007966d51204dbae8b7623de48ded558d6e9b776d0bbcbc40371fc081ae3001239a21df83062
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (177):
+Inmate is ready!
+Input length: 18874368
+Signaling inmate...
+Inmate is finished (polled 37 times at 0.100s/poll)
+Inmate duration (python): 3 s 770004 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 3e30e2313130f7de8100d1dd790dd0c04652390a2bbf4e50a18b8ae5800d67800f8d68abee298d4a5077ca67b97401d5614015d36520b9870ac01a3f8f44a664
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (178):
+Inmate is ready!
+Input length: 18874368
+Signaling inmate...
+Inmate is finished (polled 37 times at 0.100s/poll)
+Inmate duration (python): 3 s 761842 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: b4fe9f566672cbb9db81dce7bf4c9f4481c484dfb1c8fb6f5e3e59f39d62973e382124004796ac3edf743e079ec50cd9c4b72b26666647adde625f82d5d8f2cb
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (179):
+Inmate is ready!
+Input length: 18874368
+Signaling inmate...
+Inmate is finished (polled 37 times at 0.100s/poll)
+Inmate duration (python): 4 s 233561 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 6ef9fa8f2952cb771cb63ce1201fca388b7720a4e4e34ea6266a2b71a0c993dda7ac6302e215288813b6a150b600a9b437a7e68b41cb1bd7d9d06b5e88624a05
+Workload output matches expected output
+*********************************************************
+Input Size=19922944
+Time=2019-12-15_00-37-28
+*********************************************************
+Iteration 0 (180):
+Inmate is ready!
+Input length: 19922944
+Signaling inmate...
+Inmate is finished (polled 41 times at 0.100s/poll)
+Inmate duration (python): 4 s 105908 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 3b4971b1586738f51a3e9e49a1b40745fa3af148506e174995c2424a369e1e801b6f11dcbb26ea1705c415b760d973a3ecf4a97f9c7f031b3bed6d439a13e58c
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (181):
+Inmate is ready!
+Input length: 19922944
+Signaling inmate...
+Inmate is finished (polled 38 times at 0.100s/poll)
+Inmate duration (python): 3 s 805451 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 93e20446c0f838c5cd8201e6d8ad59f7d1cc74535b8ae2cf2cb3f825cda49f75a69051dbd52fab64e2df92731bc867faf262c544fd7485a41b616bdd165985c3
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (182):
+Inmate is ready!
+Input length: 19922944
+Signaling inmate...
+Inmate is finished (polled 38 times at 0.100s/poll)
+Inmate duration (python): 3 s 811604 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: b794c7276814bc48e7b8679dee10a9c69596ae197693653287ee019d6d0e2833719b235ddbc3af9fc9b3a7381a98b52a1f5ae012acc3c831b84a127c39808d62
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (183):
+Inmate is ready!
+Input length: 19922944
+Signaling inmate...
+Inmate is finished (polled 38 times at 0.100s/poll)
+Inmate duration (python): 3 s 814783 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 919362cf7fe2888205ad9899a34e849f3d400a62750b996da8075e75d6c3202c93b6cc946c4c02a369d421d725801665bba7edc3eef1bc277fa4c0279d00c40f
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (184):
+Inmate is ready!
+Input length: 19922944
+Signaling inmate...
+Inmate is finished (polled 38 times at 0.100s/poll)
+Inmate duration (python): 4 s 84905 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 9c5332028b8fe7df9398bb6c4329dcdda1ed617358bbe7d1db9c661dd547d71983945f8119104b473f6daa9cd0b3c28b472cc50b334ca748cbfd866d66fcdf0e
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (185):
+Inmate is ready!
+Input length: 19922944
+Signaling inmate...
+Inmate is finished (polled 38 times at 0.100s/poll)
+Inmate duration (python): 3 s 911633 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 4a511471ec91ac2d83971ee7b6909b45df20a0992f802f82f21278d12c15cf781ff49aa77c5d5ff47caed863fdf1fdc3c99fc10999b03163982a586c0af62aac
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (186):
+Inmate is ready!
+Input length: 19922944
+Signaling inmate...
+Inmate is finished (polled 38 times at 0.100s/poll)
+Inmate duration (python): 3 s 860043 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 8fa670b6bceada45387cd6dd849dc43f3a682d4c5e3c9c0dd7e76b13aa227181e314d95c50d752a9078f4298e04499bff55313c34a3ef639fcf49af6ee9659c3
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (187):
+Inmate is ready!
+Input length: 19922944
+Signaling inmate...
+Inmate is finished (polled 38 times at 0.100s/poll)
+Inmate duration (python): 3 s 863181 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 1d0ac34a020399b0309fbb725593face0ce7e99e9b25efe6a293f9dac02ffa53e8579eb6aa0509d12523bc4b6f6b7089ceaefdc85b886629626f39bf0f3821ee
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (188):
+Inmate is ready!
+Input length: 19922944
+Signaling inmate...
+Inmate is finished (polled 38 times at 0.100s/poll)
+Inmate duration (python): 3 s 855034 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 70612848ebadd968fe8fa6a2ea5f89024d5d873b064c5d29929bdca2912fe7c40ad7b5a65af612216eb84445498eb57f51661ff4bec41c47aa7ca9172dff69bb
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (189):
+Inmate is ready!
+Input length: 19922944
+Signaling inmate...
+Inmate is finished (polled 38 times at 0.100s/poll)
+Inmate duration (python): 4 s 514125 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 38649d27178c5d1d26e15fd486acdcf9f57ab01fb627c117a7bc8721d5fb84802970bce104c6c4e933d85ac404ce84c1678787abb5a376b28a1922a1773e6924
+Workload output matches expected output
+*********************************************************
+Input Size=20971520
+Time=2019-12-15_00-38-30
+*********************************************************
+Iteration 0 (190):
+Inmate is ready!
+Input length: 20971520
+Signaling inmate...
+Inmate is finished (polled 40 times at 0.100s/poll)
+Inmate duration (python): 4 s 7312 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 8ce69f95a9358f57a81d42238045227302027495ffc220fc066b8fbc9254cddde4088744e15c2dad97c55f7096a6d1c16ee643cb01125f03bba2f1f4d943073c
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (191):
+Inmate is ready!
+Input length: 20971520
+Signaling inmate...
+Inmate is finished (polled 40 times at 0.100s/poll)
+Inmate duration (python): 4 s 10708 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: d5c2e28eace1a4cf5a3f1f7a720f772c8a5c90ccf1a04d119cbbc8610470eeb3d2201336f425144fcf14056dce3db0a01794f1b6484abda9360d642f3fc4999f
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (192):
+Inmate is ready!
+Input length: 20971520
+Signaling inmate...
+Inmate is finished (polled 40 times at 0.100s/poll)
+Inmate duration (python): 4 s 14041 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 2ff5fa6a7347f79a02266b2b764b269000e7f9ee089bc84c88dedc692e09fe3ffad87fba4c20857bfab9fa184337504df2ec33242434a5f4eda77e679a62fef6
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (193):
+Inmate is ready!
+Input length: 20971520
+Signaling inmate...
+Inmate is finished (polled 40 times at 0.100s/poll)
+Inmate duration (python): 4 s 5684 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 2492814aeed31782cd0c226cadddb558536f4d0c0abff6907edfb0f781847346b55741b3df6c5557db21c4cf951e3a8d088b3a78e2d6e28233670ac75777d314
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (194):
+Inmate is ready!
+Input length: 20971520
+Signaling inmate...
+Inmate is finished (polled 40 times at 0.100s/poll)
+Inmate duration (python): 4 s 244267 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 0080ae2e737d58ef37e7cb9639b8220b2f118999528f50277f7dc6726eb3b4369f01c4f4ce4289c844d2dc0c214f402ddac575dc66ac5328b19369940484601c
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (195):
+Inmate is ready!
+Input length: 20971520
+Signaling inmate...
+Inmate is finished (polled 40 times at 0.100s/poll)
+Inmate duration (python): 4 s 57929 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: bd492692cc6d48490af53c52e1249d23e7ca95b96e2f70b51aa8336942f987fe82fffa1b856cf63aaa65156b8e4931aad945cfebec36bddf822d7ed5b3d2c322
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (196):
+Inmate is ready!
+Input length: 20971520
+Signaling inmate...
+Inmate is finished (polled 40 times at 0.100s/poll)
+Inmate duration (python): 4 s 53126 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: d3878b875a31de7071bd3781f8d57cd1f61887f7fc2bd6bc3c573f2b19d28f8e3212315369fde6b4f7288d2887d5c1285d70846fd5d11363fe91a4574dd9bfdb
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (197):
+Inmate is ready!
+Input length: 20971520
+Signaling inmate...
+Inmate is finished (polled 40 times at 0.100s/poll)
+Inmate duration (python): 4 s 61756 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 939a937232b8d38d5a867fbdf225a64ac18136de67a3a58c12942a3091269064baef0cae90ae551ced981971182c00d5c2f62673eb71d6a92a842c2ac688e859
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (198):
+Inmate is ready!
+Input length: 20971520
+Signaling inmate...
+Inmate is finished (polled 40 times at 0.100s/poll)
+Inmate duration (python): 4 s 73112 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 0c42439f319368d8d8842a43a5c03e90630a0d7b7bf3da7586862b94049c2f7d62d7d5a44e16fb31d32246e8031b196ab924747f13f5d409ed0d2921b33c9e38
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (199):
+Inmate is ready!
+Input length: 20971520
+Signaling inmate...
+Inmate is finished (polled 40 times at 0.100s/poll)
+Inmate duration (python): 4 s 663594 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 3e9b5ca02986bb2915e1884e34aea5e9446267a42895d0da8c01542bc677bdec646448bdb12ee18822b80dff20ab615b99d0923d428c2c29cfc3d1b40247c3a8
+Workload output matches expected output
+*********************************************************
+Input Size=22020096
+Time=2019-12-15_00-39-37
+*********************************************************
+Iteration 0 (200):
+Inmate is ready!
+Input length: 22020096
+Signaling inmate...
+Inmate is finished (polled 41 times at 0.100s/poll)
+Inmate duration (python): 4 s 104721 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 45da76f9484c87da177a949bb6f780131d201364faf86d605929c2b5bcef5a3fbb71c6c46fd9c82f2455a133326f86cf4d8cdb88e6c2a755146f22de3c68280f
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (201):
+Inmate is ready!
+Input length: 22020096
+Signaling inmate...
+Inmate is finished (polled 41 times at 0.100s/poll)
+Inmate duration (python): 4 s 105886 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 817bad78f7f7b8af72a381828af3191bdbcc261955e42e506fed22a12436dd8273ac74687cf1400452188507252ec2498b0cae04038cfee51c325d09a8117620
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (202):
+Inmate is ready!
+Input length: 22020096
+Signaling inmate...
+Inmate is finished (polled 41 times at 0.100s/poll)
+Inmate duration (python): 4 s 104837 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 96dc694ff20fe69024ab600422172ce63f61e50ea7ba829cf08794e47ddfb0b9e38cf00a2e91d6e9a712cae2880d9fd6579977e11e4020473958ad1eaa209113
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (203):
+Inmate is ready!
+Input length: 22020096
+Signaling inmate...
+Inmate is finished (polled 41 times at 0.100s/poll)
+Inmate duration (python): 4 s 106193 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: e300b348e631e12abc32366beb4e09c3f413e90bceff88a20b2fd64cf47d8c83c535498e8988346f7a82ebccb3cd45a4ff1a4ae028af10d5fea2e5475b02c030
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (204):
+Inmate is ready!
+Input length: 22020096
+Signaling inmate...
+Inmate is finished (polled 41 times at 0.100s/poll)
+Inmate duration (python): 4 s 673386 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 79f69896627be2b8cc96346b9427be086f22f4c1edd01ad5bb07d26faa0dde2ee9cd996ee41b9a582acb52d5559a94936711c0de2d8e67144b89e1deea2a80f4
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (205):
+Inmate is ready!
+Input length: 22020096
+Signaling inmate...
+Inmate is finished (polled 41 times at 0.100s/poll)
+Inmate duration (python): 4 s 154510 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 2431bca414ee91458211457d7133549d3665afbb2d989f6441f29051c4d6aa7064c7277c0c0949d904c22ccc2f61b059f10f36785375ee3247c41cb9356f7c68
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (206):
+Inmate is ready!
+Input length: 22020096
+Signaling inmate...
+Inmate is finished (polled 41 times at 0.100s/poll)
+Inmate duration (python): 4 s 158529 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 8099634ae63e881b0f2ca161849d1a2a6f6f7d172f21fc38dd35c673118fedee7cb63ba98ea0704bdf39fa8edebf3fd20a0d7b9edbab791702e5e9dcfc306363
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (207):
+Inmate is ready!
+Input length: 22020096
+Signaling inmate...
+Inmate is finished (polled 41 times at 0.100s/poll)
+Inmate duration (python): 4 s 219565 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: dcce4ccc34a4fba13852a67d28093cf46816ae0da3c491747992b1067e22e4b9e21aaf28819a51e23772b619a3a70a234b82285c321a4fd8f662fa50ca8dc1b9
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (208):
+Inmate is ready!
+Input length: 22020096
+Signaling inmate...
+Inmate is finished (polled 40 times at 0.100s/poll)
+Inmate duration (python): 4 s 172426 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 22ab7d145d1f8bbaedbb7d6e6c4f6d723705ece27b435bbab50a59cc07d27570afed3a34af6235ba36803073d7b5c2f1306034a79cee99c488e707e4cafa9a12
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (209):
+Inmate is ready!
+Input length: 22020096
+Signaling inmate...
+Inmate is finished (polled 41 times at 0.100s/poll)
+Inmate duration (python): 4 s 545241 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: afa0f69934877a4a91a1a5bfb606e2d8dead951ecc9ccf993b10f34c2386678ddb3f90552ef4e55bcb37909a3f152dc4d3eab7ac3ef404218fb8ef59ab3d7947
+Workload output matches expected output
+*********************************************************
+Input Size=23068672
+Time=2019-12-15_00-40-44
+*********************************************************
+Iteration 0 (210):
+Inmate is ready!
+Input length: 23068672
+Signaling inmate...
+Inmate is finished (polled 46 times at 0.100s/poll)
+Inmate duration (python): 4 s 605588 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: d98868811852af2c0905d44cdc9fe4c431ad19e1d724a79069c0fa649d2c3dffe330bbdf81876929678f1ef5e86ce31f965b0b4215a72008dafc9ca6f7ed93d5
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (211):
+Inmate is ready!
+Input length: 23068672
+Signaling inmate...
+Inmate is finished (polled 43 times at 0.100s/poll)
+Inmate duration (python): 4 s 306079 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 6a1c23a00b2374285a230074416dcce1f4758d743b988d965b8c717e8327605bcc4b11ca99a37171f267aabf78da118c1fc7b7673e3068a5969588fe3d1c893d
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (212):
+Inmate is ready!
+Input length: 23068672
+Signaling inmate...
+Inmate is finished (polled 43 times at 0.100s/poll)
+Inmate duration (python): 4 s 333070 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 4534f3dcb740579bd3c55c16397d6b95820756ec3f8610ffb2f2e25a8d2b427bc66a213f35112cdb78df41637e5e21bb093336e5d3aa9e0f278bd94ded528fd0
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (213):
+Inmate is ready!
+Input length: 23068672
+Signaling inmate...
+Inmate is finished (polled 43 times at 0.100s/poll)
+Inmate duration (python): 4 s 305037 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 851b33e2886cf726834c39a7e27310a764cd3f2f80e2bb08d01b75fb0a5c98dc6e993c9a4c259b4ebb2257bae023dceab3906b8c3084758acc9727119c30e5c3
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (214):
+Inmate is ready!
+Input length: 23068672
+Signaling inmate...
+Inmate is finished (polled 43 times at 0.100s/poll)
+Inmate duration (python): 4 s 705578 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 94a6b5423777a02554432fb2ad5f0020e13e9dff4a3eb1206156a9a4a0ec5025bec258ac5822a9c44257397208925cd123367b3c40fc6ae929a015adf364f2bd
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (215):
+Inmate is ready!
+Input length: 23068672
+Signaling inmate...
+Inmate is finished (polled 43 times at 0.100s/poll)
+Inmate duration (python): 4 s 364922 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: ecac1f252d391c0c8a9d91bcbba5920dd4acb590ab6fcd073cb3946f9837935e5f0157b9002fdfaa5ac04f0d54e45502f7aa49cf4ff9be913cf0ec61c87666ac
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (216):
+Inmate is ready!
+Input length: 23068672
+Signaling inmate...
+Inmate is finished (polled 43 times at 0.100s/poll)
+Inmate duration (python): 4 s 363694 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 342e1e88a3a631c1aa1ab719e12a26eea393269b930ece0ebe907e479782337d7682ed7894430e8bb7c43cd3d1e509241f5f5eb1c2c14aac322647fbf7dc6aa7
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (217):
+Inmate is ready!
+Input length: 23068672
+Signaling inmate...
+Inmate is finished (polled 42 times at 0.100s/poll)
+Inmate duration (python): 4 s 301431 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: ffa3336c7b743c5edc5f19c34518f898ad588c863d300e373ba1df84ad1196e8bc3b1ec1964025ef88838eb71598294995219a10833a1e56a8cab83b7d9e1441
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (218):
+Inmate is ready!
+Input length: 23068672
+Signaling inmate...
+Inmate is finished (polled 42 times at 0.100s/poll)
+Inmate duration (python): 4 s 304514 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 78e1a454986cca8d4eecf36db469045777b8b2ed35bbd970c88213447c21348b2602685d279cf302d1017d7a690c9a27cff66bb091500784c01b33af0dfe35a3
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (219):
+Inmate is ready!
+Input length: 23068672
+Signaling inmate...
+Inmate is finished (polled 43 times at 0.100s/poll)
+Inmate duration (python): 4 s 693210 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 6b2292853435a4bd450503499a7a8cd82c4b8db92a2a44d050bf98c9b6a16bc11f98702b61361a4c187ab7ea4373b156af76643462e275803bf3bb580c9f63af
+Workload output matches expected output
+*********************************************************
+Input Size=24117248
+Time=2019-12-15_00-41-55
+*********************************************************
+Iteration 0 (220):
+Inmate is ready!
+Input length: 24117248
+Signaling inmate...
+Inmate is finished (polled 45 times at 0.100s/poll)
+Inmate duration (python): 4 s 505266 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 975af64c302a048deabaa2498450f34f91d424165f366a7718cec709bbcf16cedf803f15b52d9deda60e49a39cfdfd234051aa35aeb6e5cfeaf0e72e1fdeca17
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (221):
+Inmate is ready!
+Input length: 24117248
+Signaling inmate...
+Inmate is finished (polled 44 times at 0.100s/poll)
+Inmate duration (python): 4 s 408475 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 79963488751e77d77745a523e442c4e6db3ce73d7749656b041bd6fdd5ec40b77e792132f63cb1665fe0846cd4870c8fc8a56c143cdfec64b677390bba1f558d
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (222):
+Inmate is ready!
+Input length: 24117248
+Signaling inmate...
+Inmate is finished (polled 44 times at 0.100s/poll)
+Inmate duration (python): 4 s 414349 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: fb6b244a0f8569589fda7a217847b3be9b0b502302aaed4962db93ec46835ac89c04431d58e0a38562761cde7292e57987661109ba9bbfc4bd224a49a031475a
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (223):
+Inmate is ready!
+Input length: 24117248
+Signaling inmate...
+Inmate is finished (polled 44 times at 0.100s/poll)
+Inmate duration (python): 4 s 405215 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 9463d9d777e2ee8e10e11f24bdc2c66364ba422389fef95e2475b739e2fc942ac119c27e8c92b09d663f21e5d6a9f282b228630210d5d56b096435275f04c306
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (224):
+Inmate is ready!
+Input length: 24117248
+Signaling inmate...
+Inmate is finished (polled 44 times at 0.100s/poll)
+Inmate duration (python): 5 s 134886 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: a9225a6f8e668c54e5607f69187654bc800164d283afa72c022a253bad06252c1255dcb46f99e404ce17040d33ff7c6659e07ff997d46d03b167d0f63ddbf854
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (225):
+Inmate is ready!
+Input length: 24117248
+Signaling inmate...
+Inmate is finished (polled 44 times at 0.100s/poll)
+Inmate duration (python): 4 s 458993 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: ec444f6e62fc5b0e2f6789feaccfa951690b39d26b6c38d38bbf57b7c698ea3dc1b642bc08bcf081731f4e35cadded38f2614cd13235700586a1aea5b97b74ca
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (226):
+Inmate is ready!
+Input length: 24117248
+Signaling inmate...
+Inmate is finished (polled 44 times at 0.100s/poll)
+Inmate duration (python): 4 s 475254 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 149ccf9169a78806320b74b65cb87edbab9782617ee767c721c32d2dba1124d3afcfc2cedee8fcdc1bb693ecde1c8782094701f6238e93fc6d09e523e764fbf0
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (227):
+Inmate is ready!
+Input length: 24117248
+Signaling inmate...
+Inmate is finished (polled 44 times at 0.100s/poll)
+Inmate duration (python): 4 s 463149 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 328f137a34e750c7dd5fc525d87d4526d43bb0c3afb86a8b6a5c33c073704e3bcc40c9a2130e81859055aa6aff2e17295ecfe5826c65dab736925d65579795fd
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (228):
+Inmate is ready!
+Input length: 24117248
+Signaling inmate...
+Inmate is finished (polled 43 times at 0.100s/poll)
+Inmate duration (python): 4 s 493563 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 72ece74117e3c8fc6e65fd63c5787cf1621a8dd6cdd7b6836e2bd53a25fc3d53a483b23dfce4867d17fdf02a4c7dc5909607a7e6ec0095461b01aecc9e8eb3cc
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (229):
+Inmate is ready!
+Input length: 24117248
+Signaling inmate...
+Inmate is finished (polled 44 times at 0.100s/poll)
+Inmate duration (python): 5 s 106456 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 101f5ba670f56aca2bb47608fe1a5d9c344c6b22b8bdebd4ff17f6107904b2347382da16afa64bcb6d13cf4bca55f67f32d4714548d693136d898dce11e96660
+Workload output matches expected output
+*********************************************************
+Input Size=25165824
+Time=2019-12-15_00-43-06
+*********************************************************
+Iteration 0 (230):
+Inmate is ready!
+Input length: 25165824
+Signaling inmate...
+Inmate is finished (polled 46 times at 0.100s/poll)
+Inmate duration (python): 4 s 607527 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 8d28d8142c3e04cda9698532d5ce0aa7bae5800e2b565422fc59a87eb1c2329030bd53784b5f719c949fc84128527a31b502e8bb9dda20974ebdc5cd644bdf4f
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (231):
+Inmate is ready!
+Input length: 25165824
+Signaling inmate...
+Inmate is finished (polled 46 times at 0.100s/poll)
+Inmate duration (python): 4 s 605541 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: b32f1d69da82a1bba229a2d270c899dbad744e7a830ed880fe867b48069bbafeafa160faea1e4cae696fb867949bcfb2e29289903d91b646f6bf3507e763bc93
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (232):
+Inmate is ready!
+Input length: 25165824
+Signaling inmate...
+Inmate is finished (polled 46 times at 0.100s/poll)
+Inmate duration (python): 4 s 606649 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 062d114c9b60f18fb05a3b7b80531e931f736371193f0c809fad1b4e2e8d72882cfb92f1154ed3762089fdef799d41111067cee5c692e558468367dfe0c92cf5
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (233):
+Inmate is ready!
+Input length: 25165824
+Signaling inmate...
+Inmate is finished (polled 46 times at 0.100s/poll)
+Inmate duration (python): 4 s 610189 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 8cad377cbac9824600da541f5b7f4173c0d90facd53419a005db5175883d7caa5818370db84bea1a9ee268150e79477c84dfc35bc2ce024498226d3ce823f52d
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (234):
+Inmate is ready!
+Input length: 25165824
+Signaling inmate...
+Inmate is finished (polled 46 times at 0.100s/poll)
+Inmate duration (python): 4 s 852473 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: c5685ffd358b3c0f735227e1f1677d06502a1a792ef0983d2ccc4ed650f8438b4a30fb842890b30d83f7636a2935f77bdd784e2a26b346dc8e24ff8a56315bee
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (235):
+Inmate is ready!
+Input length: 25165824
+Signaling inmate...
+Inmate is finished (polled 46 times at 0.100s/poll)
+Inmate duration (python): 4 s 665192 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 5aa4157a6e131e717705025dec2ac9b83e035b6c59e56b8a6386f3ee67721442fb69d77dd708413e14de9037425c094dfe08b2cba649487d1ad6268299c1535e
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (236):
+Inmate is ready!
+Input length: 25165824
+Signaling inmate...
+Inmate is finished (polled 46 times at 0.100s/poll)
+Inmate duration (python): 4 s 667891 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 09b2ee52b4ce359fad53fbfab7189fc7b66a2cd77bd04b133763a775fbce9bd3a3e9736dbc01e2eca91d1a69318db6d92e2c96fb61625a8e3a9c8fbac8d01f89
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (237):
+Inmate is ready!
+Input length: 25165824
+Signaling inmate...
+Inmate is finished (polled 46 times at 0.100s/poll)
+Inmate duration (python): 4 s 667876 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: bfc3480ca88eb58aedee67a31e0563d865125c40bb45839ae499342954549bd851ae7301e002baac910ae64b1fc2d57eb3c85dc1ba4132b7a86999f6bc39fb09
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (238):
+Inmate is ready!
+Input length: 25165824
+Signaling inmate...
+Inmate is finished (polled 46 times at 0.100s/poll)
+Inmate duration (python): 4 s 678031 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 294b24571eb8535187146b20517de1971224161b32cf0303eec37fad51cf2a2643853cbf1a8b343c0b16e1fd2e52e5ec55bf56c2fd119aad994e1c52066a322d
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (239):
+Inmate is ready!
+Input length: 25165824
+Signaling inmate...
+Inmate is finished (polled 46 times at 0.100s/poll)
+Inmate duration (python): 5 s 252322 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 83a9fa6cc98c972ae39ace4ac4963535fca1d594628ebe0b94db596e91750c2751bc2fce3b6227f94da645b6ecb36acf65157b9164c2db1e8684677fc8c524c0
+Workload output matches expected output
+*********************************************************
+Input Size=26214400
+Time=2019-12-15_00-44-19
+*********************************************************
+Iteration 0 (240):
+Inmate is ready!
+Input length: 26214400
+Signaling inmate...
+Inmate is finished (polled 47 times at 0.100s/poll)
+Inmate duration (python): 4 s 715089 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: cd8b611d00c37752e755b0fdabc09fc2153889f5b9d6a175e216dbd413874fade71c74bc07678194998f09d00d9022b9bcdd21e15299785550d4f6506cd4e0fe
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (241):
+Inmate is ready!
+Input length: 26214400
+Signaling inmate...
+Inmate is finished (polled 48 times at 0.100s/poll)
+Inmate duration (python): 4 s 805679 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 5758d43f73171a13ea0ef3ea1f029bbc9ba74594be9f20372d08c0e5bb16bd82ee05277c49a9bad3c97d315856bed1b539c2eae1db95be8e2f5a8db684c13b52
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (242):
+Inmate is ready!
+Input length: 26214400
+Signaling inmate...
+Inmate is finished (polled 48 times at 0.100s/poll)
+Inmate duration (python): 4 s 809327 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: e1f0c97b7c4169418215ac5c567572ddd74ff7dfcbb3659beef7dcbd16e793eb8183b189d1e01bbf3ae2b49f3fbe4094b15d127dbdff0ecc3489ba9f43160d9c
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (243):
+Inmate is ready!
+Input length: 26214400
+Signaling inmate...
+Inmate is finished (polled 48 times at 0.100s/poll)
+Inmate duration (python): 4 s 810231 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: b08b69ebaccb9a7fce646a52f7bca0b842537181a5c95b868e085d32e1b0b7a68e8781566996dcd96e51da4dd56b3ab016c08c881e5b80f196e658c9bf90c22b
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (244):
+Inmate is ready!
+Input length: 26214400
+Signaling inmate...
+Inmate is finished (polled 47 times at 0.100s/poll)
+Inmate duration (python): 5 s 445817 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 0814bf2cfcefbbf305f2aae2b910e54e5ebf5f8ce267c63343286e852f6aafdaaae0d86e6fec5dc0da8b083f7d674f7744dd0b7bc784131a1bcc7947a9aad7c7
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (245):
+Inmate is ready!
+Input length: 26214400
+Signaling inmate...
+Inmate is finished (polled 46 times at 0.100s/poll)
+Inmate duration (python): 4 s 734673 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: f205397c48929e0e9dd5a52ef2d4c599ab5ce53825b2c630b7c6bad1d89b0f62842445ad783a6ee61832d3b36b61f15b4ddfa7530113b871cf31b103bd0102f7
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (246):
+Inmate is ready!
+Input length: 26214400
+Signaling inmate...
+Inmate is finished (polled 47 times at 0.100s/poll)
+Inmate duration (python): 4 s 821112 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: ede16e6b3844fc2c76950eb3ffa7e93705bf38c726dc7ceb77b1b99767758f22439ae4221633a44a956fa2bba19f465b40a701a6d1432c017edd465dd69c2406
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (247):
+Inmate is ready!
+Input length: 26214400
+Signaling inmate...
+Inmate is finished (polled 47 times at 0.100s/poll)
+Inmate duration (python): 4 s 783023 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 5599874b854c281bd86968a918061642e9d89cc3419240c51df917507fc49a946678f8fc5442cc2edf2bc9a96fed9ef9e96ab8ca706ce8d39a329c295021bcde
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (248):
+Inmate is ready!
+Input length: 26214400
+Signaling inmate...
+Inmate is finished (polled 47 times at 0.100s/poll)
+Inmate duration (python): 4 s 763092 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 15fb0415e0fb1dd11eb73253cdab2e822e22247697732e0f7dd2bfd018af77e0cd1717fef0e80298bd275b30f3aad84708e6686a48de24453ecf3408dde32f03
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (249):
+Inmate is ready!
+Input length: 26214400
+Signaling inmate...
+Inmate is finished (polled 47 times at 0.100s/poll)
+Inmate duration (python): 5 s 407581 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 1680acd1086f365ee80dba00aa1f5fd3c465d7bf2c49dc33b35605a051cab4ec6b509ee5249f047622c9986070c0d9ae7e0af3659d3e3f45474aa03268c389a7
+Workload output matches expected output
+*********************************************************
+Input Size=27262976
+Time=2019-12-15_00-45-35
+*********************************************************
+Iteration 0 (250):
+Inmate is ready!
+Input length: 27262976
+Signaling inmate...
+Inmate is finished (polled 50 times at 0.100s/poll)
+Inmate duration (python): 5 s 7341 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 348d98df35291e67e2c3848684f547f316cb4983cae0f57dde1a357c96c0e6aabab7d7dac9a0e334b1d554ccdcc87aa9c86b7a20448b8c7687160645c98f8468
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (251):
+Inmate is ready!
+Input length: 27262976
+Signaling inmate...
+Inmate is finished (polled 49 times at 0.100s/poll)
+Inmate duration (python): 4 s 909790 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 4218d9ab4d166e4d305156de5d5d4013cfe21162c5201992931bb832d6555712677065fb18b9f7a9a62e06d59685e468fb85a682a5c31fe57426a8a3ca9dfdef
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (252):
+Inmate is ready!
+Input length: 27262976
+Signaling inmate...
+Inmate is finished (polled 49 times at 0.100s/poll)
+Inmate duration (python): 4 s 917235 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 2c62356095d314f48f0c125b1518d8e77dfa9eeb16c2402b761c13f18cc898c44621d9f95205317e0dbf43313e72e039792633bc1b694c1cb4db595c5273f8ce
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (253):
+Inmate is ready!
+Input length: 27262976
+Signaling inmate...
+Inmate is finished (polled 49 times at 0.100s/poll)
+Inmate duration (python): 4 s 906628 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: f15c6e9b8030ad4e0aa3750aa7bd809a61b19737eab07b5e4995b77faedcb6fe7be7765b15d15f83367d9b85e8ad7832138598d18f7e8966b08bef1fe040bfc0
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (254):
+Inmate is ready!
+Input length: 27262976
+Signaling inmate...
+Inmate is finished (polled 49 times at 0.100s/poll)
+Inmate duration (python): 5 s 676279 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: b29275e902497016adf3e71b4d839b782beb46bbfe87e507f8726000480935da972b4d05a52c60a9f0d15d4d2a2c091a12f8c7689b0115021e02b39b281bfd13
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (255):
+Inmate is ready!
+Input length: 27262976
+Signaling inmate...
+Inmate is finished (polled 48 times at 0.100s/poll)
+Inmate duration (python): 4 s 950893 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: c144bb5c57cbf0f09d89f59b710f5fd01cebf8c0af3a3ff29a95c0693646e39304518a19bac16a61d86f39dd19cf7816984333cc37d97daca270c6d8be98b5f9
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (256):
+Inmate is ready!
+Input length: 27262976
+Signaling inmate...
+Inmate is finished (polled 49 times at 0.100s/poll)
+Inmate duration (python): 4 s 977971 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 55ce6201d29f47fc99e59f672232d0afaec782cb6578a12131c53cded876e13993db9cf8369892341aaa2fb9761483c086bde73be08cc94776a8410cb5e5e636
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (257):
+Inmate is ready!
+Input length: 27262976
+Signaling inmate...
+Inmate is finished (polled 49 times at 0.100s/poll)
+Inmate duration (python): 4 s 969860 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 844401338156427eaa6e7e703e3c20e625c169ef603ce8f41fdb0927b11b5c00cd2da5a6340ad6bfc9b76b1864b432ad68b85c267b501b5fcf63563c0ae65c1b
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (258):
+Inmate is ready!
+Input length: 27262976
+Signaling inmate...
+Inmate is finished (polled 48 times at 0.100s/poll)
+Inmate duration (python): 4 s 942872 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: ea0a7db70eac83ce576967945318471ce8e90cb244c7d61dbaa891c795996375050007d64e5a2f31c0d82f21b14a6c7024cd69ab3b7f6438673832abcec86af3
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (259):
+Inmate is ready!
+Input length: 27262976
+Signaling inmate...
+Inmate is finished (polled 48 times at 0.100s/poll)
+Inmate duration (python): 5 s 646488 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 69735d5ac4dcb0d6b9c6d6f33f8303460a8e0bfe60c412f0c8a501773010360debd194bb3a4eb810c346a944f7a5be5b93dc8efdaf54fde59d5d3234db4143aa
+Workload output matches expected output
+*********************************************************
+Input Size=28311552
+Time=2019-12-15_00-46-53
+*********************************************************
+Iteration 0 (260):
+Inmate is ready!
+Input length: 28311552
+Signaling inmate...
+Inmate is finished (polled 50 times at 0.100s/poll)
+Inmate duration (python): 5 s 5907 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 928710d6df24cd52e91ab620a8c63be19768cb58f3d093ce6fa0b860c2b083ac08ba1b91f80db8d5733b001c068f57afa376018a2f5743acff34e79cdfac0422
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (261):
+Inmate is ready!
+Input length: 28311552
+Signaling inmate...
+Inmate is finished (polled 50 times at 0.100s/poll)
+Inmate duration (python): 5 s 13922 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: b74497981e017063177b058954b04fb59deddf763ce1aea684c4622c7a3fd858add7a3b5dd3a583562304b321306f623769a17bb5ffc3145b0aceab4363f9558
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (262):
+Inmate is ready!
+Input length: 28311552
+Signaling inmate...
+Inmate is finished (polled 50 times at 0.100s/poll)
+Inmate duration (python): 5 s 14642 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 75649996076482b51078af4a0b479ef26ee588a6bd4fac0379331db130ca39255c21c458e1a897e38b1d7ef384962912a9b6c20144334cf3328872bf5c122ce2
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (263):
+Inmate is ready!
+Input length: 28311552
+Signaling inmate...
+Inmate is finished (polled 50 times at 0.100s/poll)
+Inmate duration (python): 5 s 14712 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 9bb76071f83f07f303049cc18372405131b060f7ad375f3d337addfc8260fbc1382efdc9164b4425f9f0bdd81b51ae798e42d0d46766daa4fde1c0f954111758
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (264):
+Inmate is ready!
+Input length: 28311552
+Signaling inmate...
+Inmate is finished (polled 51 times at 0.100s/poll)
+Inmate duration (python): 5 s 828901 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 376e57f0cf3bb4989c384c7450172cea6c46540c47fbc4cb70ddcb342b8d535151fcde8f2dd2eb907a688a9958081ef765e3309b11c4d862129c291aa4188066
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (265):
+Inmate is ready!
+Input length: 28311552
+Signaling inmate...
+Inmate is finished (polled 49 times at 0.100s/poll)
+Inmate duration (python): 5 s 43858 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: c7a9b82b864de8d37f8dd48653e5365ee32986e278b2c6772021387f9012de4e24f1f29e42397e4183a75879f30bd378f5e6aceb6ab87d242ea73b2cd7099025
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (266):
+Inmate is ready!
+Input length: 28311552
+Signaling inmate...
+Inmate is finished (polled 50 times at 0.100s/poll)
+Inmate duration (python): 5 s 67120 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: f4f748ba8070ffb24e7cbbb7c6da47915c5fa9ff237f40bd88737b3d39169c41965795ff45cd55c8d208ffa4c5bc92ca5f91fef4434370789679e6dc84b46fff
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (267):
+Inmate is ready!
+Input length: 28311552
+Signaling inmate...
+Inmate is finished (polled 50 times at 0.100s/poll)
+Inmate duration (python): 5 s 71930 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: da40bf3ab06b1e687493ded7179a4c6d84baa27ef5e6b9f817974e6fa9dd9bba56c43f34c2c5b364e0185c82a791e66e3039b3e2f4fd09740df8e8189351aa5b
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (268):
+Inmate is ready!
+Input length: 28311552
+Signaling inmate...
+Inmate is finished (polled 50 times at 0.100s/poll)
+Inmate duration (python): 5 s 75483 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: f136f6347814e34f1c16e5ff18602876a9817400d551b7eeed6e89e9b8a4f558297ea824419cf937058878bd68c95f515f92ef1f62ee65d43dbeb717bc653321
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (269):
+Inmate is ready!
+Input length: 28311552
+Signaling inmate...
+Inmate is finished (polled 50 times at 0.100s/poll)
+Inmate duration (python): 5 s 794837 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 130c7632d40f4ec98ce525d9c7bccbc7e9e69e916c3daf8e1994438a770048175a028004666c03bb564a063fbb81521771ae1e1e6d3a277b77bb5d9cef6e3467
+Workload output matches expected output
+*********************************************************
+Input Size=29360128
+Time=2019-12-15_00-48-13
+*********************************************************
+Iteration 0 (270):
+Inmate is ready!
+Input length: 29360128
+Signaling inmate...
+Inmate is finished (polled 52 times at 0.100s/poll)
+Inmate duration (python): 5 s 216057 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 144dbea988ce71d87864a130d00cc23bf7342536fab6dbd71ad076a185c5008a32e29035c852df2d8fcc2e53acdc1386307c09fa9321105b4c9189a9785efee4
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (271):
+Inmate is ready!
+Input length: 29360128
+Signaling inmate...
+Inmate is finished (polled 52 times at 0.100s/poll)
+Inmate duration (python): 5 s 206904 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 6702c61905f40f5218bfa6b33410ecfad9148f201a0f07d97d839eac2b123887d5bcc87f1053c3161480b3f752b306b9a3455e3abd507054e9500c0a8cdc9912
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (272):
+Inmate is ready!
+Input length: 29360128
+Signaling inmate...
+Inmate is finished (polled 52 times at 0.100s/poll)
+Inmate duration (python): 5 s 212951 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: dcee19ff9acf7e739bcccb67cfd0c3088eafffe60836bf340c2ee799021fad4e2ea191dcfe83363d23b0171e842cdc71f164262070da58843faf5c8aef605247
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (273):
+Inmate is ready!
+Input length: 29360128
+Signaling inmate...
+Inmate is finished (polled 52 times at 0.100s/poll)
+Inmate duration (python): 5 s 206317 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 33e4a2bceaad06ae394ec6824a47b6c6b524cb46415e9400306dc802d9d4d2fb020e93be617c06d552ba8f10de7a2681dc8ac3a56509fdf789644446579eda6c
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (274):
+Inmate is ready!
+Input length: 29360128
+Signaling inmate...
+Inmate is finished (polled 52 times at 0.100s/poll)
+Inmate duration (python): 5 s 742254 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: d5f7f7b1cbe820143939f711e8823ae97c3d2b4aa60d98d28a870a72fc549dc6b22dad42cbb6be1fc1758fc5603b4377bd90b383842e7c085cd17c94fe4317ea
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (275):
+Inmate is ready!
+Input length: 29360128
+Signaling inmate...
+Inmate is finished (polled 52 times at 0.100s/poll)
+Inmate duration (python): 5 s 275206 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: daf8c07bd18ab279e4241e125a6d091f3f3999d237d97d059d0bbfb7dd005e03580ee92b7578df1b8a5f2c208966f017c0b6bcb4b3da127e0cb8565941d6283e
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (276):
+Inmate is ready!
+Input length: 29360128
+Signaling inmate...
+Inmate is finished (polled 52 times at 0.100s/poll)
+Inmate duration (python): 5 s 275900 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 9dfc37a3624a4a95eec013216e0c4fa4fc1a970939a55e863486b873b633cbff10485b491b3ea2a39920ff84b05d1f9e3db03542d9e22332f4caa43935c5db12
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (277):
+Inmate is ready!
+Input length: 29360128
+Signaling inmate...
+Inmate is finished (polled 52 times at 0.100s/poll)
+Inmate duration (python): 5 s 271756 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 8b5f0182f37a261b76558b6e153b3cbbadcf081d69065975263958a16b22425f53d2072605537dbf4cf29b94c3697229b921581047fed6f5e28556b7191544ae
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (278):
+Inmate is ready!
+Input length: 29360128
+Signaling inmate...
+Inmate is finished (polled 52 times at 0.100s/poll)
+Inmate duration (python): 5 s 286027 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 087ec5c1776a629240e188c375156aeddd6597ac9e2ac1d6a2728593c2ef1867e739c4564b00f0ddb68a1e2a014058d2f401fe7448bc3be0a1a177b4bd0aa27d
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (279):
+Inmate is ready!
+Input length: 29360128
+Signaling inmate...
+Inmate is finished (polled 52 times at 0.100s/poll)
+Inmate duration (python): 5 s 589168 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 94266723e8362bff3652f4f566d30f8b8acf1916bbdc35cfab918d7024720d2ae2489a4b382cb80369c31be269a3518755802874ebfb3b32b257e8cbebedb1dc
+Workload output matches expected output
+*********************************************************
+Input Size=30408704
+Time=2019-12-15_00-49-36
+*********************************************************
+Iteration 0 (280):
+Inmate is ready!
+Input length: 30408704
+Signaling inmate...
+Inmate is finished (polled 54 times at 0.100s/poll)
+Inmate duration (python): 5 s 411430 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: e73520c8d9b264666ea5cab4fe47c060950d253ed58a88f2b542054e42a970fa397906808da6cfced3f042f075298589f90bebcf9c798a39a572e69be5dcb6a8
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (281):
+Inmate is ready!
+Input length: 30408704
+Signaling inmate...
+Inmate is finished (polled 54 times at 0.100s/poll)
+Inmate duration (python): 5 s 418151 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 0f348d59fbb587884d67bca8605cbeeea2540f7454123c547c7b70790731a090932c31e096fafd762e1326e544ce46680acdb18723be2480d2de8dfffe8cab2c
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (282):
+Inmate is ready!
+Input length: 30408704
+Signaling inmate...
+Inmate is finished (polled 54 times at 0.100s/poll)
+Inmate duration (python): 5 s 412576 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 64bfd686406c1ec9b19b6f80e153a3e1d35d37d622b4aed8cb96745f6288a3ac5cd9139ba50e181249562e87625a7cd322f5a491a19ddf3dcf83a0a224ff3cfd
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (283):
+Inmate is ready!
+Input length: 30408704
+Signaling inmate...
+Inmate is finished (polled 53 times at 0.100s/poll)
+Inmate duration (python): 5 s 309244 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 0b46945f7df1df48291dfe76fbe810ffbd2e9afa7f3d3c266f742d9cd5576b385a1ff6652fa9c445273eef05f16d8389603edded4d8b8f9b6ff7916e64f67b5b
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (284):
+Inmate is ready!
+Input length: 30408704
+Signaling inmate...
+Inmate is finished (polled 54 times at 0.100s/poll)
+Inmate duration (python): 5 s 604243 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 99053235c7e37c26b65f4e4d4512e60c6bc0257fda0cb0d466dca67c37d27db6b97a37342722f9c86cb2c9cf0c4351890628abd958e49b32df925e9b123909f5
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (285):
+Inmate is ready!
+Input length: 30408704
+Signaling inmate...
+Inmate is finished (polled 53 times at 0.100s/poll)
+Inmate duration (python): 5 s 376345 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 731ede82b566d70566cc9bbef8c1e90b4cd72c3915f5a6606c9a0c677bfda0b495c33f24dc2166cde191b1272abc12597f8d6b4d3909d401b888c58b14caa52a
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (286):
+Inmate is ready!
+Input length: 30408704
+Signaling inmate...
+Inmate is finished (polled 52 times at 0.100s/poll)
+Inmate duration (python): 5 s 344012 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: d594d3bc3330e3ad1ebf1048928856539c9e595b9a099aba063492e56329fe1386034d7f09d1c5ac1d00fa2d1663d4d12cf30a5008b21d4643ad56575142f6d5
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (287):
+Inmate is ready!
+Input length: 30408704
+Signaling inmate...
+Inmate is finished (polled 53 times at 0.100s/poll)
+Inmate duration (python): 5 s 370666 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: a7172caceba2cf1af767b3536ba63b2bb7a202b247da9bace7edb85ad8b0d5670a87df40efe470044e88fdd47e1108fedeb7b6c0f36e6e5681c94f4913ad10dc
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (288):
+Inmate is ready!
+Input length: 30408704
+Signaling inmate...
+Inmate is finished (polled 53 times at 0.100s/poll)
+Inmate duration (python): 5 s 375141 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: fb172de6dd356d61a09d4cbbe570630f734f1df6588e05258a0be6d8f3b117a1cac2d885ddad3c4623e52297d17855c20385b13d9585cfd178c0791b8f87dbd0
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (289):
+Inmate is ready!
+Input length: 30408704
+Signaling inmate...
+Inmate is finished (polled 53 times at 0.100s/poll)
+Inmate duration (python): 5 s 730714 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: c7fdeb38b3bb0546b9fe839859ca614c7ab9db4679079cc9e4a33f3780c6e9c94ffee80f1c09fb77d9c051df45ac9d4db4e9ec71d3437d639dbd1cb2b76447f8
+Workload output matches expected output
+*********************************************************
+Input Size=31457280
+Time=2019-12-15_00-51-01
+*********************************************************
+Iteration 0 (290):
+Inmate is ready!
+Input length: 31457280
+Signaling inmate...
+Inmate is finished (polled 55 times at 0.100s/poll)
+Inmate duration (python): 5 s 522093 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: d280b46f50172fbbd23d29ee561a0f5b4b82f682c14e38f2d9716c68c879a4ae369e714dd17447a7a6236b6b093e6b9536688497557ac8c3973284769afeccac
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (291):
+Inmate is ready!
+Input length: 31457280
+Signaling inmate...
+Inmate is finished (polled 55 times at 0.100s/poll)
+Inmate duration (python): 5 s 507696 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 5b23c4817971fbc8ae76a5ff2cdc5b42ba2ad0407c7a72efe99f17752811e8448438cdb69235dcbcb05521cc7d139cf98503b10b476acf027057786d47871521
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (292):
+Inmate is ready!
+Input length: 31457280
+Signaling inmate...
+Inmate is finished (polled 55 times at 0.100s/poll)
+Inmate duration (python): 5 s 509987 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 80cc385659def0f4a80257e45d22fcc7fd6a119492702c53cc68ab81689875a4995f70f409e70bfd32b6587469def7f0f65ae9bd15390d3ba90e7f66e44091b2
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (293):
+Inmate is ready!
+Input length: 31457280
+Signaling inmate...
+Inmate is finished (polled 55 times at 0.100s/poll)
+Inmate duration (python): 5 s 513269 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 01bb2a74af7964c771cf7cf5be3e119206c4dd3f51aa3d6d0e3078caad93dce79e58094c696ecdcf2e92cc2b54cbaabe4b43659604be0b43053e5f635c5a6e91
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (294):
+Inmate is ready!
+Input length: 31457280
+Signaling inmate...
+Inmate is finished (polled 55 times at 0.100s/poll)
+Inmate duration (python): 5 s 901862 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 6fcc6240e1fd0e62977cf7fadf64c60a64888abe52425d664f4a33d7fbefa9ed72d47af481a125cabaf450749c9cefb63967ae0f42a7134b6a41abd17911539f
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (295):
+Inmate is ready!
+Input length: 31457280
+Signaling inmate...
+Inmate is finished (polled 53 times at 0.100s/poll)
+Inmate duration (python): 5 s 525055 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 978565c9b5b7b12b42cb94607005ee4e96795d8228a3a0d0bf4e99e827de11ab49144696dba47305af8207eba1d9f3d4068106d4e6f42abe09de7e4485b44f17
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (296):
+Inmate is ready!
+Input length: 31457280
+Signaling inmate...
+Inmate is finished (polled 55 times at 0.100s/poll)
+Inmate duration (python): 5 s 577769 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 81542d7a938ad8655284077b553149e7860fc6355633dbd7c62ab84acfb7333cc9c1d533100cf08f7fc72dc0cdb0ac9fe1154351508e81f14a424dc6d1747c6c
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (297):
+Inmate is ready!
+Input length: 31457280
+Signaling inmate...
+Inmate is finished (polled 54 times at 0.100s/poll)
+Inmate duration (python): 5 s 484600 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: d0a5eaa8aced5f2269b192a6a33eed2d38de5fb8a0966fa5060d538fcfe97d032fb211362fc973fd3ec4e8673362e3cff108359e35bcad19af95969719287f3e
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (298):
+Inmate is ready!
+Input length: 31457280
+Signaling inmate...
+Inmate is finished (polled 54 times at 0.100s/poll)
+Inmate duration (python): 5 s 485257 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 3a6815043574011aab2b6f1d338fb2824241e41110d1cd4e528b9aa0af44d5ed3183ae6f0c274fe96fc0bddf3458688a995627d2c86eb453a461e8875382a8f4
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (299):
+Inmate is ready!
+Input length: 31457280
+Signaling inmate...
+Inmate is finished (polled 55 times at 0.100s/poll)
+Inmate duration (python): 5 s 743955 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 39fac3aeebe3b9e91100d075d9993b37624b277fc8984033cd141f384449a27ed522bfcfd4c6746ca5243768c8cea7d4fb651de0bb00d52a2c9bfb4ce6aa23e1
+Workload output matches expected output
+*********************************************************
+Input Size=32505856
+Time=2019-12-15_00-52-27
+*********************************************************
+Iteration 0 (300):
+Inmate is ready!
+Input length: 32505856
+Signaling inmate...
+Inmate is finished (polled 56 times at 0.100s/poll)
+Inmate duration (python): 5 s 619450 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: e41eb40846400ceaa5d7065a3906f9ba93d18252e22f5af4ce39100b025bee6684a460b16b00ed057e2df9815ed470f0344b4a43cf54ff6c932e7ec07eb86ee1
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (301):
+Inmate is ready!
+Input length: 32505856
+Signaling inmate...
+Inmate is finished (polled 56 times at 0.100s/poll)
+Inmate duration (python): 5 s 622129 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 30d21a7b60be924de53913e00254446327f0283fba23f234c48421ab17c7c8979bbf3b4783bb0aac9bd0db3b40fe594af41d142bf357c5cdeb0d9136eb791685
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (302):
+Inmate is ready!
+Input length: 32505856
+Signaling inmate...
+Inmate is finished (polled 56 times at 0.100s/poll)
+Inmate duration (python): 5 s 617750 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: cef210d0ca14e1e7281d40a51d49c4ddd69d06624e72173adabb75c62ee53ec5e882d85dcdfbb2684d82b39aa3659de951faec20b9878a40b67a856315217463
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (303):
+Inmate is ready!
+Input length: 32505856
+Signaling inmate...
+Inmate is finished (polled 56 times at 0.100s/poll)
+Inmate duration (python): 5 s 611885 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: c794a0c37152cbf3bcb92c610b3d854a798b48d5155491f54a68ad58ed04df5a49ac865846e3df74749b2eedf0730a900bfb30e8b35140513374616ee5ebcddf
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (304):
+Inmate is ready!
+Input length: 32505856
+Signaling inmate...
+Inmate is finished (polled 56 times at 0.100s/poll)
+Inmate duration (python): 6 s 192751 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: fb7d91d7b53230bdc70dccd2953c29fbdff18987a5fd4f47c5ea8ece4cdd226419dda357568bf3f35682c8a8f221ea20e3c904cc249fc72b2f284886b77256bb
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (305):
+Inmate is ready!
+Input length: 32505856
+Signaling inmate...
+Inmate is finished (polled 56 times at 0.100s/poll)
+Inmate duration (python): 5 s 679176 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: cd973f0b2a45399e33de65e87c9a2ff0d0770b3f902ca556cf650e2e17d541fb12ff2929c09bbdeebd31106235b1afd8be96dc77721475dc56eb456d3e33e81b
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (306):
+Inmate is ready!
+Input length: 32505856
+Signaling inmate...
+Inmate is finished (polled 56 times at 0.100s/poll)
+Inmate duration (python): 5 s 675201 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 4b50b810953f7181820db2b9d0df6b4e2c62f2b01aaf728ed4163dbe2af5edeb0257b77699d67b7cf44ea4398477d2e0d1afc4fdd158526310cd5dec3b6cab66
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (307):
+Inmate is ready!
+Input length: 32505856
+Signaling inmate...
+Inmate is finished (polled 55 times at 0.100s/poll)
+Inmate duration (python): 5 s 655029 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 1fe940b928097228c3100c1745ab3dc0c63600667721343e6e0f8debd94aa3c81c4cbabada42e6fbb95a8bcf98d8d2d01f5b0c72bd5d74e95c9fb2386bba4c8f
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (308):
+Inmate is ready!
+Input length: 32505856
+Signaling inmate...
+Inmate is finished (polled 55 times at 0.100s/poll)
+Inmate duration (python): 5 s 676954 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 305667bdfb34ad960291db121b611ef74e0608c8fc358dfe0f34c4a14c2b45008d5d5b221618ad6dbeafd7b1ced0297e87107e38d443f007bcbf4a76f7f50bc9
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (309):
+Inmate is ready!
+Input length: 32505856
+Signaling inmate...
+Inmate is finished (polled 56 times at 0.100s/poll)
+Inmate duration (python): 6 s 26331 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: afa8eeb62365e1837ea7a9bc8a43dfae471a8af49742736f7b584cca4ddbd0f015e991d3002f3ba4e9f22969cc3e696da057c9a44bdbed7a8cb3e566c1df678a
+Workload output matches expected output
+*********************************************************
+Input Size=33554432
+Time=2019-12-15_00-53-58
+*********************************************************
+Iteration 0 (310):
+Inmate is ready!
+Input length: 33554432
+Signaling inmate...
+Inmate is finished (polled 58 times at 0.100s/poll)
+Inmate duration (python): 5 s 808437 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 09c8824e6ac7305ea20131db72cd4dc1e663b0f304f15fbcb799baef9c1428831b6163a486ea66c0e7fb613025ea99b1e9695571566e5aa35ba68615ac9a0dae
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (311):
+Inmate is ready!
+Input length: 33554432
+Signaling inmate...
+Inmate is finished (polled 58 times at 0.100s/poll)
+Inmate duration (python): 5 s 808957 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 25cb043cd8a0b2b289c2ab5876e5882f95eb5f35e38eb627619746ae3e03fd3b5b95cd8b9c848d0fc8b6eb7c91fe0a8eb6eae20e703b83ac052f3b213e8f2575
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (312):
+Inmate is ready!
+Input length: 33554432
+Signaling inmate...
+Inmate is finished (polled 58 times at 0.100s/poll)
+Inmate duration (python): 5 s 811778 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 25f4414d22068ce3f140ea27305a94035ff3ecad2b9079385ffad5fa8be584826aaa7fbab66c695c9ac571a14154edde5c52ba88f2857c57f47a96130f852200
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (313):
+Inmate is ready!
+Input length: 33554432
+Signaling inmate...
+Inmate is finished (polled 58 times at 0.100s/poll)
+Inmate duration (python): 5 s 811709 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: ee8e125d8ee6449304986ed273d20c0476f6968c527604c50cbbe7882ca777f09ee6524203c7b4d6b63c9f60591558ccf8098258543f107e9006fca400170803
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (314):
+Inmate is ready!
+Input length: 33554432
+Signaling inmate...
+Inmate is finished (polled 58 times at 0.100s/poll)
+Inmate duration (python): 6 s 582109 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 026ac11425c7533d4ec8137de70695094b27b8dd56a6aaae21ed1061ad7c24b3aa8f3bf863b69bd7393d4280ee30de02e4dfe98a983d49aa3256523b1e4b1456
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (315):
+Inmate is ready!
+Input length: 33554432
+Signaling inmate...
+Inmate is finished (polled 56 times at 0.100s/poll)
+Inmate duration (python): 5 s 815945 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 584f8dc9d5ab8583f1f510719cd3e524b28beec91d454af3262854944f96bf6fc51d130ef0e7c3148a4841d87488c2cb8b688848ad42cf1d47bb669826d5b58e
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (316):
+Inmate is ready!
+Input length: 33554432
+Signaling inmate...
+Inmate is finished (polled 57 times at 0.100s/poll)
+Inmate duration (python): 5 s 782776 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 53347398db1dbd076cbcfc0b0107e1a5a1a3a244e4a1804eccfe9af39149e18780966453d825346c8b83186c5f251bd5b45c6e2b38ed6c8cd9721fd076696262
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (317):
+Inmate is ready!
+Input length: 33554432
+Signaling inmate...
+Inmate is finished (polled 57 times at 0.100s/poll)
+Inmate duration (python): 5 s 789919 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: d28b3c69cbf3eb787994058a4b4c207926d8c2f48c58a2ee1f4fcc5764f7ce454d149124d4153caa66e5753623a5c00ee834bd93fe8ba0c039d8681798a24ff7
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (318):
+Inmate is ready!
+Input length: 33554432
+Signaling inmate...
+Inmate is finished (polled 57 times at 0.100s/poll)
+Inmate duration (python): 5 s 784989 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 742a6d6f998d47f3789ed93ebc71434bd428a9b379c5db2b1b0ebeea3c31199ad7098ef96fdd0cc760f057458ddff7e6a7c6a966e9e28baa1c735637130bb508
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (319):
+Inmate is ready!
+Input length: 33554432
+Signaling inmate...
+Inmate is finished (polled 57 times at 0.100s/poll)
+Inmate duration (python): 6 s 436212 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 6a2a55d2873764a2db171a9f6f5136421fbc31ee9bc1b5240ff5914c9794ead21f5cbc71fa17269585c0818a919ae761021a3f7e00194098062ad5e851a0dcab
+Workload output matches expected output
+*********************************************************
+Input Size=34603008
+Time=2019-12-15_00-55-31
+*********************************************************
+Iteration 0 (320):
+Inmate is ready!
+Input length: 34603008
+Signaling inmate...
+Inmate is finished (polled 59 times at 0.100s/poll)
+Inmate duration (python): 5 s 909592 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 4182bf677ce9b8cd5945b4c6c8eb510859215a62439d8f79cbc0df6d028c8b0b160f1e811d1ddbe19037f09754d89067aeffe6c0573c7bd5066e990b303d91a3
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (321):
+Inmate is ready!
+Input length: 34603008
+Signaling inmate...
+Inmate is finished (polled 59 times at 0.100s/poll)
+Inmate duration (python): 5 s 910965 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: a02ba7482cd10ef4fcd8994f693c8fade20b44b3ceb455e6a9ab8b1a28d9d7fa21e292829149c7e57d5f350757783925aa5b8f8c60dfa4ed6fa5ddac8563ca9c
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (322):
+Inmate is ready!
+Input length: 34603008
+Signaling inmate...
+Inmate is finished (polled 59 times at 0.100s/poll)
+Inmate duration (python): 5 s 910713 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 79d1a766b3796a36ad55711706cac0f0f06deb28e135c69ecd7ec271b6f2ac156edb814ffdd99e75fd798bc1e5ba73cbd6633e0b1309007f3685ba0be017246f
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (323):
+Inmate is ready!
+Input length: 34603008
+Signaling inmate...
+Inmate is finished (polled 59 times at 0.100s/poll)
+Inmate duration (python): 5 s 907873 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 34fefa354788bd5e80a0986f716421ddeae3eb38146cba3b75a6bd2220754b0499026024b8ae29a72df2f2c144bde786bceb26e71202d679ab63d65ee02891b5
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (324):
+Inmate is ready!
+Input length: 34603008
+Signaling inmate...
+Inmate is finished (polled 59 times at 0.100s/poll)
+Inmate duration (python): 6 s 725622 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 0ebbba4e31130ce44a0c563a6efb404ffbe06269683b83e797cf0b0313567822c55638a8a9c5603871a14959db69193c4ff14a96bb05711d366a5ba5be2b3a66
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (325):
+Inmate is ready!
+Input length: 34603008
+Signaling inmate...
+Inmate is finished (polled 59 times at 0.100s/poll)
+Inmate duration (python): 5 s 983329 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 5d71a7c6e58d85db54b9a540bc7b956aeea275a27f4871f9bb5744f4442fa07a0b4993c27eb93a3ccf57d85f2cc2b3165371c97422492b6f0d826095a03a3ec5
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (326):
+Inmate is ready!
+Input length: 34603008
+Signaling inmate...
+Inmate is finished (polled 59 times at 0.100s/poll)
+Inmate duration (python): 5 s 991292 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: cfb015ab855699a9852b08dc41d2888af33a42c94302b359acda0eb37026369124b154e1bb8f0337e6530b702d7de4c3c0f107a814c98bcce0e5befe07eb1877
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (327):
+Inmate is ready!
+Input length: 34603008
+Signaling inmate...
+Inmate is finished (polled 59 times at 0.100s/poll)
+Inmate duration (python): 5 s 983107 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: be96cfddc8550180f1b8f23c032be9f9ed09d01db6bfc877929e83b654ba699026d5658946d8b9815c022b24e5a5fe3404fd994a0f9a77faa3868bb75ef3b80a
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (328):
+Inmate is ready!
+Input length: 34603008
+Signaling inmate...
+Inmate is finished (polled 59 times at 0.100s/poll)
+Inmate duration (python): 5 s 981965 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 9eab329eb7c1e1321332b2cb6672ef1d6406c94c8fdb9f32ad00d11131891af80f1b109274b4b11a872e9242b5eedae00edab7886021e5fa2e9291fe886c2818
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (329):
+Inmate is ready!
+Input length: 34603008
+Signaling inmate...
+Inmate is finished (polled 59 times at 0.100s/poll)
+Inmate duration (python): 6 s 590500 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: f9b00401fd82f57be05dfcb1bc21e51b3dd902058681cb0026af00bc050983bd7969d7df6b1e221e34f1970d5a3d46484e06a0790d61e9eadcd38f48390d197e
+Workload output matches expected output
+*********************************************************
+Input Size=35651584
+Time=2019-12-15_00-57-05
+*********************************************************
+Iteration 0 (330):
+Inmate is ready!
+Input length: 35651584
+Signaling inmate...
+Inmate is finished (polled 61 times at 0.100s/poll)
+Inmate duration (python): 6 s 113845 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 32268abe7c7383e7783b47c2f6ac19b38d778563cf9eecd09c225330a9c0ffc88b21854e83467d91dd3ec8e834cf50473bf00a4aae7fe77d858beaddc594cf3a
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (331):
+Inmate is ready!
+Input length: 35651584
+Signaling inmate...
+Inmate is finished (polled 61 times at 0.100s/poll)
+Inmate duration (python): 6 s 117580 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 091411a53b234243cc65329db009a43de650e25162ef8677a54ebdd1830bcc99cf35e952326fe7b186aded6e734e904eaf0cfef2d163414a0ef29264982c4a78
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (332):
+Inmate is ready!
+Input length: 35651584
+Signaling inmate...
+Inmate is finished (polled 61 times at 0.100s/poll)
+Inmate duration (python): 6 s 117095 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: b443d20d4397364abadeaa2ee4a237ab2efb9cc83f02adcecce9e4ed3bca036c7cfec9300bac6e645a2a01b64b49ddd31e50cffec6258849279a195a18ad6894
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (333):
+Inmate is ready!
+Input length: 35651584
+Signaling inmate...
+Inmate is finished (polled 61 times at 0.100s/poll)
+Inmate duration (python): 6 s 107753 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: f895a367978411e764b4b98c5122c4f6023fb6427eb8e93bf94674e401a7484795ad21bb1e9a236dde4aa8d11086b5f560d34409dab605a8f2dc9cd2d37c58a0
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (334):
+Inmate is ready!
+Input length: 35651584
+Signaling inmate...
+Inmate is finished (polled 61 times at 0.100s/poll)
+Inmate duration (python): 6 s 645234 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 42876e989186cd57a327375de04a25f99cd9623bee236afe5c9ab4ddc5cb279237b9dcb7893a8d41a785e8d06b5673e6a8aa41eaf2c13e6502adfc91341ac9bd
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (335):
+Inmate is ready!
+Input length: 35651584
+Signaling inmate...
+Inmate is finished (polled 60 times at 0.100s/poll)
+Inmate duration (python): 6 s 80664 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: a50b3bf8ec3890e83373d71685239cb031e8a5bc97f58957eba5d67803ef0a0a6874247ecdec3af9ab25ffd232271bc294979d6343bfd77fbe2a617a9afb0f03
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (336):
+Inmate is ready!
+Input length: 35651584
+Signaling inmate...
+Inmate is finished (polled 60 times at 0.100s/poll)
+Inmate duration (python): 6 s 104962 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: bacd117771d11d33a7450a52c36d51dfdf2fa6441c724f41b104814d65b912220fb47274bb24f6bd3fce14e32b7abde441502c68a1852555de3678d841d078ce
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (337):
+Inmate is ready!
+Input length: 35651584
+Signaling inmate...
+Inmate is finished (polled 60 times at 0.100s/poll)
+Inmate duration (python): 6 s 84818 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 252b5b53e8702e0e65c3a8a66c401b0a36a3f8855db3559cc03e9f275e98501290a07066174326c5659d1983b61b6e6af8dcd89c875f53c3e20d710ab1b1e9fd
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (338):
+Inmate is ready!
+Input length: 35651584
+Signaling inmate...
+Inmate is finished (polled 59 times at 0.100s/poll)
+Inmate duration (python): 6 s 100927 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 6cd2eb408b63731dff2ff45a9cd87b72b6df2f2bd3cdfd0713845fc15dd6ab9f9e54a3b62e49ed21d74008f479a21cbb822f514e95d9fe7575ce2a765a2a9aee
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (339):
+Inmate is ready!
+Input length: 35651584
+Signaling inmate...
+Inmate is finished (polled 60 times at 0.100s/poll)
+Inmate duration (python): 6 s 338122 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 065d97235eb113bc738bf0a48226e726f104ce65bb8be4c6700fc2ab1840c5306f03c0cf89ba0e7eaa584e0458d83a84c50c85dd2701cd3d14c9c12c99574500
+Workload output matches expected output
+*********************************************************
+Input Size=36700160
+Time=2019-12-15_00-58-42
+*********************************************************
+Iteration 0 (340):
+Inmate is ready!
+Input length: 36700160
+Signaling inmate...
+Inmate is finished (polled 62 times at 0.100s/poll)
+Inmate duration (python): 6 s 217978 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 230c3f755eee4874fbd0c5e9f14b729a915c16877adbb37cdbcbef8f9973fb06c1d145a620c966646d5047ffd8f0aa04941a097805347dabe8d095a76fc48bea
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (341):
+Inmate is ready!
+Input length: 36700160
+Signaling inmate...
+Inmate is finished (polled 62 times at 0.100s/poll)
+Inmate duration (python): 6 s 210272 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 74e04adf4efbd2360ce30bf13f6fed49e1e090a574f682b68f436717c62f9396790fedabc43dd3e94cbff9a1ed0e687d7117ba2b7a124ec741322106ae1b855c
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (342):
+Inmate is ready!
+Input length: 36700160
+Signaling inmate...
+Inmate is finished (polled 62 times at 0.100s/poll)
+Inmate duration (python): 6 s 210881 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 0b2425fac9f4188eafeb4ba970f3a1c94318e8d8d689521bd8c9185aab05088920284f2462294a416b57478fbe70b4d63d0387b60eae8d291eec4576bc24d098
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (343):
+Inmate is ready!
+Input length: 36700160
+Signaling inmate...
+Inmate is finished (polled 62 times at 0.100s/poll)
+Inmate duration (python): 6 s 208565 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 0c6e2d333a37a2515b8c4c815b5371b938305fe1bf467a70d661775638219ab3c826d9e442080acd8e7cfed6062052f37b57a167a26aaa2d422e3247bc96321a
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (344):
+Inmate is ready!
+Input length: 36700160
+Signaling inmate...
+Inmate is finished (polled 62 times at 0.100s/poll)
+Inmate duration (python): 6 s 938384 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 722167cda67fc654bab91c5f667a6f497a342db78577be4f3a521f9b808a8580d5ad6225e114079f24dcc2e9bfc118cf0d379f008ff74db6d1d9474ae8cf226f
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (345):
+Inmate is ready!
+Input length: 36700160
+Signaling inmate...
+Inmate is finished (polled 60 times at 0.100s/poll)
+Inmate duration (python): 6 s 222078 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 560e6b76ff94c051b75520c1ce125a934d6a9cbc6a485255ae19023557b83986b1c42d40b71a1422ab0dcc8ad30287adb65669faaffe9e27d2eb8754707fc483
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (346):
+Inmate is ready!
+Input length: 36700160
+Signaling inmate...
+Inmate is finished (polled 62 times at 0.100s/poll)
+Inmate duration (python): 6 s 282443 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: d872be8b144d43310aba970cc8479a5cb4b66c3f2b1b0ced38854d68a9dae4f201a670ec3603db46bb95b189a8178d3eb0f9afb789fca1e555bf141fab63e42e
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (347):
+Inmate is ready!
+Input length: 36700160
+Signaling inmate...
+Inmate is finished (polled 62 times at 0.100s/poll)
+Inmate duration (python): 6 s 295471 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: c6bfb7a7f63280479795153b81b48e848d006fb7b10a4cb490592ff5d583b2653fd19ec81c824ee0d114a31196f39e9ed558c16af0855d32c0cf14c788decab6
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (348):
+Inmate is ready!
+Input length: 36700160
+Signaling inmate...
+Inmate is finished (polled 61 times at 0.100s/poll)
+Inmate duration (python): 6 s 297945 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 1a2d359a03605955142da69623ce47611496821c9962a2f8c08a14860f2bc7b096cb038d736bd776dc15419eea2a9eff3243218572d3260a8d304eac9c39c25b
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (349):
+Inmate is ready!
+Input length: 36700160
+Signaling inmate...
+Inmate is finished (polled 62 times at 0.100s/poll)
+Inmate duration (python): 6 s 613961 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: df2c3926d78f2e50dd2cc9f2f824b51efd021ee649dc53ab9f48a11880a048b28ae7fefc03adbe0c34707b8e879349f3a29476d22c2220c76299613e87426708
+Workload output matches expected output
+*********************************************************
+Input Size=37748736
+Time=2019-12-15_01-00-22
+*********************************************************
+Iteration 0 (350):
+Inmate is ready!
+Input length: 37748736
+Signaling inmate...
+Inmate is finished (polled 64 times at 0.100s/poll)
+Inmate duration (python): 6 s 421016 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: b153639b1c45582c2a7796761de3720545fd809e8569d2bea4615f59f3c8fc5f784acc06581523754639dcd8fa2d5cff3db200980732a5c99fdd774360f8a323
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (351):
+Inmate is ready!
+Input length: 37748736
+Signaling inmate...
+Inmate is finished (polled 64 times at 0.100s/poll)
+Inmate duration (python): 6 s 413553 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 6e59d7fcfce1ade1c5885dbbdd8460f09ea5c1c45dbdc1b537c6856ec91cde2737b8b5f3bff85b0d65a76364c65c5c614c92a8a4ce137bcabdcdfde39c5e4368
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (352):
+Inmate is ready!
+Input length: 37748736
+Signaling inmate...
+Inmate is finished (polled 64 times at 0.100s/poll)
+Inmate duration (python): 6 s 415157 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 4094ef4f457845fc6b58c9ada95e61d4b50b492a4a8f18e88574052a2efbb9fda829c190180a012131a40c4eb03914c15ca4de627aac7409dcc86e94278af068
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (353):
+Inmate is ready!
+Input length: 37748736
+Signaling inmate...
+Inmate is finished (polled 64 times at 0.100s/poll)
+Inmate duration (python): 6 s 408397 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: db19d675181c803dbdfe87f703fe3e935eef4c1fa22615ee02a78ed0c457e9990df4f19f3b720c16c985fdd2839d819bfbf6590be9dcc405197eb02b7de1b779
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (354):
+Inmate is ready!
+Input length: 37748736
+Signaling inmate...
+Inmate is finished (polled 64 times at 0.100s/poll)
+Inmate duration (python): 6 s 665126 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 1b8589a2ad0714608937157626b70340a34c612378bdb877f48105b41bb788a635c15e966dbc00293eba82825dedf9edc4edcf289cc852f6076a9e85c4c2bff2
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (355):
+Inmate is ready!
+Input length: 37748736
+Signaling inmate...
+Inmate is finished (polled 63 times at 0.100s/poll)
+Inmate duration (python): 6 s 443496 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 1836f1c556273a28fb39e434b216273efaea48815861f7a0d5c092e6d22f7debf571c90ca84f166291bb1e828e1644cd7dde63c09e3c11db92af38e015053551
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (356):
+Inmate is ready!
+Input length: 37748736
+Signaling inmate...
+Inmate is finished (polled 63 times at 0.100s/poll)
+Inmate duration (python): 6 s 392613 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 8361f3b8447f7a39d1a52b06f06e8543e09b66e7a496371f2d10eeab8a4955f94107b29068c49a27ad8dd984898c942eb05794c6685d0fabfa92bc7cb3a3a401
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (357):
+Inmate is ready!
+Input length: 37748736
+Signaling inmate...
+Inmate is finished (polled 63 times at 0.100s/poll)
+Inmate duration (python): 6 s 392032 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 9618ed308d789b015a32f2d1188cac16e5e10178bb6b14ca22bb0c2e96993be8c6d2b6adfcd09c921d1ebfe7c2c99e978ee641e1f95b23922ae13caa97648aba
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (358):
+Inmate is ready!
+Input length: 37748736
+Signaling inmate...
+Inmate is finished (polled 63 times at 0.100s/poll)
+Inmate duration (python): 6 s 429929 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 0afa418367b056a81f4931b7f6868d661371739b044b4c13605f363bafe623d4b7657956de1d49695f0980e86a81b516e9d162ed5c0f56a6a7596a5aba32743f
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (359):
+Inmate is ready!
+Input length: 37748736
+Signaling inmate...
+Inmate is finished (polled 63 times at 0.100s/poll)
+Inmate duration (python): 6 s 765440 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 101fda344d8f59c0109f90dc596df2ff0c9da1cb5ceed1d35a08d5503f4db8c328cb119c8883452ec185026506ad5a0c8b2009852a9e57880ce38a584ee451f4
+Workload output matches expected output
+*********************************************************
+Input Size=38797312
+Time=2019-12-15_01-02-02
+*********************************************************
+Iteration 0 (360):
+Inmate is ready!
+Input length: 38797312
+Signaling inmate...
+Inmate is finished (polled 65 times at 0.100s/poll)
+Inmate duration (python): 6 s 511210 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: e80e1837cf97fc192e83806668013205c99eabbda8255f79ac071717423f6f65770a72d359a5805f04f6b9fac20e2e71f744a4a8daeeacd1d7c6f58572279807
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (361):
+Inmate is ready!
+Input length: 38797312
+Signaling inmate...
+Inmate is finished (polled 65 times at 0.100s/poll)
+Inmate duration (python): 6 s 507774 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 8694c4be9c1d93c94f7a558d3727f5e46c5992fbaa874e1c992dab60881e70ea3a6b05698091eb6f2d875e22ec1492550fd48440f335a248df25b7eaaefad1e5
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (362):
+Inmate is ready!
+Input length: 38797312
+Signaling inmate...
+Inmate is finished (polled 65 times at 0.100s/poll)
+Inmate duration (python): 6 s 507704 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 87217b63c10731c83481faaee04560fc5cf011bd1f62dd90ea6014a5767a061a8f7ce06989585f1fd3d63dfb965f7fb24a63cd7290e61b982e0d11bfc041689e
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (363):
+Inmate is ready!
+Input length: 38797312
+Signaling inmate...
+Inmate is finished (polled 65 times at 0.100s/poll)
+Inmate duration (python): 6 s 509380 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 4687cdd723cb045d0eb9bdd63f482ae5a657b4760b64f35b83a93df4b49652a6a1270638d12e48da1b4f26d94adf532624bbc56274fdc9fdb95403f5feee0775
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (364):
+Inmate is ready!
+Input length: 38797312
+Signaling inmate...
+Inmate is finished (polled 65 times at 0.100s/poll)
+Inmate duration (python): 7 s 233691 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 1b11b449cfb292e13b60b0479ece88aea7caea9be4ec90c2f687e224e2eb830aff2ce1696a7e75b4e5f669eb6fbdbbafa148ed7c2ff3f65d2fcff15fc1a62a72
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (365):
+Inmate is ready!
+Input length: 38797312
+Signaling inmate...
+Inmate is finished (polled 65 times at 0.100s/poll)
+Inmate duration (python): 6 s 591350 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: be13dd3f0979f673bec2093b5b9313fb1ed0c73407d343eeb89d32c92bb1b3711bc5eaa4194dfcc39aed5f9ed2e06807949fd9893a3d0ceb6ee4b14a3b958929
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (366):
+Inmate is ready!
+Input length: 38797312
+Signaling inmate...
+Inmate is finished (polled 65 times at 0.100s/poll)
+Inmate duration (python): 6 s 587266 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: ec259f37a161d5e8d5b62bcd228e9875fbac9922785ba944dfc04105c144d1497f0a9ae44da92a5f702a0b9ae99d0870b573afb34ace8e5137b2f00be627c917
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (367):
+Inmate is ready!
+Input length: 38797312
+Signaling inmate...
+Inmate is finished (polled 64 times at 0.100s/poll)
+Inmate duration (python): 6 s 521328 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 6819b719353ff6142a19e10379abd8085f9207969cdbc23a7e97893bd3ddfd5198aab64c95054f57059b37efde2f2c4161948bb957e6a944198c3cdabba923b5
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (368):
+Inmate is ready!
+Input length: 38797312
+Signaling inmate...
+Inmate is finished (polled 65 times at 0.100s/poll)
+Inmate duration (python): 6 s 611631 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: f23f3a02df00ebe84b3ecf75e796d42ad93ff70c4939c28175d34f7d7cfda8adc3e0af488ad6f0616e9e0461d5c14c805c211dccaf795e61a1831934a9cd57da
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (369):
+Inmate is ready!
+Input length: 38797312
+Signaling inmate...
+Inmate is finished (polled 65 times at 0.100s/poll)
+Inmate duration (python): 7 s 44422 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: ca855fff08f6aae2eb0a6c7ce6d2540854fe14340f5ccf46525f78bc40f044bffae7e8e7cb2d5112d0964db938830df358199b0a0f94e0aa798fdecd2a195dc7
+Workload output matches expected output
+*********************************************************
+Input Size=39845888
+Time=2019-12-15_01-03-46
+*********************************************************
+Iteration 0 (370):
+Inmate is ready!
+Input length: 39845888
+Signaling inmate...
+Inmate is finished (polled 68 times at 0.100s/poll)
+Inmate duration (python): 6 s 809056 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: df4ced95de8184ab204297a289bb86730b50be6b05062e0daab808ba3ff8d85b2d0ab2c4e0d8dcdc89de77e131cef79d9a27904468205e5a6d3d8dc3d5c25643
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (371):
+Inmate is ready!
+Input length: 39845888
+Signaling inmate...
+Inmate is finished (polled 67 times at 0.100s/poll)
+Inmate duration (python): 6 s 708014 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: a174aac79249b29689266937453afc9a96879753759066e84a315d5644fc427c7edf9220785e2ffe3a6bacc7cd21a955b9e1a289c7d80830449cddfa1647a1a4
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (372):
+Inmate is ready!
+Input length: 39845888
+Signaling inmate...
+Inmate is finished (polled 67 times at 0.100s/poll)
+Inmate duration (python): 6 s 716278 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 1f20ddf05f30ad1e5d6980bee355e39af7a0ead9c79d11c3a828753c2a8046cd462ab740506d34d24225d3a9e20aafc124be6c8baaf6e2737bb7cd15557041d8
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (373):
+Inmate is ready!
+Input length: 39845888
+Signaling inmate...
+Inmate is finished (polled 67 times at 0.100s/poll)
+Inmate duration (python): 6 s 708881 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 931faa582e8d0410dfd8457d47b9deeee1eb7d8082392f55c68472612195f3452a0a2d079deee4f046a3d323dd72a89277fa2e52fe717a105b9a81f1e1c1509d
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (374):
+Inmate is ready!
+Input length: 39845888
+Signaling inmate...
+Inmate is finished (polled 67 times at 0.100s/poll)
+Inmate duration (python): 6 s 946957 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: a2162b463ce2c25319806a7bd051018a0f256f115109b564a9039308486069484f51fcae9313d913ae8db957fbe89f680e6f0e57813cf810384bf62f00f7a7ef
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (375):
+Inmate is ready!
+Input length: 39845888
+Signaling inmate...
+Inmate is finished (polled 66 times at 0.100s/poll)
+Inmate duration (python): 6 s 745557 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: af44399e4560cca78d53fd430689de388f3234b726efce1c590eea2771dc9642181fe3b150cdc4e3e9477b250768761d75adf758165dac9a64e1bf82947d0542
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (376):
+Inmate is ready!
+Input length: 39845888
+Signaling inmate...
+Inmate is finished (polled 66 times at 0.100s/poll)
+Inmate duration (python): 6 s 714390 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 8065283a2654df3ea60fb47526a48cfaf6987ffb983a738e91b546c166bed1e4e248d71dc9ecce293f38d2031badaf561db34602a86364ba064286036dfd8731
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (377):
+Inmate is ready!
+Input length: 39845888
+Signaling inmate...
+Inmate is finished (polled 66 times at 0.100s/poll)
+Inmate duration (python): 6 s 727249 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: ae03a023030dcaf9d5fe387a39347c78b3621be1e822d4bf109a4d2851e439e91ff4c174659db3f24904307b9b607f45b2d28e1e0d4ce4d89d7be7946ed2fa1a
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (378):
+Inmate is ready!
+Input length: 39845888
+Signaling inmate...
+Inmate is finished (polled 66 times at 0.100s/poll)
+Inmate duration (python): 6 s 699292 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 31f3af2001ae45bdc4fd348ac5e9cb7e6ba6e5177a5cae1a8005e977128640dd5dc762bbc8c696854b40ad984af044c8364c4dc810ee863cb7e6b7cbdee85439
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (379):
+Inmate is ready!
+Input length: 39845888
+Signaling inmate...
+Inmate is finished (polled 66 times at 0.100s/poll)
+Inmate duration (python): 7 s 59889 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: c2f8dbd9f31de40b39360c852ec168b710cbd4ac464a52998837afbe1132f6f09f9fd1f7b0cb1e48bccc177f059a1fb75c928ccd3b9a1575e146d4ac7d930f8f
+Workload output matches expected output
+*********************************************************
+Input Size=40894464
+Time=2019-12-15_01-05-30
+*********************************************************
+Iteration 0 (380):
+Inmate is ready!
+Input length: 40894464
+Signaling inmate...
+Inmate is finished (polled 69 times at 0.100s/poll)
+Inmate duration (python): 6 s 910549 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 38bc35733fa7d6ab3ae77ff09ffad973e3bb51f7cac8afae65927853cc73f6c2580d3ba37d03ef07048959ab80b0a282b49b86727b45fa176b4428674573dad5
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (381):
+Inmate is ready!
+Input length: 40894464
+Signaling inmate...
+Inmate is finished (polled 69 times at 0.100s/poll)
+Inmate duration (python): 6 s 909934 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: d8c51509e314da62a7276e4d46b1bd33aacaf713f7f71c071cf477b53f082c336cc7880ac4a6731ead795692cf998ecebdf6704c541cb2572e011448bdefe22b
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (382):
+Inmate is ready!
+Input length: 40894464
+Signaling inmate...
+Inmate is finished (polled 68 times at 0.100s/poll)
+Inmate duration (python): 6 s 808059 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 97b146285401b3a0e60c5e5cde60d41abad2aa5f2dc1aa32cebd0ee3e27b39e60d74801ce04f1716b8893ae0be896ffd2b15a9953cb1b9ed945a29eaab5bb89f
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (383):
+Inmate is ready!
+Input length: 40894464
+Signaling inmate...
+Inmate is finished (polled 68 times at 0.100s/poll)
+Inmate duration (python): 6 s 808065 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: d276f539d1c07f65307d79fff82ae1564f0f1f89830c687d25dde1a1f50d322062c9d76b77c31ee56cb04c7576d479f58f9b460e8856e6856c7809e8bf448c50
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (384):
+Inmate is ready!
+Input length: 40894464
+Signaling inmate...
+Inmate is finished (polled 68 times at 0.100s/poll)
+Inmate duration (python): 7 s 234911 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 728072b10000267b9561f0e497123bf44cfe50c20bbbce2bdc9482dc5ec380db967bccc0de6dc4187c9dda5f166cea75c3a6348efb09658a03860c125cc10b81
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (385):
+Inmate is ready!
+Input length: 40894464
+Signaling inmate...
+Inmate is finished (polled 68 times at 0.100s/poll)
+Inmate duration (python): 6 s 903856 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 61d6232a5ac7339b56c0fcf292cfed03991b37586d15a2f1aa1ad65abc86ba8b1021233cd8d5e4c709ee3a6fe64ddecd5d97fd6a6b681976ca5c015d5b73d2f1
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (386):
+Inmate is ready!
+Input length: 40894464
+Signaling inmate...
+Inmate is finished (polled 68 times at 0.100s/poll)
+Inmate duration (python): 6 s 893364 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 6eaa9d4461faa5f38321247b279b1c2c60056a7259a0920799d5fd7a3a5aa3c8d85fb2789b0eb71634bae89ac5dd187c39cbbbc3af641c162f2f9c098924d92d
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (387):
+Inmate is ready!
+Input length: 40894464
+Signaling inmate...
+Inmate is finished (polled 67 times at 0.100s/poll)
+Inmate duration (python): 6 s 810285 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 96d6a42afcab2fd6d3c2c53d6b62420b495486bf126f4b2e7c1ac09700c0de7887b98c2667fce2f414a2de9f91069a885782a2d36f954c5be5445037d628b617
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (388):
+Inmate is ready!
+Input length: 40894464
+Signaling inmate...
+Inmate is finished (polled 68 times at 0.100s/poll)
+Inmate duration (python): 6 s 905494 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: f7bd6ae51f63c83bf4426e70250238e3c0104c7f2e188f4e3ecdb922cf3d9c60ba5448e36f361199f78f00d1cd5186f4cc87c08e8baba2930127365cb2352243
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (389):
+Inmate is ready!
+Input length: 40894464
+Signaling inmate...
+Inmate is finished (polled 68 times at 0.100s/poll)
+Inmate duration (python): 7 s 476557 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 6350575fd571b08454d43737d143cda55843a8ebbed8e18299e6b56b5b03aad50bf53cd7d04503a67c519db8561f764de2e944aaeee68ef83ec2e12370c70ed4
+Workload output matches expected output
+*********************************************************
+sudo killall HandBrakeCLI
+sudo rm input/*
+sudo kill 31019
+sudo ../../tools/jailhouse cell destroy bazooka-inmate
+Ending experiments at 2019-12-15_01-07-25
