@@ -1,11 +1,9 @@
 #include <stdio.h>
-#include "include/workloads.h"
-
-#include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdlib.h>
+#include "include/workloads.h"
 
 // This silences compiler warnings over of #include <string.h>
 size_t strlen(const char *s);
