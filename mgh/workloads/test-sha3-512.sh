@@ -61,7 +61,7 @@ else
     echo "rhash: Test B Passed"
 fi
 
-A_MGH_OUT=$($mgh_bin "$A_IN")
+A_MGH_OUT=$($mgh_bin -s "$A_IN")
 if [ "$A_MGH_OUT" != "$A_GOLD" ]; then
     echo "mgh FAILED test \"\"!"
     printf "    mgh : $A_MGH_OUT \n    gold: $A_GOLD\n"
@@ -69,7 +69,7 @@ if [ "$A_MGH_OUT" != "$A_GOLD" ]; then
 else
     echo "mgh: Test A Passed"
 fi
-B_MGH_OUT=$($mgh_bin "$B_IN")
+B_MGH_OUT=$($mgh_bin -s "$B_IN")
 if [ "$B_MGH_OUT" != "$B_GOLD" ]; then
     echo "mgh FAILED test \"\"!"
     printf "    mgh : $B_MGH_OUT \n    gold: $B_GOLD\n"
@@ -91,7 +91,7 @@ test_strings=(
 
 for i in ${test_strings[@]}; do
     RHASH_OUT=$(rhash_sha3_512 "${i}")
-    MGH_OUT=$($mgh_bin "${i}")
+    MGH_OUT=$($mgh_bin -s "${i}")
 
     if [ "$RHASH_OUT" != "$MGH_OUT" ]; then
         echo "FAILURE: rhash and mgh differ on string \"${i}\"!:"
@@ -121,3 +121,12 @@ else
 fi
 
 exit $RET_CODE
+
+# TODO: Test the stdin, string, and file input methods:
+
+# printf "" | ./build/sha3-512
+
+# ./build/sha3-512 -s ""
+
+# touch empty_file.txt
+# ./build/sha3-512 -f empty_file.txt
