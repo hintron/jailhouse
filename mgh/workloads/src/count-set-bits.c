@@ -14,7 +14,7 @@ const char *help_string =
 "Usage:\n"
 "    count-set-bits <input-file> [<mode=2>] [verbose]\n\n"
 
-"Print to stderr the number of 1s in an input file's binary data.\n\n"
+"Print to stdout the number of 1s in an input file's binary data.\n\n"
 "    <input-file>: Required. The input file to use.\n\n"
 
 "    <mode>: Optional. Defaults to 2. Specifies the algorithm used.\n"
