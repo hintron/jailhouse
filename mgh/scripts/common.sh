@@ -274,7 +274,13 @@ function create_random_file {
 # $2: (optional) The workload mode. Defaults to Count Set Bits.
 function get_expected_output {
     if [ "$2" == $WM_SHA3 ]; then
-        sha3_linux_file "$1"
+        # If we are running exclusively in Linux, run the actual workload, not
+        # the golden standard, so we can profile things
+        if [ "$RUN_ON_LINUX" == 1 ]; then
+            sha3_linux_file "$1"
+        else
+            sha3_linux_file_golden "$1"
+        fi
     elif [ "$2" == $WM_RANDOM_ACCESS ]; then
         random_access_linux_file "$1"
     else
@@ -286,12 +292,20 @@ function get_expected_output {
 # Requires rhash to be installed on the system
 # `sudo apt install rhash`
 # See mgh/sha3/test.sh
-function sha3_linux_file {
+function sha3_linux_file_golden {
     rhash --sha3-512 "$1" | cut -f 1 -d " "
 }
 
-function sha3_linux_str {
+function sha3_linux_str_golden {
     printf "$1" | rhash --sha3-512 - | cut -f 1 -d " "
+}
+
+function sha3_linux_file {
+    ../workloads/build/sha-512 -f "$1"
+}
+
+function sha3_linux_str {
+    ../workloads/build/sha-512 -s "$1"
 }
 
 function count_set_bits_linux_file {
