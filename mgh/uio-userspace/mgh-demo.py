@@ -22,7 +22,7 @@
 # The root cell sets byte 0 to 2, indicating to inmate that data is ready.
 # The inmate is constantly polling byte 0.
 # If it's 2, inmate sets the byte to 3 (work in progress)
-# Inmate then computes a SHA3 hash of the input from shmem
+# Inmate then computes a workload on the input from shmem
 # Inmate writes the result to shmem
 # Inmate sets byte to 1, indicating computation is finished and ready for work.
 # Repeat
