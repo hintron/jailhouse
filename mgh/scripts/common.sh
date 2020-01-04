@@ -220,6 +220,13 @@ function build_jailhouse {
     popd > /dev/null
 }
 
+function build_linux_workloads {
+    pushd $WORKLOAD_DIR > /dev/null
+    meson build > /dev/null
+    ninja -C build > /dev/null
+    popd > /dev/null
+}
+
 function clean_jailhouse {
     pushd $JAILHOUSE_DIR > /dev/null
     make clean
@@ -250,12 +257,16 @@ function end_jailhouse {
 
 # Stop everything, rebuild, and reload drivers
 function reset_jailhouse_all {
-    # Stop root and inmate
     end_jailhouse
-    # try removing drivers
     rm_drivers
     build_jailhouse
     load_drivers
+}
+# Stop everything, rebuild, and reload drivers
+function reset_linux_all {
+    end_jailhouse
+    rm_drivers
+    build_linux_workloads
 }
 
 function create_random_file_max {

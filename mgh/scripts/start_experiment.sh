@@ -33,7 +33,8 @@ THROTTLE_ITERATIONS=$(($ITERATIONS / 2))
 experiment_time="$(timestamp)"
 OUTPUT_DIR="$SCRIPTS_DIR/output/${experiment_time}"
 INPUT_DIR="$SCRIPTS_DIR/input"
-WORKLOAD_BIN_DIR="$MGH_DIR/workloads/build"
+WORKLOAD_DIR="$MGH_DIR/workloads"
+WORKLOAD_BIN_DIR="$WORKLOAD_DIR/build"
 JAILHOUSE_BIN=$JAILHOUSE_DIR/tools/jailhouse
 MGH_DEMO_PY="$MGH_DIR/uio-userspace/mgh-demo.py"
 JAILHOUSE_OUTPUT_FILE="$OUTPUT_DIR/jailhouse_${experiment_time}.txt"
@@ -56,10 +57,6 @@ INTERFERENCE_WORKLOAD=$INTF_HANDBRAKE
 # INTERFERENCE_WORKLOAD=$INTF_RANDOM
 INTERFERENCE_RAMPUP_TIME=15
 
-
-################################################################################
-# Experiment-wide inmate inputs
-################################################################################
 # If true, just start the inmate and listen to the output. Don't generate and
 # send inputs.
 INMATE_DEBUG=0
@@ -71,21 +68,23 @@ function main {
     ############################################################################
     # make output folder if it doesn't already exist
     mkdir -p $OUTPUT_DIR
-    mkdir -p $VTUNE_OUTPUT_DIR
 
     echo "Starting experiments at $experiment_time" >> $EXPERIMENT_OUTPUT_FILE
     echo "=======================================================" >> $EXPERIMENT_OUTPUT_FILE
 
-    reset_jailhouse_all >> $EXPERIMENT_OUTPUT_FILE 2>&1
-
-    echo "Start time: $experiment_time" >> $JAILHOUSE_OUTPUT_FILE
-    echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
-
-    # Start recording experiment output
-    # Put process in the background and kill it once done
-    sudo jailhouse console -f >> $JAILHOUSE_OUTPUT_FILE 2>&1 &
-    tailf_pid=$!
-    echo "tailf_pid: $tailf_pid" >> $EXPERIMENT_OUTPUT_FILE
+    if [ "$RUN_ON_LINUX" == 1 ]; then
+        mkdir -p $VTUNE_OUTPUT_DIR
+        reset_linux_all >> $EXPERIMENT_OUTPUT_FILE 2>&1
+    else
+        reset_jailhouse_all >> $EXPERIMENT_OUTPUT_FILE 2>&1
+        echo "Start time: $experiment_time" >> $JAILHOUSE_OUTPUT_FILE
+        echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
+        # Start recording experiment output
+        # Put process in the background and kill it once done
+        sudo jailhouse console -f >> $JAILHOUSE_OUTPUT_FILE 2>&1 &
+        tailf_pid=$!
+        echo "tailf_pid: $tailf_pid" >> $EXPERIMENT_OUTPUT_FILE
+    fi
 
     # Return early if just running tests in inmate with no inputs
     if [ "$INMATE_DEBUG" == 1 ]; then
@@ -131,20 +130,23 @@ function main {
 
     # Flush any buffers
     end_time="$(timestamp)"
-    echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
-    echo "Ending experiments at $end_time" >> $JAILHOUSE_OUTPUT_FILE
-    echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
 
-    echo "sudo kill $tailf_pid" >> $EXPERIMENT_OUTPUT_FILE
-    sudo kill $tailf_pid >> $EXPERIMENT_OUTPUT_FILE 2>&1
-    # end_jailhouse_processes >> $EXPERIMENT_OUTPUT_FILE 2>&1
+    if [ "$RUN_ON_LINUX" == 0 ]; then
+        echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
+        echo "Ending experiments at $end_time" >> $JAILHOUSE_OUTPUT_FILE
+        echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
 
-    end_inmate >> $EXPERIMENT_OUTPUT_FILE 2>&1
-    end_root >> $EXPERIMENT_OUTPUT_FILE 2>&1
+        echo "sudo kill $tailf_pid" >> $EXPERIMENT_OUTPUT_FILE
+        sudo kill $tailf_pid >> $EXPERIMENT_OUTPUT_FILE 2>&1
+        # end_jailhouse_processes >> $EXPERIMENT_OUTPUT_FILE 2>&1
+
+        end_inmate >> $EXPERIMENT_OUTPUT_FILE 2>&1
+        end_root >> $EXPERIMENT_OUTPUT_FILE 2>&1
+    fi
 
     echo "Ending experiments at $end_time" >> $EXPERIMENT_OUTPUT_FILE
 
-    if [ "$INMATE_DEBUG" == 0 ]; then
+    if [ "$INMATE_DEBUG" == 0 ] && [ "$RUN_ON_LINUX" == 0 ]; then
         post_process_data
     fi
 }
@@ -236,8 +238,9 @@ function prep_experiment_jailhouse {
     start_jailhouse $ROOT_CELL $INMATE_CELL $INMATE_NAME $INMATE_PROGRAM "$INMATE_CMDLINE" >> $EXPERIMENT_OUTPUT_FILE 2>&1
 }
 
+# TODO: fill in when necessary
 function prep_experiment_linux {
-    echo "TODO: prep_experiment_linux"
+    : # no-op placeholder
 }
 
 experiment_counter=1
