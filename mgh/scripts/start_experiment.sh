@@ -10,7 +10,6 @@ source ./common.sh > /dev/null
 # If true, just start the inmate and listen to the output. Don't generate and
 # send inputs.
 INMATE_DEBUG=0
-# INMATE_DEBUG=1
 
 VTUNE_MODE=$VTUNE_MODE_MA
 
