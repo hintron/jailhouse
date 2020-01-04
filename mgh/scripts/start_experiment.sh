@@ -47,15 +47,6 @@ INTERFERENCE_RAMPUP_TIME=15
 INMATE_DEBUG=0
 # INMATE_DEBUG=1
 
-THROTTLE_MODE=$TMODE_ITERATION
-# THROTTLE_MODE=$TMODE_DISABLED
-DEBUG_MODE="true"
-# LOCAL_BUFFER="true"
-# THROTTLE_MECHANISM=$TMECH_CLOCK
-# WORKLOAD_MODE=$WM_COUNT_SET_BITS
-# COUNT_SET_BITS_MODE=$CSBM_FASTEST
-# POLLUTE_CACHE="true"
-
 function main {
     ############################################################################
     # Script-wide setup

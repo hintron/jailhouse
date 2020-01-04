@@ -39,6 +39,8 @@ CSBM_FASTEST=2 # default
 INTF_HANDBRAKE=0
 INTF_RANDOM=1
 
+# Set some tuning parameters:
+DEBUG_MODE="true"
 
 # Parameters:
 #   DEBUG_MODE
