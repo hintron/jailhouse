@@ -13,23 +13,10 @@ JAILHOUSE_DIR=$(pwd)
 popd > /dev/null
 popd > /dev/null
 
-# If RUN_ON_LINUX is enabled, this says to run the workloads under Intel VTune
-RUN_WITH_VTUNE=1
-
 ROOT_CELL=$JAILHOUSE_DIR/configs/x86/bazooka-root.cell
 INMATE_CELL=$JAILHOUSE_DIR/configs/x86/bazooka-inmate.cell
 INMATE_NAME=bazooka-inmate
 INMATE_PROGRAM=$JAILHOUSE_DIR/inmates/demos/x86/mgh-demo.bin
-ITERATIONS=10
-INPUT_SIZE_START=$((1 * $MiB))
-INPUT_SIZE_END=$((40 * $MiB))
-INPUT_SIZE_STEP=$((1 * $MiB))
-# ITERATIONS=4
-# INPUT_SIZE_START=$((14 * $MiB))
-# INPUT_SIZE_END=$((16 * $MiB))
-# INPUT_SIZE_STEP=$((100 * $KiB))
-# We have up to 40 MiB, which is 41.9E6 bytes
-THROTTLE_ITERATIONS=$(($ITERATIONS / 2))
 experiment_time="$(timestamp)"
 OUTPUT_DIR="$SCRIPTS_DIR/output/${experiment_time}"
 INPUT_DIR="$SCRIPTS_DIR/input"
@@ -41,7 +28,6 @@ JAILHOUSE_OUTPUT_FILE="$OUTPUT_DIR/jailhouse_${experiment_time}.txt"
 EXPERIMENT_OUTPUT_FILE="$OUTPUT_DIR/experiment_${experiment_time}.txt"
 VTUNE_OUTPUT_DIR="$SCRIPTS_DIR/output/vtune-thesis"
 VTUNE_OUTPUT_FILE="$OUTPUT_DIR/vtune_${experiment_time}.txt"
-VTUNE_MODE=$VTUNE_MODE_MA
 OUTPUT_DATA_FILE="$OUTPUT_DIR/data_${experiment_time}.csv"
 OUTPUT_FREQ_FILE="$OUTPUT_DIR/freq_${experiment_time}.csv"
 OUTPUT_DATA_THROTTLED_FILE="$OUTPUT_DIR/throttled_${experiment_time}.csv"
@@ -50,17 +36,8 @@ OUTPUT_FREQ_THROTTLED_FILE="$OUTPUT_DIR/throttled_freq_${experiment_time}.csv"
 OUTPUT_DATA_UNTHROTTLED_FILE="$OUTPUT_DIR/unthrottled_${experiment_time}.csv"
 OUTPUT_DATA_UNTHROTTLED_AVG_FILE="$OUTPUT_DIR/unthrottled_avg_${experiment_time}.csv"
 OUTPUT_FREQ_UNTHROTTLED_FILE="$OUTPUT_DIR/unthrottled_freq_${experiment_time}.csv"
-INTERFERENCE_WORKLOAD_ENABLE=0
 INTERFERENCE_WORKLOAD_OUTPUT="$OUTPUT_DIR/interference_${experiment_time}.txt"
-# TODO: Make this experiment-dependent later
-INTERFERENCE_WORKLOAD=$INTF_HANDBRAKE
-# INTERFERENCE_WORKLOAD=$INTF_RANDOM
 INTERFERENCE_RAMPUP_TIME=15
-
-# If true, just start the inmate and listen to the output. Don't generate and
-# send inputs.
-INMATE_DEBUG=0
-# INMATE_DEBUG=1
 
 function main {
     ############################################################################
