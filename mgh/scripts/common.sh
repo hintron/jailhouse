@@ -41,8 +41,6 @@ INTF_RANDOM=1
 VTUNE_MODE_MA=0 # Memory Access
 VTUNE_MODE_UE=1 # Microarchitectural Exploration
 
-VTUNE_MODE=$VTUNE_MODE_MA
-
 # This needs to already be on the path
 VTUNE_BIN=amplxe-cl
 

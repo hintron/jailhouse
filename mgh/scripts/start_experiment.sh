@@ -40,6 +40,7 @@ JAILHOUSE_OUTPUT_FILE="$OUTPUT_DIR/jailhouse_${experiment_time}.txt"
 EXPERIMENT_OUTPUT_FILE="$OUTPUT_DIR/experiment_${experiment_time}.txt"
 VTUNE_OUTPUT_DIR="$SCRIPTS_DIR/output/vtune-thesis"
 VTUNE_OUTPUT_FILE="$OUTPUT_DIR/vtune_${experiment_time}.txt"
+VTUNE_MODE=$VTUNE_MODE_MA
 OUTPUT_DATA_FILE="$OUTPUT_DIR/data_${experiment_time}.csv"
 OUTPUT_FREQ_FILE="$OUTPUT_DIR/freq_${experiment_time}.csv"
 OUTPUT_DATA_THROTTLED_FILE="$OUTPUT_DIR/throttled_${experiment_time}.csv"
