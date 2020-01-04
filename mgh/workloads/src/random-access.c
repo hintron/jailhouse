@@ -11,7 +11,7 @@ const char *help_string =
 "Usage:\n"
 "    random-access-hash <input-file> [verbose]\n\n"
 
-"A workload that takes a random input and randomly accesses it according to \n"
+"A workload that takes a random input and randomly accesses it according to\n"
 "the input. If the input isn't random, the access pattern won't be random.\n\n"
 
 "    <input-file>: Required. The input file to use. Must be random, since\n"
