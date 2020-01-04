@@ -148,10 +148,10 @@ function start_root {
 # Make sure $CMDLINE is in quotes, or else only the first space-delimited item
 # will make it through.
 function start_inmate {
-    INMATE_CELL="$1"
-    INMATE_NAME="$2"
-    INMATE_PROGRAM="$3"
-    INMATE_CMDLINE="$4"
+    local INMATE_CELL="$1"
+    local INMATE_NAME="$2"
+    local INMATE_PROGRAM="$3"
+    local INMATE_CMDLINE="$4"
     # Start the inmate with the following three commands
     echo "sudo $JAILHOUSE_BIN cell create $INMATE_CELL"
     sudo $JAILHOUSE_BIN cell create $INMATE_CELL
@@ -172,9 +172,9 @@ function end_inmate {
     # Get string "Name RootCell InmateCellName"
     local tmp=$(sudo $JAILHOUSE_BIN cell list | awk '{print $2}')
     # Convert to array
-    tmp2=($tmp)
+    local tmp2=($tmp)
     # Get InmateCellName
-    inmate=${tmp2[2]}
+    local inmate=${tmp2[2]}
     if [ ! -z $inmate ]; then
         echo "sudo $JAILHOUSE_BIN cell destroy $inmate"
         sudo $JAILHOUSE_BIN cell destroy $inmate
@@ -201,7 +201,7 @@ function show_cells {
 }
 
 function build_jailhouse {
-    cur_dir=$(pwd)
+    local cur_dir=$(pwd)
     cd ../..
     make CC=gcc-7 > /dev/null
     sudo make install CC=gcc-7 > /dev/null
@@ -212,7 +212,7 @@ function build_jailhouse {
 }
 
 function clean_jailhouse {
-    cur_dir=$(pwd)
+    local cur_dir=$(pwd)
     cd ../..
     make clean
     cd mgh/uio-kernel-module
@@ -248,18 +248,18 @@ function reset_jailhouse_all {
 }
 
 function create_random_file_max {
-    file="$1"
+    local file="$1"
     # Create the maximum-sized input possible
     # Current max size is (40 MB - 8)
-    size=$(((2**20 * 40)- 8))
+    local size=$(((2**20 * 40)- 8))
     create_random_file $size $file
 }
 
 # 1: Size in bytes
 # 2: file name to overwrite
 function create_random_file {
-    size="$1"
-    file="$2"
+    local size="$1"
+    local file="$2"
 
     if [ -z $file ]; then
         file="__tmp.txt"
@@ -322,7 +322,7 @@ function clear_sync_byte_shmem {
 
 # Send input to the inmate via file
 function send_inmate_input {
-    input_file="$1"
+    local input_file="$1"
 
     if [ -z $input_file ]; then
         echo "error: no input file"
@@ -339,31 +339,18 @@ function timestamp {
 }
 
 function grep_freq_data {
-    in_file="$1"
+    local in_file="$1"
     grep_token_in_file_to_file "MGHFREQ:" $in_file
-}
-
-# Create a scratch function to easily test other functions interactively.
-function test_common_sh {
-    input_sizes=()
-    input_sizes+=(14680064)
-    input_sizes+=(15728640)
-
-    # for token in $tokens; do
-    for input_size in "${input_sizes[@]}"; do
-        # echo $input_size
-        grep_token_columns_csv "$input_size" 2 3 output/2019-12-14_13-31-44/unthrottled_2019-12-14_13-31-44.csv
-    done
 }
 
 # Use awk to get all lines of a csv where column $token_column == $token.
 # Then, grab the value in $output_column and append to a comma-separated list.
 # Output as "$token|$csv_list".
 function grep_token_columns_csv {
-    token="$1"
-    token_column="$2"
-    output_column="$3"
-    in_file="$4"
+    local token="$1"
+    local token_column="$2"
+    local output_column="$3"
+    local in_file="$4"
 
     # Use awk to find the lines where $token_column == $token, use cut to get
     # the column $output_column, replace all newlines with commas, replace the
@@ -373,12 +360,12 @@ function grep_token_columns_csv {
 # https://stackoverflow.com/questions/26148546/grep-keeping-lines-that-has-specific-string-in-certain-column
 
 function grep_output_data_throttled {
-    in_file="$1"
+    local in_file="$1"
     grep_token_in_file_to_file "MGHOUT:is_throttled,\|MGHOUT:1," $in_file
 }
 
 function grep_output_data_unthrottled {
-    in_file="$1"
+    local in_file="$1"
     grep_token_in_file_to_file "MGHOUT:is_throttled,\|MGHOUT:0," $in_file
 }
 
@@ -387,39 +374,39 @@ function grep_output_data_unthrottled {
 # at the start, then adds carriage returns to all newlines), and store the
 # output in a file.
 function grep_token_in_file_to_file {
-    token="$1"
-    in_file="$2"
+    local token="$1"
+    local in_file="$2"
 
     grep_token_in_file $token $in_file
 }
 
 function grep_token_in_file {
-    token="$1"
-    in_file="$2"
+    local token="$1"
+    local in_file="$2"
 
     # echo "grep \"$token\" $in_file | sed \"s/${token}//\" | sed \"s/\r//\""
     grep "$token" $in_file | sed "s/${token}//" | sed "s/\r//"
 }
 
 function grep_token_in_str {
-    token="$1"
-    str="$2"
+    local token="$1"
+    local str="$2"
 
     echo "$str" | grep "$token" | sed "s/${token}//" | sed "s/\r//"
 }
 
 function start_handbrake {
-    INPUT="$1"
-    OUTPUT="$2"
+    local INPUT="$1"
+    local OUTPUT="$2"
 
     HandBrakeCLI -i $INPUT -o $OUTPUT
 }
 
 function start_handbrake_demo {
-    TIMESTAMP=$(timestamp)
+    local TIMESTAMP=$(timestamp)
 
-    INPUT="/home/hintron/Videos/sources/i_am_legend.m2ts"
-    OUTPUT="/home/hintron/Videos/jailhouse_outputs/run_$TIMESTAMP"
+    local INPUT="/home/hintron/Videos/sources/i_am_legend.m2ts"
+    local OUTPUT="/home/hintron/Videos/jailhouse_outputs/run_$TIMESTAMP"
 
     start_handbrake $INPUT $OUTPUT
 

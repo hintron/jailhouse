@@ -165,8 +165,8 @@ function generate_random_inputs {
     for ((i = 0 ; i < $input_sizes_count ; i++)); do
         for ((j = 0 ; j < $ITERATIONS ; j++)); do
             # flatten 2d (i,j) index into a single flat index
-            index=$(($i * $ITERATIONS + $j))
-            input_file="${INPUT_FILE_BASE}_${index}.bin"
+            local index=$(($i * $ITERATIONS + $j))
+            local input_file="${INPUT_FILE_BASE}_${index}.bin"
             create_random_file ${input_sizes[$i]} $input_file
             random_inputs+=($input_file)
         done
@@ -187,14 +187,14 @@ function generate_expected_outputs {
     for ((i = 0 ; i < $input_sizes_count ; i++)); do
         for ((j = 0 ; j < $ITERATIONS ; j++)); do
             # flatten 2d (i,j) index into a single flat index
-            index=$(($i * $ITERATIONS + $j))
+            local index=$(($i * $ITERATIONS + $j))
             # Calculate and capture expected outputs
-            start_time_ns=$(date +%s%N)
-            expected_output=$(get_expected_output ${random_inputs[$index]} $WORKLOAD_MODE)
-            end_time_ns=$(date +%s%N)
-            duration_ns=$(($end_time_ns-$start_time_ns))
-            duration_us=$(($duration_ns/1000))
-            duration_ms=$(($duration_us/1000))
+            local start_time_ns=$(date +%s%N)
+            local expected_output=$(get_expected_output ${random_inputs[$index]} $WORKLOAD_MODE)
+            local end_time_ns=$(date +%s%N)
+            local duration_ns=$(($end_time_ns-$start_time_ns))
+            local duration_us=$(($duration_ns/1000))
+            local duration_ms=$(($duration_us/1000))
             expected_outputs+=($expected_output)
             expected_output_times_ms+=($duration_ms)
         done
@@ -222,7 +222,7 @@ function start_experiment_linux {
 }
 
 function prep_experiment_jailhouse {
-    INMATE_CMDLINE=$(set_cmdline) >> $EXPERIMENT_OUTPUT_FILE 2>&1
+    local INMATE_CMDLINE=$(set_cmdline) >> $EXPERIMENT_OUTPUT_FILE 2>&1
     start_jailhouse $ROOT_CELL $INMATE_CELL $INMATE_NAME $INMATE_PROGRAM "$INMATE_CMDLINE" >> $EXPERIMENT_OUTPUT_FILE 2>&1
 }
 
@@ -266,21 +266,21 @@ function start_experiment_jailhouse {
     fi
 
     for ((i = 0 ; i < $input_sizes_count ; i++)); do
-        input_size=${input_sizes[$i]}
+        local input_size=${input_sizes[$i]}
         echo "*********************************************************" >> $EXPERIMENT_OUTPUT_FILE
         echo "Input Size=$input_size" >> $EXPERIMENT_OUTPUT_FILE
         echo "Time=$(timestamp)" >> $EXPERIMENT_OUTPUT_FILE
         echo "*********************************************************" >> $EXPERIMENT_OUTPUT_FILE
         for ((j = 0 ; j < $ITERATIONS ; j++)); do
             # flatten 2d (i,j) index into a single flat index
-            index=$(($i * $ITERATIONS + $j))
+            local index=$(($i * $ITERATIONS + $j))
             if [ "$j" != "0" ]; then
                 echo "---------------------------------------------------------" >> $EXPERIMENT_OUTPUT_FILE
             fi
             echo "Iteration $j ($index):" >> $EXPERIMENT_OUTPUT_FILE
 
-            input_file=${random_inputs[$index]}
-            expected_output_value="${expected_outputs[$index]}"
+            local input_file=${random_inputs[$index]}
+            local expected_output_value="${expected_outputs[$index]}"
 
             if [ "$RUN_ON_LINUX" == 1 ]; then
                 # On Linux, the workload output is just the expected value
