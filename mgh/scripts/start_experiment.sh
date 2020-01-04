@@ -1,14 +1,22 @@
 #!/bin/bash
 source ./common.sh > /dev/null
+
 ################################################################################
 # Script-wide inputs here
 ################################################################################
-RUN_ON_LINUX=0
+# jailhouse/mgh/scripts/
+SCRIPTS_DIR=$(pwd)
+pushd .. > /dev/null
+MGH_DIR=$(pwd)
+pushd .. > /dev/null
+JAILHOUSE_DIR=$(pwd)
+popd > /dev/null
+popd > /dev/null
 
-ROOT_CELL=../../configs/x86/bazooka-root.cell
-INMATE_CELL=../../configs/x86/bazooka-inmate.cell
+ROOT_CELL=$JAILHOUSE_DIR/configs/x86/bazooka-root.cell
+INMATE_CELL=$JAILHOUSE_DIR/configs/x86/bazooka-inmate.cell
 INMATE_NAME=bazooka-inmate
-INMATE_PROGRAM=../../inmates/demos/x86/mgh-demo.bin
+INMATE_PROGRAM=$JAILHOUSE_DIR/inmates/demos/x86/mgh-demo.bin
 ITERATIONS=10
 INPUT_SIZE_START=$((1 * $MiB))
 INPUT_SIZE_END=$((40 * $MiB))
@@ -20,7 +28,10 @@ INPUT_SIZE_STEP=$((1 * $MiB))
 # We have up to 40 MiB, which is 41.9E6 bytes
 THROTTLE_ITERATIONS=$(($ITERATIONS / 2))
 experiment_time="$(timestamp)"
-OUTPUT_DIR="output/${experiment_time}"
+OUTPUT_DIR="$SCRIPTS_DIR/output/${experiment_time}"
+WORKLOAD_BIN_DIR="$MGH_DIR/workloads/build"
+JAILHOUSE_BIN=$JAILHOUSE_DIR/tools/jailhouse
+MGH_DEMO_PY="$MGH_DIR/uio-userspace/mgh-demo.py"
 JAILHOUSE_OUTPUT_FILE="$OUTPUT_DIR/jailhouse_${experiment_time}.txt"
 EXPERIMENT_OUTPUT_FILE="$OUTPUT_DIR/experiment_${experiment_time}.txt"
 OUTPUT_DATA_FILE="$OUTPUT_DIR/data_${experiment_time}.csv"
@@ -97,7 +108,7 @@ function main {
         ######################################################################
         WORKLOAD_MODE=${1:-$WM_COUNT_SET_BITS}
         INTERFERENCE_WORKLOAD_ENABLE=${2:-1}
-        RUN_ON_LINUX=${3:-0}
+        RUN_ON_LINUX=${3:-0} # If 1, run workloads exclusively in Linux
         THROTTLE_MODE=${4:-$TMODE_ITERATION}
         ######################################################################
         start_experiment_jailhouse

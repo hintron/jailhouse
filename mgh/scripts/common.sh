@@ -10,8 +10,6 @@ CMDLINE_OFFSET=0x1000
 MiB=$((2 ** 20))
 KiB=$((2 ** 10))
 
-JAILHOUSE_BIN=../../tools/jailhouse
-
 # Throttle mode values
 TMODE_ALTERNATING=0 # default
 TMODE_DEADLINE=1
@@ -96,20 +94,20 @@ function sign_drivers {
 
     # Before signing these drivers, the keys need to be accepted by mokutil
 
-    sudo /usr/src/linux-headers-$(uname -r)/scripts/sign-file sha256 ./MOK.priv ./MOK.der ../../driver/jailhouse.ko
-    modinfo ../../driver/jailhouse.ko
-    sudo /usr/src/linux-headers-$(uname -r)/scripts/sign-file sha256 ./MOK.priv ./MOK.der ../uio-kernel-module/uio_ivshmem.ko
-    modinfo ../uio-kernel-module/uio_ivshmem.ko
+    sudo /usr/src/linux-headers-$(uname -r)/scripts/sign-file sha256 $SCRIPTS_DIR/MOK.priv $SCRIPTS_DIR/MOK.der $JAILHOUSE_DIR/driver/jailhouse.ko
+    modinfo $JAILHOUSE_DIR/driver/jailhouse.ko
+    sudo /usr/src/linux-headers-$(uname -r)/scripts/sign-file sha256 $SCRIPTS_DIR/MOK.priv $SCRIPTS_DIR/MOK.der $MGH_DIR/uio-kernel-module/uio_ivshmem.ko
+    modinfo $MGH_DIR/uio-kernel-module/uio_ivshmem.ko
 }
 
 function load_uio_driver {
     sudo modprobe uio
-    sudo insmod ../uio-kernel-module/uio_ivshmem.ko
+    sudo insmod $MGH_DIR/uio-kernel-module/uio_ivshmem.ko
     lsmod | grep -i uio
 }
 
 function load_jailhouse_driver {
-    sudo insmod ../../driver/jailhouse.ko
+    sudo insmod $JAILHOUSE_DIR/driver/jailhouse.ko
     lsmod | grep -i jail
 }
 
@@ -203,23 +201,27 @@ function show_cells {
 }
 
 function build_jailhouse {
-    local cur_dir=$(pwd)
-    cd ../..
+    pushd $JAILHOUSE_DIR > /dev/null
     make CC=gcc-7 > /dev/null
     sudo make install CC=gcc-7 > /dev/null
-    cd mgh/uio-kernel-module
+
+    pushd $MGH_DIR/uio-kernel-module > /dev/null
     make > /dev/null
     sudo make install > /dev/null
-    cd "$cur_dir"
+
+    popd > /dev/null
+    popd > /dev/null
 }
 
 function clean_jailhouse {
-    local cur_dir=$(pwd)
-    cd ../..
+    pushd $JAILHOUSE_DIR > /dev/null
     make clean
-    cd mgh/uio-kernel-module
+
+    pushd $MGH_DIR/uio-kernel-module > /dev/null
     make clean
-    cd "$cur_dir"
+
+    popd > /dev/null
+    popd > /dev/null
 }
 
 # End any Jailhouse Linux processes (sudo jailhouse console -f), since anything
@@ -303,23 +305,23 @@ function sha3_linux_str_golden {
 }
 
 function sha3_linux_file {
-    ../workloads/build/sha-512 -f "$1"
+    "${WORKLOAD_BIN_DIR}/sha-512" -f "$1"
 }
 
 function sha3_linux_str {
-    ../workloads/build/sha-512 -s "$1"
+    "${WORKLOAD_BIN_DIR}/sha-512" -s "$1"
 }
 
 function count_set_bits_linux_file {
-    ../workloads/build/count-set-bits "$1"
+    "${WORKLOAD_BIN_DIR}/count-set-bits" "$1"
 }
 
 function random_access_linux_file {
-    ../workloads/build/random-access "$1"
+    "${WORKLOAD_BIN_DIR}/random-access" "$1"
 }
 
 function clear_sync_byte_shmem {
-    sudo ../uio-userspace/mgh-demo.py -c
+    sudo $MGH_DEMO_PY -c
 }
 
 # Send input to the inmate via file
@@ -332,7 +334,7 @@ function send_inmate_input {
     fi
 
     # Send input to inmate
-    sudo ../uio-userspace/mgh-demo.py -f $input_file
+    sudo $MGH_DEMO_PY -f $input_file
 }
 
 # https://stackoverflow.com/questions/17066250/create-timestamp-variable-in-bash-script
