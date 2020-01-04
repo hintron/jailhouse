@@ -37,6 +37,12 @@ CSBM_FASTEST=2 # default
 INTF_HANDBRAKE=0
 INTF_RANDOM=1
 
+# VTune Analysis Modes
+VTUNE_MODE_MA=0 # Memory Access
+VTUNE_MODE_UE=1 # Microarchitectural Exploration
+
+VTUNE_MODE=$VTUNE_MODE_MA
+
 # This needs to already be on the path
 VTUNE_BIN=amplxe-cl
 
@@ -309,7 +315,7 @@ function sha3_linux_str_golden {
 
 function sha3_linux_file {
     if [ "$RUN_WITH_VTUNE" == 1 ]; then
-        vtune_uarch_explore "${WORKLOAD_BIN_DIR}/sha-512" -f "$1"
+        run_vtune "${WORKLOAD_BIN_DIR}/sha-512" -f "$1"
     else
         "${WORKLOAD_BIN_DIR}/sha-512" -f "$1"
     fi
@@ -317,7 +323,7 @@ function sha3_linux_file {
 
 function sha3_linux_str {
     if [ "$RUN_WITH_VTUNE" == 1 ]; then
-        vtune_uarch_explore "${WORKLOAD_BIN_DIR}/sha-512" -s "$1"
+        run_vtune "${WORKLOAD_BIN_DIR}/sha-512" -s "$1"
     else
         "${WORKLOAD_BIN_DIR}/sha-512" -s "$1"
     fi
@@ -325,7 +331,7 @@ function sha3_linux_str {
 
 function count_set_bits_linux_file {
     if [ "$RUN_WITH_VTUNE" == 1 ]; then
-        vtune_uarch_explore "${WORKLOAD_BIN_DIR}/count-set-bits" "$1"
+        run_vtune "${WORKLOAD_BIN_DIR}/count-set-bits" "$1"
     else
         "${WORKLOAD_BIN_DIR}/count-set-bits" "$1"
     fi
@@ -333,7 +339,7 @@ function count_set_bits_linux_file {
 
 function random_access_linux_file {
     if [ "$RUN_WITH_VTUNE" == 1 ]; then
-        vtune_uarch_explore "${WORKLOAD_BIN_DIR}/random-access" "$1"
+        run_vtune "${WORKLOAD_BIN_DIR}/random-access" "$1"
     else
         "${WORKLOAD_BIN_DIR}/random-access" "$1"
     fi
@@ -354,6 +360,14 @@ function send_inmate_input {
 
     # Send input to inmate
     sudo $MGH_DEMO_PY -f $input_file
+}
+
+function run_vtune {
+    if [ "$VTUNE_MODE" == "$VTUNE_MODE_MA" ]; then
+        vtune_mem_access "$@"
+    else
+        vtune_uarch_explore "$@"
+    fi
 }
 
 function vtune_mem_access {
