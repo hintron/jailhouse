@@ -12,20 +12,26 @@ VTUNE_MODE=$VTUNE_MODE_MA
 INTERFERENCE_WORKLOAD=$INTF_HANDBRAKE
 # INTERFERENCE_WORKLOAD=$INTF_RANDOM
 
+# 1-40 MiB Data Set
 ITERATIONS=10
 INPUT_SIZE_START=$((1 * $MiB))
 INPUT_SIZE_END=$((40 * $MiB))
 INPUT_SIZE_STEP=$((1 * $MiB))
+
+# # Short Range Data Set
 # ITERATIONS=1
 # INPUT_SIZE_START=$((14 * $MiB))
 # INPUT_SIZE_END=$((15 * $MiB))
 # INPUT_SIZE_STEP=$((1 * $MiB))
+
+# # Short Step Data Set
 # ITERATIONS=4
 # INPUT_SIZE_START=$((14 * $MiB))
 # INPUT_SIZE_END=$((16 * $MiB))
 # INPUT_SIZE_STEP=$((100 * $KiB))
-# We have up to 40 MiB, which is 41.9E6 bytes
+# # We have up to 40 MiB, which is 41.9E6 bytes
 
+# Only used in Jailhouse
 THROTTLE_ITERATIONS=$(($ITERATIONS / 2))
 
 # If RUN_ON_LINUX is enabled, this says to run the workloads under Intel VTune
