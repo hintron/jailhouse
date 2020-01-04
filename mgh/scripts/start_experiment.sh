@@ -69,9 +69,11 @@ WORKLOAD_BIN_DIR="$WORKLOAD_DIR/build"
 JAILHOUSE_BIN=$JAILHOUSE_DIR/tools/jailhouse
 MGH_DEMO_PY="$MGH_DIR/uio-userspace/mgh-demo.py"
 JAILHOUSE_OUTPUT_FILE="$OUTPUT_DIR/jailhouse_${experiment_time}.txt"
+LINUX_OUTPUT_FILE="$OUTPUT_DIR/linux_output_${experiment_time}.txt"
 EXPERIMENT_OUTPUT_FILE="$OUTPUT_DIR/experiment_${experiment_time}.txt"
 VTUNE_OUTPUT_DIR="$SCRIPTS_DIR/output/vtune-thesis"
-VTUNE_OUTPUT_FILE="$OUTPUT_DIR/vtune_${experiment_time}.txt"
+VTUNE_OUTPUT_FILE="$OUTPUT_DIR/vtune_output_${experiment_time}.txt"
+VTUNE_RUNS_FILE="$OUTPUT_DIR/vtune_runs_${experiment_time}.txt"
 OUTPUT_DATA_FILE="$OUTPUT_DIR/data_${experiment_time}.csv"
 OUTPUT_FREQ_FILE="$OUTPUT_DIR/freq_${experiment_time}.csv"
 OUTPUT_DATA_THROTTLED_FILE="$OUTPUT_DIR/throttled_${experiment_time}.csv"
@@ -90,7 +92,8 @@ function main {
     # make output folder if it doesn't already exist
     mkdir -p $OUTPUT_DIR
 
-    echo "Starting experiments at $experiment_time" >> $EXPERIMENT_OUTPUT_FILE
+    echo "=======================================================" >> $EXPERIMENT_OUTPUT_FILE
+    echo "Starting script at $experiment_time" >> $EXPERIMENT_OUTPUT_FILE
     echo "=======================================================" >> $EXPERIMENT_OUTPUT_FILE
 
     # Set script inputs as globals
@@ -104,7 +107,9 @@ function main {
         reset_linux_all >> $EXPERIMENT_OUTPUT_FILE 2>&1
     else
         reset_jailhouse_all >> $EXPERIMENT_OUTPUT_FILE 2>&1
-        echo "Start time: $experiment_time" >> $JAILHOUSE_OUTPUT_FILE
+        echo "=======================================================" >> $JAILHOUSE_OUTPUT_FILE
+        echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
+        echo "Starting script at $experiment_time" >> $JAILHOUSE_OUTPUT_FILE
         echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
         # Start recording experiment output
         # Put process in the background and kill it once done
@@ -165,8 +170,12 @@ function main {
 
     echo "Ending experiments at $end_time" >> $EXPERIMENT_OUTPUT_FILE
 
-    if [ "$INMATE_DEBUG" == 0 ] && [ "$RUN_ON_LINUX" == 0 ]; then
-        post_process_data
+    if [ "$RUN_ON_LINUX" == 1 ]; then
+        post_process_data_linux
+    else
+        if [ "$INMATE_DEBUG" == 0 ]; then
+            post_process_data_jailhouse
+        fi
     fi
 }
 
@@ -232,7 +241,12 @@ function generate_expected_outputs {
     done
 }
 
-function post_process_data {
+function post_process_data_linux {
+    # Create a condensed list of VTune output folders
+    grep_token_in_file "amplxe: Using result path " $VTUNE_OUTPUT_FILE > $VTUNE_RUNS_FILE
+}
+
+function post_process_data_jailhouse {
     # Do not print out all MGHFREQ lines. Avg freq is already in MGHOUT
 
     # Separate throttled and unthrottled data
@@ -253,6 +267,13 @@ function start_experiment_linux {
 }
 
 function prep_experiment_jailhouse {
+    # Flush jailhouse output
+    sleep 3
+    echo "=======================================================" >> $JAILHOUSE_OUTPUT_FILE
+    echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
+    echo "Starting Experiment" >> $JAILHOUSE_OUTPUT_FILE
+    echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
+
     local INMATE_CMDLINE=$(set_cmdline) >> $EXPERIMENT_OUTPUT_FILE 2>&1
     start_jailhouse $ROOT_CELL $INMATE_CELL $INMATE_NAME $INMATE_PROGRAM "$INMATE_CMDLINE" >> $EXPERIMENT_OUTPUT_FILE 2>&1
 }
@@ -264,25 +285,14 @@ function prep_experiment_linux {
 
 experiment_counter=1
 function prep_experiment {
-    # Start recording experiment output
-    end_jailhouse >> $EXPERIMENT_OUTPUT_FILE 2>&1
-
-    # Flush jailhouse output
-    sleep 3
-    echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
-
     echo "################################################################################" >> $EXPERIMENT_OUTPUT_FILE
-    echo "# Experiment $experiment_counter" >> $EXPERIMENT_OUTPUT_FILE
+    echo "# Starting Experiment" >> $EXPERIMENT_OUTPUT_FILE
     echo "################################################################################" >> $EXPERIMENT_OUTPUT_FILE
-
-    echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
-    echo "Experiment $experiment_counter" >> $JAILHOUSE_OUTPUT_FILE
-    echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
 
     if [ "$RUN_ON_LINUX" == 1 ]; then
         prep_experiment_linux
     else
-        prep_experiment_jailhouse
+        prep_experiment_jailhouse $experiment_counter
     fi
 }
 
@@ -303,6 +313,9 @@ function start_experiment_jailhouse {
         echo "Input Size=$input_size" >> $EXPERIMENT_OUTPUT_FILE
         echo "Time=$(timestamp)" >> $EXPERIMENT_OUTPUT_FILE
         echo "*********************************************************" >> $EXPERIMENT_OUTPUT_FILE
+        if [ "$RUN_ON_LINUX" == 1 ]; then
+            echo "MGHOUT:index,input_size(B),workload_output_duration(ms)" >> $LINUX_OUTPUT_FILE
+        fi
         for ((j = 0 ; j < $ITERATIONS ; j++)); do
             # flatten 2d (i,j) index into a single flat index
             local index=$(($i * $ITERATIONS + $j))
@@ -322,7 +335,7 @@ function start_experiment_jailhouse {
                 echo "Linux output: $expected_output_value" >> $EXPERIMENT_OUTPUT_FILE 2>&1
                 echo "Linux output duration: $workload_output_duration" >> $EXPERIMENT_OUTPUT_FILE 2>&1
                 # Put Linux workload timing data into jailhouse output file
-                echo "MGHOUT:$index,$input_size,$workload_output_duration" >> $JAILHOUSE_OUTPUT_FILE
+                echo "MGHOUT:$index,$input_size,$workload_output_duration" >> $LINUX_OUTPUT_FILE
             else
                 workload_output=$(send_inmate_input $input_file)
                 echo "$workload_output" >> $EXPERIMENT_OUTPUT_FILE 2>&1
