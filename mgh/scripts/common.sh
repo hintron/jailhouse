@@ -387,14 +387,14 @@ function vtune_mem_access {
     -app-working-dir $VTUNE_OUTPUT_DIR \
     -- $@" >> $VTUNE_OUTPUT_FILE 2>&1
 
-    pushd $VTUNE_OUTPUT_DIR
+    pushd $VTUNE_OUTPUT_DIR > /dev/null
     $VTUNE_BIN \
     -collect memory-access \
     -knob analyze-mem-objects=true \
     -knob mem-object-size-min-thres=1 \
     -app-working-dir $VTUNE_OUTPUT_DIR \
     -- "$@" >> $VTUNE_OUTPUT_FILE 2>&1
-    popd
+    popd > /dev/null
 }
 
 function vtune_uarch_explore {
@@ -404,13 +404,13 @@ function vtune_uarch_explore {
     -app-working-dir $VTUNE_OUTPUT_DIR \
     -- $@" >> $VTUNE_OUTPUT_FILE 2>&1
 
-    pushd $VTUNE_OUTPUT_DIR
+    pushd $VTUNE_OUTPUT_DIR > /dev/null
     $VTUNE_BIN \
     -collect uarch-exploration \
     -knob collect-memory-bandwidth=true \
     -app-working-dir $VTUNE_OUTPUT_DIR \
     -- "$@" >> $VTUNE_OUTPUT_FILE 2>&1
-    popd
+    popd > /dev/null
 }
 
 # https://stackoverflow.com/questions/17066250/create-timestamp-variable-in-bash-script
