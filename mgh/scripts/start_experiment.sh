@@ -29,6 +29,7 @@ INPUT_SIZE_STEP=$((1 * $MiB))
 THROTTLE_ITERATIONS=$(($ITERATIONS / 2))
 experiment_time="$(timestamp)"
 OUTPUT_DIR="$SCRIPTS_DIR/output/${experiment_time}"
+INPUT_DIR="$SCRIPTS_DIR/input"
 WORKLOAD_BIN_DIR="$MGH_DIR/workloads/build"
 JAILHOUSE_BIN=$JAILHOUSE_DIR/tools/jailhouse
 MGH_DEMO_PY="$MGH_DIR/uio-userspace/mgh-demo.py"
@@ -161,7 +162,7 @@ function generate_input_size_range {
 # IN: $ITERATIONS
 # OUT: $random_inputs
 function generate_random_inputs {
-    INPUT_FILE_BASE="input/input_${experiment_time}"
+    INPUT_FILE_BASE="$INPUT_DIR/input_${experiment_time}"
     # This will in effect be a 2d array of input files with pregenerated random data
     random_inputs=()
     for ((i = 0 ; i < $input_sizes_count ; i++)); do
