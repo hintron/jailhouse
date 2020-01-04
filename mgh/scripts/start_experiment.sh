@@ -87,15 +87,7 @@ function main {
         # Pre-generate all input sizes beforehand
         generate_input_size_range
 
-        ######################################################################
-        # Inmate inputs
-        ######################################################################
-        WORKLOAD_MODE=${1:-$WM_COUNT_SET_BITS}
-        INTERFERENCE_WORKLOAD_ENABLE=${2:-1}
-        RUN_ON_LINUX=${3:-0} # If 1, run workloads exclusively in Linux
-        THROTTLE_MODE=${4:-$TMODE_ITERATION}
-        ######################################################################
-        start_experiment_jailhouse
+        start_experiment_jailhouse "$@"
 
         # Let's wait for the last iteration to print everything
         sleep 5
@@ -245,6 +237,15 @@ function prep_experiment {
 }
 
 function start_experiment_jailhouse {
+    ######################################################################
+    # Inmate inputs
+    ######################################################################
+    WORKLOAD_MODE=${1:-$WM_COUNT_SET_BITS}
+    INTERFERENCE_WORKLOAD_ENABLE=${2:-1}
+    RUN_ON_LINUX=${3:-0} # If 1, run workloads exclusively in Linux
+    THROTTLE_MODE=${4:-$TMODE_ITERATION}
+    ######################################################################
+
     prep_experiment
     generate_random_inputs
     generate_expected_outputs
