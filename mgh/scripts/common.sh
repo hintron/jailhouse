@@ -37,6 +37,9 @@ CSBM_FASTEST=2 # default
 INTF_HANDBRAKE=0
 INTF_RANDOM=1
 
+# This needs to already be on the path
+VTUNE_BIN=amplxe-cl
+
 # Set some tuning parameters:
 DEBUG_MODE="true"
 
@@ -305,19 +308,35 @@ function sha3_linux_str_golden {
 }
 
 function sha3_linux_file {
-    "${WORKLOAD_BIN_DIR}/sha-512" -f "$1"
+    if [ "$RUN_WITH_VTUNE" == 1 ]; then
+        vtune_uarch_explore "${WORKLOAD_BIN_DIR}/sha-512" -f "$1"
+    else
+        "${WORKLOAD_BIN_DIR}/sha-512" -f "$1"
+    fi
 }
 
 function sha3_linux_str {
-    "${WORKLOAD_BIN_DIR}/sha-512" -s "$1"
+    if [ "$RUN_WITH_VTUNE" == 1 ]; then
+        vtune_uarch_explore "${WORKLOAD_BIN_DIR}/sha-512" -s "$1"
+    else
+        "${WORKLOAD_BIN_DIR}/sha-512" -s "$1"
+    fi
 }
 
 function count_set_bits_linux_file {
-    "${WORKLOAD_BIN_DIR}/count-set-bits" "$1"
+    if [ "$RUN_WITH_VTUNE" == 1 ]; then
+        vtune_uarch_explore "${WORKLOAD_BIN_DIR}/count-set-bits" "$1"
+    else
+        "${WORKLOAD_BIN_DIR}/count-set-bits" "$1"
+    fi
 }
 
 function random_access_linux_file {
-    "${WORKLOAD_BIN_DIR}/random-access" "$1"
+    if [ "$RUN_WITH_VTUNE" == 1 ]; then
+        vtune_uarch_explore "${WORKLOAD_BIN_DIR}/random-access" "$1"
+    else
+        "${WORKLOAD_BIN_DIR}/random-access" "$1"
+    fi
 }
 
 function clear_sync_byte_shmem {
@@ -335,6 +354,40 @@ function send_inmate_input {
 
     # Send input to inmate
     sudo $MGH_DEMO_PY -f $input_file
+}
+
+function vtune_mem_access {
+    echo "$VTUNE_BIN \
+    -collect memory-access \
+    -knob analyze-mem-objects=true \
+    -knob mem-object-size-min-thres=1 \
+    -app-working-dir $VTUNE_OUTPUT_DIR \
+    -- $@" >> $VTUNE_OUTPUT_FILE 2>&1
+
+    pushd $VTUNE_OUTPUT_DIR
+    $VTUNE_BIN \
+    -collect memory-access \
+    -knob analyze-mem-objects=true \
+    -knob mem-object-size-min-thres=1 \
+    -app-working-dir $VTUNE_OUTPUT_DIR \
+    -- "$@" >> $VTUNE_OUTPUT_FILE 2>&1
+    popd
+}
+
+function vtune_uarch_explore {
+    echo "$VTUNE_BIN \
+    -collect uarch-exploration \
+    -knob collect-memory-bandwidth=true \
+    -app-working-dir $VTUNE_OUTPUT_DIR \
+    -- $@" >> $VTUNE_OUTPUT_FILE 2>&1
+
+    pushd $VTUNE_OUTPUT_DIR
+    $VTUNE_BIN \
+    -collect uarch-exploration \
+    -knob collect-memory-bandwidth=true \
+    -app-working-dir $VTUNE_OUTPUT_DIR \
+    -- "$@" >> $VTUNE_OUTPUT_FILE 2>&1
+    popd
 }
 
 # https://stackoverflow.com/questions/17066250/create-timestamp-variable-in-bash-script

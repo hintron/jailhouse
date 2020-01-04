@@ -13,6 +13,9 @@ JAILHOUSE_DIR=$(pwd)
 popd > /dev/null
 popd > /dev/null
 
+# If RUN_ON_LINUX is enabled, this says to run the workloads under Intel VTune
+RUN_WITH_VTUNE=1
+
 ROOT_CELL=$JAILHOUSE_DIR/configs/x86/bazooka-root.cell
 INMATE_CELL=$JAILHOUSE_DIR/configs/x86/bazooka-inmate.cell
 INMATE_NAME=bazooka-inmate
@@ -35,6 +38,8 @@ JAILHOUSE_BIN=$JAILHOUSE_DIR/tools/jailhouse
 MGH_DEMO_PY="$MGH_DIR/uio-userspace/mgh-demo.py"
 JAILHOUSE_OUTPUT_FILE="$OUTPUT_DIR/jailhouse_${experiment_time}.txt"
 EXPERIMENT_OUTPUT_FILE="$OUTPUT_DIR/experiment_${experiment_time}.txt"
+VTUNE_OUTPUT_DIR="$SCRIPTS_DIR/output/vtune-thesis"
+VTUNE_OUTPUT_FILE="$OUTPUT_DIR/vtune_${experiment_time}.txt"
 OUTPUT_DATA_FILE="$OUTPUT_DIR/data_${experiment_time}.csv"
 OUTPUT_FREQ_FILE="$OUTPUT_DIR/freq_${experiment_time}.csv"
 OUTPUT_DATA_THROTTLED_FILE="$OUTPUT_DIR/throttled_${experiment_time}.csv"
@@ -65,6 +70,7 @@ function main {
     ############################################################################
     # make output folder if it doesn't already exist
     mkdir -p $OUTPUT_DIR
+    mkdir -p $VTUNE_OUTPUT_DIR
 
     echo "Starting experiments at $experiment_time" >> $EXPERIMENT_OUTPUT_FILE
     echo "=======================================================" >> $EXPERIMENT_OUTPUT_FILE
