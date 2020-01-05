@@ -11,7 +11,8 @@ source ./common.sh > /dev/null
 # send inputs.
 INMATE_DEBUG=0
 
-VTUNE_MODE=$VTUNE_MODE_MA
+VTUNE_MODE=$VTUNE_MODE_UE
+# VTUNE_MODE=$VTUNE_MODE_MA
 
 # TODO: Make this experiment-dependent later
 INTERFERENCE_WORKLOAD=$INTF_HANDBRAKE
