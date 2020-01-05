@@ -295,7 +295,12 @@ function prep_experiment {
 function start_experiment {
     prep_experiment
     generate_random_inputs
-    generate_expected_outputs
+
+    # If running on Linux, don't do this step until the interference workload
+    # is running!
+    if [ "$RUN_ON_LINUX" == 0 ]; then
+        generate_expected_outputs
+    fi
 
     if [ "$INTERFERENCE_WORKLOAD" != "$INTF_NONE" ]; then
         start_interference_workload $INTERFERENCE_WORKLOAD >> $INTERFERENCE_WORKLOAD_OUTPUT 2>&1 &
@@ -304,6 +309,10 @@ function start_experiment {
     fi
 
     if [ "$RUN_ON_LINUX" == 1 ]; then
+        # Now that the interference workload is running, run the workloads on
+        # Linux
+        generate_expected_outputs
+
         echo "MGHOUT:index,input_size(B),workload_output_duration(ms)" >> $LINUX_OUTPUT_FILE
     fi
     for ((i = 0 ; i < $input_sizes_count ; i++)); do
