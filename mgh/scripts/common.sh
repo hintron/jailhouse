@@ -295,19 +295,19 @@ function create_random_file {
 # $1: Input file to work on
 # $2: (optional) The workload mode. Defaults to Count Set Bits.
 function get_expected_output {
-    if [ "$2" == $WM_SHA3 ]; then
+    if [ "$3" == $WM_SHA3 ]; then
         # If we are running exclusively in Linux, run the actual workload, not
         # the golden standard, so we can profile things
         if [ "$RUN_ON_LINUX" == 1 ]; then
-            sha3_linux_file "$1"
+            sha3_linux_file "$1" "$2"
         else
-            sha3_linux_file_golden "$1"
+            sha3_linux_file_golden "$1" "$2"
         fi
-    elif [ "$2" == $WM_RANDOM_ACCESS ]; then
-        random_access_linux_file "$1"
+    elif [ "$3" == $WM_RANDOM_ACCESS ]; then
+        random_access_linux_file "$1" "$2"
     else
         # This is the default
-        count_set_bits_linux_file "$1"
+        count_set_bits_linux_file "$1" "$2"
     fi
 }
 
@@ -324,7 +324,7 @@ function sha3_linux_str_golden {
 
 function sha3_linux_file {
     if [ "$RUN_WITH_VTUNE" == 1 ]; then
-        run_vtune "${WORKLOAD_BIN_DIR}/sha3-512" -f "$1"
+        run_vtune $2 "${WORKLOAD_BIN_DIR}/sha3-512" -f "$1"
     else
         "${WORKLOAD_BIN_DIR}/sha3-512" -f "$1"
     fi
@@ -332,7 +332,7 @@ function sha3_linux_file {
 
 function sha3_linux_str {
     if [ "$RUN_WITH_VTUNE" == 1 ]; then
-        run_vtune "${WORKLOAD_BIN_DIR}/sha3-512" -s "$1"
+        run_vtune $2 "${WORKLOAD_BIN_DIR}/sha3-512" -s "$1"
     else
         "${WORKLOAD_BIN_DIR}/sha3-512" -s "$1"
     fi
@@ -340,7 +340,7 @@ function sha3_linux_str {
 
 function count_set_bits_linux_file {
     if [ "$RUN_WITH_VTUNE" == 1 ]; then
-        run_vtune "${WORKLOAD_BIN_DIR}/count-set-bits" "$1"
+        run_vtune $2 "${WORKLOAD_BIN_DIR}/count-set-bits" "$1"
     else
         "${WORKLOAD_BIN_DIR}/count-set-bits" "$1"
     fi
@@ -348,7 +348,7 @@ function count_set_bits_linux_file {
 
 function random_access_linux_file {
     if [ "$RUN_WITH_VTUNE" == 1 ]; then
-        run_vtune "${WORKLOAD_BIN_DIR}/random-access" "$1"
+        run_vtune $2 "${WORKLOAD_BIN_DIR}/random-access" "$1"
     else
         "${WORKLOAD_BIN_DIR}/random-access" "$1"
     fi
@@ -372,19 +372,32 @@ function send_inmate_input {
 }
 
 function run_vtune {
+    local iteration_counter=$1
+    # Get rid of iteration_counter from $@
+    shift
+
+    echo "iteration_counter: $iteration_counter" >> $VTUNE_OUTPUT_FILE 2>&1
+    local vtune_result_dir="${VTUNE_RESULTS_BASE}_vtune${iteration_counter}"
     if [ "$VTUNE_MODE" == "$VTUNE_MODE_MA" ]; then
-        vtune_mem_access "$@"
+        vtune_mem_access $vtune_result_dir "$@"
     else
-        vtune_uarch_explore "$@"
+        vtune_uarch_explore $vtune_result_dir "$@"
     fi
+    # TODO: Create a report and save it
+    # amplxe-cl -report summary -r /home/hintron/code/jailhouse/mgh/scripts/output/2020-01-04_20-41-31/vtune/2020-01-04_20-41-31_0 -format=csv
 }
 
 function vtune_mem_access {
+    local result_dir=$1
+    # Get rid of the result dir from $@
+    shift
+
     echo "$VTUNE_BIN \
     -collect memory-access \
     -knob analyze-mem-objects=true \
     -knob mem-object-size-min-thres=1 \
-    -app-working-dir $VTUNE_OUTPUT_DIR \
+    -app-working-dir=$VTUNE_OUTPUT_DIR \
+    -result-dir=$result_dir \
     -- $@" >> $VTUNE_OUTPUT_FILE 2>&1
 
     pushd $VTUNE_OUTPUT_DIR > /dev/null
@@ -393,15 +406,21 @@ function vtune_mem_access {
     -knob analyze-mem-objects=true \
     -knob mem-object-size-min-thres=1 \
     -app-working-dir $VTUNE_OUTPUT_DIR \
+    -result-dir=$result_dir \
     -- "$@" >> $VTUNE_OUTPUT_FILE 2>&1
     popd > /dev/null
 }
 
 function vtune_uarch_explore {
+    local result_dir=$1
+    # Get rid of the result dir from $@
+    shift
+
     echo "$VTUNE_BIN \
     -collect uarch-exploration \
     -knob collect-memory-bandwidth=true \
-    -app-working-dir $VTUNE_OUTPUT_DIR \
+    -app-working-dir=$VTUNE_OUTPUT_DIR \
+    -result-dir=$result_dir \
     -- $@" >> $VTUNE_OUTPUT_FILE 2>&1
 
     pushd $VTUNE_OUTPUT_DIR > /dev/null
@@ -409,6 +428,7 @@ function vtune_uarch_explore {
     -collect uarch-exploration \
     -knob collect-memory-bandwidth=true \
     -app-working-dir $VTUNE_OUTPUT_DIR \
+    -result-dir=$result_dir \
     -- "$@" >> $VTUNE_OUTPUT_FILE 2>&1
     popd > /dev/null
 }

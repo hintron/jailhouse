@@ -71,7 +71,8 @@ MGH_DEMO_PY="$MGH_DIR/uio-userspace/mgh-demo.py"
 JAILHOUSE_OUTPUT_FILE="$OUTPUT_DIR/jailhouse_${experiment_time}.txt"
 LINUX_OUTPUT_FILE="$OUTPUT_DIR/linux_output_${experiment_time}.txt"
 EXPERIMENT_OUTPUT_FILE="$OUTPUT_DIR/experiment_${experiment_time}.txt"
-VTUNE_OUTPUT_DIR="$SCRIPTS_DIR/output/vtune-thesis"
+VTUNE_OUTPUT_DIR="$OUTPUT_DIR/vtune"
+VTUNE_RESULTS_BASE="$VTUNE_OUTPUT_DIR/${experiment_time}"
 VTUNE_OUTPUT_FILE="$OUTPUT_DIR/vtune_output_${experiment_time}.txt"
 VTUNE_RUNS_FILE="$OUTPUT_DIR/vtune_runs_${experiment_time}.txt"
 OUTPUT_DATA_FILE="$OUTPUT_DIR/data_${experiment_time}.csv"
@@ -230,7 +231,7 @@ function generate_expected_outputs {
             local index=$(($i * $ITERATIONS + $j))
             # Calculate and capture expected outputs
             local start_time_ns=$(date +%s%N)
-            local expected_output=$(get_expected_output ${random_inputs[$index]} $WORKLOAD_MODE)
+            local expected_output=$(get_expected_output ${random_inputs[$index]} $index $WORKLOAD_MODE)
             local end_time_ns=$(date +%s%N)
             local duration_ns=$(($end_time_ns-$start_time_ns))
             local duration_us=$(($duration_ns/1000))
