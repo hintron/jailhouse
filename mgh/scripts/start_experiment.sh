@@ -144,7 +144,7 @@ function main {
         # Pre-generate all input sizes beforehand
         generate_input_size_range
 
-        start_experiment_jailhouse
+        start_experiment
 
         # Let's wait for the last iteration to print everything
         sleep 5
@@ -264,10 +264,6 @@ function post_process_data_jailhouse {
     done
 }
 
-function start_experiment_linux {
-    generate_random_inputs
-}
-
 function prep_experiment_jailhouse {
     # Flush jailhouse output
     sleep 3
@@ -285,7 +281,6 @@ function prep_experiment_linux {
     : # no-op placeholder
 }
 
-experiment_counter=1
 function prep_experiment {
     echo "################################################################################" >> $EXPERIMENT_OUTPUT_FILE
     echo "# Starting Experiment" >> $EXPERIMENT_OUTPUT_FILE
@@ -294,11 +289,11 @@ function prep_experiment {
     if [ "$RUN_ON_LINUX" == 1 ]; then
         prep_experiment_linux
     else
-        prep_experiment_jailhouse $experiment_counter
+        prep_experiment_jailhouse
     fi
 }
 
-function start_experiment_jailhouse {
+function start_experiment {
     prep_experiment
     generate_random_inputs
     generate_expected_outputs
@@ -366,8 +361,6 @@ function start_experiment_jailhouse {
         # echo "sudo rm $input_file" >> $EXPERIMENT_OUTPUT_FILE
         sudo rm $input_file >> $EXPERIMENT_OUTPUT_FILE 2>&1
     done
-
-    experiment_counter=$(($experiment_counter + 1))
 }
 
 # Call main here to allow for forward declaration (like Python)
