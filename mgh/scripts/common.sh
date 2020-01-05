@@ -480,6 +480,14 @@ function grep_token_in_file_to_file {
     grep_token_in_file $token $in_file
 }
 
+function grep_all_but_token_in_file_to_file {
+    local token="$1"
+    local in_file="$2"
+
+    # echo "grep -v \"$token\" $in_file | sed \"s/${token}//\" | sed \"s/\r//\""
+    grep -v "$token" $in_file | sed "s/${token}//" | sed "s/\r//"
+}
+
 function grep_token_in_file {
     local token="$1"
     local in_file="$2"
