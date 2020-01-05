@@ -378,13 +378,15 @@ function run_vtune {
 
     echo "iteration_counter: $iteration_counter" >> $VTUNE_OUTPUT_FILE 2>&1
     local vtune_result_dir="${VTUNE_RESULTS_BASE}_vtune${iteration_counter}"
+    local vtune_report_file="${vtune_result_dir}/report.txt"
+
     if [ "$VTUNE_MODE" == "$VTUNE_MODE_MA" ]; then
         vtune_mem_access $vtune_result_dir "$@"
     else
         vtune_uarch_explore $vtune_result_dir "$@"
     fi
-    # TODO: Create a report and save it
-    # amplxe-cl -report summary -r /home/hintron/code/jailhouse/mgh/scripts/output/2020-01-04_20-41-31/vtune/2020-01-04_20-41-31_0 -format=csv
+    # Create a report and save it
+    amplxe-cl -report summary -r $vtune_result_dir -format=csv > $vtune_report_file 2>&1
 }
 
 function vtune_mem_access {
