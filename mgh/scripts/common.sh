@@ -379,7 +379,7 @@ function run_vtune {
 
     echo "iteration_counter: $iteration_counter" >> $VTUNE_OUTPUT_FILE 2>&1
     local vtune_result_dir="${VTUNE_RESULTS_BASE}_vtune${iteration_counter}"
-    local vtune_report_file="${vtune_result_dir}/report.txt"
+    local vtune_report_file="${vtune_result_dir}/report_${iteration_counter}.txt"
 
     if [ "$VTUNE_MODE" == "$VTUNE_MODE_MA" ]; then
         vtune_mem_access $vtune_result_dir "$@"
