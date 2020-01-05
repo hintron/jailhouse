@@ -324,17 +324,17 @@ function sha3_linux_str_golden {
 
 function sha3_linux_file {
     if [ "$RUN_WITH_VTUNE" == 1 ]; then
-        run_vtune "${WORKLOAD_BIN_DIR}/sha-512" -f "$1"
+        run_vtune "${WORKLOAD_BIN_DIR}/sha3-512" -f "$1"
     else
-        "${WORKLOAD_BIN_DIR}/sha-512" -f "$1"
+        "${WORKLOAD_BIN_DIR}/sha3-512" -f "$1"
     fi
 }
 
 function sha3_linux_str {
     if [ "$RUN_WITH_VTUNE" == 1 ]; then
-        run_vtune "${WORKLOAD_BIN_DIR}/sha-512" -s "$1"
+        run_vtune "${WORKLOAD_BIN_DIR}/sha3-512" -s "$1"
     else
-        "${WORKLOAD_BIN_DIR}/sha-512" -s "$1"
+        "${WORKLOAD_BIN_DIR}/sha3-512" -s "$1"
     fi
 }
 
