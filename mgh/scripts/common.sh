@@ -34,8 +34,9 @@ CSBM_FASTER=1
 CSBM_FASTEST=2 # default
 
 # Interference Workloads
-INTF_HANDBRAKE=0
-INTF_RANDOM=1
+INTF_NONE=0
+INTF_HANDBRAKE=1
+INTF_RANDOM=2
 
 # VTune Analysis Modes
 VTUNE_MODE_MA=0 # Memory Access

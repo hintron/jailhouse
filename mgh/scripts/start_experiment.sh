@@ -14,10 +14,6 @@ INMATE_DEBUG=0
 VTUNE_MODE=$VTUNE_MODE_UE
 # VTUNE_MODE=$VTUNE_MODE_MA
 
-# TODO: Make this experiment-dependent later
-INTERFERENCE_WORKLOAD=$INTF_HANDBRAKE
-# INTERFERENCE_WORKLOAD=$INTF_RANDOM
-
 # # 1-40 MiB Data Set
 # ITERATIONS=10
 # INPUT_SIZE_START=$((1 * $MiB))
@@ -76,6 +72,7 @@ VTUNE_OUTPUT_DIR="$OUTPUT_DIR/vtune"
 VTUNE_RESULTS_BASE="$VTUNE_OUTPUT_DIR/${experiment_time}"
 VTUNE_OUTPUT_FILE="$OUTPUT_DIR/vtune_output_${experiment_time}.txt"
 VTUNE_RUNS_FILE="$OUTPUT_DIR/vtune_runs_${experiment_time}.txt"
+# VTUNE_TIMES_FILE="$OUTPUT_DIR/vtune_times_${experiment_time}.txt"
 OUTPUT_DATA_FILE="$OUTPUT_DIR/data_${experiment_time}.csv"
 OUTPUT_FREQ_FILE="$OUTPUT_DIR/freq_${experiment_time}.csv"
 OUTPUT_DATA_THROTTLED_FILE="$OUTPUT_DIR/throttled_${experiment_time}.csv"
@@ -100,7 +97,7 @@ function main {
 
     # Set script inputs as globals
     WORKLOAD_MODE=${1:-$WM_COUNT_SET_BITS}
-    INTERFERENCE_WORKLOAD_ENABLE=${2:-1}
+    INTERFERENCE_WORKLOAD=${2:-$INTF_HANDBRAKE}
     RUN_ON_LINUX=${3:-0} # If 1, run workloads exclusively in Linux
     THROTTLE_MODE=${4:-$TMODE_ITERATION}
 
@@ -246,6 +243,8 @@ function generate_expected_outputs {
 function post_process_data_linux {
     # Create a condensed list of VTune output folders
     grep_token_in_file "amplxe: Using result path " $VTUNE_OUTPUT_FILE > $VTUNE_RUNS_FILE
+    # grep_token_in_file "Elapsed Time: " $VTUNE_OUTPUT_FILE > $VTUNE_TIMES_FILE
+    # grep_all_but_token_in_file_to_file "amplxe:" $VTUNE_OUTPUT_FILE > $VTUNE_RUNS_FILE
 }
 
 function post_process_data_jailhouse {
@@ -298,7 +297,7 @@ function start_experiment {
     generate_random_inputs
     generate_expected_outputs
 
-    if [ "$INTERFERENCE_WORKLOAD_ENABLE" == 1 ]; then
+    if [ "$INTERFERENCE_WORKLOAD" != "$INTF_NONE" ]; then
         start_interference_workload $INTERFERENCE_WORKLOAD >> $INTERFERENCE_WORKLOAD_OUTPUT 2>&1 &
         echo "Wait $INTERFERENCE_RAMPUP_TIME seconds for handbrake to ramp up" >> $EXPERIMENT_OUTPUT_FILE
         sleep $INTERFERENCE_RAMPUP_TIME
@@ -351,7 +350,7 @@ function start_experiment {
     done
     echo "*********************************************************" >> $EXPERIMENT_OUTPUT_FILE
 
-    if [ "$INTERFERENCE_WORKLOAD_ENABLE" == 1 ]; then
+    if [ "$INTERFERENCE_WORKLOAD" != "$INTF_NONE" ]; then
         stop_interference_workload $INTERFERENCE_WORKLOAD >> $EXPERIMENT_OUTPUT_FILE 2>&1
     fi
 
