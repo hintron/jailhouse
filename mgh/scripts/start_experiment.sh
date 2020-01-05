@@ -307,15 +307,15 @@ function start_experiment_jailhouse {
         sleep $INTERFERENCE_RAMPUP_TIME
     fi
 
+    if [ "$RUN_ON_LINUX" == 1 ]; then
+        echo "MGHOUT:index,input_size(B),workload_output_duration(ms)" >> $LINUX_OUTPUT_FILE
+    fi
     for ((i = 0 ; i < $input_sizes_count ; i++)); do
         local input_size=${input_sizes[$i]}
         echo "*********************************************************" >> $EXPERIMENT_OUTPUT_FILE
         echo "Input Size=$input_size" >> $EXPERIMENT_OUTPUT_FILE
         echo "Time=$(timestamp)" >> $EXPERIMENT_OUTPUT_FILE
         echo "*********************************************************" >> $EXPERIMENT_OUTPUT_FILE
-        if [ "$RUN_ON_LINUX" == 1 ]; then
-            echo "MGHOUT:index,input_size(B),workload_output_duration(ms)" >> $LINUX_OUTPUT_FILE
-        fi
         for ((j = 0 ; j < $ITERATIONS ; j++)); do
             # flatten 2d (i,j) index into a single flat index
             local index=$(($i * $ITERATIONS + $j))
