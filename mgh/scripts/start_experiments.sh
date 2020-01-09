@@ -11,8 +11,8 @@ function main {
     # ./start_experiment.sh $WM_RANDOM_ACCESS
     # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_NONE 1
     # ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_NONE 1
-    # ./start_experiment.sh $WM_SHA3 $INTF_NONE 1
-    ./start_experiment.sh $WM_SHA3 $INTF_HANDBRAKE 1
+    # ./start_experiment.sh $WM_SHA3 $INTF_NONE 0
+    # ./start_experiment.sh $WM_SHA3 $INTF_HANDBRAKE 1
     # ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_NONE 0 $TMODE_DISABLED
 }
 
