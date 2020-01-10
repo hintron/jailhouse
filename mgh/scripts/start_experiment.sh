@@ -45,15 +45,6 @@ RUN_WITH_VTUNE=1
 #
 ################################################################################
 
-# jailhouse/mgh/scripts/
-SCRIPTS_DIR=$(pwd)
-pushd .. > /dev/null
-MGH_DIR=$(pwd)
-pushd .. > /dev/null
-JAILHOUSE_DIR=$(pwd)
-popd > /dev/null
-popd > /dev/null
-
 ROOT_CELL=$JAILHOUSE_DIR/configs/x86/bazooka-root.cell
 INMATE_CELL=$JAILHOUSE_DIR/configs/x86/bazooka-inmate.cell
 INMATE_NAME=bazooka-inmate
