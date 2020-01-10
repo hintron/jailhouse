@@ -274,8 +274,6 @@ function reset_jailhouse_all {
 }
 # Stop everything, rebuild, and reload drivers
 function reset_linux_all {
-    end_jailhouse
-    rm_drivers
     build_linux_workloads
 }
 
