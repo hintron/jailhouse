@@ -54,7 +54,6 @@ OUTPUT_DIR="$SCRIPTS_DIR/output/${experiment_time}"
 INPUT_DIR="$SCRIPTS_DIR/input"
 WORKLOAD_DIR="$MGH_DIR/workloads"
 WORKLOAD_BIN_DIR="$WORKLOAD_DIR/build"
-JAILHOUSE_BIN=$JAILHOUSE_DIR/tools/jailhouse
 MGH_DEMO_PY="$MGH_DIR/uio-userspace/mgh-demo.py"
 JAILHOUSE_OUTPUT_FILE="$OUTPUT_DIR/jailhouse_${experiment_time}.txt"
 LINUX_OUTPUT_FILE="$OUTPUT_DIR/linux_output_${experiment_time}.txt"
