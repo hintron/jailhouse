@@ -11,8 +11,8 @@ source ./common.sh > /dev/null
 # send inputs.
 INMATE_DEBUG=0
 
-VTUNE_MODE=$VTUNE_MODE_UE
-# VTUNE_MODE=$VTUNE_MODE_MA
+# VTUNE_MODE=$VTUNE_MODE_UE
+VTUNE_MODE=$VTUNE_MODE_MA
 
 # # 1-40 MiB Data Set
 # ITERATIONS=10
