@@ -103,6 +103,7 @@ function main {
     INTERFERENCE_WORKLOAD=${2:-$INTF_HANDBRAKE}
     RUN_ON_LINUX=${3:-0} # If 1, run workloads exclusively in Linux
     THROTTLE_MODE=${4:-$TMODE_ITERATION}
+    INPUT_FILE=${5:-""}
 
     if [ "$DISABLE_TURBO_BOOST" == 1 ]; then
         disable_turbo_boost >> $EXPERIMENT_OUTPUT_FILE
@@ -154,9 +155,10 @@ function main {
         done
         echo "$count s: Finished!" >> $EXPERIMENT_OUTPUT_FILE
     else
-        # Pre-generate all input sizes beforehand
-        generate_input_size_range
-
+        if [ "$INPUT_FILE" != "" ]; then
+            # Pre-generate all input sizes beforehand
+            generate_input_size_range
+        fi
         start_experiment
 
         # Let's wait for the last iteration to print everything
@@ -321,11 +323,13 @@ function start_experiment {
     log_parameters
 
     prep_experiment
-    generate_random_inputs
 
+    if [ "$INPUT_FILE" != "" ] ; then
+        generate_random_inputs
+    fi
     # If running on Linux, don't do this step until the interference workload
     # is running!
-    if [ "$RUN_ON_LINUX" == 0 ]; then
+    if [ "$RUN_ON_LINUX" == 0 ] && [ "$INPUT_FILE" != "" ]; then
         generate_expected_outputs
     fi
 
@@ -338,12 +342,18 @@ function start_experiment {
     if [ "$RUN_ON_LINUX" == 1 ]; then
         # Now that the interference workload is running, run the workloads on
         # Linux
-        generate_expected_outputs
+        if [ "$INPUT_FILE" != "" ]; then
+            generate_expected_outputs
+        fi
 
         echo "MGHOUT:index,input_size(B),workload_output_duration(ms)" >> $LINUX_OUTPUT_FILE
     fi
     for ((i = 0 ; i < $input_sizes_count ; i++)); do
-        local input_size=${input_sizes[$i]}
+        if [ "$INPUT_FILE" == "" ]; then
+            local input_size=${input_sizes[$i]}
+        else
+            local input_size=$(get_size_of_file_bytes $INPUT_FILE)
+        fi
         echo "*********************************************************" >> $EXPERIMENT_OUTPUT_FILE
         echo "Input Size=$input_size" >> $EXPERIMENT_OUTPUT_FILE
         echo "Time=$(timestamp)" >> $EXPERIMENT_OUTPUT_FILE
@@ -356,13 +366,29 @@ function start_experiment {
             fi
             echo "Iteration $j ($index):" >> $EXPERIMENT_OUTPUT_FILE
 
-            local input_file=${random_inputs[$index]}
-            local expected_output_value="${expected_outputs[$index]}"
+            if [ "$INPUT_FILE" == "" ]; then
+                local input_file=${random_inputs[$index]}
+            else
+                local input_file="$INPUT_FILE"
+            fi
+
+            if [ "$INPUT_FILE" == "" ]; then
+                local expected_output_value="${expected_outputs[$index]}"
+            else
+                local start_time_ns=$(date +%s%N)
+                local expected_output_value=$(get_expected_output $INPUT_FILE $index $WORKLOAD_MODE)
+                local end_time_ns=$(date +%s%N)
+                local duration_ms=$((($end_time_ns-$start_time_ns)/1000/1000))
+            fi
 
             if [ "$RUN_ON_LINUX" == 1 ]; then
                 # On Linux, the workload output is just the expected value
                 # already calculated
-                workload_output_duration=${expected_output_times_ms[$index]}
+                if [ "$INPUT_FILE" == "" ]; then
+                    local workload_output_duration=${expected_output_times_ms[$index]}
+                else
+                    local workload_output_duration=$duration_ms
+                fi
                 echo "Linux input size: $input_size" >> $EXPERIMENT_OUTPUT_FILE 2>&1
                 echo "Linux output: $expected_output_value" >> $EXPERIMENT_OUTPUT_FILE 2>&1
                 echo "Linux output duration: $workload_output_duration" >> $EXPERIMENT_OUTPUT_FILE 2>&1
@@ -383,6 +409,12 @@ function start_experiment {
                 fi
             fi
         done
+
+        # If input file was specified, break out of the input range loop
+        # (we only need to execute one set of iterations)
+        if [ "$INPUT_FILE" != "" ]; then
+            break;
+        fi
     done
     echo "*********************************************************" >> $EXPERIMENT_OUTPUT_FILE
 
@@ -390,12 +422,19 @@ function start_experiment {
         stop_interference_workload $INTERFERENCE_WORKLOAD >> $EXPERIMENT_OUTPUT_FILE 2>&1
     fi
 
-    echo "Removing all generated random input files..." >> $EXPERIMENT_OUTPUT_FILE
-    for input_file in ${random_inputs[@]}; do
-        # The input is just random data, so really no sense in keeping it around rn
-        # echo "sudo rm $input_file" >> $EXPERIMENT_OUTPUT_FILE
-        sudo rm $input_file >> $EXPERIMENT_OUTPUT_FILE 2>&1
-    done
+    if [ "$INPUT_FILE" == "" ] ; then
+        echo "Removing all generated random input files..." >> $EXPERIMENT_OUTPUT_FILE
+        for input_file in ${random_inputs[@]}; do
+            # The input is just random data, so really no sense in keeping it around rn
+            # echo "sudo rm $input_file" >> $EXPERIMENT_OUTPUT_FILE
+            sudo rm $input_file >> $EXPERIMENT_OUTPUT_FILE 2>&1
+        done
+    else
+        # Skip input file deletion if input was specified
+        # copy the input file for future reference
+        cp "$INPUT_FILE" "$OUTPUT_DIR/input_${experiment_time}"
+    fi
+
 }
 
 # Call main here to allow for forward declaration (like Python)
