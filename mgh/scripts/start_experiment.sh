@@ -14,6 +14,9 @@ INMATE_DEBUG=0
 # VTUNE_MODE=$VTUNE_MODE_UE
 VTUNE_MODE=$VTUNE_MODE_MA
 
+# If RUN_ON_LINUX is enabled, this says to run the workloads under Intel VTune
+# RUN_WITH_VTUNE=1
+RUN_WITH_VTUNE=0
 # When doing Linux workloads, make Linux run on top of Jailhouse
 LINUX_UNDER_JAILHOUSE=0
 # When doing Linux workloads, turn off Turbo Boost
@@ -40,9 +43,6 @@ INPUT_SIZE_STEP=$((1 * $MiB))
 
 # Only used in Jailhouse
 THROTTLE_ITERATIONS=$(($ITERATIONS / 2))
-
-# If RUN_ON_LINUX is enabled, this says to run the workloads under Intel VTune
-RUN_WITH_VTUNE=1
 
 ################################################################################
 #
