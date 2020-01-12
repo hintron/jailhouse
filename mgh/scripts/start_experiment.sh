@@ -107,7 +107,9 @@ function main {
     fi
 
     if [ "$RUN_ON_LINUX" == 1 ]; then
-        mkdir -p $VTUNE_OUTPUT_DIR
+        if [ "$RUN_WITH_VTUNE" == 1 ]; then
+            mkdir -p $VTUNE_OUTPUT_DIR
+        fi
         reset_linux_all >> $EXPERIMENT_OUTPUT_FILE 2>&1
     fi
 
@@ -259,10 +261,12 @@ function generate_expected_outputs {
 }
 
 function post_process_data_linux {
-    # Create a condensed list of VTune output folders
-    grep_token_in_file "amplxe: Using result path " $VTUNE_OUTPUT_FILE > $VTUNE_RUNS_FILE
-    # grep_token_in_file "Elapsed Time: " $VTUNE_OUTPUT_FILE > $VTUNE_TIMES_FILE
-    # grep_all_but_token_in_file_to_file "amplxe:" $VTUNE_OUTPUT_FILE > $VTUNE_RUNS_FILE
+    if [ "$RUN_WITH_VTUNE" == 1 ]; then
+        # Create a condensed list of VTune output folders
+        grep_token_in_file "amplxe: Using result path " $VTUNE_OUTPUT_FILE > $VTUNE_RUNS_FILE
+        # grep_token_in_file "Elapsed Time: " $VTUNE_OUTPUT_FILE > $VTUNE_TIMES_FILE
+        # grep_all_but_token_in_file_to_file "amplxe:" $VTUNE_OUTPUT_FILE > $VTUNE_RUNS_FILE
+    fi
 }
 
 function post_process_data_jailhouse {
