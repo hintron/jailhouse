@@ -55,6 +55,8 @@ VTUNE_MODE_UE=1 # Microarchitectural Exploration
 # This needs to already be on the path
 VTUNE_BIN=amplxe-cl
 
+NO_TURBO_INTERFACE=/sys/devices/system/cpu/intel_pstate/no_turbo
+
 # Set some tuning parameters:
 DEBUG_MODE="true"
 
@@ -101,6 +103,16 @@ function set_cmdline {
     # https://stackoverflow.com/questions/369758/how-to-trim-whitespace-from-a-bash-variable
     CMDLINE="$(echo -e "${CMDLINE}" | sed -e 's/^[[:space:]]*//')"
     echo $CMDLINE
+}
+
+function disable_turbo_boost {
+    echo "Disabling Turbo Boost"
+    echo "1" | sudo tee "$NO_TURBO_INTERFACE"
+}
+
+function enable_turbo_boost {
+    echo "Enabling Turbo Boost"
+    echo "0" | sudo tee "$NO_TURBO_INTERFACE"
 }
 
 # End the inmate cell at position 1
