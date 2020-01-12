@@ -14,6 +14,9 @@ INMATE_DEBUG=0
 # VTUNE_MODE=$VTUNE_MODE_UE
 VTUNE_MODE=$VTUNE_MODE_MA
 
+# When doing Linux workloads, turn off Turbo Boost
+DISABLE_TURBO_BOOST=0
+
 # # 1-40 MiB Data Set
 # ITERATIONS=10
 # INPUT_SIZE_START=$((1 * $MiB))
@@ -91,6 +94,10 @@ function main {
     RUN_ON_LINUX=${3:-0} # If 1, run workloads exclusively in Linux
     THROTTLE_MODE=${4:-$TMODE_ITERATION}
 
+    if [ "$DISABLE_TURBO_BOOST" == 1 ]; then
+        disable_turbo_boost >> $EXPERIMENT_OUTPUT_FILE
+    fi
+
     if [ "$RUN_ON_LINUX" == 1 ]; then
         mkdir -p $VTUNE_OUTPUT_DIR
         reset_linux_all >> $EXPERIMENT_OUTPUT_FILE 2>&1
@@ -140,6 +147,10 @@ function main {
     # ##########################################################################
     # Final Cleanup
     # ##########################################################################
+
+    if [ "$DISABLE_TURBO_BOOST" == 1 ]; then
+        enable_turbo_boost >> $EXPERIMENT_OUTPUT_FILE
+    fi
 
     # Flush any buffers
     end_time="$(timestamp)"
