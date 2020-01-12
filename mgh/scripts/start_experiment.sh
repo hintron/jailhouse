@@ -18,9 +18,11 @@ VTUNE_MODE=$VTUNE_MODE_MA
 # RUN_WITH_VTUNE=1
 RUN_WITH_VTUNE=0
 # When doing Linux workloads, make Linux run on top of Jailhouse
-LINUX_UNDER_JAILHOUSE=0
+LINUX_UNDER_JAILHOUSE=1
+# LINUX_UNDER_JAILHOUSE=0
 # When doing Linux workloads, turn off Turbo Boost
-DISABLE_TURBO_BOOST=0
+DISABLE_TURBO_BOOST=1
+# DISABLE_TURBO_BOOST=0
 
 # # 1-40 MiB Data Set
 # ITERATIONS=10
