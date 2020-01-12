@@ -14,6 +14,8 @@ INMATE_DEBUG=0
 # VTUNE_MODE=$VTUNE_MODE_UE
 VTUNE_MODE=$VTUNE_MODE_MA
 
+# When doing Linux workloads, make Linux run on top of Jailhouse
+LINUX_UNDER_JAILHOUSE=0
 # When doing Linux workloads, turn off Turbo Boost
 DISABLE_TURBO_BOOST=0
 
@@ -88,6 +90,12 @@ function main {
     echo "Starting script at $experiment_time" >> $EXPERIMENT_OUTPUT_FILE
     echo "=======================================================" >> $EXPERIMENT_OUTPUT_FILE
 
+    # VTune doesn't work under a hypervisor, at least not out of the box
+    if [ "$LINUX_UNDER_JAILHOUSE" == 1 ] && [ "$RUN_WITH_VTUNE" == 1 ]; then
+        echo "Error: Cannot run Linux under Jailhouse while also running a Linux workload under VTune. Canceling experiment." >> $EXPERIMENT_OUTPUT_FILE
+        return
+    fi
+
     # Set script inputs as globals
     WORKLOAD_MODE=${1:-$WM_COUNT_SET_BITS}
     INTERFERENCE_WORKLOAD=${2:-$INTF_HANDBRAKE}
@@ -101,7 +109,9 @@ function main {
     if [ "$RUN_ON_LINUX" == 1 ]; then
         mkdir -p $VTUNE_OUTPUT_DIR
         reset_linux_all >> $EXPERIMENT_OUTPUT_FILE 2>&1
-    else
+    fi
+
+    if [ "$RUN_ON_LINUX" == 0 ] || [ "$LINUX_UNDER_JAILHOUSE" == 1 ]; then
         reset_jailhouse_all >> $EXPERIMENT_OUTPUT_FILE 2>&1
         echo "=======================================================" >> $JAILHOUSE_OUTPUT_FILE
         echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
@@ -112,6 +122,11 @@ function main {
         sudo jailhouse console -f >> $JAILHOUSE_OUTPUT_FILE 2>&1 &
         tailf_pid=$!
         echo "tailf_pid: $tailf_pid" >> $EXPERIMENT_OUTPUT_FILE
+    fi
+
+    # Start the root cell here, so Linux is under Jailhouse
+    if [ "$LINUX_UNDER_JAILHOUSE" == 1 ]; then
+        start_root $ROOT_CELL >> $EXPERIMENT_OUTPUT_FILE
     fi
 
     # Return early if just running tests in inmate with no inputs
@@ -155,7 +170,7 @@ function main {
     # Flush any buffers
     end_time="$(timestamp)"
 
-    if [ "$RUN_ON_LINUX" == 0 ]; then
+    if [ "$RUN_ON_LINUX" == 0 ] || [ "$LINUX_UNDER_JAILHOUSE" == 1 ]; then
         echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
         echo "Ending experiments at $end_time" >> $JAILHOUSE_OUTPUT_FILE
         echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
@@ -164,7 +179,9 @@ function main {
         sudo kill $tailf_pid >> $EXPERIMENT_OUTPUT_FILE 2>&1
         # end_jailhouse_processes >> $EXPERIMENT_OUTPUT_FILE 2>&1
 
-        end_inmate >> $EXPERIMENT_OUTPUT_FILE 2>&1
+        if [ "$RUN_ON_LINUX" == 0 ]; then
+            end_inmate >> $EXPERIMENT_OUTPUT_FILE 2>&1
+        fi
         end_root >> $EXPERIMENT_OUTPUT_FILE 2>&1
     fi
 
