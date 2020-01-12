@@ -290,6 +290,10 @@ function start_root {
     sudo $JAILHOUSE_BIN enable "$1"
 }
 
+function get_size_of_file_bytes {
+    wc -c < "$1"
+}
+
 # Parameters:
 #   INMATE_CELL
 #   INMATE_NAME
