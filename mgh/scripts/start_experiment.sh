@@ -283,6 +283,9 @@ function prep_experiment {
 }
 
 function start_experiment {
+    # Print out the experimental parameters
+    log_parameters
+
     prep_experiment
     generate_random_inputs
 

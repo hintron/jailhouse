@@ -60,6 +60,128 @@ NO_TURBO_INTERFACE=/sys/devices/system/cpu/intel_pstate/no_turbo
 # Set some tuning parameters:
 DEBUG_MODE="true"
 
+function log_parameters {
+    ####################
+    # Common Parameters
+    ####################
+    echo "RUN_ON_LINUX: $RUN_ON_LINUX" >> $EXPERIMENT_OUTPUT_FILE
+    echo "DEBUG_MODE: $DEBUG_MODE" >> $EXPERIMENT_OUTPUT_FILE
+    echo "INMATE_DEBUG: $INMATE_DEBUG" >> $EXPERIMENT_OUTPUT_FILE
+    echo "INPUT_SIZE_START: $INPUT_SIZE_START" >> $EXPERIMENT_OUTPUT_FILE
+    echo "INPUT_SIZE_END: $INPUT_SIZE_END" >> $EXPERIMENT_OUTPUT_FILE
+    echo "INPUT_SIZE_STEP: $INPUT_SIZE_STEP" >> $EXPERIMENT_OUTPUT_FILE
+    echo "ITERATIONS: $ITERATIONS" >> $EXPERIMENT_OUTPUT_FILE
+
+    printf "WORKLOAD_MODE: " >> $EXPERIMENT_OUTPUT_FILE
+    case "$WORKLOAD_MODE" in
+    "$WM_SHA3")
+        echo "WM_SHA3" >> $EXPERIMENT_OUTPUT_FILE
+        ;;
+    "$WM_CACHE_ANALYSIS")
+        echo "WM_CACHE_ANALYSIS" >> $EXPERIMENT_OUTPUT_FILE
+        ;;
+    "$WM_COUNT_SET_BITS")
+        echo "WM_COUNT_SET_BITS" >> $EXPERIMENT_OUTPUT_FILE
+        ;;
+    "$WM_RANDOM_ACCESS")
+        echo "WM_RANDOM_ACCESS" >> $EXPERIMENT_OUTPUT_FILE
+        ;;
+    "$WM_INMATE_DEBUG")
+        echo "WM_INMATE_DEBUG" >> $EXPERIMENT_OUTPUT_FILE
+        ;;
+    "")
+        echo "Unspecified" >> $EXPERIMENT_OUTPUT_FILE
+        ;;
+    *)
+        echo "Unknown" >> $EXPERIMENT_OUTPUT_FILE
+        ;;
+    esac
+
+    printf "INTERFERENCE_WORKLOAD: " >> $EXPERIMENT_OUTPUT_FILE
+    case "$INTERFERENCE_WORKLOAD" in
+    "$INTF_NONE")
+        echo "INTF_NONE" >> $EXPERIMENT_OUTPUT_FILE
+        ;;
+    "$INTF_HANDBRAKE")
+        echo "INTF_HANDBRAKE" >> $EXPERIMENT_OUTPUT_FILE
+        ;;
+    "$INTF_RANDOM")
+        echo "INTF_RANDOM" >> $EXPERIMENT_OUTPUT_FILE
+        ;;
+    "")
+        echo "Unspecified" >> $EXPERIMENT_OUTPUT_FILE
+        ;;
+    *)
+        echo "Unknown" >> $EXPERIMENT_OUTPUT_FILE
+        ;;
+    esac
+
+    ####################
+    # Linux-only Parameters
+    ####################
+    echo "RUN_WITH_VTUNE: $RUN_WITH_VTUNE" >> $EXPERIMENT_OUTPUT_FILE
+    printf "VTUNE_MODE: " >> $EXPERIMENT_OUTPUT_FILE
+    case "$VTUNE_MODE" in
+    "$VTUNE_MODE_MA")
+        echo "VTUNE_MODE_MA" >> $EXPERIMENT_OUTPUT_FILE
+        ;;
+    "$VTUNE_MODE_UE")
+        echo "VTUNE_MODE_UE" >> $EXPERIMENT_OUTPUT_FILE
+        ;;
+    "")
+        echo "Unspecified" >> $EXPERIMENT_OUTPUT_FILE
+        ;;
+    *)
+        echo "Unknown" >> $EXPERIMENT_OUTPUT_FILE
+        ;;
+    esac
+
+    ####################
+    # Inmate-only Parameters
+    ####################
+    echo "THROTTLE_ITERATIONS: $THROTTLE_ITERATIONS" >> $EXPERIMENT_OUTPUT_FILE
+    printf "THROTTLE_MODE: " >> $EXPERIMENT_OUTPUT_FILE
+    case "$THROTTLE_MODE" in
+    "$TMODE_ALTERNATING")
+        echo "TMODE_ALTERNATING" >> $EXPERIMENT_OUTPUT_FILE
+        ;;
+    "$TMODE_DEADLINE")
+        echo "TMODE_DEADLINE" >> $EXPERIMENT_OUTPUT_FILE
+        ;;
+    "$TMODE_ITERATION")
+        echo "TMODE_ITERATION" >> $EXPERIMENT_OUTPUT_FILE
+        ;;
+    "$TMODE_DISABLED")
+        echo "TMODE_DISABLED" >> $EXPERIMENT_OUTPUT_FILE
+        ;;
+    "")
+        echo "Unspecified" >> $EXPERIMENT_OUTPUT_FILE
+        ;;
+    *)
+        echo "Unknown" >> $EXPERIMENT_OUTPUT_FILE
+        ;;
+    esac
+
+    printf "THROTTLE_MECHANISM: " >> $EXPERIMENT_OUTPUT_FILE
+    case "$THROTTLE_MECHANISM" in
+    "$TMECH_CLOCK")
+        echo "TMECH_CLOCK" >> $EXPERIMENT_OUTPUT_FILE
+        ;;
+    "$TMECH_SPIN")
+        echo "TMECH_SPIN" >> $EXPERIMENT_OUTPUT_FILE
+        ;;
+    "$TMECH_PAUSE")
+        echo "TMECH_PAUSE" >> $EXPERIMENT_OUTPUT_FILE
+        ;;
+    "")
+        echo "Unspecified" >> $EXPERIMENT_OUTPUT_FILE
+        ;;
+    *)
+        echo "Unknown" >> $EXPERIMENT_OUTPUT_FILE
+        ;;
+    esac
+}
+
 # Parameters:
 #   DEBUG_MODE
 #   LOCAL_BUFFER
