@@ -61,9 +61,9 @@ NO_TURBO_INTERFACE=/sys/devices/system/cpu/intel_pstate/no_turbo
 DEBUG_MODE="true"
 
 function log_parameters {
-    ####################
-    # Common Parameters
-    ####################
+    echo "#####################" >> $EXPERIMENT_OUTPUT_FILE
+    echo "# Common Parameters #" >> $EXPERIMENT_OUTPUT_FILE
+    echo "#####################" >> $EXPERIMENT_OUTPUT_FILE
     echo "RUN_ON_LINUX: $RUN_ON_LINUX" >> $EXPERIMENT_OUTPUT_FILE
     echo "DISABLE_TURBO_BOOST: $DISABLE_TURBO_BOOST" >> $EXPERIMENT_OUTPUT_FILE
     echo "DEBUG_MODE: $DEBUG_MODE" >> $EXPERIMENT_OUTPUT_FILE
@@ -118,9 +118,9 @@ function log_parameters {
         ;;
     esac
 
-    ####################
-    # Linux-only Parameters
-    ####################
+    echo "#########################" >> $EXPERIMENT_OUTPUT_FILE
+    echo "# Linux-only Parameters #" >> $EXPERIMENT_OUTPUT_FILE
+    echo "#########################" >> $EXPERIMENT_OUTPUT_FILE
     echo "LINUX_UNDER_JAILHOUSE: $LINUX_UNDER_JAILHOUSE" >> $EXPERIMENT_OUTPUT_FILE
     echo "RUN_WITH_VTUNE: $RUN_WITH_VTUNE" >> $EXPERIMENT_OUTPUT_FILE
     printf "VTUNE_MODE: " >> $EXPERIMENT_OUTPUT_FILE
@@ -139,9 +139,9 @@ function log_parameters {
         ;;
     esac
 
-    ####################
-    # Inmate-only Parameters
-    ####################
+    echo "##########################" >> $EXPERIMENT_OUTPUT_FILE
+    echo "# Inmate-only Parameters #" >> $EXPERIMENT_OUTPUT_FILE
+    echo "##########################" >> $EXPERIMENT_OUTPUT_FILE
     echo "THROTTLE_ITERATIONS: $THROTTLE_ITERATIONS" >> $EXPERIMENT_OUTPUT_FILE
     printf "THROTTLE_MODE: " >> $EXPERIMENT_OUTPUT_FILE
     case "$THROTTLE_MODE" in
@@ -183,6 +183,9 @@ function log_parameters {
         echo "Unknown" >> $EXPERIMENT_OUTPUT_FILE
         ;;
     esac
+    echo "##################" >> $EXPERIMENT_OUTPUT_FILE
+    echo "# End Parameters #" >> $EXPERIMENT_OUTPUT_FILE
+    echo "##################" >> $EXPERIMENT_OUTPUT_FILE
 }
 
 # Parameters:
