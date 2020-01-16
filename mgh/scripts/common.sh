@@ -233,6 +233,14 @@ function set_cmdline {
     echo $CMDLINE
 }
 
+function cycles_to_seconds {
+    local cycles="$1"
+    # This has proved to be invariant on my system
+    local TSC_FREQUENCY=3696003000
+    python3 -c "print(float($cycles)/float($TSC_FREQUENCY))"
+}
+# https://unix.stackexchange.com/questions/40786/how-to-do-integer-float-calculations-in-bash-or-other-languages-frameworks
+
 function disable_turbo_boost {
     echo "Disabling Turbo Boost"
     echo "1" | sudo tee "$NO_TURBO_INTERFACE"
