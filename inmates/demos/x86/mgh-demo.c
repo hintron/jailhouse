@@ -373,19 +373,6 @@ static void calculate_sha3(char *input, unsigned long input_len, char *output,
 		printk("ERROR: SHA3 failed!\n");
 		return;
 	}
-
-	// Return early if not in debug mode
-	if (!MGH_DEBUG_MODE)
-		return;
-
-	// Print out the calculated SHA3
-	for (int i = 0; i < MD_LENGTH; ++i) {
-		char upper = _get_hex_from_upper_nibble(output[i]);
-		char lower = _get_hex_from_lower_nibble(output[i]);
-		printk("%c", upper);
-		printk("%c", lower);
-	}
-	printk("\n");
 }
 
 // TODO: Actually make this useful?
@@ -869,9 +856,6 @@ static char *get_inout(volatile char *shmem)
 static void workload(char *input, unsigned long len, char *output,
 		     unsigned long *output_len, workload_t workload_mode)
 {
-	if (MGH_DEBUG_MODE)
-		printk("MGH DEBUG: Input data length: %lu\n", len);
-
 	// Account for space needed to tack on NULL character
 	if (len > DATA_SIZE) {
 		printk("MGH: Input data max length exceeded (%lu > %u)\n",
@@ -974,6 +958,17 @@ static void expand_memory(void)
 	/* Set heap_pos to point to MGH_HEAP_BASE, instead of right after the
 	 * inmate's stack, so alloc() can allocate more than 1 MB. */
 	heap_pos = MGH_HEAP_BASE;
+}
+
+static void print_hex(char *buffer, unsigned long buffer_len)
+{
+	for (int i = 0; i < buffer_len; ++i) {
+		char upper = _get_hex_from_upper_nibble(buffer[i]);
+		char lower = _get_hex_from_lower_nibble(buffer[i]);
+		printk("%c", upper);
+		printk("%c", lower);
+	}
+	printk("\n");
 }
 
 void inmate_main(void)
@@ -1094,6 +1089,10 @@ void inmate_main(void)
 		shmem[OFFSET_SYNC] = 3;
 		input_len = get_data_length(shmem);
 
+		if (MGH_DEBUG_MODE)
+			printk("MGH DEBUG: Input data length: %lu\n",
+			       input_len);
+
 		if (input_len == 0) {
 			printk("MGH: ERROR: Inmate input is 0. Exiting...\n");
 			return;
@@ -1131,6 +1130,11 @@ void inmate_main(void)
 		workload(inout, input_len, inout, &output_len, workload_mode);
 		end_tsc = rdtsc();
 		end = tsc_read_ns();
+
+		if (MGH_DEBUG_MODE) {
+			printk("workload output: 0x");
+			print_hex(inout, output_len);
+		}
 
 		set_data_length(shmem, output_len);
 
