@@ -392,18 +392,9 @@ static void cache_analysis(char *input, unsigned long input_len, char *output,
 	} else {
 		input_hash = CACHE_ANALYSIS_SIZE_MB;
 	}
-	if (MGH_DEBUG_MODE) {
-		printk("MGH DEBUG: input_hash: %u\n", input_hash);
-		printk("MGH DEBUG: buffer_size: 0x%lx\n", buffer_size);
-	}
 
 	// Allocate 20 MB of memory to play with
 	buffer = (unsigned char *)alloc_heap(buffer_size);
-
-	if (MGH_DEBUG_MODE) {
-		printk("MGH DEBUG: buffer: %p\n", buffer);
-		printk("MGH DEBUG: buffer_end: %p\n", &buffer[buffer_size-1]);
-	}
 
 	// Force entire buffer into cache
 	if (CACHE_ANALYSIS_POLLUTE_CACHE)
