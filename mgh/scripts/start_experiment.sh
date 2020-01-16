@@ -256,8 +256,7 @@ function generate_expected_outputs {
             local expected_output=$(get_expected_output ${random_inputs[$index]} $index $WORKLOAD_MODE)
             local end_time_ns=$(date +%s%N)
             local duration_ns=$(($end_time_ns-$start_time_ns))
-            local duration_us=$(($duration_ns/1000))
-            local duration_ms=$(($duration_us/1000))
+            local duration_ms=$(ns_to_ms $duration_ns)
             expected_outputs+=($expected_output)
             expected_output_times_ms+=($duration_ms)
         done
@@ -378,7 +377,8 @@ function start_experiment {
                 local start_time_ns=$(date +%s%N)
                 local expected_output_value=$(get_expected_output $INPUT_FILE $index $WORKLOAD_MODE)
                 local end_time_ns=$(date +%s%N)
-                local duration_ms=$((($end_time_ns-$start_time_ns)/1000/1000))
+                local duration_ns=$(($end_time_ns-$start_time_ns))
+                local duration_ms=$(ns_to_ms $duration_ns)
             fi
 
             if [ "$RUN_ON_LINUX" == 1 ]; then

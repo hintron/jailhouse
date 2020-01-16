@@ -237,6 +237,16 @@ function set_cmdline {
     echo $CMDLINE
 }
 
+function ns_to_s {
+    local ns="$1"
+    python3 -c "print(float($1)/float(1000000000))"
+}
+
+function ns_to_ms {
+    local ns="$1"
+    python3 -c "print(float($1)/float(1000000))"
+}
+
 function cycles_to_seconds {
     local cycles="$1"
     # This has proved to be invariant on my system
