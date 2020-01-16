@@ -858,7 +858,7 @@ static void workload(char *input, unsigned long len, char *output,
 {
 	// Account for space needed to tack on NULL character
 	if (len > DATA_SIZE) {
-		printk("MGH: Input data max length exceeded (%lu > %u)\n",
+		printk("MGH: ERROR: Input exceeded max length (%lu > %u)\n",
 		       len, DATA_SIZE);
 		return;
 	}
