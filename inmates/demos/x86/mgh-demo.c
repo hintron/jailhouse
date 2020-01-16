@@ -1005,8 +1005,7 @@ void inmate_main(void)
 	(void) query_freq();
 
 	/* Initialize better (?) exception reporting */
-	if (MGH_DEBUG_MODE)
-		excp_reporting_init();
+	// excp_reporting_init();
 
 	// Get the first PCI device, which should be the IVSHMEM device
 	shmem = devs[0].shmem;
