@@ -50,18 +50,18 @@ function main {
     # ./start_experiment.sh $WM_SHA3 $INTF_NONE $RM_INMATE $TMODE_DISABLED tmp.input
     # # ./start_experiment.sh $WM_SHA3 $INTF_NONE $RM_LINUX $TMODE_DISABLED tmp.input
 
-
-    create_random_file $((2**20 * 20)) tmp.input
-    # ./start_experiment.sh $WM_SHA3 $INTF_NONE $RM_INMATE $TMODE_DISABLED tmp.input
-    ./start_experiment.sh $WM_SHA3 $INTF_NONE $RM_LINUX $TMODE_DISABLED tmp.input
-    ./start_experiment.sh $WM_SHA3 $INTF_NONE $RM_LINUX_JAILHOUSE $TMODE_DISABLED tmp.input
-    # ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_NONE $RM_INMATE $TMODE_DISABLED tmp.input
-    # ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_NONE $RM_LINUX $TMODE_DISABLED tmp.input
-    # ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_NONE $RM_LINUX_JAILHOUSE $TMODE_DISABLED tmp.input
-    # # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_NONE $RM_INMATE $TMODE_DISABLED tmp.input
-    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_NONE $RM_LINUX $TMODE_DISABLED tmp.input
-    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_NONE $RM_LINUX_JAILHOUSE $TMODE_DISABLED tmp.input
-    rm tmp.input
+    INPUT_FILE=tmp.input
+    create_random_file $((2**20 * 20)) $INPUT_FILE
+    # ./start_experiment.sh $WM_SHA3 $INTF_NONE $RM_INMATE $TMODE_DISABLED $INPUT_FILE
+    ./start_experiment.sh $WM_SHA3 $INTF_NONE $RM_LINUX $TMODE_DISABLED $INPUT_FILE
+    ./start_experiment.sh $WM_SHA3 $INTF_NONE $RM_LINUX_JAILHOUSE $TMODE_DISABLED $INPUT_FILE
+    # ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_NONE $RM_INMATE $TMODE_DISABLED $INPUT_FILE
+    ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_NONE $RM_LINUX $TMODE_DISABLED $INPUT_FILE
+    ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_NONE $RM_LINUX_JAILHOUSE $TMODE_DISABLED $INPUT_FILE
+    # # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_NONE $RM_INMATE $TMODE_DISABLED $INPUT_FILE
+    ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_NONE $RM_LINUX $TMODE_DISABLED $INPUT_FILE
+    ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_NONE $RM_LINUX_JAILHOUSE $TMODE_DISABLED $INPUT_FILE
+    rm $INPUT_FILE
 }
 
 # Call main here to allow for forward declaration (like Python)
