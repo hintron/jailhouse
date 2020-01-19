@@ -14,12 +14,9 @@ INMATE_DEBUG=0
 # VTUNE_MODE=$VTUNE_MODE_UE
 VTUNE_MODE=$VTUNE_MODE_MA
 
-# If RUN_ON_LINUX is enabled, this says to run the workloads under Intel VTune
+# This says to run the workloads under Intel VTune (Linux-only)
 # RUN_WITH_VTUNE=1
 RUN_WITH_VTUNE=0
-# When doing Linux workloads, make Linux run on top of Jailhouse
-LINUX_UNDER_JAILHOUSE=1
-# LINUX_UNDER_JAILHOUSE=0
 # When doing Linux workloads, turn off Turbo Boost
 DISABLE_TURBO_BOOST=1
 # DISABLE_TURBO_BOOST=0
@@ -93,7 +90,7 @@ function main {
     echo "=======================================================" >> $EXPERIMENT_OUTPUT_FILE
 
     # VTune doesn't work under a hypervisor, at least not out of the box
-    if [ "$LINUX_UNDER_JAILHOUSE" == 1 ] && [ "$RUN_WITH_VTUNE" == 1 ]; then
+    if [ "$RUN_MODE" == "$RM_LINUX_JAILHOUSE" ] && [ "$RUN_WITH_VTUNE" == 1 ]; then
         echo "Error: Cannot run Linux under Jailhouse while also running a Linux workload under VTune. Canceling experiment." >> $EXPERIMENT_OUTPUT_FILE
         return
     fi
@@ -101,7 +98,7 @@ function main {
     # Set script inputs as globals
     WORKLOAD_MODE=${1:-$WM_COUNT_SET_BITS}
     INTERFERENCE_WORKLOAD=${2:-$INTF_HANDBRAKE}
-    RUN_ON_LINUX=${3:-0} # If 1, run workloads exclusively in Linux
+    RUN_MODE=${3:-$RM_INMATE}
     THROTTLE_MODE=${4:-$TMODE_ITERATION}
     INPUT_FILE=${5:-""}
 
@@ -109,14 +106,14 @@ function main {
         disable_turbo_boost >> $EXPERIMENT_OUTPUT_FILE
     fi
 
-    if [ "$RUN_ON_LINUX" == 1 ]; then
+    if [[ "$RUN_MODE" > "$RM_INMATE" ]]; then
         if [ "$RUN_WITH_VTUNE" == 1 ]; then
             mkdir -p $VTUNE_OUTPUT_DIR
         fi
         reset_linux_all >> $EXPERIMENT_OUTPUT_FILE 2>&1
     fi
 
-    if [ "$RUN_ON_LINUX" == 0 ] || [ "$LINUX_UNDER_JAILHOUSE" == 1 ]; then
+    if [ "$RUN_MODE" == "$RM_INMATE" ] || [ "$RUN_MODE" == "$RM_LINUX_JAILHOUSE" ]; then
         reset_jailhouse_all >> $EXPERIMENT_OUTPUT_FILE 2>&1
         echo "=======================================================" >> $JAILHOUSE_OUTPUT_FILE
         echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
@@ -130,7 +127,7 @@ function main {
     fi
 
     # Start the root cell here, so Linux is under Jailhouse
-    if [ "$LINUX_UNDER_JAILHOUSE" == 1 ]; then
+    if [ "$RUN_MODE" == "$RM_LINUX_JAILHOUSE" ]; then
         start_root $ROOT_CELL >> $EXPERIMENT_OUTPUT_FILE
     fi
 
@@ -176,7 +173,7 @@ function main {
     # Flush any buffers
     end_time="$(timestamp)"
 
-    if [ "$RUN_ON_LINUX" == 0 ] || [ "$LINUX_UNDER_JAILHOUSE" == 1 ]; then
+    if [ "$RUN_MODE" == "$RM_INMATE" ] || [ "$RUN_MODE" == "$RM_LINUX_JAILHOUSE" ]; then
         echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
         echo "Ending experiments at $end_time" >> $JAILHOUSE_OUTPUT_FILE
         echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
@@ -185,7 +182,7 @@ function main {
         sudo kill $tailf_pid >> $EXPERIMENT_OUTPUT_FILE 2>&1
         # end_jailhouse_processes >> $EXPERIMENT_OUTPUT_FILE 2>&1
 
-        if [ "$RUN_ON_LINUX" == 0 ]; then
+        if [ "$RUN_MODE" == "$RM_INMATE" ]; then
             end_inmate >> $EXPERIMENT_OUTPUT_FILE 2>&1
         fi
         end_root >> $EXPERIMENT_OUTPUT_FILE 2>&1
@@ -193,7 +190,7 @@ function main {
 
     echo "Ending experiments at $end_time" >> $EXPERIMENT_OUTPUT_FILE
 
-    if [ "$RUN_ON_LINUX" == 1 ]; then
+    if [[ "$RUN_MODE" > "$RM_INMATE" ]]; then
         post_process_data_linux
     else
         if [ "$INMATE_DEBUG" == 0 ]; then
@@ -310,7 +307,7 @@ function prep_experiment {
     echo "# Starting Experiment" >> $EXPERIMENT_OUTPUT_FILE
     echo "################################################################################" >> $EXPERIMENT_OUTPUT_FILE
 
-    if [ "$RUN_ON_LINUX" == 1 ]; then
+    if [[ "$RUN_MODE" > "$RM_INMATE" ]]; then
         prep_experiment_linux
     else
         prep_experiment_jailhouse
@@ -328,7 +325,7 @@ function start_experiment {
     fi
     # If running on Linux, don't do this step until the interference workload
     # is running!
-    if [ "$RUN_ON_LINUX" == 0 ] && [ "$INPUT_FILE" != "" ]; then
+    if [ "$RUN_MODE" == 0 ] && [ "$INPUT_FILE" != "" ]; then
         generate_expected_outputs
     fi
 
@@ -338,7 +335,7 @@ function start_experiment {
         sleep $INTERFERENCE_RAMPUP_TIME
     fi
 
-    if [ "$RUN_ON_LINUX" == 1 ]; then
+    if [[ "$RUN_MODE" > "$RM_INMATE" ]]; then
         # Now that the interference workload is running, run the workloads on
         # Linux
         if [ "$INPUT_FILE" != "" ]; then
@@ -381,7 +378,7 @@ function start_experiment {
                 local duration_ms=$(ns_to_ms $duration_ns)
             fi
 
-            if [ "$RUN_ON_LINUX" == 1 ]; then
+            if [[ "$RUN_MODE" > "$RM_INMATE" ]]; then
                 # On Linux, the workload output is just the expected value
                 # already calculated
                 if [ "$INPUT_FILE" == "" ]; then

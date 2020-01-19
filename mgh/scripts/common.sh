@@ -52,6 +52,11 @@ INTF_RANDOM=2
 VTUNE_MODE_MA=0 # Memory Access
 VTUNE_MODE_UE=1 # Microarchitectural Exploration
 
+# run modes
+RM_INMATE=0 # Do not run workloads in Linux
+RM_LINUX=1 # Run in Linux, but NOT in the root cell in Jailhouse
+RM_LINUX_JAILHOUSE=2 # Run in Linux under root cell in Jailhouse
+
 # This needs to already be on the path
 VTUNE_BIN=amplxe-cl
 
@@ -64,7 +69,25 @@ function log_parameters {
     echo "#####################" >> $EXPERIMENT_OUTPUT_FILE
     echo "# Common Parameters #" >> $EXPERIMENT_OUTPUT_FILE
     echo "#####################" >> $EXPERIMENT_OUTPUT_FILE
-    echo "RUN_ON_LINUX: $RUN_ON_LINUX" >> $EXPERIMENT_OUTPUT_FILE
+    printf "RUN_MODE: " >> $EXPERIMENT_OUTPUT_FILE
+    case "$RUN_MODE" in
+    "$RM_INMATE")
+        echo "RM_INMATE" >> $EXPERIMENT_OUTPUT_FILE
+        ;;
+    "$RM_LINUX")
+        echo "RM_LINUX" >> $EXPERIMENT_OUTPUT_FILE
+        ;;
+    "$RM_LINUX_JAILHOUSE")
+        echo "RM_LINUX_JAILHOUSE" >> $EXPERIMENT_OUTPUT_FILE
+        ;;
+    "")
+        echo "Unspecified" >> $EXPERIMENT_OUTPUT_FILE
+        ;;
+    *)
+        echo "Unknown" >> $EXPERIMENT_OUTPUT_FILE
+        ;;
+    esac
+
     echo "DISABLE_TURBO_BOOST: $DISABLE_TURBO_BOOST" >> $EXPERIMENT_OUTPUT_FILE
     echo "DEBUG_MODE: $DEBUG_MODE" >> $EXPERIMENT_OUTPUT_FILE
     echo "INMATE_DEBUG: $INMATE_DEBUG" >> $EXPERIMENT_OUTPUT_FILE
@@ -473,7 +496,7 @@ function get_expected_output {
     if [ "$3" == $WM_SHA3 ]; then
         # If we are running exclusively in Linux, run the actual workload, not
         # the golden standard, so we can profile things
-        if [ "$RUN_ON_LINUX" == 1 ]; then
+        if [[ "$RUN_MODE" > "$RM_INMATE" ]]; then
             sha3_linux_file "$1" "$2"
         else
             sha3_linux_file_golden "$1" "$2"
