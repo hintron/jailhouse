@@ -204,7 +204,7 @@ in Linux under the root cell.
 
 See [_mgh/README.md_](mgh/README.md) for more information.
 
+## Issues
 
-## Wish list
-
-[Here is a wish list of some unresolved problems](TODO.md)
+Check the GitHub issue tracker for TODO items, wish list items, bugs, and other
+issues.
