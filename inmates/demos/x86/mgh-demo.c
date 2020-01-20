@@ -100,23 +100,23 @@ static csb_mode_t COUNT_SET_BITS_MODE = DEFAULT_COUNT_SET_BITS_MODE;
 static bool CACHE_ANALYSIS_POLLUTE_CACHE = false;
 
 // # of bytes for the sha3-512 message digest output
-#define MD_LENGTH 	64
-#define MB		(1 << 20) // 2^20 = 1048576 = 1 MB
+#define MD_LENGTH 		64
+#define MB			(1 << 20) // 2^20 = 1048576 = 1 MB
 
 // Map out shared memory (define the sizes)
-#define SYNC_SIZE 	1
-#define RESERVED_SIZE	3
-#define LEN_SIZE	4
+#define SYNC_SIZE 		1
+#define RESERVED_SIZE		3
+#define LEN_SIZE		4
 // The entire IVSHMEM region is 40 MB. Data gets the rest of the space.
-#define DATA_SIZE	((40 * MB) - (SYNC_SIZE + RESERVED_SIZE + LEN_SIZE))
+#define DATA_SIZE		((40 * MB) - (SYNC_SIZE + RESERVED_SIZE + LEN_SIZE))
 
-#define MGH_HEAP_BASE	0x00200000
-#define MGH_HEAP_SIZE	(35 * MB)
+#define MGH_HEAP_BASE		0x00200000
+#define MGH_HEAP_SIZE		(35 * MB)
 
-#define OFFSET_SYNC 	0
-#define OFFSET_RESERVED	(OFFSET_SYNC + SYNC_SIZE)
-#define OFFSET_LEN	(OFFSET_RESERVED + RESERVED_SIZE)
-#define OFFSET_DATA	(OFFSET_LEN + LEN_SIZE)
+#define OFFSET_SYNC 		0
+#define OFFSET_RESERVED		(OFFSET_SYNC + SYNC_SIZE)
+#define OFFSET_LEN		(OFFSET_RESERVED + RESERVED_SIZE)
+#define OFFSET_DATA		(OFFSET_LEN + LEN_SIZE)
 
 // NOTE: The "heap" is really just another stack.
 extern unsigned long heap_pos;
