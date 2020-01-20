@@ -78,7 +78,8 @@ root busy. E.g., encode a Blu-ray video file with handbrake:
 
     ./start_handbrake.sh
 
-Also, optionally monitor core frequencies using CoreFreq with this script:
+Also, optionally monitor core frequencies in a separate terminal using CoreFreq
+with this script:
 
     ./start_corefreq.sh
 
