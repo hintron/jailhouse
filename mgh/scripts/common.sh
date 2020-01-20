@@ -14,6 +14,8 @@ popd > /dev/null
 popd > /dev/null
 
 JAILHOUSE_BIN=$JAILHOUSE_DIR/tools/jailhouse
+MGH_DEMO_PY="$MGH_DIR/uio-userspace/mgh-demo.py"
+
 # Note that the inmate libraries assume that the cmdline string will be stored
 # at 0x1000 and will have a size of CMDLINE_BUFFER_SIZE.
 CMDLINE_OFFSET=0x1000

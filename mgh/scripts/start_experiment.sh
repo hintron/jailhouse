@@ -49,6 +49,8 @@ THROTTLE_ITERATIONS=$(($ITERATIONS / 2))
 #
 ################################################################################
 
+# common.sh will have set up SCRIPTS_DIR, MGH_DIR, and JAILHOUSE_DIR
+
 ROOT_CELL=$JAILHOUSE_DIR/configs/x86/bazooka-root.cell
 INMATE_CELL=$JAILHOUSE_DIR/configs/x86/bazooka-inmate.cell
 INMATE_NAME=bazooka-inmate
@@ -58,7 +60,6 @@ OUTPUT_DIR="$SCRIPTS_DIR/output/${experiment_time}"
 INPUT_DIR="$SCRIPTS_DIR/input"
 WORKLOAD_DIR="$MGH_DIR/workloads"
 WORKLOAD_BIN_DIR="$WORKLOAD_DIR/build"
-MGH_DEMO_PY="$MGH_DIR/uio-userspace/mgh-demo.py"
 JAILHOUSE_OUTPUT_FILE="$OUTPUT_DIR/jailhouse_${experiment_time}.txt"
 LINUX_OUTPUT_FILE="$OUTPUT_DIR/linux_output_${experiment_time}.txt"
 EXPERIMENT_OUTPUT_FILE="$OUTPUT_DIR/experiment_${experiment_time}.txt"
