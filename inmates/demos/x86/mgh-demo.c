@@ -1075,7 +1075,7 @@ void inmate_main(void)
 			continue;
 		}
 
-		// Indicate that we are now working on sha3
+		/* Indicate that we are now executing the workload */
 		shmem[OFFSET_SYNC] = 3;
 		input_len = get_data_length(shmem);
 
