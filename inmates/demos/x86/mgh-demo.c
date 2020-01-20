@@ -121,9 +121,9 @@ static bool CACHE_ANALYSIS_POLLUTE_CACHE = false;
 // NOTE: The "heap" is really just another stack.
 extern unsigned long heap_pos;
 
-static void *alloc_heap(unsigned long size)
+static char *alloc_heap(unsigned long size)
 {
-	return alloc(size, PAGE_SIZE);
+	return (char *)alloc(size, PAGE_SIZE);
 }
 
 /*
@@ -379,7 +379,7 @@ static void calculate_sha3(char *input, unsigned long input_len, char *output,
 static void cache_analysis(char *input, unsigned long input_len, char *output,
 			   unsigned long *output_len)
 {
-	unsigned char *buffer = NULL;
+	char *buffer = NULL;
 	unsigned long buffer_size = CACHE_ANALYSIS_SIZE_MB*MB;
 	unsigned char input_hash = 0;
 
@@ -394,7 +394,7 @@ static void cache_analysis(char *input, unsigned long input_len, char *output,
 	}
 
 	// Allocate 20 MB of memory to play with
-	buffer = (unsigned char *)alloc_heap(buffer_size);
+	buffer = alloc_heap(buffer_size);
 
 	// Force entire buffer into cache
 	if (CACHE_ANALYSIS_POLLUTE_CACHE)
