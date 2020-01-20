@@ -57,7 +57,7 @@ to run, determining what input files or input size ranges to use, whether to
 disable Turbo Boost in Linux, and other options.
 
 To manually start the root and inmate, along with the UIO infrastructure needed
-for the IVSHMEM shared memory channel, cd to the _mgh/scripts_ directory and
+for the IVSHMEM shared memory channel, `cd` to the _mgh/scripts_ directory and
 do the following:
 
     ./clean.sh
@@ -107,19 +107,21 @@ to encode a specific Blu-ray file.
 
 ##### Inspiron Demo
 
-(NOTE: This likely doesn't work right now).
+(NOTE: This doesn't work right now. Root config _inspiron-root.c_ needs to be
+updated)
 
 The Inspiron demo is an inmate demo configured to run on my x86-64 Intel
 Kubuntu 19.10 Dell Inspiron laptop.
 
-[_inspiron-root.c_](../configs/x86/inspiron-root.c) and
+[_inspiron-root.c_](../configs/x86/to-port/inspiron-root.c) and
 [_inspiron-inmate.c_](../configs/x86/inspiron-inmate.c) are the root and inmate
-cell configuration files, respectively.
+cell configuration files, respectively. _inspiron-root.c_ needs to be updated.
 
 
 ##### QEMU Demo
 
-(NOTE: This doesn't work right now, since the configs aren't updated).
+(NOTE: This doesn't work right now. Root config _qemu-mgh.c_ and inmate config
+_mgh-demo.c_ need to be updated)
 
 The root config is [_qemu-mgh.c_](../configs/x86/to-port/qemu-mgh.c)
 (based off of [_qemu-x86.c_](../configs/x86/qemu-x86.c)).
