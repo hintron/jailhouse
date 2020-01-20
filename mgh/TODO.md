@@ -1,7 +1,6 @@
 [Back to README-MGH.md](README-MGH.md)
-# TODO List
 
-(Roughly sorted by priority)
+# Wish List
 
 * Get root cell properly sending interrupts back to the inmate
 

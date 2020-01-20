@@ -1,11 +1,6 @@
 README - Hintron Fork of Jailhouse
 ====================================
 
-## TODO List
-
-[Checkout the TODO list here](TODO.md)
-
-
 ## Overview
 
 The goal of this project is to use Jailhouse to get a real-time VM running
@@ -113,3 +108,8 @@ See [mgh/README.md](mgh/README.md) for more information.
 mgh/docs contains additional external documents and resources.
 
 See [docs/README.md](docs/README.md) for a listing of these resources.
+
+
+## Wish list
+
+[Here is a wish list of some unresolved problems](TODO.md)
