@@ -85,6 +85,7 @@ typedef enum {
 
 #define DEFAULT_DEBUG_MODE		false
 #define DEFAULT_LOCAL_BUFFER		false
+#define DEFAULT_LOCAL_INPUT		false
 #define DEFAULT_THROTTLE_MODE		ALTERNATING
 #define DEFAULT_THROTTLE_MECHANISM	SPIN
 #define DEFAULT_WORKLOAD_MODE		COUNT_SET_BITS
@@ -112,6 +113,8 @@ static bool CACHE_ANALYSIS_POLLUTE_CACHE = false;
 
 #define MGH_HEAP_BASE		0x00200000
 #define MGH_HEAP_SIZE		(35 * MB)
+/* Default to 20 MiB for now */
+#define LOCAL_INPUT_SIZE	(20 * MB)
 
 #define OFFSET_SYNC 		0
 #define OFFSET_RESERVED		(OFFSET_SYNC + SYNC_SIZE)
@@ -455,7 +458,7 @@ static void command_line_params(bool *local_buffer,
 				throttle_mode_t *throttle_mode,
 				workload_t *workload_mode,
 				throttle_t *throttle_mechanism,
-				int *throttle_iterations)
+				int *throttle_iterations, bool *local_input)
 {
 	*local_buffer = cmdline_parse_bool("lb",
 					   DEFAULT_LOCAL_BUFFER);
@@ -551,6 +554,9 @@ static void command_line_params(bool *local_buffer,
 		printk("MGH: CACHE_ANALYSIS_POLLUTE_CACHE=%d\n",
 		       CACHE_ANALYSIS_POLLUTE_CACHE);
 	}
+
+	*local_input = cmdline_parse_bool("li", DEFAULT_LOCAL_INPUT);
+	printk("MGH: local_input=%d\n", *local_input);
 }
 /*
  * Returns true if hardware setup was successful.
@@ -982,10 +988,17 @@ void inmate_main(void)
 	 * than helps.
 	 */
 	bool local_buffer = DEFAULT_LOCAL_BUFFER;
+	bool local_input = DEFAULT_LOCAL_INPUT;
 
 	/* Process custom command line parameters for inmate */
 	command_line_params(&local_buffer, &throttle_mode, &workload_mode,
-			    &throttle_mechanism, &throttle_iterations);
+			    &throttle_mechanism, &throttle_iterations,
+			    &local_input);
+
+	if (local_buffer && local_input) {
+		printk("MGH: ERROR: local_buffer and local_input are both set, which is incompatible. Exiting...\n");
+		return;
+	}
 
 	if (!hardware_setup())
 		return;
@@ -1077,7 +1090,19 @@ void inmate_main(void)
 
 		/* Indicate that we are now executing the workload */
 		shmem[OFFSET_SYNC] = 3;
-		input_len = get_data_length(shmem);
+
+		if (local_input) {
+			input_len = LOCAL_INPUT_SIZE;
+			/* Make inout a local buffer that avoids shmem */
+			inout = alloc_heap(LOCAL_INPUT_SIZE);
+			/* Create a 20 MiB input of all 'X' characters */
+			for (int i = 0; i < LOCAL_INPUT_SIZE; i++) {
+				inout[i] = 'X';
+			}
+		} else {
+			input_len = get_data_length(shmem);
+			inout = get_inout(shmem);
+		}
 
 		if (MGH_DEBUG_MODE)
 			printk("MGH DEBUG: Input data length: %lu\n",
@@ -1087,8 +1112,6 @@ void inmate_main(void)
 			printk("MGH: ERROR: Inmate input is 0. Exiting...\n");
 			return;
 		}
-
-		inout = get_inout(shmem);
 
 		freq1 = query_freq();
 
@@ -1150,6 +1173,11 @@ void inmate_main(void)
 			if (MGH_DEBUG_MODE)
 				printk("Output buffer copy took %lu ns\n",
 				       (end - start));
+		} else if (local_input) {
+			/* Copy output to shmem as a courtesy */
+			memcpy(get_inout(shmem), inout, output_len);
+			/* Reset heap pointer for next iteration */
+			free_heap_all();
 		}
 
 		freq4 = query_freq();

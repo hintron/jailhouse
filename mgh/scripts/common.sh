@@ -59,6 +59,8 @@ RM_INMATE=0 # Do not run workloads in Linux
 RM_LINUX=1 # Run in Linux, but NOT in the root cell in Jailhouse
 RM_LINUX_JAILHOUSE=2 # Run in Linux under root cell in Jailhouse
 
+LOCAL_INPUT_TOKEN="<local-input>"
+
 # This needs to already be on the path
 VTUNE_BIN=amplxe-cl
 
@@ -99,7 +101,9 @@ function log_parameters {
         echo "INPUT_SIZE_STEP: $INPUT_SIZE_STEP" >> $EXPERIMENT_OUTPUT_FILE
     else
         echo "INPUT_FILE: $INPUT_FILE" >> $EXPERIMENT_OUTPUT_FILE
-        echo "INPUT_FILE size: $(get_size_of_file_bytes $INPUT_FILE) Bytes" >> $EXPERIMENT_OUTPUT_FILE
+        if [ "$LOCAL_INPUT" != 1 ]; then
+            echo "INPUT_FILE size: $(get_size_of_file_bytes $INPUT_FILE) Bytes" >> $EXPERIMENT_OUTPUT_FILE
+        fi
     fi
     echo "ITERATIONS: $ITERATIONS" >> $EXPERIMENT_OUTPUT_FILE
 
@@ -254,6 +258,9 @@ function set_cmdline {
     fi
     if [ ! -z $THROTTLE_ITERATIONS ]; then
         CMDLINE="${CMDLINE} throttleiter=$THROTTLE_ITERATIONS"
+    fi
+    if [ ! -z $LOCAL_INPUT ]; then
+        CMDLINE="${CMDLINE} li=$LOCAL_INPUT"
     fi
 
     # Remove leading whitespace
@@ -482,6 +489,11 @@ function create_random_file_max {
     create_random_file $size $file
 }
 
+# The inmate is hardcoded to generate a local 20 MiB input of all `X` characters
+function create_inmate_local_input_file {
+    create_repeated_char_file 'X' $1 $((2**20 * 20))
+}
+
 # 1: String to repeatedly print to file (no newline)
 # 2: file name to write to
 # 3: Number of times to repeatedly print the string
@@ -518,19 +530,29 @@ function create_random_file {
 # $1: Input file to work on
 # $2: (optional) The workload mode. Defaults to Count Set Bits.
 function get_expected_output {
+    local input_file="$1"
+    if [ "$LOCAL_INPUT" == 1 ]; then
+        input_file="tmp.txt"
+        create_inmate_local_input_file $input_file
+    fi
+
     if [ "$3" == $WM_SHA3 ]; then
         # If we are running exclusively in Linux, run the actual workload, not
         # the golden standard, so we can profile things
         if [[ "$RUN_MODE" > "$RM_INMATE" ]]; then
-            sha3_linux_file "$1" "$2"
+            sha3_linux_file $input_file "$2"
         else
-            sha3_linux_file_golden "$1" "$2"
+            sha3_linux_file_golden $input_file "$2"
         fi
     elif [ "$3" == $WM_RANDOM_ACCESS ]; then
-        random_access_linux_file "$1" "$2"
+        random_access_linux_file $input_file "$2"
     else
         # This is the default
-        count_set_bits_linux_file "$1" "$2"
+        count_set_bits_linux_file $input_file "$2"
+    fi
+
+    if [ "$LOCAL_INPUT" == 1 ]; then
+        rm $input_file
     fi
 }
 
@@ -584,6 +606,11 @@ function clear_sync_byte_shmem {
 # Send input to the inmate via file
 function send_inmate_input {
     local input_file="$1"
+    if [ "$LOCAL_INPUT" == 1 ]; then
+        # Go through the motions so the inmate knows to generate its own input
+        local input_file="bogus_input.txt"
+        touch $input_file
+    fi
 
     if [ -z $input_file ]; then
         echo "error: no input file"
@@ -592,6 +619,10 @@ function send_inmate_input {
 
     # Send input to inmate
     sudo $MGH_DEMO_PY -f $input_file
+
+    if [ "$LOCAL_INPUT" == 1 ]; then
+        rm $input_file
+    fi
 }
 
 function run_vtune {

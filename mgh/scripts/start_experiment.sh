@@ -103,6 +103,17 @@ function main {
         return
     fi
 
+    # A special input mode that allows the inmate to generate its own input
+    # instead of read input through shared memory from the Linux root cell
+    if [ "$INPUT_FILE" == "$LOCAL_INPUT_TOKEN" ]; then
+        LOCAL_INPUT=1
+    fi
+
+    if [ "$LOCAL_INPUT" == 1 ] && [ "$RUN_MODE" != "$RM_INMATE" ]; then
+        echo "Error: File input mode `$LOCAL_INPUT_TOKEN` can only be used with run mode RM_INMATE. Canceling experiment..." >> $EXPERIMENT_OUTPUT_FILE
+        return
+    fi
+
     if [ "$DISABLE_TURBO_BOOST" == 1 ]; then
         disable_turbo_boost >> $EXPERIMENT_OUTPUT_FILE
     fi
@@ -299,6 +310,7 @@ function prep_experiment_jailhouse {
     echo "Starting Experiment" >> $JAILHOUSE_OUTPUT_FILE
     echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
 
+    # If the LOCAL_INPUT global was set, it will be passed in automatically
     local INMATE_CMDLINE=$(set_cmdline) >> $EXPERIMENT_OUTPUT_FILE 2>&1
     start_jailhouse $ROOT_CELL $INMATE_CELL $INMATE_NAME $INMATE_PROGRAM "$INMATE_CMDLINE" >> $EXPERIMENT_OUTPUT_FILE 2>&1
 }
@@ -355,10 +367,11 @@ function start_experiment {
 
     # If $INPUT_FILE is specified, $input_sizes_count is just 1
     for ((i = 0 ; i < $input_sizes_count ; i++)); do
+        local input_size="$LOCAL_INPUT_TOKEN"
         if [ "$INPUT_FILE" == "" ]; then
-            local input_size=${input_sizes[$i]}
-        else
-            local input_size=$(get_size_of_file_bytes $INPUT_FILE)
+            input_size=${input_sizes[$i]}
+        elif [ "$LOCAL_INPUT" != 1 ]; then
+            input_size=$(get_size_of_file_bytes $INPUT_FILE)
         fi
         echo "*********************************************************" >> $EXPERIMENT_OUTPUT_FILE
         echo "Input Size=$input_size" >> $EXPERIMENT_OUTPUT_FILE
@@ -430,7 +443,7 @@ function start_experiment {
             # echo "sudo rm $input_file" >> $EXPERIMENT_OUTPUT_FILE
             sudo rm $input_file >> $EXPERIMENT_OUTPUT_FILE 2>&1
         done
-    else
+    elif [ "$LOCAL_INPUT" != 1 ]; then
         # Skip input file deletion if input was specified
         # copy the input file for future reference
         cp "$INPUT_FILE" "$OUTPUT_DIR/input_${experiment_time}"
