@@ -326,7 +326,7 @@ function start_experiment {
     fi
     # If running on Linux, don't do this step until the interference workload
     # is running!
-    if [ "$RUN_MODE" == 0 ] && [ "$INPUT_FILE" != "" ]; then
+    if [ "$RUN_MODE" == "$RM_INMATE" ] && [ "$INPUT_FILE" != "" ]; then
         generate_expected_outputs
     fi
 
