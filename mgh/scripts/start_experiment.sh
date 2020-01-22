@@ -335,9 +335,7 @@ function prep_experiment {
 function start_experiment {
     # Print out the experimental parameters
     log_parameters
-
     prep_experiment
-
 
     if [ "$INPUT_FILE" == "" ] ; then
         generate_random_inputs
@@ -378,6 +376,8 @@ function start_experiment {
         echo "Time=$(timestamp)" >> $EXPERIMENT_OUTPUT_FILE
         echo "*********************************************************" >> $EXPERIMENT_OUTPUT_FILE
         for ((j = 0 ; j < $ITERATIONS ; j++)); do
+            local vmexits_start=0
+            local vmexits_end=0
             # flatten 2d (i,j) index into a single flat index
             local index=$(($i * $ITERATIONS + $j))
             if [ "$j" != "0" ]; then
@@ -395,7 +395,13 @@ function start_experiment {
                 local expected_output_value="${expected_outputs[$index]}"
             else
                 local start_time_ns=$(date +%s%N)
+                if [[ "$RUN_MODE" == "$RM_LINUX_JAILHOUSE" ]]; then
+                    vmexits_start=$(jailhouse_root_total_vmexits)
+                fi
                 local expected_output_value=$(get_expected_output $INPUT_FILE $index $WORKLOAD_MODE)
+                if [[ "$RUN_MODE" == "$RM_LINUX_JAILHOUSE" ]]; then
+                    vmexits_end=$(jailhouse_root_total_vmexits)
+                fi
                 local end_time_ns=$(date +%s%N)
                 local duration_ns=$(($end_time_ns-$start_time_ns))
                 local duration_ms=$(ns_to_ms $duration_ns)
@@ -412,12 +418,20 @@ function start_experiment {
                 echo "Linux input size: $input_size" >> $EXPERIMENT_OUTPUT_FILE 2>&1
                 echo "Linux output: $expected_output_value" >> $EXPERIMENT_OUTPUT_FILE 2>&1
                 echo "Linux output duration: $workload_output_duration" >> $EXPERIMENT_OUTPUT_FILE 2>&1
+                if [ "$RUN_MODE" == "$RM_LINUX_JAILHOUSE" ]; then
+                    local vmexits_delta=$((vmexits_end - vmexits_start))
+                    echo "Root cell vmexits delta: $vmexits_delta = ($vmexits_end - $vmexits_start)" >> $EXPERIMENT_OUTPUT_FILE 2>&1
+                fi
                 # Put Linux workload timing data into jailhouse output file
                 echo "MGHOUT:$index,$input_size,$workload_output_duration" >> $LINUX_OUTPUT_FILE
             else
+                vmexits_start=$(jailhouse_inmate_total_vmexits)
                 workload_output=$(send_inmate_input $INPUT_FILE)
+                vmexits_end=$(jailhouse_inmate_total_vmexits)
                 echo "$workload_output" >> $EXPERIMENT_OUTPUT_FILE 2>&1
                 workload_output_value=$(grep_token_in_str "Inmate output: " "$workload_output")
+                local vmexits_delta=$((vmexits_end - vmexits_start))
+                echo "Inmate vmexits delta: $vmexits_delta = ($vmexits_end - $vmexits_start)" >> $EXPERIMENT_OUTPUT_FILE 2>&1
 
                 # Validate workload output against pre-calculated values
                 if [ "$workload_output_value" != "$expected_output_value" ]; then

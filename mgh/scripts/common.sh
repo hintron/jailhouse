@@ -59,6 +59,9 @@ RM_INMATE=0 # Do not run workloads in Linux
 RM_LINUX=1 # Run in Linux, but NOT in the root cell in Jailhouse
 RM_LINUX_JAILHOUSE=2 # Run in Linux under root cell in Jailhouse
 
+CELL_ROOT=0
+CELL_INMATE_1=1
+
 LOCAL_INPUT_TOKEN="<local-input>"
 
 # This needs to already be on the path
@@ -414,6 +417,18 @@ function start_jailhouse {
     # Clear the sync byte of shared memory to 0
     clear_sync_byte_shmem
     start_inmate "$2" "$3" "$4" "$5"
+}
+
+function jailhouse_root_total_vmexits {
+    jailhouse_cell_total_vmexits $CELL_ROOT
+}
+
+function jailhouse_inmate_total_vmexits {
+    jailhouse_cell_total_vmexits $CELL_INMATE_1
+}
+
+function jailhouse_cell_total_vmexits {
+    cat "/sys/devices/jailhouse/cells/$1/statistics/vmexits_total"
 }
 
 # End the inmate cell at position 1
