@@ -203,6 +203,9 @@ function main {
         end_root >> $EXPERIMENT_OUTPUT_FILE 2>&1
     fi
 
+    # Clean up any leftover stuff
+    rm_drivers
+
     echo "Ending experiments at $end_time" >> $EXPERIMENT_OUTPUT_FILE
 
     if [[ "$RUN_MODE" > "$RM_INMATE" ]]; then
