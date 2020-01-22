@@ -345,6 +345,11 @@ function get_size_of_file_bytes {
     wc -c < "$1"
 }
 
+function get_size_of_string_bytes {
+    # https://stackoverflow.com/questions/4988155/is-there-a-bash-command-that-can-tell-the-size-of-a-shell-variable
+    printf "$1" | wc -c
+}
+
 # Parameters:
 #   INMATE_CELL
 #   INMATE_NAME
@@ -475,6 +480,24 @@ function create_random_file_max {
     # Current max size is (40 MB - 8)
     local size=$(((2**20 * 40)- 8))
     create_random_file $size $file
+}
+
+# 1: String to repeatedly print to file (no newline)
+# 2: file name to write to
+# 3: Number of times to repeatedly print the string
+function create_repeated_char_file {
+    local char="$1"
+    local file="$2"
+    local size="$3"
+    local char_size=$(get_size_of_string_bytes $char)
+    # Only 1-byte chars are currently allowed
+    if (($char_size > 1)); then
+        echo "Only 1-byte strings are supported for create_repeated_file (char_size=$char_size)"
+        return
+    fi
+
+    # https://stackoverflow.com/questions/3211891/creating-string-of-repeated-characters-in-shell-script
+    head -c $size < /dev/zero | tr '\0' "$char" > "$file"
 }
 
 # 1: Size in bytes
