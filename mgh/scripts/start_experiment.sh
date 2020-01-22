@@ -446,7 +446,7 @@ function start_experiment {
     elif [ "$LOCAL_INPUT" != 1 ]; then
         # Skip input file deletion if input was specified
         # copy the input file for future reference
-        cp "$INPUT_FILE" "$OUTPUT_DIR/input_${experiment_time}"
+        cp "$INPUT_FILE" "$OUTPUT_DIR/${experiment_time}.input"
     fi
 
 }
