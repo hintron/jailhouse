@@ -400,7 +400,7 @@ function start_experiment {
                 # Put Linux workload timing data into jailhouse output file
                 echo "MGHOUT:$index,$input_size,$workload_output_duration" >> $LINUX_OUTPUT_FILE
             else
-                workload_output=$(send_inmate_input $input_file)
+                workload_output=$(send_inmate_input $INPUT_FILE)
                 echo "$workload_output" >> $EXPERIMENT_OUTPUT_FILE 2>&1
                 workload_output_value=$(grep_token_in_str "Inmate output: " "$workload_output")
 
