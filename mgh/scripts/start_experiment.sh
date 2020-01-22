@@ -277,8 +277,10 @@ function post_process_data_jailhouse {
     # Do not print out all MGHFREQ lines. Avg freq is already in MGHOUT
 
     # Separate throttled and unthrottled data
-    grep_output_data_throttled $JAILHOUSE_OUTPUT_FILE > $OUTPUT_DATA_THROTTLED_FILE
     grep_output_data_unthrottled $JAILHOUSE_OUTPUT_FILE > $OUTPUT_DATA_UNTHROTTLED_FILE
+    if [ "$THROTTLE_MODE" != "$TMODE_DISABLED" ]; then
+        grep_output_data_throttled $JAILHOUSE_OUTPUT_FILE > $OUTPUT_DATA_THROTTLED_FILE
+    fi
 
     # Aggregate iterations for each input size
     for input_size in "${input_sizes[@]}"; do
