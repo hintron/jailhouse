@@ -153,9 +153,12 @@ function main {
         done
         echo "$count s: Finished!" >> $EXPERIMENT_OUTPUT_FILE
     else
-        if [ "$INPUT_FILE" != "" ]; then
+        if [ "$INPUT_FILE" == "" ]; then
             # Pre-generate all input sizes beforehand
             generate_input_size_range
+        else
+            # We only need to iterate over one file
+            input_sizes_count=1
         fi
         start_experiment
 
@@ -321,12 +324,14 @@ function start_experiment {
 
     prep_experiment
 
-    if [ "$INPUT_FILE" != "" ] ; then
+
+    if [ "$INPUT_FILE" == "" ] ; then
         generate_random_inputs
     fi
+
     # If running on Linux, don't do this step until the interference workload
     # is running!
-    if [ "$RUN_MODE" == "$RM_INMATE" ] && [ "$INPUT_FILE" != "" ]; then
+    if [ "$RUN_MODE" == "$RM_INMATE" ] && [ "$INPUT_FILE" == "" ]; then
         generate_expected_outputs
     fi
 
@@ -339,12 +344,14 @@ function start_experiment {
     if [[ "$RUN_MODE" > "$RM_INMATE" ]]; then
         # Now that the interference workload is running, run the workloads on
         # Linux
-        if [ "$INPUT_FILE" != "" ]; then
+        if [ "$INPUT_FILE" == "" ]; then
             generate_expected_outputs
         fi
 
         echo "MGHOUT:index,input_size(B),workload_output_duration(ms)" >> $LINUX_OUTPUT_FILE
     fi
+
+    # If $INPUT_FILE is specified, $input_sizes_count is just 1
     for ((i = 0 ; i < $input_sizes_count ; i++)); do
         if [ "$INPUT_FILE" == "" ]; then
             local input_size=${input_sizes[$i]}
@@ -407,12 +414,6 @@ function start_experiment {
                 fi
             fi
         done
-
-        # If input file was specified, break out of the input range loop
-        # (we only need to execute one set of iterations)
-        if [ "$INPUT_FILE" != "" ]; then
-            break;
-        fi
     done
     echo "*********************************************************" >> $EXPERIMENT_OUTPUT_FILE
 
