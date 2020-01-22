@@ -90,18 +90,18 @@ function main {
     echo "Starting script at $experiment_time" >> $EXPERIMENT_OUTPUT_FILE
     echo "=======================================================" >> $EXPERIMENT_OUTPUT_FILE
 
-    # VTune doesn't work under a hypervisor, at least not out of the box
-    if [ "$RUN_MODE" == "$RM_LINUX_JAILHOUSE" ] && [ "$RUN_WITH_VTUNE" == 1 ]; then
-        echo "Error: Cannot run Linux under Jailhouse while also running a Linux workload under VTune. Canceling experiment." >> $EXPERIMENT_OUTPUT_FILE
-        return
-    fi
-
     # Set script inputs as globals
     WORKLOAD_MODE=${1:-$WM_COUNT_SET_BITS}
     INTERFERENCE_WORKLOAD=${2:-$INTF_HANDBRAKE}
     RUN_MODE=${3:-$RM_INMATE}
     THROTTLE_MODE=${4:-$TMODE_ITERATION}
     INPUT_FILE=${5:-""}
+
+    # VTune doesn't work under a hypervisor, at least not out of the box
+    if [ "$RUN_MODE" == "$RM_LINUX_JAILHOUSE" ] && [ "$RUN_WITH_VTUNE" == 1 ]; then
+        echo "Error: Cannot run Linux under Jailhouse while also running a Linux workload under VTune. Canceling experiment." >> $EXPERIMENT_OUTPUT_FILE
+        return
+    fi
 
     if [ "$DISABLE_TURBO_BOOST" == 1 ]; then
         disable_turbo_boost >> $EXPERIMENT_OUTPUT_FILE
