@@ -58,8 +58,6 @@ INMATE_PROGRAM=$JAILHOUSE_DIR/inmates/demos/x86/mgh-demo.bin
 experiment_time="$(timestamp)"
 OUTPUT_DIR="$SCRIPTS_DIR/output/${experiment_time}"
 INPUT_DIR="$SCRIPTS_DIR/input"
-WORKLOAD_DIR="$MGH_DIR/workloads"
-WORKLOAD_BIN_DIR="$WORKLOAD_DIR/build"
 JAILHOUSE_OUTPUT_FILE="$OUTPUT_DIR/jailhouse_${experiment_time}.txt"
 LINUX_OUTPUT_FILE="$OUTPUT_DIR/linux_output_${experiment_time}.txt"
 EXPERIMENT_OUTPUT_FILE="$OUTPUT_DIR/experiment_${experiment_time}.txt"
@@ -122,7 +120,7 @@ function main {
         if [ "$RUN_WITH_VTUNE" == 1 ]; then
             mkdir -p $VTUNE_OUTPUT_DIR
         fi
-        reset_linux_all >> $EXPERIMENT_OUTPUT_FILE 2>&1
+        build_linux_workloads >> $EXPERIMENT_OUTPUT_FILE 2>&1
     fi
 
     if [ "$RUN_MODE" == "$RM_INMATE" ] || [ "$RUN_MODE" == "$RM_LINUX_JAILHOUSE" ]; then

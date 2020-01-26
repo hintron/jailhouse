@@ -1,9 +1,10 @@
-project('mgh-sha3-512', 'c')
+project('workloads', 'c')
 
-src = [
-    '../../inmates/lib/mgh-sha3.c',
-    'src/sha3-512.c',
-]
+# NOTE: Make sure to build with the command `CC=gcc-7 meson build` in order to
+# match how Jailhouse is currently being built in my scripts!
+
+# NOTE: Make sure to pass `LDFLAGS=-no-pie` env to `meson build` in order to
+# suppress the automatic pie builds on my system!
 
 inmate_x86_inc = include_directories(
     join_paths('..','..','inmates','lib','x86','include')
@@ -21,9 +22,13 @@ jailhouse_x86_inc = include_directories(
 # Note that the source and build paths are both added to the include dirs by
 # default!
 
+# Since these binaries now all include leftover object files from the Jailhouse
+# inmate library, make sure to build Jailhouse first!
+
 executable(
     'sha3-512', # name
-    src, # source files
+    ['src/sha3-512.c',],
+    objects: ['../../inmates/lib/mgh-sha3.o',],
     install: true,
     include_directories: [
         inmate_x86_inc,
@@ -35,7 +40,8 @@ executable(
 
 executable(
     'count-set-bits', # name
-    ['src/count-set-bits.c', '../../inmates/lib/mgh-count-set-bits.c',],
+    ['src/count-set-bits.c',],
+    objects: ['../../inmates/lib/mgh-count-set-bits.o',],
     install: true,
     include_directories: [
         inmate_x86_inc,
@@ -47,7 +53,8 @@ executable(
 
 executable(
     'random-access', # name
-    ['src/random-access.c', '../../inmates/lib/mgh-random-access.c',],
+    ['src/random-access.c',],
+    objects: ['../../inmates/lib/mgh-random-access.o',],
     install: true,
     include_directories: [
         inmate_x86_inc,

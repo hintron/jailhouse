@@ -15,6 +15,8 @@ popd > /dev/null
 
 JAILHOUSE_BIN=$JAILHOUSE_DIR/tools/jailhouse
 MGH_DEMO_PY="$MGH_DIR/uio-userspace/mgh-demo.py"
+WORKLOAD_DIR="$MGH_DIR/workloads"
+WORKLOAD_BIN_DIR="$WORKLOAD_DIR/build"
 
 # Note that the inmate libraries assume that the cmdline string will be stored
 # at 0x1000 and will have a size of CMDLINE_BUFFER_SIZE.
@@ -449,9 +451,16 @@ function build_jailhouse {
     popd > /dev/null
 }
 
+# Build the workloads in Linux
+# Use gcc-7 to match the version of gcc that Jailhouse is using.
+# Pass -no-pie to the linker or else it will err saying:
+# "... can not be used when making a PIE object; recompile with -fPIE"
+# Apparently PIC/PIE is enabled by default on my Linux system, so explicitly
+# disable it. Jailhouse, on the other hand, produces object files with -no-pie.
 function build_linux_workloads {
     pushd $WORKLOAD_DIR > /dev/null
-    meson build > /dev/null
+    rm -rf build > /dev/null
+    LDFLAGS=-no-pie CC=gcc-7 meson build > /dev/null
     ninja -C build > /dev/null
     popd > /dev/null
 }
@@ -490,10 +499,6 @@ function reset_jailhouse_all {
     rm_drivers
     build_jailhouse
     load_drivers
-}
-# Stop everything, rebuild, and reload drivers
-function reset_linux_all {
-    build_linux_workloads
 }
 
 function create_random_file_max {
