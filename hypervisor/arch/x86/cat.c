@@ -141,8 +141,10 @@ static int cat_cell_init(struct cell *cell)
 
 	cell->arch.cos = CAT_ROOT_COS;
 
-	if (cos_max < 0)
+	if (cos_max < 0) {
+		printk("WARNING: CAT is unsupported\n");
 		return 0;
+	}
 
 	if (cell->config->num_cache_regions > 0) {
 		if (cell != &root_cell) {
@@ -215,6 +217,9 @@ static int cat_init(void)
 		cbm_max = cpuid_eax(0x10, CAT_RESID_L3) & CAT_CBM_LEN_MASK;
 		cos_max = cpuid_edx(0x10, CAT_RESID_L3) & CAT_COS_MAX_MASK;
 	}
+
+	/* cbm_max should be 12, representing 12 1-MB chunks to cover L3 */
+	printk("CAT: cbm_max: %d; cos_max: %d; \n", cbm_max, cos_max);
 
 	err = cat_cell_init(&root_cell);
 	orig_root_mask = root_cell.arch.cat_mask;

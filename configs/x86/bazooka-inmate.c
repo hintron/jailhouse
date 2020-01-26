@@ -19,8 +19,8 @@
 struct {
 	struct jailhouse_cell_desc cell;
 	__u64 cpus[1];
-	// struct jailhouse_memory mem_regions[3];
 	struct jailhouse_memory mem_regions[4];
+	struct jailhouse_cache cache_regions[1];
 	struct jailhouse_pio pio_regions[2];
 	struct jailhouse_pci_device pci_devices[1];
 	struct jailhouse_pci_capability pci_caps[0];
@@ -35,6 +35,7 @@ struct {
 		 * it down (see apic-demo.c) */
 		.cpu_set_size = sizeof(config.cpus),
 		.num_memory_regions = ARRAY_SIZE(config.mem_regions),
+		.num_cache_regions = ARRAY_SIZE(config.cache_regions),
 		.num_irqchips = 0,
 		.num_pio_regions = ARRAY_SIZE(config.pio_regions),
 		.num_pci_devices = ARRAY_SIZE(config.pci_devices),
@@ -118,6 +119,22 @@ struct {
 			},
 			.num_msix_vectors = 1,
 			.shmem_region = 2,
+		},
+	},
+
+	/* By default, the root is given the entire cache to start out, and the
+	 * inmate shares the entire cache as well. But when a cache region is
+	 * specified below, it takes it from the root (if ROOTSHARED isn't
+	 * specified) so there are two disjoint masks of the cache.
+	 * NOTE: The CPU on Bazooka does not support CAT. */
+	.cache_regions = {
+		{
+			/* Units are MB of cache. Give half to inmate */
+			.start = 0,
+			.size = 6,
+			.type = JAILHOUSE_CACHE_L3,
+			/* Share cache with root cell completely */
+			// .flags = JAILHOUSE_CACHE_ROOTSHARED,
 		},
 	},
 };
