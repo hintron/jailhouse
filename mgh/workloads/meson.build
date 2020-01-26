@@ -5,11 +5,6 @@ src = [
     'src/sha3-512.c',
 ]
 
-profile_src = [
-    '../../inmates/lib/mgh-sha3.c',
-    'src/sha3-512-profile.c',
-]
-
 inmate_x86_inc = include_directories(
     join_paths('..','..','inmates','lib','x86','include')
 )
@@ -29,18 +24,6 @@ jailhouse_x86_inc = include_directories(
 executable(
     'sha3-512', # name
     src, # source files
-    install: true,
-    include_directories: [
-        inmate_x86_inc,
-        inmate_common_inc,
-        jailhouse_inc,
-        jailhouse_x86_inc
-    ],
-)
-
-executable(
-    'sha3-512-profile', # name
-    profile_src, # source files
     install: true,
     include_directories: [
         inmate_x86_inc,
@@ -76,6 +59,5 @@ executable(
 
 # Run test through ninja install
 test('sha3-512', find_program('test-sha3-512.sh'))
-test('sha3-512-profile', find_program('test-sha3-512-profile.sh'))
 test('count-set-bits', find_program('test-count-set-bits.sh'))
 test('random-access', find_program('test-random-access.sh'))

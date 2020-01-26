@@ -5,8 +5,8 @@ This contains various programs that can be used as workloads for an inmate.
 Workloads include:
 
 * SHA-3
-* SHA-3 profile workload (for profilers)
-* Bit count
+* Count Set Bits
+* Random Access
 
 # Build instructions
 
