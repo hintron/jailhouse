@@ -740,6 +740,16 @@ function grep_output_data_unthrottled {
     grep_token_in_file_to_file "MGHOUT:is_throttled,\|MGHOUT:0," $in_file
 }
 
+function grep_output_freq_throttled {
+    local in_file="$1"
+    grep_token_in_file_to_file "MGHFREQ:is_throttled,\|MGHFREQ:1," $in_file
+}
+
+function grep_output_freq_unthrottled {
+    local in_file="$1"
+    grep_token_in_file_to_file "MGHFREQ:is_throttled,\|MGHFREQ:0," $in_file
+}
+
 # Grep a file for all lines with a token, remove that token from the output,
 # remove additional carriage returns (since grep puts a single carriage return
 # at the start, then adds carriage returns to all newlines), and store the

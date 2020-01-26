@@ -35,7 +35,6 @@
  * the actual CPU clock frequency due to turbo or power saving states."
  */
 static unsigned long tsc_freq = 0;
-static u64 max_freq = 0;
 
 /* See Intel SDM Vol. 4: Model-Specific Registers */
 #define MSR_IA32_MPERF		0xe7
@@ -138,6 +137,13 @@ static void free_heap_all(void)
 	heap_pos = MGH_HEAP_BASE;
 }
 
+/*
+ * “Maximum Non-Turbo Ratio (R/O) This is the ratio of the frequency that
+ * invariant TSC runs at. Frequency = ratio * 100 MHz.” See Intel SDM Vol. 4
+ * Section 2.17 and tables 2-20, 2-25, and 2-29.
+ *
+ * Get bits 8-15 of MSR_PLATFORM_INFO
+ */
 static u64 query_max_freq_ratio(void)
 {
 	u64 plat_info = read_msr(MSR_PLATFORM_INFO);
@@ -146,24 +152,18 @@ static u64 query_max_freq_ratio(void)
 }
 
 /*
- * Return the Maximum Non-Turbo Frequency in Hz
- *
- * “Maximum Non-Turbo Ratio (R/O) This is the ratio of the frequency that
- * invariant TSC runs at. Frequency = ratio * 100 MHz.” See Intel SDM Vol. 4
- * Section 2.17 and tables 2-20, 2-25, and 2-29.
- *
- * Get bits 8-15 of MSR_PLATFORM_INFO
+ * Print the Maximum Non-Turbo Frequency and Ratio in Hz.
+ * max_ratio: If 0, query the max freq ratio, else use it as the max_ratio.
  */
-static u64 query_max_freq(void)
+static u64 query_max_freq(u64 max_ratio)
 {
-	u64 max_ratio = query_max_freq_ratio();
-	u64 max_freq = max_ratio * 100000000;
-	printk("MGH: Maximum Non-Turbo Ratio: %llu\n", max_ratio);
-	printk("MGH: Maximum Non-Turbo Frequency: %llu\n", max_freq);
-	return max_freq;
+	if (!max_ratio)
+		max_ratio = query_max_freq_ratio();
+
+	return max_ratio * 100000000;
 }
 
-static void clear_freq_counters(void)
+static void clear_freq_perf_counters(void)
 {
 	// TODO: How to avoid preemption-timer interrupt between the following
 	// msr instructions? Needs to be successive, or readings will be off.
@@ -172,56 +172,48 @@ static void clear_freq_counters(void)
 	write_msr(MSR_IA32_MPERF, 0);
 	write_msr(MSR_IA32_APERF, 0);
 }
+
 /*
- * Calculate the CPU's current frequency. Must call hardware_init() beforehand!
- *
- * See the Intel SDM, Vol 3B, Section 14.2
- *
- * We should probably query the frequency multiple times to get an accurate
- * reading (in case both counters are 0 or really low, etc.)
- * max frequency is the same as tsc_freq. Right?
- * See https://stackoverflow.com/questions/65095/assembly-cpu-frequency-measuring-algorithm
+ * Sample and print the average frequency over the time period when
+ * clear_freq_perf_counters() was last called.
  */
-static u64 query_freq(void)
+static void print_freq(bool is_throttled, unsigned long workload_counter)
 {
-	static u64 counter = 0;
-	u64 freq;
+	static u64 max_ratio = 0;
+	static u64 max_freq = 0;
+	u64 mperf = 0;
+	u64 aperf = 0;
 
-	if (tsc_freq == 0) {
-		printk("MGH: ERROR: tsc_freq is uninitialized\n");
-		return 0;
+	/* Print out column headers for subsequent frequency data.*/
+	if (workload_counter == 0) {
+		printk("MGHFREQ:is_throttled,workload_counter,freq_sample_counter,freq=[(max_freq*aperf)/mperf]\n");
+		max_ratio = query_max_freq_ratio();
+		 /* max_freq and tsc_freq are basically the same */
+		max_freq = query_max_freq(max_ratio);
+		printk("MGH: Maximum Non-Turbo Ratio: %llu\n", max_ratio);
+		printk("MGH: Maximum Non-Turbo Frequency: %llu\n", max_freq);
 	}
 
-	if (max_freq == 0) {
-		printk("MGH: ERROR: max_freq is uninitialized\n");
-		return 0;
+	if (!max_ratio || !max_freq) {
+		printk("MGH: ERROR: Could not query frequency information\n");
+		return;
 	}
 
-	// TODO: How to avoid preemption-timer interrupt between the following
-	// msr instructions? Needs to be successive, or readings will be off.
-	u64 mperf = read_msr(MSR_IA32_MPERF);
-	u64 aperf = read_msr(MSR_IA32_APERF);
+	/* Even though the following avoids integer math truncation, the
+	 * multiplication can overflow when aperf is large:
+	 *     freq = (max_freq * aperf) / mperf
+	 * See the Intel SDM, Vol 3B, Section 14.2.
+	 * See https://stackoverflow.com/questions/65095/assembly-cpu-frequency-measuring-algorithm
+	 * So do this calculation outside the inmate. Format the output so it
+	 * can be easily passed into a calculator like bc.
+	 */
+	aperf = read_msr(MSR_IA32_APERF);
+	mperf = read_msr(MSR_IA32_MPERF);
+	printk("MGHFREQ:%d,%lu,(%llu * %llu) / %llu\n", is_throttled,
+	       workload_counter, max_freq, aperf, mperf);
 
-	// Reset freq counters
-	clear_freq_counters();
-
-	// NOTE: Beware of order of operations so integer division does not
-	// prematurely floor the ratio to 0!
-	// freq = (tsc_freq * aperf) / mperf;
-	freq = (max_freq * aperf) / mperf;
-
-	if (MGH_DEBUG_MODE)
-		printk("MGHFREQ:%llu,%llu,%llu,%llu,%llu\n",
-		       counter, freq, max_freq, aperf, mperf);
-
-	if (MGH_DEBUG_MODE && freq < max_freq) {
-		printk("MGH: WARNING: %6llu: Actual CPU frequency less than max!\n",
-		       counter);
-	}
-
-	counter++;
-
-	return freq;
+	// TODO: How to avoid preemption-timer interrupt between sampling aperf
+	// and mperf?
 }
 
 struct ivshmem_dev_data {
@@ -575,13 +567,6 @@ static bool hardware_setup(void)
 
 	// Set the cache line size
 	init_cache_line_size();
-
-	// Clear the frequency counters to start with clean slate
-	clear_freq_counters();
-
-	// Architecture-dependent!
-	// Get the max turbo frequency from Recent Intel architectures
-	max_freq = query_max_freq();
 
 	return true;
 }
@@ -1011,12 +996,6 @@ void inmate_main(void)
 		return;
 	}
 
-	// Print out column headers for the subsequent frequency data
-	if (MGH_DEBUG_MODE)
-		printk("MGHFREQ:counter,freq,max_freq,aperf,mperf\n");
-
-	(void) query_freq();
-
 	/* Initialize better (?) exception reporting */
 	// excp_reporting_init();
 
@@ -1033,10 +1012,9 @@ void inmate_main(void)
 	// Indicate to userspace that we are up and running
 	shmem[OFFSET_SYNC] = 1;
 
-	(void) query_freq();
-
 	// Print out column headers for the subsequent data
-	printk("MGHOUT:is_throttled,workload_counter,input_len,workload_cycles,avg_freq\n");
+	printk("Starting workload iterations...\n");
+	printk("MGHOUT:is_throttled,workload_counter,input_len,workload_cycles\n");
 
 	// Continuously wait on userspace for a workload
 	while (1) {
@@ -1051,7 +1029,6 @@ void inmate_main(void)
 		unsigned long workload_duration = 0;
 		unsigned long total_duration = 0;
 		unsigned long ns_per_byte = 0;
-		u64 freq1, freq2, freq3, freq4, avg_freq;
 		bool is_throttled = false;
 
 		char *inout = NULL;
@@ -1113,8 +1090,6 @@ void inmate_main(void)
 			return;
 		}
 
-		freq1 = query_freq();
-
 		/* Don't exceed heap when copying input into local buffer */
 		if (local_buffer && input_len > MGH_HEAP_SIZE) {
 			printk("MGH: WARNING: Inmate input > %d B (heap size), so can't copy input into local buffer.\n", MGH_HEAP_SIZE);
@@ -1136,13 +1111,17 @@ void inmate_main(void)
 				       copy_duration);
 		}
 
-		freq2 = query_freq();
+		/* Clear frequency counters before running the workload */
+		clear_freq_perf_counters();
 
 		start = tsc_read_ns();
 		start_tsc = rdtsc();
 		workload(inout, input_len, inout, &output_len, workload_mode);
 		end_tsc = rdtsc();
 		end = tsc_read_ns();
+
+		/* Print out the average frequency during the workload */
+		print_freq(is_throttled, workload_counter);
 
 		if (MGH_DEBUG_MODE) {
 			printk("workload output: 0x");
@@ -1162,8 +1141,6 @@ void inmate_main(void)
 		workload_cycles = end_tsc - start_tsc;
 		workload_duration = end - start;
 
-		freq3 = query_freq();
-
 		if (local_buffer) {
 			start = tsc_read_ns();
 			inout = get_inout(shmem);
@@ -1180,14 +1157,11 @@ void inmate_main(void)
 			free_heap_all();
 		}
 
-		freq4 = query_freq();
-		avg_freq = (freq1 + freq2 + freq3 + freq4) / 4;
-
 		total_duration = copy_duration + workload_duration;
 		ns_per_byte = total_duration / input_len;
 
-		printk("MGHOUT:%d,%lu,%lu,%lu,%llu\n", is_throttled,
-		       workload_counter, input_len, workload_cycles, avg_freq);
+		printk("MGHOUT:%d,%lu,%lu,%lu\n", is_throttled,
+		       workload_counter, input_len, workload_cycles);
 
 		workload_counter++;
 
