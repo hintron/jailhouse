@@ -32,8 +32,8 @@
 
 /* Comment the following line to remove throttling code from Jailhouse. This
  * reverts the preemption timer behavior to what it was originally */
-#define THROTTLE_CAPABILITY
-#ifdef THROTTLE_CAPABILITY
+#define MGH_X86_THROTTLE_CAPABILITY
+#ifdef MGH_X86_THROTTLE_CAPABILITY
 // MGH: Set a relatively high max CPU count
 #define CPUS_THROTTLED_COUNT	256
 
@@ -598,13 +598,13 @@ static bool vmcs_setup(void)
 
 	val = read_msr(MSR_IA32_VMX_PINBASED_CTLS);
 	val |= PIN_BASED_NMI_EXITING;
-#ifdef THROTTLE_CAPABILITY
+#ifdef MGH_X86_THROTTLE_CAPABILITY
 	/* MGH: Enable the preemption timer from the beginning */
 	val |= PIN_BASED_VMX_PREEMPTION_TIMER;
 #endif
 	ok &= vmcs_write32(PIN_BASED_VM_EXEC_CONTROL, val);
 
-#ifdef THROTTLE_CAPABILITY
+#ifdef MGH_X86_THROTTLE_CAPABILITY
 	/* MGH: There is no harm in making it go off as soon as possible */
 	ok &= vmcs_write32(VMX_PREEMPTION_TIMER_VALUE, 0);
 
@@ -640,7 +640,7 @@ static bool vmcs_setup(void)
 	val = read_msr(MSR_IA32_VMX_EXIT_CTLS);
 	val |= VM_EXIT_HOST_ADDR_SPACE_SIZE |
 		VM_EXIT_SAVE_IA32_PAT | VM_EXIT_LOAD_IA32_PAT |
-#ifdef THROTTLE_CAPABILITY
+#ifdef MGH_X86_THROTTLE_CAPABILITY
 		/* MGH: If VM_EXIT_SAVE_PREEMPTION_TIME is set, the actual value
 		 * of the timer will be saved to the timer value field used on
 		 * VM entry. This makes it so the timer value doesn't get reset
@@ -666,7 +666,7 @@ static bool vmcs_setup(void)
 	return ok;
 }
 
-#ifdef THROTTLE_CAPABILITY
+#ifdef MGH_X86_THROTTLE_CAPABILITY
 /*
  * MGH: Get the TSC bit that the VMX preemption timer monitors for change. When
  * this bit changes, the preemption timer counter value decrements.
@@ -948,7 +948,7 @@ void vcpu_vendor_reset(unsigned int sipi_vector)
 	}
 }
 
-#ifdef THROTTLE_CAPABILITY
+#ifdef MGH_X86_THROTTLE_CAPABILITY
 /*
  * Returns SPIN, CLOCK, or PAUSE if throttle needs to be turned ON
  * Returns STOP if throttle needs to be turned OFF
@@ -1256,7 +1256,7 @@ static void vmx_preemption_timer_set_enable(bool enable)
 
 void vcpu_nmi_handler(void)
 {
-#ifdef THROTTLE_CAPABILITY
+#ifdef MGH_X86_THROTTLE_CAPABILITY
 	struct per_cpu *cpu_data = this_cpu_data();
 
 	cpu_data->public.stats[JAILHOUSE_CPU_STAT_VMEXITS_MANAGEMENT]++;
@@ -1294,7 +1294,7 @@ void vcpu_skip_emulated_instruction(unsigned int inst_len)
 
 static void vmx_check_events(void)
 {
-#ifdef THROTTLE_CAPABILITY
+#ifdef MGH_X86_THROTTLE_CAPABILITY
 	struct per_cpu *cpu_data = this_cpu_data();
 	if (cpu_data->immediate_exit > 0) {
 		// Service the NMI
@@ -1334,7 +1334,7 @@ static void vmx_handle_exception_nmi(void)
 
 	// printk("MGH HYPER: CPU %2d: vmx_handle_exception_nmi\n", cpu_public->cpu_id);
 	if ((intr_info & INTR_INFO_INTR_TYPE_MASK) == INTR_TYPE_NMI_INTR) {
-#ifndef THROTTLE_CAPABILITY
+#ifndef MGH_X86_THROTTLE_CAPABILITY
 		cpu_public->stats[JAILHOUSE_CPU_STAT_VMEXITS_MANAGEMENT]++;
 #endif
 		// printk("MGH HYPER: CPU %2d: Calling nmi interrupt handler via the `int` instruction\n", cpu_public->cpu_id);
@@ -1568,7 +1568,7 @@ void vcpu_handle_exit(struct per_cpu *cpu_data)
 		vmx_handle_exception_nmi();
 		return;
 	case EXIT_REASON_PREEMPTION_TIMER:
-#ifndef THROTTLE_CAPABILITY
+#ifndef MGH_X86_THROTTLE_CAPABILITY
 		/* The reason we don't always want to count a preemption timer
 		 * VM exit as a "management" VM exit when throttle mode is
 		 * enabled is that if immediate_exit is 0, then this is just a
