@@ -1569,6 +1569,14 @@ void vcpu_handle_exit(struct per_cpu *cpu_data)
 		return;
 	case EXIT_REASON_PREEMPTION_TIMER:
 #ifndef THROTTLE_CAPABILITY
+		/* The reason we don't always want to count a preemption timer
+		 * VM exit as a "management" VM exit when throttle mode is
+		 * enabled is that if immediate_exit is 0, then this is just a
+		 * regular preemption timer VM exit that should be used for
+		 * throttling and doesn't represent a 'deferred' NMI handler.
+		 * If immediate_exit is > 0, then this is a deferred NMI handler
+		 * from host mode and we increment the management VM exit count.
+		 */
 		stats[JAILHOUSE_CPU_STAT_VMEXITS_MANAGEMENT]++;
 #endif
 		vmx_check_events();
