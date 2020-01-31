@@ -41,6 +41,10 @@
 
 #include <jailhouse/console.h>
 
+/* Comment the following line to remove throttling code from the hypervisor.
+ * This reverts the preemption timer behavior to what it was originally. */
+#define MGH_X86_THROTTLE_CAPABILITY
+
 #define JAILHOUSE_HC_DISABLE			0
 #define JAILHOUSE_HC_CELL_CREATE		1
 #define JAILHOUSE_HC_CELL_START			2
@@ -69,9 +73,19 @@
 /* CPU statistics */
 #define JAILHOUSE_CPU_STAT_VMEXITS_TOTAL	0
 #define JAILHOUSE_CPU_STAT_VMEXITS_MMIO		1
+#ifdef MGH_X86_THROTTLE_CAPABILITY
+/* This number represents both the combined count of NMI VM exits as well as
+ * preemption timer VM exits explicitly used as a deferred NMI handler
+ * (triggered by the host mode NMI interrupt handler). */
+#endif
 #define JAILHOUSE_CPU_STAT_VMEXITS_MANAGEMENT	2
 #define JAILHOUSE_CPU_STAT_VMEXITS_HYPERCALL	3
 #define JAILHOUSE_GENERIC_CPU_STATS		4
+#ifdef MGH_X86_THROTTLE_CAPABILITY
+/* This number represents the count of preemption timer VM exits not including
+ * those hijacked as a deferred NMI handler. */
+#define JAILHOUSE_CPU_STAT_VMEXITS_PREEMPTION 5
+#endif
 
 #define JAILHOUSE_MSG_NONE			0
 

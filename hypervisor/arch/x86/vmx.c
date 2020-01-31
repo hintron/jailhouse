@@ -30,9 +30,6 @@
 
 #define PIO_BITMAP_PAGES	2
 
-/* Comment the following line to remove throttling code from Jailhouse. This
- * reverts the preemption timer behavior to what it was originally */
-#define MGH_X86_THROTTLE_CAPABILITY
 #ifdef MGH_X86_THROTTLE_CAPABILITY
 // MGH: Set a relatively high max CPU count
 #define CPUS_THROTTLED_COUNT	256
@@ -1254,13 +1251,13 @@ static void vmx_preemption_timer_set_enable(bool enable)
 }
 #endif
 
+/* This can be triggered directly while in host mode or as a result of the `int`
+ * instruction in vmx_handle_exception_nmi() (int NMI_VECTOR -> nmi_entry() ->
+ * vcpu_nmi_handler())*/
 void vcpu_nmi_handler(void)
 {
 #ifdef MGH_X86_THROTTLE_CAPABILITY
 	struct per_cpu *cpu_data = this_cpu_data();
-
-	cpu_data->public.stats[JAILHOUSE_CPU_STAT_VMEXITS_MANAGEMENT]++;
-	// printk("MGH HYPER: CPU %2d: vcpu_nmi_handler()\n", this_cpu_id());
 	if (cpu_data->vmx_state == VMCS_READY) {
 		// Set timer to 0
 		vmcs_write32(VMX_PREEMPTION_TIMER_VALUE, 0);
@@ -1334,10 +1331,9 @@ static void vmx_handle_exception_nmi(void)
 
 	// printk("MGH HYPER: CPU %2d: vmx_handle_exception_nmi\n", cpu_public->cpu_id);
 	if ((intr_info & INTR_INFO_INTR_TYPE_MASK) == INTR_TYPE_NMI_INTR) {
-#ifndef MGH_X86_THROTTLE_CAPABILITY
 		cpu_public->stats[JAILHOUSE_CPU_STAT_VMEXITS_MANAGEMENT]++;
-#endif
-		// printk("MGH HYPER: CPU %2d: Calling nmi interrupt handler via the `int` instruction\n", cpu_public->cpu_id);
+		/* Force vcpu_nmi_handler() to be called, which creates an
+		 * immediate preemption timer VM exit on next VM entry */
 		asm volatile("int %0" : : "i" (NMI_VECTOR));
 	} else {
 		cpu_public->stats[JAILHOUSE_CPU_STAT_VMEXITS_EXCEPTION]++;
@@ -1565,10 +1561,11 @@ void vcpu_handle_exit(struct per_cpu *cpu_data)
 
 	switch (reason) {
 	case EXIT_REASON_EXCEPTION_NMI:
+		/* Increments VM exit management count by 1 */
 		vmx_handle_exception_nmi();
 		return;
 	case EXIT_REASON_PREEMPTION_TIMER:
-#ifndef MGH_X86_THROTTLE_CAPABILITY
+#ifdef MGH_X86_THROTTLE_CAPABILITY
 		/* The reason we don't always want to count a preemption timer
 		 * VM exit as a "management" VM exit when throttle mode is
 		 * enabled is that if immediate_exit is 0, then this is just a
@@ -1577,8 +1574,14 @@ void vcpu_handle_exit(struct per_cpu *cpu_data)
 		 * If immediate_exit is > 0, then this is a deferred NMI handler
 		 * from host mode and we increment the management VM exit count.
 		 */
+		if (this_cpu_data()->immediate_exit > 0)
+			stats[JAILHOUSE_CPU_STAT_VMEXITS_MANAGEMENT]++;
+		else
+			stats[JAILHOUSE_CPU_STAT_VMEXITS_PREEMPTION]++;
+#else
 		stats[JAILHOUSE_CPU_STAT_VMEXITS_MANAGEMENT]++;
 #endif
+		/* Increments VM exit management count by 1 */
 		vmx_check_events();
 		return;
 	case EXIT_REASON_CPUID:

@@ -130,6 +130,10 @@ JAILHOUSE_CPU_STATS_ATTR(vmexits_management,
 			 JAILHOUSE_CPU_STAT_VMEXITS_MANAGEMENT);
 JAILHOUSE_CPU_STATS_ATTR(vmexits_hypercall,
 			 JAILHOUSE_CPU_STAT_VMEXITS_HYPERCALL);
+#ifdef MGH_X86_THROTTLE_CAPABILITY
+JAILHOUSE_CPU_STATS_ATTR(vmexits_preemption,
+			 JAILHOUSE_CPU_STAT_VMEXITS_PREEMPTION);
+#endif
 #ifdef CONFIG_X86
 JAILHOUSE_CPU_STATS_ATTR(vmexits_pio, JAILHOUSE_CPU_STAT_VMEXITS_PIO);
 JAILHOUSE_CPU_STATS_ATTR(vmexits_xapic, JAILHOUSE_CPU_STAT_VMEXITS_XAPIC);
@@ -159,6 +163,9 @@ static struct attribute *cell_stats_attrs[] = {
 	&vmexits_mmio_cell_attr.kattr.attr,
 	&vmexits_management_cell_attr.kattr.attr,
 	&vmexits_hypercall_cell_attr.kattr.attr,
+#ifdef MGH_X86_THROTTLE_CAPABILITY
+	&vmexits_preemption_cell_attr.kattr.attr,
+#endif
 #ifdef CONFIG_X86
 	&vmexits_pio_cell_attr.kattr.attr,
 	&vmexits_xapic_cell_attr.kattr.attr,
@@ -191,6 +198,9 @@ static struct attribute *cpu_stats_attrs[] = {
 	&vmexits_mmio_cpu_attr.kattr.attr,
 	&vmexits_management_cpu_attr.kattr.attr,
 	&vmexits_hypercall_cpu_attr.kattr.attr,
+#ifdef MGH_X86_THROTTLE_CAPABILITY
+	&vmexits_preemption_cpu_attr.kattr.attr,
+#endif
 #ifdef CONFIG_X86
 	&vmexits_pio_cpu_attr.kattr.attr,
 	&vmexits_xapic_cpu_attr.kattr.attr,
