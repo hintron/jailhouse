@@ -80,12 +80,12 @@
 #endif
 #define JAILHOUSE_CPU_STAT_VMEXITS_MANAGEMENT	2
 #define JAILHOUSE_CPU_STAT_VMEXITS_HYPERCALL	3
-#define JAILHOUSE_GENERIC_CPU_STATS		4
 #ifdef MGH_X86_THROTTLE_CAPABILITY
 /* This number represents the count of preemption timer VM exits not including
  * those hijacked as a deferred NMI handler. */
-#define JAILHOUSE_CPU_STAT_VMEXITS_PREEMPTION 5
+#define JAILHOUSE_CPU_STAT_VMEXITS_PREEMPTION 4
 #endif
+#define JAILHOUSE_GENERIC_CPU_STATS		5
 
 #define JAILHOUSE_MSG_NONE			0
 
