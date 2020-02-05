@@ -2,3 +2,6 @@ output/*
 *.txt
 *.csv
 *.input
+# Used for creating an initramfs image
+root/*
+initramfs
