@@ -68,22 +68,23 @@ function main {
     # If the workload is executed in the inmate, and the input file is
     # `<local-input>`, then make the inmate generate its own 20 MiB input of all
     # X's.
-    ./start_experiment.sh $WM_SHA3 $INTF_NONE $RM_INMATE $TMODE_DISABLED "<local-input>"
+    # ./start_experiment.sh $WM_SHA3 $INTF_NONE $RM_INMATE $TMODE_DISABLED "<local-input>"
     # Execute the same input in the inmate, but this time pass it over the
     # shared memory channel instead.
     ./start_experiment.sh $WM_SHA3 $INTF_NONE $RM_INMATE $TMODE_DISABLED $INPUT_FILE
     ./start_experiment.sh $WM_SHA3 $INTF_NONE $RM_LINUX_JAILHOUSE $TMODE_DISABLED $INPUT_FILE
-    ./start_experiment.sh $WM_SHA3 $INTF_NONE $RM_LINUX $TMODE_DISABLED $INPUT_FILE
+    ./start_experiment.sh $WM_SHA3 $INTF_NONE $RM_INMATE_LINUX $TMODE_DISABLED $INPUT_FILE
+    # ./start_experiment.sh $WM_SHA3 $INTF_NONE $RM_LINUX $TMODE_DISABLED $INPUT_FILE
 
-    ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_NONE $RM_INMATE $TMODE_DISABLED "<local-input>"
-    ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_NONE $RM_INMATE $TMODE_DISABLED $INPUT_FILE
-    ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_NONE $RM_LINUX_JAILHOUSE $TMODE_DISABLED $INPUT_FILE
-    ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_NONE $RM_LINUX $TMODE_DISABLED $INPUT_FILE
+    # ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_NONE $RM_INMATE $TMODE_DISABLED "<local-input>"
+    # ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_NONE $RM_INMATE $TMODE_DISABLED $INPUT_FILE
+    # ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_NONE $RM_LINUX_JAILHOUSE $TMODE_DISABLED $INPUT_FILE
+    # ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_NONE $RM_LINUX $TMODE_DISABLED $INPUT_FILE
 
-    ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_NONE $RM_INMATE $TMODE_DISABLED "<local-input>"
-    ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_NONE $RM_INMATE $TMODE_DISABLED $INPUT_FILE
-    ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_NONE $RM_LINUX_JAILHOUSE $TMODE_DISABLED $INPUT_FILE
-    ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_NONE $RM_LINUX $TMODE_DISABLED $INPUT_FILE
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_NONE $RM_INMATE $TMODE_DISABLED "<local-input>"
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_NONE $RM_INMATE $TMODE_DISABLED $INPUT_FILE
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_NONE $RM_LINUX_JAILHOUSE $TMODE_DISABLED $INPUT_FILE
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_NONE $RM_LINUX $TMODE_DISABLED $INPUT_FILE
 
     rm $INPUT_FILE
 }
