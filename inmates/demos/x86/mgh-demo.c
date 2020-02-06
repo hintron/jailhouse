@@ -935,7 +935,7 @@ static void inmate_debug(void)
  */
 static void expand_memory(void)
 {
-	map_range((char *)MGH_HEAP_BASE, MGH_HEAP_SIZE, MAP_UNCACHED);
+	map_range((char *)MGH_HEAP_BASE, MGH_HEAP_SIZE, MAP_CACHED);
 
 	/* Set heap_pos to point to MGH_HEAP_BASE, instead of right after the
 	 * inmate's stack, so alloc() can allocate more than 1 MB. */
