@@ -57,9 +57,10 @@ VTUNE_MODE_MA=0 # Memory Access
 VTUNE_MODE_UE=1 # Microarchitectural Exploration
 
 # run modes
-RM_INMATE=0 # Do not run workloads in Linux
-RM_LINUX=1 # Run in Linux, but NOT in the root cell in Jailhouse
+RM_INMATE=0 # Run on the real-time inmate
+RM_LINUX=1 # Run in Linux, but NOT under the root cell (Jailhouse not active)
 RM_LINUX_JAILHOUSE=2 # Run in Linux under root cell in Jailhouse
+RM_INMATE_LINUX=3 # Run on the Linux inmate
 
 CELL_ROOT=0
 CELL_INMATE_1=1
@@ -88,6 +89,9 @@ function log_parameters {
         ;;
     "$RM_LINUX_JAILHOUSE")
         echo "RM_LINUX_JAILHOUSE" >> $EXPERIMENT_OUTPUT_FILE
+        ;;
+    "$RM_INMATE_LINUX")
+        echo "RM_INMATE_LINUX" >> $EXPERIMENT_OUTPUT_FILE
         ;;
     "")
         echo "Unspecified" >> $EXPERIMENT_OUTPUT_FILE
@@ -559,7 +563,7 @@ function get_expected_output {
     if [ "$3" == $WM_SHA3 ]; then
         # If we are running exclusively in Linux, run the actual workload, not
         # the golden standard, so we can profile things
-        if [[ "$RUN_MODE" > "$RM_INMATE" ]]; then
+        if [[ "$RUN_MODE" != "$RM_INMATE" && "$RUN_MODE" != "$RM_INMATE_LINUX" ]]; then
             sha3_linux_file $input_file "$2"
         else
             sha3_linux_file_golden $input_file "$2"

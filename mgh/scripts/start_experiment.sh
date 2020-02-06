@@ -107,7 +107,7 @@ function main {
         LOCAL_INPUT=1
     fi
 
-    if [ "$LOCAL_INPUT" == 1 ] && [ "$RUN_MODE" != "$RM_INMATE" ]; then
+    if [[ "$LOCAL_INPUT" == 1 && "$RUN_MODE" != "$RM_INMATE" && "$RUN_MODE" != "$RM_INMATE_LINUX" ]]; then
         echo "Error: File input mode `$LOCAL_INPUT_TOKEN` can only be used with run mode RM_INMATE. Canceling experiment..." >> $EXPERIMENT_OUTPUT_FILE
         return
     fi
@@ -116,14 +116,14 @@ function main {
         disable_turbo_boost >> $EXPERIMENT_OUTPUT_FILE
     fi
 
-    if [[ "$RUN_MODE" > "$RM_INMATE" ]]; then
+    if [[ "$RUN_MODE" != "$RM_INMATE" && "$RUN_MODE" != "$RM_INMATE_LINUX" ]]; then
         if [ "$RUN_WITH_VTUNE" == 1 ]; then
             mkdir -p $VTUNE_OUTPUT_DIR
         fi
         build_linux_workloads >> $EXPERIMENT_OUTPUT_FILE 2>&1
     fi
 
-    if [ "$RUN_MODE" == "$RM_INMATE" ] || [ "$RUN_MODE" == "$RM_LINUX_JAILHOUSE" ]; then
+    if [[ "$RUN_MODE" == "$RM_INMATE" || "$RUN_MODE" == "$RM_LINUX_JAILHOUSE" || "$RUN_MODE" == "$RM_INMATE_LINUX" ]]; then
         reset_jailhouse_all >> $EXPERIMENT_OUTPUT_FILE 2>&1
         echo "=======================================================" >> $JAILHOUSE_OUTPUT_FILE
         echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
@@ -186,7 +186,7 @@ function main {
     # Flush any buffers
     end_time="$(timestamp)"
 
-    if [ "$RUN_MODE" == "$RM_INMATE" ] || [ "$RUN_MODE" == "$RM_LINUX_JAILHOUSE" ]; then
+    if [[ "$RUN_MODE" == "$RM_INMATE" || "$RUN_MODE" == "$RM_LINUX_JAILHOUSE" || "$RUN_MODE" == "$RM_INMATE_LINUX" ]]; then
         echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
         echo "Ending experiments at $end_time" >> $JAILHOUSE_OUTPUT_FILE
         echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
@@ -195,7 +195,7 @@ function main {
         sudo kill $tailf_pid >> $EXPERIMENT_OUTPUT_FILE 2>&1
         # end_jailhouse_processes >> $EXPERIMENT_OUTPUT_FILE 2>&1
 
-        if [ "$RUN_MODE" == "$RM_INMATE" ]; then
+        if [[ "$RUN_MODE" == "$RM_INMATE" || "$RUN_MODE" == "$RM_INMATE_LINUX" ]]; then
             end_inmate >> $EXPERIMENT_OUTPUT_FILE 2>&1
         fi
         end_root >> $EXPERIMENT_OUTPUT_FILE 2>&1
@@ -206,7 +206,7 @@ function main {
 
     echo "Ending experiments at $end_time" >> $EXPERIMENT_OUTPUT_FILE
 
-    if [[ "$RUN_MODE" > "$RM_INMATE" ]]; then
+    if [[ "$RUN_MODE" != "$RM_INMATE" && "$RUN_MODE" != "$RM_INMATE_LINUX" ]]; then
         post_process_data_linux
     else
         if [ "$INMATE_DEBUG" == 0 ]; then
@@ -338,7 +338,7 @@ function prep_experiment {
     echo "# Starting Experiment" >> $EXPERIMENT_OUTPUT_FILE
     echo "################################################################################" >> $EXPERIMENT_OUTPUT_FILE
 
-    if [[ "$RUN_MODE" > "$RM_INMATE" ]]; then
+    if [[  "$RUN_MODE" != "$RM_INMATE" && "$RUN_MODE" != "$RM_INMATE_LINUX" ]]; then
         prep_experiment_linux
     else
         prep_experiment_jailhouse
@@ -356,7 +356,7 @@ function start_experiment {
 
     # If running on Linux, don't do this step until the interference workload
     # is running!
-    if [ "$RUN_MODE" == "$RM_INMATE" ] && [ "$INPUT_FILE" == "" ]; then
+    if [[ ("$RUN_MODE" == "$RM_INMATE" || "$RUN_MODE" == "$RM_INMATE_LINUX") && "$INPUT_FILE" == "" ]]; then
         generate_expected_outputs
     fi
 
@@ -366,7 +366,7 @@ function start_experiment {
         sleep $INTERFERENCE_RAMPUP_TIME
     fi
 
-    if [[ "$RUN_MODE" > "$RM_INMATE" ]]; then
+    if [[ "$RUN_MODE" != "$RM_INMATE" && "$RUN_MODE" != "$RM_INMATE_LINUX" ]]; then
         # Now that the interference workload is running, run the workloads on
         # Linux
         if [ "$INPUT_FILE" == "" ]; then
@@ -420,7 +420,7 @@ function start_experiment {
                 local duration_ms=$(ns_to_ms $duration_ns)
             fi
 
-            if [[ "$RUN_MODE" > "$RM_INMATE" ]]; then
+            if [ "$RUN_MODE" != "$RM_INMATE" ] || [ "$RUN_MODE" != "$RM_INMATE_LINUX" ]; then
                 # On Linux, the workload output is just the expected value
                 # already calculated
                 if [ "$INPUT_FILE" == "" ]; then
