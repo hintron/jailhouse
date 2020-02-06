@@ -43,9 +43,12 @@ static struct cell *cell_create(const struct jailhouse_cell_desc *cell_desc)
 	unsigned int id;
 	int err;
 
+	printk("MGH: GOT HERE!!!!!!!!!!!!!\n");
 	if (cell_desc->num_memory_regions >=
-	    ULONG_MAX / sizeof(struct jailhouse_memory))
+	    ULONG_MAX / sizeof(struct jailhouse_memory)) {
+		printk("MGH: ERROR EINVAL: cell_desc->num_memory_regions >= ULONG_MAX / sizeof(struct jailhouse_memory)\n");
 		return ERR_PTR(-EINVAL);
+	}
 
 	/* determine cell id */
 	id = 0;
@@ -57,44 +60,57 @@ retry:
 		}
 
 	cell = kzalloc(sizeof(*cell), GFP_KERNEL);
-	if (!cell)
+	if (!cell) {
+		printk("MGH: ERROR ENOMEM 2: cell_create())\n");
 		return ERR_PTR(-ENOMEM);
+	}
 
+	printk("MGH: GOT HERE 2!!!!!!!!!!!!!\n");
 	INIT_LIST_HEAD(&cell->entry);
 
 	cell->id = id;
 
+	printk("MGH: GOT HERE 5!!!!!!!!!!!!!\n");
 	bitmap_copy(cpumask_bits(&cell->cpus_assigned),
 		    jailhouse_cell_cpu_set(cell_desc),
 		    min((unsigned int)nr_cpumask_bits,
 		        cell_desc->cpu_set_size * 8));
 
+	printk("MGH: GOT HERE 6!!!!!!!!!!!!!\n");
 	cell->num_memory_regions = cell_desc->num_memory_regions;
 	cell->memory_regions = vmalloc(sizeof(struct jailhouse_memory) *
 				       cell->num_memory_regions);
 	if (!cell->memory_regions) {
 		kfree(cell);
+		printk("MGH: ERROR ENOMEM 2: cell_create())\n");
 		return ERR_PTR(-ENOMEM);
 	}
 
+	printk("MGH: GOT HERE 7!!!!!!!!!!!!!\n");
 	memcpy(cell->name, cell_desc->name, JAILHOUSE_CELL_ID_NAMELEN);
 	cell->name[JAILHOUSE_CELL_ID_NAMELEN] = 0;
 
 	memcpy(cell->memory_regions, jailhouse_cell_mem_regions(cell_desc),
 	       sizeof(struct jailhouse_memory) * cell->num_memory_regions);
 
+	printk("MGH: GOT HERE 8!!!!!!!!!!!!!\n");
 	err = jailhouse_pci_cell_setup(cell, cell_desc);
 	if (err) {
 		vfree(cell->memory_regions);
 		kfree(cell);
+		printk("MGH: ERROR: jailhouse_pci_cell_setup())\n");
 		return ERR_PTR(err);
 	}
 
+	printk("MGH: GOT HERE 9!!!!!!!!!!!!!\n");
 	err = jailhouse_sysfs_cell_create(cell);
-	if (err)
+	if (err) {
 		/* cleanup done by jailhouse_sysfs_cell_create */
+		printk("MGH: ERROR: jailhouse_sysfs_cell_create())\n");
 		return ERR_PTR(err);
+	}
 
+	printk("MGH: Returning cell %s\n", cell->name);
 	return cell;
 }
 
@@ -173,12 +189,12 @@ int jailhouse_cmd_cell_create(struct jailhouse_cell_create __user *arg)
 	if (cell_params.config_size < sizeof(*config) ||
 	    memcmp(config->signature, JAILHOUSE_CELL_DESC_SIGNATURE,
 		   sizeof(config->signature)) != 0) {
-		pr_err("jailhouse: Not a cell configuration\n");
+		printk("jailhouse: ERROR EINVAL: Not a cell configuration\n");
 		err = -EINVAL;
 		goto kfree_config_out;
 	}
 	if (config->revision != JAILHOUSE_CONFIG_REVISION) {
-		pr_err("jailhouse: Configuration revision mismatch\n");
+		printk("jailhouse: ERROR EINVAL: Configuration revision mismatch\n");
 		err = -EINVAL;
 		goto kfree_config_out;
 	}
@@ -195,6 +211,7 @@ int jailhouse_cmd_cell_create(struct jailhouse_cell_create __user *arg)
 	}
 
 	if (!jailhouse_enabled) {
+		printk("MGH: ERROR EINVAL: jailhouse: !jailhouse_enabled\n");
 		err = -EINVAL;
 		goto unlock_out;
 	}
@@ -209,6 +226,7 @@ int jailhouse_cmd_cell_create(struct jailhouse_cell_create __user *arg)
 	cell = cell_create(config);
 	if (IS_ERR(cell)) {
 		err = PTR_ERR(cell);
+		printk("MGH: ERROR IS_ERR(cell)\n");
 		goto unlock_out;
 	}
 
@@ -219,6 +237,7 @@ int jailhouse_cmd_cell_create(struct jailhouse_cell_create __user *arg)
 		goto error_cell_delete;
 	}
 
+	printk("MGH: GOT HERE 11\n");
 	/* Off-line each CPU assigned to the new cell and remove it from the
 	 * root cell's set. */
 	for_each_cpu(cpu, &cell->cpus_assigned) {
@@ -230,26 +249,34 @@ int jailhouse_cmd_cell_create(struct jailhouse_cell_create __user *arg)
 			 * This is not support by Jailhouse wich destroys the
 			 * CPU state across non-root assignments.
 			 */
-			pr_err("Cannot assign CPU 0 to other cells\n");
+			printk("Cannot assign CPU 0 to other cells\n");
 			err = -EINVAL;
 			goto error_cpu_online;
 		}
 #endif
 		if (cpu_online(cpu)) {
 			err = cpu_down(cpu);
-			if (err)
+			if (err) {
+				printk("MGH: ERROR cpu_down(cpu)\n");
 				goto error_cpu_online;
+			}
 			cpumask_set_cpu(cpu, &offlined_cpus);
 		}
 		cpumask_clear_cpu(cpu, &root_cell->cpus_assigned);
 	}
 
+	printk("MGH: GOT HERE 12\n");
 	jailhouse_pci_do_all_devices(cell, JAILHOUSE_PCI_TYPE_DEVICE,
 	                             JAILHOUSE_PCI_ACTION_CLAIM);
 
+	printk("MGH: GOT HERE 13\n");
 	err = jailhouse_call_arg1(JAILHOUSE_HC_CELL_CREATE, __pa(config));
-	if (err < 0)
+	printk("MGH: GOT HERE 14\n");
+	if (err < 0) {
+		printk("MGH: ERROR jailhouse_call_arg1(JAILHOUSE_HC_CELL_CREATE): err = %d\n", err);
 		goto error_cpu_online;
+	}
+	printk("MGH: GOT HERE 15\n");
 
 	cell_register(cell);
 
@@ -309,28 +336,45 @@ static int load_image(struct cell *cell,
 	int err = 0;
 
 	printk("MGH: Inside load_image");
-	printk("MGH: copy_from_user()");
 	if (copy_from_user(&image, uimage, sizeof(image)))
 		return -EFAULT;
 
+	printk("MGH: cell.c --> load_image(): Trying to load image of size %lld (0x%llx)",
+       image.size, image.size);
 	if (image.size == 0)
 		return 0;
 
 	mem = cell->memory_regions;
-	printk("MGH: for loop");
 	for (regions = cell->num_memory_regions; regions > 0; regions--) {
 		image_offset = image.target_address - mem->virt_start;
 		if (image.target_address >= mem->virt_start &&
 		    image_offset < mem->size) {
-			if (image.size > mem->size - image_offset ||
-			    (mem->flags & MEM_REQ_FLAGS) != MEM_REQ_FLAGS)
+			if (image.size > mem->size - image_offset) {
+				printk("MGH: ERROR EINVAL: image.size (%lld) > mem->size (%lld) - image_offset (%lld)",
+				       image.size, mem->size, image_offset);
 				return -EINVAL;
+			} else if ((mem->flags & MEM_REQ_FLAGS)
+				   != MEM_REQ_FLAGS) {
+				printk("MGH: ERROR EINVAL: mem->flags & MEM_REQ_FLAGS (%lld) != MEM_REQ_FLAGS (%d)",
+				       mem->flags & MEM_REQ_FLAGS,
+				       MEM_REQ_FLAGS);
+				return -EINVAL;
+			}
 			break;
+		} else {
+			printk("MGH: Warning: image.target_address (0x%llx) < mem->virt_start (0x%llx) || image_offset (0x%llx) >= mem->size (0x%llx). Check next mem region...",
+			       image.target_address, mem->virt_start,
+			       image_offset, mem->size);
 		}
 		mem++;
 	}
-	if (regions == 0)
+	if (regions == 0) {
+		printk("MGH: ERROR EINVAL: regions == 0 (no region was suitable to load the image in)");
 		return -EINVAL;
+	} else {
+		printk("MGH: The image was loaded into memory region %d!",
+		       regions);
+	}
 
 	phys_start = (mem->phys_start + image_offset) & PAGE_MASK;
 	printk("MGH: offset_in_page()");
@@ -380,8 +424,7 @@ int jailhouse_cmd_cell_load(struct jailhouse_cell_load __user *arg)
 	unsigned int n;
 	int err;
 
-	printk("MGH: driver/cell.c#jailhouse_cmd_cell_load()");
-	printk("MGH: copy_from_user()");
+	printk("MGH: driver/cell.c --> jailhouse_cmd_cell_load()");
 	if (copy_from_user(&cell_load, arg, sizeof(cell_load)))
 		return -EFAULT;
 
@@ -390,7 +433,6 @@ int jailhouse_cmd_cell_load(struct jailhouse_cell_load __user *arg)
 	if (err)
 		return err;
 
-	printk("MGH: jailhouse_call_arg1()");
 	err = jailhouse_call_arg1(JAILHOUSE_HC_CELL_SET_LOADABLE, cell->id);
 	if (err)
 		goto unlock_out;

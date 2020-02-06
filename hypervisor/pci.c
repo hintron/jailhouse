@@ -711,8 +711,10 @@ static int pci_cell_init(struct cell *cell)
 
 		if (device->info->type == JAILHOUSE_PCI_TYPE_IVSHMEM) {
 			err = ivshmem_init(cell, device);
-			if (err)
+			if (err) {
+				printk("MGH: ERROR pci.c --> ivshmem_init(): %d\n", err);
 				goto error;
+			}
 
 			continue;
 		}
@@ -723,8 +725,10 @@ static int pci_cell_init(struct cell *cell)
 			pci_remove_physical_device(root_device);
 
 		err = pci_add_physical_device(cell, device);
-		if (err)
+		if (err) {
+			printk("MGH: ERROR pci.c --> pci_add_physical_device(): %d\n", err);
 			goto error;
+		}
 
 		for_each_pci_cap(cap, device, ncap)
 			if (cap->id == PCI_CAP_ID_MSI)

@@ -242,8 +242,10 @@ int cell_init(struct cell *cell)
 	struct cpu_set *cpu_set;
 	int err;
 
-	if (cpu_set_size > PAGE_SIZE)
+	if (cpu_set_size > PAGE_SIZE) {
+		printk("MGH: ERROR EINVAL: cell_init(): cpu_set_size > PAGE_SIZE\n");
 		return trace_error(-EINVAL);
+	}
 	if (cpu_set_size > sizeof(cell->small_cpu_set.bitmap)) {
 		cpu_set = page_alloc(&mem_pool, 1);
 		if (!cpu_set)
@@ -257,6 +259,9 @@ int cell_init(struct cell *cell)
 	cell->cpu_set = cpu_set;
 
 	err = mmio_cell_init(cell);
+	if (err) {
+		printk("MGH: ERROR %d: mmio_cell_init()\n", err);
+	}
 	if (err && cell->cpu_set != &cell->small_cpu_set)
 		page_free(&mem_pool, cell->cpu_set, 1);
 
@@ -408,7 +413,7 @@ static int cell_create(struct per_cpu *cpu_data, unsigned long config_address)
 	void *cfg_mapping;
 	int err;
 
-	// printk("MGH: Got into hypervisor/control.c#cell_create()\n");
+	printk("MGH: hypervisor/control.c --> cell_create()\n");
 
 	/* We do not support creation over non-root cells. */
 	if (cpu_data->public.cell != &root_cell)
@@ -468,8 +473,10 @@ static int cell_create(struct per_cpu *cpu_data, unsigned long config_address)
 	memcpy(cell->config, cfg, cfg_total_size);
 
 	err = cell_init(cell);
-	if (err)
+	if (err) {
+		printk("MGH: ERROR cell_init(): %d\n", err);
 		goto err_free_cell;
+	}
 
 	/* don't assign the CPU we are currently running on */
 	if (cell_owns_cpu(cell, cpu_data->public.cpu_id)) {
@@ -485,12 +492,15 @@ static int cell_create(struct per_cpu *cpu_data, unsigned long config_address)
 		}
 
 	err = arch_cell_create(cell);
-	if (err)
+	if (err) {
+		printk("MGH: ERROR arch_cell_create(): %d\n", err);
 		goto err_cell_exit;
+	}
 
 	for_each_unit(unit) {
 		err = unit->cell_init(cell);
 		if (err) {
+			printk("MGH: ERROR unit->cell_init() for unit %s: %d\n", unit->name, err);
 			for_each_unit_before_reverse(unit, unit)
 				unit->cell_exit(cell);
 			goto err_arch_destroy;
@@ -523,16 +533,20 @@ static int cell_create(struct per_cpu *cpu_data, unsigned long config_address)
 		if (!(mem->flags & (JAILHOUSE_MEM_COMM_REGION |
 				    JAILHOUSE_MEM_ROOTSHARED))) {
 			err = unmap_from_root_cell(mem);
-			if (err)
+			if (err) {
+				printk("MGH: ERROR unmap_from_root_cell(): %d\n", err);
 				goto err_destroy_cell;
+			}
 		}
 
 		if (JAILHOUSE_MEMORY_IS_SUBPAGE(mem))
 			err = mmio_subpage_register(cell, mem);
 		else
 			err = arch_map_memory_region(cell, mem);
-		if (err)
+		if (err) {
+			printk("MGH: ERROR mmio_subpage_register()/arch_map_memory_region(): %d\n", err);
 			goto err_destroy_cell;
+		}
 	}
 
 	config_commit(cell);
@@ -941,6 +955,7 @@ long hypercall(unsigned long code, unsigned long arg1, unsigned long arg2)
 	case JAILHOUSE_HC_DISABLE:
 		return hypervisor_disable(cpu_data);
 	case JAILHOUSE_HC_CELL_CREATE:
+		printk("MGH: GOT HERE 20\n");
 		return cell_create(cpu_data, arg1);
 	case JAILHOUSE_HC_CELL_START:
 		return cell_start(cpu_data, arg1);

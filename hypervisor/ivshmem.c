@@ -348,10 +348,18 @@ int ivshmem_init(struct cell *cell, struct pci_device *device)
 			peer_dev->info->shmem_region;
 
 		/* check that the regions and protocols of both peers match */
-		if (peer_mem->phys_start != mem->phys_start ||
-		    peer_mem->size != mem->size ||
-		    peer_dev->info->shmem_protocol != dev_info->shmem_protocol)
+		if (peer_mem->phys_start != mem->phys_start) {
+			printk("MGH: ERROR EINVAL: ivshmem.c --> ivshmem_init(): peer_mem->phys_start != mem->phys_start\n");
 			return trace_error(-EINVAL);
+		}
+		if (peer_mem->size != mem->size ) {
+			printk("MGH: ERROR EINVAL: ivshmem.c --> ivshmem_init(): peer_mem->size != mem->size \n");
+			return trace_error(-EINVAL);
+		}
+		if (peer_dev->info->shmem_protocol != dev_info->shmem_protocol) {
+			printk("MGH: ERROR EINVAL: ivshmem.c --> ivshmem_init(): peer_dev->info->shmem_protocol != dev_info->shmem_protocol\n");
+			return trace_error(-EINVAL);
+		}
 
 		printk("Shared memory connection established: "
 		       "\"%s\" <--> \"%s\"\n",
