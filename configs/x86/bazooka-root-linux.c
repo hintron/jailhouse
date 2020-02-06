@@ -223,6 +223,14 @@ struct {
 			.size = 0x1b3000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE,
 		},
+		// TODO: Needed?
+		// /* MemRegion: a35b3000-a35b3fff : 0000:03:00.0 MSIX */
+		// {
+		// 	.phys_start = 0xa35b3000,
+		// 	.virt_start = 0xa35b3000,
+		// 	.size = 0x1000,
+		// 	.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE,
+		// },
 		/* MemRegion: a35b4000-a35fffff : 0000:03:00.0 */
 		{
 			.phys_start = 0xa35b4000,
