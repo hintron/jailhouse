@@ -77,6 +77,8 @@ OUTPUT_FREQ_UNTHROTTLED_FILE="$OUTPUT_DIR/unthrottled_freq_${experiment_time}.cs
 INTERFERENCE_WORKLOAD_OUTPUT="$OUTPUT_DIR/interference_${experiment_time}.txt"
 INTERFERENCE_RAMPUP_TIME=30
 LOCAL_INPUT_TOKEN="<local-input>"
+# local input is currently hardwired to 20 MiB
+LOCAL_INPUT_SIZE="20971520"
 
 function main {
     ############################################################################
@@ -298,6 +300,8 @@ function post_process_data_jailhouse {
         for input_size in "${input_sizes[@]}"; do
             grep_token_columns_csv "$input_size" 2 3 $OUTPUT_DATA_UNTHROTTLED_FILE >> $OUTPUT_DATA_UNTHROTTLED_AVG_FILE
         done
+    elif [ "$LOCAL_INPUT" == 1 ]; then
+            grep_token_columns_csv "$LOCAL_INPUT_SIZE" 2 3 $OUTPUT_DATA_UNTHROTTLED_FILE >> $OUTPUT_DATA_UNTHROTTLED_AVG_FILE
     else
             grep_token_columns_csv "$(get_size_of_file_bytes $INPUT_FILE)" 2 3 $OUTPUT_DATA_UNTHROTTLED_FILE >> $OUTPUT_DATA_UNTHROTTLED_AVG_FILE
     fi
