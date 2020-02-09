@@ -17,7 +17,7 @@ VTUNE_MODE=$VTUNE_MODE_MA
 # This says to run the workloads under Intel VTune (Linux-only)
 # RUN_WITH_VTUNE=1
 RUN_WITH_VTUNE=0
-# When doing Linux workloads, turn off Turbo Boost
+# When doing Linux workloads, turn off Turbo Boost (not sure this works...)
 DISABLE_TURBO_BOOST=1
 # DISABLE_TURBO_BOOST=0
 
