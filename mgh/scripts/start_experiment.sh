@@ -104,6 +104,16 @@ function main {
         return
     fi
 
+    if [ "$ITERATIONS" == 0 ]; then
+        echo "Error: Need at least 1 iteration for the experiments to work" >> $EXPERIMENT_OUTPUT_FILE
+        return
+    fi
+
+    if [ "$ITERATIONS" == 1 ] && [ "$THROTTLE_MODE" == "$TMODE_ITERATION" ]; then
+        echo "Error: Need >= 2 iterations for iteration throttle mode to work" >> $EXPERIMENT_OUTPUT_FILE
+        return
+    fi
+
     # A special input mode that allows the inmate to generate its own input
     # instead of read input through shared memory from the Linux root cell
     if [ "$INPUT_FILE" == "$LOCAL_INPUT_TOKEN" ]; then
