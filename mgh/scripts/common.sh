@@ -64,8 +64,6 @@ RM_LINUX_JAILHOUSE=2 # Run in Linux under root cell in Jailhouse
 CELL_ROOT=0
 CELL_INMATE_1=1
 
-LOCAL_INPUT_TOKEN="<local-input>"
-
 # This needs to already be on the path
 VTUNE_BIN=amplxe-cl
 

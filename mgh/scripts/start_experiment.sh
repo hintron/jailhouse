@@ -76,6 +76,7 @@ OUTPUT_DATA_UNTHROTTLED_AVG_FILE="$OUTPUT_DIR/unthrottled_avg_${experiment_time}
 OUTPUT_FREQ_UNTHROTTLED_FILE="$OUTPUT_DIR/unthrottled_freq_${experiment_time}.csv"
 INTERFERENCE_WORKLOAD_OUTPUT="$OUTPUT_DIR/interference_${experiment_time}.txt"
 INTERFERENCE_RAMPUP_TIME=30
+LOCAL_INPUT_TOKEN="<local-input>"
 
 function main {
     ############################################################################
