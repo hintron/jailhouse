@@ -293,7 +293,7 @@ function post_process_data_jailhouse {
     grep_output_data_unthrottled $JAILHOUSE_OUTPUT_FILE > $OUTPUT_DATA_UNTHROTTLED_FILE
     grep_output_freq_unthrottled $JAILHOUSE_OUTPUT_FILE > $OUTPUT_FREQ_UNTHROTTLED_FILE
 
-    if [ "$INPUT_FILE" = "" ]; then
+    if [ "$INPUT_FILE" == "" ]; then
         # Aggregate iterations for each input size
         for input_size in "${input_sizes[@]}"; do
             grep_token_columns_csv "$input_size" 2 3 $OUTPUT_DATA_UNTHROTTLED_FILE >> $OUTPUT_DATA_UNTHROTTLED_AVG_FILE
@@ -305,7 +305,7 @@ function post_process_data_jailhouse {
     if [ "$THROTTLE_MODE" != "$TMODE_DISABLED" ]; then
         grep_output_data_throttled $JAILHOUSE_OUTPUT_FILE > $OUTPUT_DATA_THROTTLED_FILE
         grep_output_freq_throttled $JAILHOUSE_OUTPUT_FILE > $OUTPUT_FREQ_THROTTLED_FILE
-        if [ "$INPUT_FILE" = "" ]; then
+        if [ "$INPUT_FILE" == "" ]; then
             # Aggregate iterations for each input size
             for input_size in "${input_sizes[@]}"; do
                 grep_token_columns_csv "$input_size" 2 3 $OUTPUT_DATA_THROTTLED_FILE >> $OUTPUT_DATA_THROTTLED_AVG_FILE

@@ -68,8 +68,6 @@ CELL_INMATE_1=1
 VTUNE_BIN=amplxe-cl
 
 NO_TURBO_INTERFACE=/sys/devices/system/cpu/intel_pstate/no_turbo
-
-# Set some tuning parameters:
 DEBUG_MODE="true"
 
 function log_parameters {
