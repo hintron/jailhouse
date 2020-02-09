@@ -17,8 +17,8 @@ function main {
     # ./start_experiment.sh $WM_RANDOM_ACCESS
 
     # # Run three types of inmate workloads without interference workload
-    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_NONE $RM_LINUX
-    # ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_NONE $RM_LINUX
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_NONE $RM_INMATE
+    # ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_NONE $RM_INMATE
     # ./start_experiment.sh $WM_SHA3 $INTF_NONE $RM_INMATE
 
     # # Run CSB inmate workload without any throttling
