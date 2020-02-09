@@ -285,7 +285,7 @@ static void map_shmem_and_bars(struct ivshmem_dev_data *d)
 
 	pci_write_config(d->bdf, PCI_CFG_COMMAND,
 			 (PCI_CMD_MEM | PCI_CMD_MASTER), 2);
-	map_range(d->shmem, d->shmemsz + PAGE_SIZE + d->bar2sz, MAP_UNCACHED);
+	map_range(d->shmem, d->shmemsz + PAGE_SIZE + d->bar2sz, MAP_CACHED);
 }
 
 static int get_ivpos(struct ivshmem_dev_data *d)
