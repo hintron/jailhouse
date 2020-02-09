@@ -414,12 +414,6 @@ function start_experiment {
             echo "Iteration $j ($index):" >> $EXPERIMENT_OUTPUT_FILE
 
             if [ "$INPUT_FILE" == "" ]; then
-                local input_file=${random_inputs[$index]}
-            else
-                local input_file="$INPUT_FILE"
-            fi
-
-            if [ "$INPUT_FILE" == "" ]; then
                 local expected_output_value="${expected_outputs[$index]}"
             else
                 local start_time_ns=$(date +%s%N)
@@ -454,7 +448,11 @@ function start_experiment {
                 echo "MGHOUT:$index,$input_size,$workload_output_duration" >> $LINUX_OUTPUT_FILE
             else
                 vmexits_start=$(jailhouse_inmate_total_vmexits)
-                workload_output=$(send_inmate_input $INPUT_FILE)
+                if [ "$INPUT_FILE" == "" ]; then
+                    workload_output=$(send_inmate_input ${random_inputs[$index]})
+                else
+                    workload_output=$(send_inmate_input $INPUT_FILE)
+                fi
                 vmexits_end=$(jailhouse_inmate_total_vmexits)
                 echo "$workload_output" >> $EXPERIMENT_OUTPUT_FILE 2>&1
                 workload_output_value=$(grep_token_in_str "Inmate output: " "$workload_output")
