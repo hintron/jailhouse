@@ -98,6 +98,7 @@ function log_parameters {
         echo "Unknown" >> $EXPERIMENT_OUTPUT_FILE
         ;;
     esac
+    echo "RUN_MODE_RAW: $RUN_MODE" >> $EXPERIMENT_OUTPUT_FILE
 
     echo "DISABLE_TURBO_BOOST: $DISABLE_TURBO_BOOST" >> $EXPERIMENT_OUTPUT_FILE
     echo "DEBUG_MODE: $DEBUG_MODE" >> $EXPERIMENT_OUTPUT_FILE
@@ -138,6 +139,7 @@ function log_parameters {
         echo "Unknown" >> $EXPERIMENT_OUTPUT_FILE
         ;;
     esac
+    echo "WORKLOAD_MODE_RAW: $WORKLOAD_MODE" >> $EXPERIMENT_OUTPUT_FILE
 
     printf "INTERFERENCE_WORKLOAD: " >> $EXPERIMENT_OUTPUT_FILE
     case "$INTERFERENCE_WORKLOAD" in
@@ -157,6 +159,7 @@ function log_parameters {
         echo "Unknown" >> $EXPERIMENT_OUTPUT_FILE
         ;;
     esac
+    echo "INTERFERENCE_WORKLOAD_RAW: $INTERFERENCE_WORKLOAD" >> $EXPERIMENT_OUTPUT_FILE
 
     echo "#########################" >> $EXPERIMENT_OUTPUT_FILE
     echo "# Linux-only Parameters #" >> $EXPERIMENT_OUTPUT_FILE
@@ -179,6 +182,7 @@ function log_parameters {
         echo "Unknown" >> $EXPERIMENT_OUTPUT_FILE
         ;;
     esac
+    echo "VTUNE_MODE_RAW: $VTUNE_MODE" >> $EXPERIMENT_OUTPUT_FILE
 
     echo "##########################" >> $EXPERIMENT_OUTPUT_FILE
     echo "# Inmate-only Parameters #" >> $EXPERIMENT_OUTPUT_FILE
@@ -205,6 +209,7 @@ function log_parameters {
         echo "Unknown" >> $EXPERIMENT_OUTPUT_FILE
         ;;
     esac
+    echo "THROTTLE_MODE_RAW: $THROTTLE_MODE" >> $EXPERIMENT_OUTPUT_FILE
 
     printf "THROTTLE_MECHANISM: " >> $EXPERIMENT_OUTPUT_FILE
     case "$THROTTLE_MECHANISM" in
@@ -224,6 +229,8 @@ function log_parameters {
         echo "Unknown" >> $EXPERIMENT_OUTPUT_FILE
         ;;
     esac
+    echo "THROTTLE_MECHANISM_RAW: $THROTTLE_MECHANISM" >> $EXPERIMENT_OUTPUT_FILE
+
     echo "##################" >> $EXPERIMENT_OUTPUT_FILE
     echo "# End Parameters #" >> $EXPERIMENT_OUTPUT_FILE
     echo "##################" >> $EXPERIMENT_OUTPUT_FILE
@@ -237,6 +244,8 @@ function log_parameters {
 #   WORKLOAD_MODE
 #   COUNT_SET_BITS_MODE
 #   POLLUTE_CACHE
+#   THROTTLE_ITERATIONS
+#   INPUT_FILE
 #
 # Do `CMDLINE=$(set_cmdline)` to capture the output of this function
 # Make sure to use " " later whenever using $CMDLINE, or else only first item
