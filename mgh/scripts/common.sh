@@ -70,6 +70,10 @@ VTUNE_BIN=amplxe-cl
 NO_TURBO_INTERFACE=/sys/devices/system/cpu/intel_pstate/no_turbo
 DEBUG_MODE="true"
 
+# local input is currently hardwired to 20 MiB
+LOCAL_INPUT_SIZE="20971520"
+LOCAL_INPUT_TOKEN="<local-input>"
+
 function log_parameters {
     echo "#####################" >> $EXPERIMENT_OUTPUT_FILE
     echo "# Common Parameters #" >> $EXPERIMENT_OUTPUT_FILE
@@ -102,7 +106,7 @@ function log_parameters {
         echo "INPUT_SIZE_STEP: $INPUT_SIZE_STEP" >> $EXPERIMENT_OUTPUT_FILE
     else
         echo "INPUT_FILE: $INPUT_FILE" >> $EXPERIMENT_OUTPUT_FILE
-        if [ "$LOCAL_INPUT" != 1 ]; then
+        if [ "$INPUT_FILE" != "$LOCAL_INPUT_TOKEN" ]; then
             echo "INPUT_FILE size: $(get_size_of_file_bytes $INPUT_FILE) Bytes" >> $EXPERIMENT_OUTPUT_FILE
         fi
     fi
@@ -260,8 +264,8 @@ function set_cmdline {
     if [ ! -z $THROTTLE_ITERATIONS ]; then
         CMDLINE="${CMDLINE} throttleiter=$THROTTLE_ITERATIONS"
     fi
-    if [ ! -z $LOCAL_INPUT ]; then
-        CMDLINE="${CMDLINE} li=$LOCAL_INPUT"
+    if [ "$INPUT_FILE" == "$LOCAL_INPUT_TOKEN" ]; then
+        CMDLINE="${CMDLINE} li=1"
     fi
 
     # Remove leading whitespace
@@ -547,7 +551,7 @@ function create_random_file {
 # $2: (optional) The workload mode. Defaults to Count Set Bits.
 function get_expected_output {
     local input_file="$1"
-    if [ "$LOCAL_INPUT" == 1 ]; then
+    if [ "$INPUT_FILE" == "$LOCAL_INPUT_TOKEN" ]; then
         input_file="tmp.txt"
         create_inmate_local_input_file $input_file
     fi
@@ -567,7 +571,7 @@ function get_expected_output {
         count_set_bits_linux_file $input_file "$2"
     fi
 
-    if [ "$LOCAL_INPUT" == 1 ]; then
+    if [ "$INPUT_FILE" == "$LOCAL_INPUT_TOKEN" ]; then
         rm $input_file
     fi
 }
@@ -622,7 +626,7 @@ function clear_sync_byte_shmem {
 # Send input to the inmate via file
 function send_inmate_input {
     local input_file="$1"
-    if [ "$LOCAL_INPUT" == 1 ]; then
+    if [ "$input_file" == "$LOCAL_INPUT_TOKEN" ]; then
         # Go through the motions so the inmate knows to generate its own input
         local input_file="bogus_input.txt"
         touch $input_file
@@ -636,7 +640,7 @@ function send_inmate_input {
     # Send input to inmate
     sudo $MGH_DEMO_PY -f $input_file
 
-    if [ "$LOCAL_INPUT" == 1 ]; then
+    if [ "$input_file" == "$LOCAL_INPUT_TOKEN" ]; then
         rm $input_file
     fi
 }
@@ -872,7 +876,7 @@ function post_process_data_jailhouse {
         for input_size in "${input_sizes[@]}"; do
             grep_token_columns_csv "$input_size" 2 3 $OUTPUT_DATA_UNTHROTTLED_FILE >> $OUTPUT_DATA_UNTHROTTLED_AVG_FILE
         done
-    elif [ "$LOCAL_INPUT" == 1 ]; then
+    elif [ "$INPUT_FILE" == "$LOCAL_INPUT_TOKEN" ]; then
             grep_token_columns_csv "$LOCAL_INPUT_SIZE" 2 3 $OUTPUT_DATA_UNTHROTTLED_FILE >> $OUTPUT_DATA_UNTHROTTLED_AVG_FILE
     else
             grep_token_columns_csv "$(get_size_of_file_bytes $INPUT_FILE)" 2 3 $OUTPUT_DATA_UNTHROTTLED_FILE >> $OUTPUT_DATA_UNTHROTTLED_AVG_FILE

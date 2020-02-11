@@ -76,9 +76,6 @@ OUTPUT_DATA_UNTHROTTLED_AVG_FILE="$OUTPUT_DIR/unthrottled_avg_${experiment_time}
 OUTPUT_FREQ_UNTHROTTLED_FILE="$OUTPUT_DIR/unthrottled_freq_${experiment_time}.csv"
 INTERFERENCE_WORKLOAD_OUTPUT="$OUTPUT_DIR/interference_${experiment_time}.txt"
 INTERFERENCE_RAMPUP_TIME=30
-LOCAL_INPUT_TOKEN="<local-input>"
-# local input is currently hardwired to 20 MiB
-LOCAL_INPUT_SIZE="20971520"
 
 function main {
     ############################################################################
@@ -114,13 +111,7 @@ function main {
         return
     fi
 
-    # A special input mode that allows the inmate to generate its own input
-    # instead of read input through shared memory from the Linux root cell
-    if [ "$INPUT_FILE" == "$LOCAL_INPUT_TOKEN" ]; then
-        LOCAL_INPUT=1
-    fi
-
-    if [ "$LOCAL_INPUT" == 1 ] && [ "$RUN_MODE" != "$RM_INMATE" ]; then
+    if [ "$INPUT_FILE" == "$LOCAL_INPUT_TOKEN" ] && [ "$RUN_MODE" != "$RM_INMATE" ]; then
         echo "Error: File input mode `$LOCAL_INPUT_TOKEN` can only be used with run mode RM_INMATE. Canceling experiment..." >> $EXPERIMENT_OUTPUT_FILE
         return
     fi
@@ -291,7 +282,6 @@ function prep_experiment_jailhouse {
     echo "Starting Experiment" >> $JAILHOUSE_OUTPUT_FILE
     echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
 
-    # If the LOCAL_INPUT global was set, it will be passed in automatically
     local INMATE_CMDLINE=$(set_cmdline) >> $EXPERIMENT_OUTPUT_FILE 2>&1
     start_jailhouse $ROOT_CELL $INMATE_CELL $INMATE_NAME $INMATE_PROGRAM "$INMATE_CMDLINE" >> $EXPERIMENT_OUTPUT_FILE 2>&1
 }
@@ -349,7 +339,7 @@ function start_experiment {
         local input_size="$LOCAL_INPUT_TOKEN"
         if [ "$INPUT_FILE" == "" ]; then
             input_size=${input_sizes[$i]}
-        elif [ "$LOCAL_INPUT" != 1 ]; then
+        elif [ "$INPUT_FILE" != "$LOCAL_INPUT_TOKEN" ]; then
             input_size=$(get_size_of_file_bytes $INPUT_FILE)
         fi
         echo "*********************************************************" >> $EXPERIMENT_OUTPUT_FILE
@@ -436,7 +426,7 @@ function start_experiment {
             # echo "sudo rm $input_file" >> $EXPERIMENT_OUTPUT_FILE
             sudo rm $input_file >> $EXPERIMENT_OUTPUT_FILE 2>&1
         done
-    elif [ "$LOCAL_INPUT" != 1 ]; then
+    elif [ "$INPUT_FILE" != "$LOCAL_INPUT_TOKEN" ]; then
         # Skip input file deletion if input was specified
         # copy the input file for future reference
         cp "$INPUT_FILE" "$OUTPUT_DIR/${experiment_time}.input"
