@@ -289,47 +289,6 @@ function generate_expected_outputs {
     done
 }
 
-function post_process_data_linux {
-    if [ "$RUN_WITH_VTUNE" == 1 ]; then
-        # Create a condensed list of VTune output folders
-        grep_token_in_file "amplxe: Using result path " $VTUNE_OUTPUT_FILE > $VTUNE_RUNS_FILE
-        # grep_token_in_file "Elapsed Time: " $VTUNE_OUTPUT_FILE > $VTUNE_TIMES_FILE
-        # grep_all_but_token_in_file_to_file "amplxe:" $VTUNE_OUTPUT_FILE > $VTUNE_RUNS_FILE
-    fi
-}
-
-function post_process_data_jailhouse {
-    # Do not print out all MGHFREQ lines. Avg freq is already in MGHOUT
-
-    # Separate throttled and unthrottled data
-    grep_output_data_unthrottled $JAILHOUSE_OUTPUT_FILE > $OUTPUT_DATA_UNTHROTTLED_FILE
-    grep_output_freq_unthrottled $JAILHOUSE_OUTPUT_FILE > $OUTPUT_FREQ_UNTHROTTLED_FILE
-
-    if [ "$INPUT_FILE" == "" ]; then
-        # Aggregate iterations for each input size
-        for input_size in "${input_sizes[@]}"; do
-            grep_token_columns_csv "$input_size" 2 3 $OUTPUT_DATA_UNTHROTTLED_FILE >> $OUTPUT_DATA_UNTHROTTLED_AVG_FILE
-        done
-    elif [ "$LOCAL_INPUT" == 1 ]; then
-            grep_token_columns_csv "$LOCAL_INPUT_SIZE" 2 3 $OUTPUT_DATA_UNTHROTTLED_FILE >> $OUTPUT_DATA_UNTHROTTLED_AVG_FILE
-    else
-            grep_token_columns_csv "$(get_size_of_file_bytes $INPUT_FILE)" 2 3 $OUTPUT_DATA_UNTHROTTLED_FILE >> $OUTPUT_DATA_UNTHROTTLED_AVG_FILE
-    fi
-
-    if [ "$THROTTLE_MODE" != "$TMODE_DISABLED" ]; then
-        grep_output_data_throttled $JAILHOUSE_OUTPUT_FILE > $OUTPUT_DATA_THROTTLED_FILE
-        grep_output_freq_throttled $JAILHOUSE_OUTPUT_FILE > $OUTPUT_FREQ_THROTTLED_FILE
-        if [ "$INPUT_FILE" == "" ]; then
-            # Aggregate iterations for each input size
-            for input_size in "${input_sizes[@]}"; do
-                grep_token_columns_csv "$input_size" 2 3 $OUTPUT_DATA_THROTTLED_FILE >> $OUTPUT_DATA_THROTTLED_AVG_FILE
-            done
-        else
-                grep_token_columns_csv "$(get_size_of_file_bytes $INPUT_FILE)" 2 3 $OUTPUT_DATA_THROTTLED_FILE >> $OUTPUT_DATA_THROTTLED_AVG_FILE
-        fi
-    fi
-}
-
 function prep_experiment_jailhouse {
     # Flush jailhouse output
     sleep 3
