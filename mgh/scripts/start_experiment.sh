@@ -64,16 +64,8 @@ EXPERIMENT_OUTPUT_FILE="$OUTPUT_DIR/experiment_${experiment_time}.txt"
 VTUNE_OUTPUT_DIR="$OUTPUT_DIR/vtune"
 VTUNE_RESULTS_BASE="$VTUNE_OUTPUT_DIR/${experiment_time}"
 VTUNE_OUTPUT_FILE="$OUTPUT_DIR/vtune_output_${experiment_time}.txt"
-VTUNE_RUNS_FILE="$OUTPUT_DIR/vtune_runs_${experiment_time}.txt"
-# VTUNE_TIMES_FILE="$OUTPUT_DIR/vtune_times_${experiment_time}.txt"
 OUTPUT_DATA_FILE="$OUTPUT_DIR/data_${experiment_time}.csv"
 OUTPUT_FREQ_FILE="$OUTPUT_DIR/freq_${experiment_time}.csv"
-OUTPUT_DATA_THROTTLED_FILE="$OUTPUT_DIR/throttled_${experiment_time}.csv"
-OUTPUT_DATA_THROTTLED_AVG_FILE="$OUTPUT_DIR/throttled_avg_${experiment_time}.csv"
-OUTPUT_FREQ_THROTTLED_FILE="$OUTPUT_DIR/throttled_freq_${experiment_time}.csv"
-OUTPUT_DATA_UNTHROTTLED_FILE="$OUTPUT_DIR/unthrottled_${experiment_time}.csv"
-OUTPUT_DATA_UNTHROTTLED_AVG_FILE="$OUTPUT_DIR/unthrottled_avg_${experiment_time}.csv"
-OUTPUT_FREQ_UNTHROTTLED_FILE="$OUTPUT_DIR/unthrottled_freq_${experiment_time}.csv"
 INTERFERENCE_WORKLOAD_OUTPUT="$OUTPUT_DIR/interference_${experiment_time}.txt"
 INTERFERENCE_RAMPUP_TIME=30
 
@@ -167,8 +159,9 @@ function main {
         echo "$count s: Finished!" >> $EXPERIMENT_OUTPUT_FILE
     else
         if [ "$INPUT_FILE" == "" ]; then
-            # Pre-generate all input sizes beforehand
-            generate_input_size_range
+            # Generate input sizes and append to global input_sizes array
+            generate_input_size_range $INPUT_SIZE_START $INPUT_SIZE_END $INPUT_SIZE_STEP
+            input_sizes_count=${#input_sizes[@]}
         else
             # We only need to iterate over one file
             input_sizes_count=1
@@ -210,21 +203,19 @@ function main {
 
     echo "Ending experiments at $end_time" >> $EXPERIMENT_OUTPUT_FILE
 
-    post_process_data
+    post_process_data $OUTPUT_DIR $experiment_time
 }
 
-# Calculates the input sizes
-# IN: $INPUT_SIZE_START
-# IN: $INPUT_SIZE_END
-# IN: $INPUT_SIZE_STEP
-# OUT: $input_sizes
-# OUT: $input_sizes_count
+# Calculates the input sizes based on start, end, and step, and adds to an
+# already existing input_sizes array.
+# IN/OUT: $input_size
 function generate_input_size_range {
-    input_sizes=()
-    for ((input_size = "$INPUT_SIZE_START"; input_size < "$INPUT_SIZE_END"; input_size += "$INPUT_SIZE_STEP")); do
+    local start="$1"
+    local end="$2"
+    local step="$3"
+    for ((input_size = "$start"; input_size < "$end"; input_size += "$step")); do
         input_sizes+=($input_size)
     done
-    input_sizes_count=${#input_sizes[@]}
 }
 
 # Generates random inputs and stores them in random_inputs

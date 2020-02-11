@@ -845,56 +845,91 @@ function stop_interference_workload {
 
 # Global inputs:
 # $RUN_MODE
-# $RM_INMATE
 # $INMATE_DEBUG
+# $VTUNE_OUTPUT_FILE
+# $JAILHOUSE_OUTPUT_FILE
 # ...more passed to inner functions
 function post_process_data {
+    local output_dir="$1"
+    local time="$2"
     if [[ "$RUN_MODE" > "$RM_INMATE" ]]; then
-        post_process_data_linux
+        post_process_data_linux $VTUNE_OUTPUT_FILE $output_dir $time
     else
         if [ "$INMATE_DEBUG" == 0 ]; then
-            post_process_data_jailhouse
+            post_process_data_jailhouse $JAILHOUSE_OUTPUT_FILE $output_dir $time
         fi
     fi
 }
 
+# Global inputs:
+# $RUN_WITH_VTUNE
 function post_process_data_linux {
-    if [ "$RUN_WITH_VTUNE" == 1 ]; then
-        # Create a condensed list of VTune output folders
-        grep_token_in_file "amplxe: Using result path " $VTUNE_OUTPUT_FILE > $VTUNE_RUNS_FILE
-        # grep_token_in_file "Elapsed Time: " $VTUNE_OUTPUT_FILE > $VTUNE_TIMES_FILE
-        # grep_all_but_token_in_file_to_file "amplxe:" $VTUNE_OUTPUT_FILE > $VTUNE_RUNS_FILE
+    local input_data_file="$1"
+    local output_dir="$2"
+    local time="$3"
+
+    if [ "$RUN_WITH_VTUNE" != 1 ]; then
+        return
     fi
+
+    local vtune_runs_file="$output_dir/vtune_runs_${time}.txt"
+    # vtune_times_file="$OUTPUT_DIR/vtune_times_${time}.txt"
+
+    # Create a condensed list of VTune output folders
+    grep_token_in_file "amplxe: Using result path " $input_data_file > $vtune_runs_file
+    # grep_token_in_file "Elapsed Time: " $input_data_file > $vtune_times_file
+    # grep_all_but_token_in_file_to_file "amplxe:" $input_data_file > $vtune_runs_file
 }
 
+# Global inputs:
+# $INPUT_SIZE_START
+# $INPUT_SIZE_END
+# $INPUT_SIZE_STEP
+# $INPUT_FILE
+# $THROTTLE_MODE
 function post_process_data_jailhouse {
+    # local inputs:
+    local input_data_file="$1"
+    local output_dir="$2"
+    local time="$3"
+
+    local throttled_data="$output_dir/throttled_${time}.csv"
+    local throttled_avg_data="$output_dir/throttled_avg_${time}.csv"
+    local throttled_freq="$output_dir/throttled_freq_${time}.csv"
+
+    local unthrottled_data="$output_dir/unthrottled_${time}.csv"
+    local unthrottled_avg_data="$output_dir/unthrottled_avg_${time}.csv"
+    local unthrottled_freq="$output_dir/unthrottled_freq_${time}.csv"
+
     # Do not print out all MGHFREQ lines. Avg freq is already in MGHOUT
+    local input_sizes=()
+    generate_input_size_range $INPUT_SIZE_START $INPUT_SIZE_END $INPUT_SIZE_STEP
 
     # Separate throttled and unthrottled data
-    grep_output_data_unthrottled $JAILHOUSE_OUTPUT_FILE > $OUTPUT_DATA_UNTHROTTLED_FILE
-    grep_output_freq_unthrottled $JAILHOUSE_OUTPUT_FILE > $OUTPUT_FREQ_UNTHROTTLED_FILE
+    grep_output_data_unthrottled $input_data_file > $unthrottled_data
+    grep_output_freq_unthrottled $input_data_file > $unthrottled_freq
 
     if [ "$INPUT_FILE" == "" ]; then
         # Aggregate iterations for each input size
         for input_size in "${input_sizes[@]}"; do
-            grep_token_columns_csv "$input_size" 2 3 $OUTPUT_DATA_UNTHROTTLED_FILE >> $OUTPUT_DATA_UNTHROTTLED_AVG_FILE
+            grep_token_columns_csv "$input_size" 2 3 $unthrottled_data >> $unthrottled_avg_data
         done
     elif [ "$INPUT_FILE" == "$LOCAL_INPUT_TOKEN" ]; then
-            grep_token_columns_csv "$LOCAL_INPUT_SIZE" 2 3 $OUTPUT_DATA_UNTHROTTLED_FILE >> $OUTPUT_DATA_UNTHROTTLED_AVG_FILE
+        grep_token_columns_csv "$LOCAL_INPUT_SIZE" 2 3 $unthrottled_data >> $unthrottled_avg_data
     else
-            grep_token_columns_csv "$(get_size_of_file_bytes $INPUT_FILE)" 2 3 $OUTPUT_DATA_UNTHROTTLED_FILE >> $OUTPUT_DATA_UNTHROTTLED_AVG_FILE
+        grep_token_columns_csv "$(get_size_of_file_bytes $INPUT_FILE)" 2 3 $unthrottled_data >> $unthrottled_avg_data
     fi
 
     if [ "$THROTTLE_MODE" != "$TMODE_DISABLED" ]; then
-        grep_output_data_throttled $JAILHOUSE_OUTPUT_FILE > $OUTPUT_DATA_THROTTLED_FILE
-        grep_output_freq_throttled $JAILHOUSE_OUTPUT_FILE > $OUTPUT_FREQ_THROTTLED_FILE
+        grep_output_data_throttled $input_data_file > $throttled_data
+        grep_output_freq_throttled $input_data_file > $throttled_freq
         if [ "$INPUT_FILE" == "" ]; then
             # Aggregate iterations for each input size
             for input_size in "${input_sizes[@]}"; do
-                grep_token_columns_csv "$input_size" 2 3 $OUTPUT_DATA_THROTTLED_FILE >> $OUTPUT_DATA_THROTTLED_AVG_FILE
+                grep_token_columns_csv "$input_size" 2 3 $throttled_data >> $throttled_avg_data
             done
         else
-                grep_token_columns_csv "$(get_size_of_file_bytes $INPUT_FILE)" 2 3 $OUTPUT_DATA_THROTTLED_FILE >> $OUTPUT_DATA_THROTTLED_AVG_FILE
+            grep_token_columns_csv "$(get_size_of_file_bytes $INPUT_FILE)" 2 3 $throttled_data >> $throttled_avg_data
         fi
     fi
 }
