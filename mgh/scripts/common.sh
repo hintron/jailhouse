@@ -836,6 +836,21 @@ function stop_interference_workload {
     fi
 }
 
+# Global inputs:
+# $RUN_MODE
+# $RM_INMATE
+# $INMATE_DEBUG
+# ...more passed to inner functions
+function post_process_data {
+    if [[ "$RUN_MODE" > "$RM_INMATE" ]]; then
+        post_process_data_linux
+    else
+        if [ "$INMATE_DEBUG" == 0 ]; then
+            post_process_data_jailhouse
+        fi
+    fi
+}
+
 function post_process_data_linux {
     if [ "$RUN_WITH_VTUNE" == 1 ]; then
         # Create a condensed list of VTune output folders

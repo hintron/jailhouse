@@ -219,13 +219,7 @@ function main {
 
     echo "Ending experiments at $end_time" >> $EXPERIMENT_OUTPUT_FILE
 
-    if [[ "$RUN_MODE" > "$RM_INMATE" ]]; then
-        post_process_data_linux
-    else
-        if [ "$INMATE_DEBUG" == 0 ]; then
-            post_process_data_jailhouse
-        fi
-    fi
+    post_process_data
 }
 
 # Calculates the input sizes
