@@ -159,7 +159,6 @@ function log_parameters {
     echo "#########################" >> $EXPERIMENT_OUTPUT_FILE
     echo "# Linux-only Parameters #" >> $EXPERIMENT_OUTPUT_FILE
     echo "#########################" >> $EXPERIMENT_OUTPUT_FILE
-    echo "LINUX_UNDER_JAILHOUSE: $LINUX_UNDER_JAILHOUSE" >> $EXPERIMENT_OUTPUT_FILE
     echo "RUN_WITH_VTUNE: $RUN_WITH_VTUNE" >> $EXPERIMENT_OUTPUT_FILE
     printf "VTUNE_MODE: " >> $EXPERIMENT_OUTPUT_FILE
     case "$VTUNE_MODE" in
