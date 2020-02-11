@@ -69,6 +69,9 @@ OUTPUT_FREQ_FILE="$OUTPUT_DIR/freq_${experiment_time}.csv"
 INTERFERENCE_WORKLOAD_OUTPUT="$OUTPUT_DIR/interference_${experiment_time}.txt"
 INTERFERENCE_RAMPUP_TIME=30
 
+input_sizes=()
+input_sizes_count=0
+
 function main {
     ############################################################################
     # Script-wide setup
