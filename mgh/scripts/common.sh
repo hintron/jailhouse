@@ -78,6 +78,8 @@ function log_parameters {
     echo "#####################" >> $EXPERIMENT_OUTPUT_FILE
     echo "# Common Parameters #" >> $EXPERIMENT_OUTPUT_FILE
     echo "#####################" >> $EXPERIMENT_OUTPUT_FILE
+    echo "TIMESTAMP: $experiment_time" >> $EXPERIMENT_OUTPUT_FILE
+    echo "JAILHOUSE_OUTPUT_FILE: $JAILHOUSE_OUTPUT_FILE" >> $EXPERIMENT_OUTPUT_FILE
     printf "RUN_MODE: " >> $EXPERIMENT_OUTPUT_FILE
     case "$RUN_MODE" in
     "$RM_INMATE")
@@ -160,6 +162,8 @@ function log_parameters {
     echo "# Linux-only Parameters #" >> $EXPERIMENT_OUTPUT_FILE
     echo "#########################" >> $EXPERIMENT_OUTPUT_FILE
     echo "RUN_WITH_VTUNE: $RUN_WITH_VTUNE" >> $EXPERIMENT_OUTPUT_FILE
+    echo "VTUNE_OUTPUT_FILE: $VTUNE_OUTPUT_FILE" >> $EXPERIMENT_OUTPUT_FILE
+    echo "LINUX_OUTPUT_FILE: $LINUX_OUTPUT_FILE" >> $EXPERIMENT_OUTPUT_FILE
     printf "VTUNE_MODE: " >> $EXPERIMENT_OUTPUT_FILE
     case "$VTUNE_MODE" in
     "$VTUNE_MODE_MA")
