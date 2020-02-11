@@ -855,9 +855,7 @@ function post_process_data {
     if [[ "$RUN_MODE" > "$RM_INMATE" ]]; then
         post_process_data_linux $VTUNE_OUTPUT_FILE $output_dir $time
     else
-        if [ "$INMATE_DEBUG" == 0 ]; then
-            post_process_data_jailhouse $JAILHOUSE_OUTPUT_FILE $output_dir $time
-        fi
+        post_process_data_jailhouse $JAILHOUSE_OUTPUT_FILE $output_dir $time
     fi
 }
 
@@ -882,12 +880,18 @@ function post_process_data_linux {
 }
 
 # Global inputs:
+# $INMATE_DEBUG
 # $INPUT_SIZE_START
 # $INPUT_SIZE_END
 # $INPUT_SIZE_STEP
 # $INPUT_FILE
 # $THROTTLE_MODE
 function post_process_data_jailhouse {
+    # Don't post-process the short-circuited inmate debug mode's output
+    if [ "$INMATE_DEBUG" == 1 ]; then
+        return
+    fi
+
     # local inputs:
     local input_data_file="$1"
     local output_dir="$2"
