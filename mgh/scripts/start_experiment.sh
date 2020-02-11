@@ -206,18 +206,6 @@ function main {
     post_process_data $OUTPUT_DIR $experiment_time
 }
 
-# Calculates the input sizes based on start, end, and step, and adds to an
-# already existing input_sizes array.
-# IN/OUT: $input_size
-function generate_input_size_range {
-    local start="$1"
-    local end="$2"
-    local step="$3"
-    for ((input_size = "$start"; input_size < "$end"; input_size += "$step")); do
-        input_sizes+=($input_size)
-    done
-}
-
 # Generates random inputs and stores them in random_inputs
 # IN: $input_sizes
 # IN: $input_sizes_count
