@@ -89,7 +89,7 @@ function log_parameters {
     "$RM_LINUX_JAILHOUSE")
         echo "RM_LINUX_JAILHOUSE" >> $EXPERIMENT_OUTPUT_FILE
         ;;
-    "")
+    ""|"Unspecified")
         echo "Unspecified" >> $EXPERIMENT_OUTPUT_FILE
         ;;
     *)
@@ -129,7 +129,7 @@ function log_parameters {
     "$WM_INMATE_DEBUG")
         echo "WM_INMATE_DEBUG" >> $EXPERIMENT_OUTPUT_FILE
         ;;
-    "")
+    ""|"Unspecified")
         echo "Unspecified" >> $EXPERIMENT_OUTPUT_FILE
         ;;
     *)
@@ -148,7 +148,7 @@ function log_parameters {
     "$INTF_RANDOM")
         echo "INTF_RANDOM" >> $EXPERIMENT_OUTPUT_FILE
         ;;
-    "")
+    ""|"Unspecified")
         echo "Unspecified" >> $EXPERIMENT_OUTPUT_FILE
         ;;
     *)
@@ -169,7 +169,7 @@ function log_parameters {
     "$VTUNE_MODE_UE")
         echo "VTUNE_MODE_UE" >> $EXPERIMENT_OUTPUT_FILE
         ;;
-    "")
+    ""|"Unspecified")
         echo "Unspecified" >> $EXPERIMENT_OUTPUT_FILE
         ;;
     *)
@@ -195,7 +195,7 @@ function log_parameters {
     "$TMODE_DISABLED")
         echo "TMODE_DISABLED" >> $EXPERIMENT_OUTPUT_FILE
         ;;
-    "")
+    ""|"Unspecified")
         echo "Unspecified" >> $EXPERIMENT_OUTPUT_FILE
         ;;
     *)
@@ -214,7 +214,7 @@ function log_parameters {
     "$TMECH_PAUSE")
         echo "TMECH_PAUSE" >> $EXPERIMENT_OUTPUT_FILE
         ;;
-    "")
+    ""|"Unspecified")
         echo "Unspecified" >> $EXPERIMENT_OUTPUT_FILE
         ;;
     *)
