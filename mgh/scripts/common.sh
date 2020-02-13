@@ -731,19 +731,26 @@ function grep_freq_data {
     grep_token_in_file_to_file "MGHFREQ:" $in_file
 }
 
-# Use awk to get all lines of a csv where column $token_column == $token.
+# Use awk to get all lines of a csv where $token == $token_column.
 # Then, grab the value in $output_column and append to a comma-separated list.
-# Output as "$token|$csv_list".
+# Output as "$before$csv_list$after". If $before and $after are not specified,
+# $before defaults to "$token|" and $after to ""
 function grep_token_columns_csv {
     local token="$1"
     local token_column="$2"
     local output_column="$3"
     local in_file="$4"
+    local before="$5"
+    local after="$6"
+
+    if [ "$before" == "" ]; then
+        before="$token|"
+    fi
 
     # Use awk to find the lines where $token_column == $token, use cut to get
     # the column $output_column, replace all newlines with commas, replace the
-    # last comma with a newline, and prepend "$token|".
-    awk  -F ',' "\$$token_column == $token" $in_file | cut -f$output_column -d, | tr '\n' ',' | sed "s/.$/\n/" | sed "s/^/$token|/"
+    awk  -F ',' "\$$token_column == $token" $in_file | cut -f$output_column -d, | tr '\n' ',' | sed "s/.$/\n/" | sed "s/^/$before/" | sed "s/$/$after/"
+    # last comma with a newline, prepend $before, and append $after.
 }
 # https://stackoverflow.com/questions/26148546/grep-keeping-lines-that-has-specific-string-in-certain-column
 
