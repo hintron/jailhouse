@@ -906,6 +906,10 @@ function post_process_data_jailhouse {
     local output_dir="$2"
     local time="$3"
 
+    # Create a file for potential columns in a spreadsheet
+    local input_sizes_b_data="$output_dir/input_sizes_b_${time}.csv"
+    local input_sizes_mb_data="$output_dir/input_sizes_mb_${time}.csv"
+
     local unthrottled_data="$output_dir/unthrottled_${time}.csv"
     local unthrottled_avg_data="$output_dir/unthrottled_avg_${time}.csv"
     local unthrottled_freq="$output_dir/unthrottled_freq_${time}.csv"
@@ -925,6 +929,8 @@ function post_process_data_jailhouse {
     if [ "$INPUT_FILE" == "" ]; then
         # Aggregate iterations for each input size
         for input_size in "${input_sizes[@]}"; do
+            echo "$input_size" >> $input_sizes_b_data
+            echo "=$input_size/$MiB" >> $input_sizes_mb_data
             grep_token_columns_csv "$input_size" 2 3 $unthrottled_data >> $unthrottled_avg_data
         done
     elif [ "$INPUT_FILE" == "$LOCAL_INPUT_TOKEN" ]; then
