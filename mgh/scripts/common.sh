@@ -906,13 +906,13 @@ function post_process_data_jailhouse {
     local output_dir="$2"
     local time="$3"
 
-    local throttled_data="$output_dir/throttled_${time}.csv"
-    local throttled_avg_data="$output_dir/throttled_avg_${time}.csv"
-    local throttled_freq="$output_dir/throttled_freq_${time}.csv"
-
     local unthrottled_data="$output_dir/unthrottled_${time}.csv"
     local unthrottled_avg_data="$output_dir/unthrottled_avg_${time}.csv"
     local unthrottled_freq="$output_dir/unthrottled_freq_${time}.csv"
+
+    local throttled_data="$output_dir/throttled_${time}.csv"
+    local throttled_avg_data="$output_dir/throttled_avg_${time}.csv"
+    local throttled_freq="$output_dir/throttled_freq_${time}.csv"
 
     # Do not print out all MGHFREQ lines. Avg freq is already in MGHOUT
     local input_sizes=()
