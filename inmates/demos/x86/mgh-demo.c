@@ -186,7 +186,7 @@ static void print_freq(bool is_throttled, unsigned long workload_counter)
 
 	/* Print out column headers for subsequent frequency data.*/
 	if (workload_counter == 0) {
-		printk("MGHFREQ:is_throttled,workload_counter,freq_sample_counter,freq=[(max_freq*aperf)/mperf]\n");
+		printk("MGHFREQ:is_throttled,workload_counter,max_freq,aperf,mperf\n");
 		max_ratio = query_max_freq_ratio();
 		 /* max_freq and tsc_freq are basically the same */
 		max_freq = query_max_freq(max_ratio);
@@ -204,12 +204,11 @@ static void print_freq(bool is_throttled, unsigned long workload_counter)
 	 *     freq = (max_freq * aperf) / mperf
 	 * See the Intel SDM, Vol 3B, Section 14.2.
 	 * See https://stackoverflow.com/questions/65095/assembly-cpu-frequency-measuring-algorithm
-	 * So do this calculation outside the inmate. Format the output so it
-	 * can be easily passed into a calculator like bc.
+	 * So do this calculation outside the inmate.
 	 */
 	aperf = read_msr(MSR_IA32_APERF);
 	mperf = read_msr(MSR_IA32_MPERF);
-	printk("MGHFREQ:%d,%lu,(%llu * %llu) / %llu\n", is_throttled,
+	printk("MGHFREQ:%d,%lu,%llu,%llu,%llu\n", is_throttled,
 	       workload_counter, max_freq, aperf, mperf);
 
 	// TODO: How to avoid preemption-timer interrupt between sampling aperf
