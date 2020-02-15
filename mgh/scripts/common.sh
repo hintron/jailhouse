@@ -958,14 +958,14 @@ function post_process_data_jailhouse {
     # _<file_name> means it's only an intermediate file ('private')
     # <file_name> means it's a drop in for a spreadsheet column ('public')
     local unthrottled_cycles="$output_dir/_cycles_unthrottled_${time}.csv"
-    local unthrottled_cycles_flat="$output_dir/_cycles_flat_unthrottled_${time}.txt"
+    # local unthrottled_cycles_flat="$output_dir/_cycles_flat_unthrottled_${time}.txt"
     local unthrottled_avg_dur_s="$output_dir/dur_avg_s_unthrottled_${time}.txt"
     local unthrottled_avg_dur_ms="$output_dir/dur_avg_ms_unthrottled_${time}.txt"
     local unthrottled_freq="$output_dir/_freq_unthrottled_${time}.csv"
     local unthrottled_freq_avg="$output_dir/freq_avg_unthrottled_${time}.txt"
 
     local throttled_cycles="$output_dir/_cycles_throttled_${time}.csv"
-    local throttled_cycles_flat="$output_dir/_cycles_flat_throttled_${time}.txt"
+    # local throttled_cycles_flat="$output_dir/_cycles_flat_throttled_${time}.txt"
     local throttled_avg_dur_s="$output_dir/dur_avg_s_throttled_${time}.txt"
     local throttled_avg_dur_ms="$output_dir/dur_avg_ms_throttled_${time}.txt"
     local throttled_freq="$output_dir/_freq_throttled_${time}.csv"
@@ -1016,14 +1016,14 @@ function post_process_data_jailhouse {
 function process_cycle_data_unthrottled {
     echo "$input_size" >> $input_sizes_b_data
     echo "=$input_size/$MiB" >> $input_sizes_mb_data
-    aggregate_column_csv "$input_size" 2 3 $unthrottled_cycles "$input_size|" >> $unthrottled_cycles_flat
+    # aggregate_column_csv "$input_size" 2 3 $unthrottled_cycles "$input_size|" >> $unthrottled_cycles_flat
     aggregate_column_csv "$input_size" 2 3 $unthrottled_cycles "=AVERAGE(" ")\/$tsc_freq" >> $unthrottled_avg_dur_s
     aggregate_column_csv "$input_size" 2 3 $unthrottled_cycles "=AVERAGE(" ")*1000\/$tsc_freq" >> $unthrottled_avg_dur_ms
     aggregate_avg_freq $unthrottled_freq "$input_size" >> $unthrottled_freq_avg
 }
 
 function process_cycle_data_throttled {
-    aggregate_column_csv "$input_size" 2 3 $throttled_cycles "$input_size|" >> $throttled_cycles_flat
+    # aggregate_column_csv "$input_size" 2 3 $throttled_cycles "$input_size|" >> $throttled_cycles_flat
     aggregate_column_csv "$input_size" 2 3 $throttled_cycles "=AVERAGE(" ")\/$tsc_freq" >> $throttled_avg_dur_s
     aggregate_column_csv "$input_size" 2 3 $throttled_cycles "=AVERAGE(" ")*1000\/$tsc_freq" >> $throttled_avg_dur_ms
     aggregate_avg_freq $throttled_freq "$input_size" >> $throttled_freq_avg
