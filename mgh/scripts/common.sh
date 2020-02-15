@@ -17,6 +17,9 @@ JAILHOUSE_BIN=$JAILHOUSE_DIR/tools/jailhouse
 MGH_DEMO_PY="$MGH_DIR/uio-userspace/mgh-demo.py"
 WORKLOAD_DIR="$MGH_DIR/workloads"
 WORKLOAD_BIN_DIR="$WORKLOAD_DIR/build"
+SHA3_BIN="$WORKLOAD_BIN_DIR/sha3-512"
+CSB_BIN="$WORKLOAD_BIN_DIR/count-set-bits"
+RA_BIN="$WORKLOAD_BIN_DIR/random-access"
 
 # Note that the inmate libraries assume that the cmdline string will be stored
 # at 0x1000 and will have a size of CMDLINE_BUFFER_SIZE.
@@ -604,33 +607,33 @@ function sha3_linux_str_golden {
 
 function sha3_linux_file {
     if [ "$RUN_WITH_VTUNE" == 1 ]; then
-        run_vtune $2 "${WORKLOAD_BIN_DIR}/sha3-512" -f "$1"
+        run_vtune $2 "$SHA3_BIN" -f "$1"
     else
-        "${WORKLOAD_BIN_DIR}/sha3-512" -f "$1"
+        "$SHA3_BIN" -f "$1"
     fi
 }
 
 function sha3_linux_str {
     if [ "$RUN_WITH_VTUNE" == 1 ]; then
-        run_vtune $2 "${WORKLOAD_BIN_DIR}/sha3-512" -s "$1"
+        run_vtune $2 "$SHA3_BIN" -s "$1"
     else
-        "${WORKLOAD_BIN_DIR}/sha3-512" -s "$1"
+        "$SHA3_BIN" -s "$1"
     fi
 }
 
 function count_set_bits_linux_file {
     if [ "$RUN_WITH_VTUNE" == 1 ]; then
-        run_vtune $2 "${WORKLOAD_BIN_DIR}/count-set-bits" "$1"
+        run_vtune $2 "$CSB_BIN" "$1"
     else
-        "${WORKLOAD_BIN_DIR}/count-set-bits" "$1"
+        "$CSB_BIN" "$1"
     fi
 }
 
 function random_access_linux_file {
     if [ "$RUN_WITH_VTUNE" == 1 ]; then
-        run_vtune $2 "${WORKLOAD_BIN_DIR}/random-access" "$1"
+        run_vtune $2 "$RA_BIN" "$1"
     else
-        "${WORKLOAD_BIN_DIR}/random-access" "$1"
+        "$RA_BIN" "$1"
     fi
 }
 
