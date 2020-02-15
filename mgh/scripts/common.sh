@@ -975,19 +975,14 @@ function post_process_data_jailhouse {
     local input_sizes=()
     generate_input_size_range $INPUT_SIZE_START $INPUT_SIZE_END $INPUT_SIZE_STEP
 
-    # Separate throttled and unthrottled data
+    # Separate throttled and unthrottled data for further processing
     grep_output_data_unthrottled $input_data_file > $unthrottled_cycles
     grep_output_freq_unthrottled $input_data_file > $unthrottled_freq
 
     if [ "$INPUT_FILE" == "" ]; then
         # Aggregate iterations for each input size
         for input_size in "${input_sizes[@]}"; do
-            echo "$input_size" >> $input_sizes_b_data
-            echo "=$input_size/$MiB" >> $input_sizes_mb_data
-            aggregate_column_csv "$input_size" 2 3 $unthrottled_cycles "$input_size|" >> $unthrottled_cycles_flat
-            aggregate_column_csv "$input_size" 2 3 $unthrottled_cycles "=AVERAGE(" ")\/$tsc_freq" >> $unthrottled_avg_dur_s
-            aggregate_column_csv "$input_size" 2 3 $unthrottled_cycles "=AVERAGE(" ")*1000\/$tsc_freq" >> $unthrottled_avg_dur_ms
-            aggregate_avg_freq $unthrottled_freq "$input_size" >> $unthrottled_freq_avg
+            process_cycle_data_unthrottled
         done
     else
         if [ "$INPUT_FILE" == "$LOCAL_INPUT_TOKEN" ]; then
@@ -995,7 +990,7 @@ function post_process_data_jailhouse {
         else
             input_size="$(get_size_of_file_bytes $INPUT_FILE)"
         fi
-        aggregate_column_csv "$input_size" 2 3 $unthrottled_cycles "$input_size|" >> $unthrottled_cycles_flat
+        process_cycle_data_unthrottled
     fi
 
     if [ "$THROTTLE_MODE" != "$TMODE_DISABLED" ]; then
@@ -1004,10 +999,7 @@ function post_process_data_jailhouse {
         if [ "$INPUT_FILE" == "" ]; then
             # Aggregate iterations for each input size
             for input_size in "${input_sizes[@]}"; do
-                aggregate_column_csv "$input_size" 2 3 $throttled_cycles "$input_size|" >> $throttled_cycles_flat
-                aggregate_column_csv "$input_size" 2 3 $throttled_cycles "=AVERAGE(" ")\/$tsc_freq" >> $throttled_avg_dur_s
-                aggregate_column_csv "$input_size" 2 3 $throttled_cycles "=AVERAGE(" ")*1000\/$tsc_freq" >> $throttled_avg_dur_ms
-                aggregate_avg_freq $throttled_freq "$input_size" >> $throttled_freq_avg
+                process_cycle_data_throttled
             done
         else
             if [ "$INPUT_FILE" == "$LOCAL_INPUT_TOKEN" ]; then
@@ -1015,9 +1007,26 @@ function post_process_data_jailhouse {
             else
                 input_size="$(get_size_of_file_bytes $INPUT_FILE)"
             fi
-            aggregate_column_csv "$input_size" 2 3 $throttled_cycles "$input_size|" >> $throttled_cycles_flat
+            process_cycle_data_throttled
         fi
     fi
+}
+
+# Pull out common functionality so it can be done in a for loop or stand-alone
+function process_cycle_data_unthrottled {
+    echo "$input_size" >> $input_sizes_b_data
+    echo "=$input_size/$MiB" >> $input_sizes_mb_data
+    aggregate_column_csv "$input_size" 2 3 $unthrottled_cycles "$input_size|" >> $unthrottled_cycles_flat
+    aggregate_column_csv "$input_size" 2 3 $unthrottled_cycles "=AVERAGE(" ")\/$tsc_freq" >> $unthrottled_avg_dur_s
+    aggregate_column_csv "$input_size" 2 3 $unthrottled_cycles "=AVERAGE(" ")*1000\/$tsc_freq" >> $unthrottled_avg_dur_ms
+    aggregate_avg_freq $unthrottled_freq "$input_size" >> $unthrottled_freq_avg
+}
+
+function process_cycle_data_throttled {
+    aggregate_column_csv "$input_size" 2 3 $throttled_cycles "$input_size|" >> $throttled_cycles_flat
+    aggregate_column_csv "$input_size" 2 3 $throttled_cycles "=AVERAGE(" ")\/$tsc_freq" >> $throttled_avg_dur_s
+    aggregate_column_csv "$input_size" 2 3 $throttled_cycles "=AVERAGE(" ")*1000\/$tsc_freq" >> $throttled_avg_dur_ms
+    aggregate_avg_freq $throttled_freq "$input_size" >> $throttled_freq_avg
 }
 
 # Calculates the input sizes based on start, end, and step, and adds to an
