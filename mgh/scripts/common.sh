@@ -729,13 +729,30 @@ function timestamp {
     date +"%Y-%m-%d_%H-%M-%S"
 }
 
-# Use awk to get all lines of a csv where $token == $token_column.
-# Then, grab the value in $output_column and append to a comma-separated list.
-# Output as "$before$csv_list$after". If $before and $after default to "".
-function grep_token_columns_csv {
+
+# Get the $output_column of all lines where $token == $token_column and merge
+# them together into a single comman-separated list.
+# Output as "$before$csv_list$after". $before and $after default to "".
+function aggregate_column_csv {
+    local token="$1"
+    local token_col="$2"
+    local output_col="$3"
+    local in_file="$4"
+    local before="$5"
+    local after="$6"
+    aggregate_custom_csv "$token" "$token_col" "\$$output_col" "$in_file" "$before" "$after"
+}
+# https://stackoverflow.com/questions/26148546/grep-keeping-lines-that-has-specific-string-in-certain-column
+
+
+
+
+# Same as aggregate_column_csv, except $output_col is customizable to print
+# multiple columns in any format
+function aggregate_custom_csv {
     local token="$1"
     local token_column="$2"
-    local output_column="$3"
+    local print_txt="$3"
     local in_file="$4"
     local before="$5"
     local after="$6"
@@ -743,7 +760,7 @@ function grep_token_columns_csv {
     # Use awk to find the lines where $token_column == $token and print out
     # column $output_column, replace all newlines with commas, replace the
     # last comma with a newline, prepend $before, and append $after.
-    tmp="\$$token_column == \"$token\" {print(\$$output_column)}"
+    tmp="\$$token_column == \"$token\" {print($print_txt)}"
     awk -F ',' "$tmp" $in_file | tr '\n' ',' | sed "s/,$/\n/" | sed "s/^/$before/" | sed "s/$/$after/"
 }
 # https://stackoverflow.com/questions/26148546/grep-keeping-lines-that-has-specific-string-in-certain-column
@@ -955,15 +972,15 @@ function post_process_data_jailhouse {
         for input_size in "${input_sizes[@]}"; do
             echo "$input_size" >> $input_sizes_b_data
             echo "=$input_size/$MiB" >> $input_sizes_mb_data
-            grep_token_columns_csv "$input_size" 2 3 $unthrottled_data "$input_size|" >> $unthrottled_avg_data
-            grep_token_columns_csv "$input_size" 2 3 $unthrottled_data "=AVERAGE(" ")\/$tsc_freq" >> $unthrottled_avg_dur_s
-            grep_token_columns_csv "$input_size" 2 3 $unthrottled_data "=AVERAGE(" ")*1000\/$tsc_freq" >> $unthrottled_avg_dur_ms
-            grep_token_columns_csv "$input_size" 2 3 $unthrottled_freq >> $unthrottled_freq_avg
+            aggregate_column_csv "$input_size" 2 3 $unthrottled_data "$input_size|" >> $unthrottled_avg_data
+            aggregate_column_csv "$input_size" 2 3 $unthrottled_data "=AVERAGE(" ")\/$tsc_freq" >> $unthrottled_avg_dur_s
+            aggregate_column_csv "$input_size" 2 3 $unthrottled_data "=AVERAGE(" ")*1000\/$tsc_freq" >> $unthrottled_avg_dur_ms
+            aggregate_column_csv "$input_size" 2 3 $unthrottled_freq >> $unthrottled_freq_avg
         done
     elif [ "$INPUT_FILE" == "$LOCAL_INPUT_TOKEN" ]; then
-        grep_token_columns_csv "$LOCAL_INPUT_SIZE" 2 3 $unthrottled_data "$input_size|" >> $unthrottled_avg_data
+        aggregate_column_csv "$LOCAL_INPUT_SIZE" 2 3 $unthrottled_data "$input_size|" >> $unthrottled_avg_data
     else
-        grep_token_columns_csv "$(get_size_of_file_bytes $INPUT_FILE)" 2 3 $unthrottled_data "$input_size|" >> $unthrottled_avg_data
+        aggregate_column_csv "$(get_size_of_file_bytes $INPUT_FILE)" 2 3 $unthrottled_data "$input_size|" >> $unthrottled_avg_data
     fi
 
     if [ "$THROTTLE_MODE" != "$TMODE_DISABLED" ]; then
@@ -972,13 +989,13 @@ function post_process_data_jailhouse {
         if [ "$INPUT_FILE" == "" ]; then
             # Aggregate iterations for each input size
             for input_size in "${input_sizes[@]}"; do
-                grep_token_columns_csv "$input_size" 2 3 $throttled_data "$input_size|" >> $throttled_avg_data
-                grep_token_columns_csv "$input_size" 2 3 $throttled_data "=AVERAGE(" ")\/$tsc_freq" >> $throttled_avg_dur_s
-                grep_token_columns_csv "$input_size" 2 3 $throttled_data "=AVERAGE(" ")*1000\/$tsc_freq" >> $throttled_avg_dur_ms
-                grep_token_columns_csv "$input_size" 2 3 $throttled_freq >> $throttled_freq_avg
+                aggregate_column_csv "$input_size" 2 3 $throttled_data "$input_size|" >> $throttled_avg_data
+                aggregate_column_csv "$input_size" 2 3 $throttled_data "=AVERAGE(" ")\/$tsc_freq" >> $throttled_avg_dur_s
+                aggregate_column_csv "$input_size" 2 3 $throttled_data "=AVERAGE(" ")*1000\/$tsc_freq" >> $throttled_avg_dur_ms
+                aggregate_column_csv "$input_size" 2 3 $throttled_freq >> $throttled_freq_avg
             done
         else
-            grep_token_columns_csv "$(get_size_of_file_bytes $INPUT_FILE)" 2 3 $throttled_data "$input_size|" >> $throttled_avg_data
+            aggregate_column_csv "$(get_size_of_file_bytes $INPUT_FILE)" 2 3 $throttled_data "$input_size|" >> $throttled_avg_data
         fi
     fi
 }
