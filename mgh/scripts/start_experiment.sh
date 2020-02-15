@@ -304,8 +304,9 @@ function start_experiment {
     fi
 
     if [ "$INTERFERENCE_WORKLOAD" != "$INTF_NONE" ]; then
-        start_interference_workload $INTERFERENCE_WORKLOAD >> $INTERFERENCE_WORKLOAD_OUTPUT 2>&1 &
-        echo "Wait $INTERFERENCE_RAMPUP_TIME seconds for handbrake to ramp up" >> $EXPERIMENT_OUTPUT_FILE
+        local workload_pid=""
+        start_interference_workload $INTERFERENCE_WORKLOAD
+        echo "Wait $INTERFERENCE_RAMPUP_TIME seconds for interference workload $INTERFERENCE_WORKLOAD (PID $workload_pid) to ramp up" >> $EXPERIMENT_OUTPUT_FILE
         sleep $INTERFERENCE_RAMPUP_TIME
     fi
 
@@ -401,7 +402,8 @@ function start_experiment {
     echo "*********************************************************" >> $EXPERIMENT_OUTPUT_FILE
 
     if [ "$INTERFERENCE_WORKLOAD" != "$INTF_NONE" ]; then
-        stop_interference_workload $INTERFERENCE_WORKLOAD >> $EXPERIMENT_OUTPUT_FILE 2>&1
+        echo "Stopping workload $INTERFERENCE_WORKLOAD (pid=$workload_pid)" >> $EXPERIMENT_OUTPUT_FILE
+        stop_interference_workload $INTERFERENCE_WORKLOAD $workload_pid >> $EXPERIMENT_OUTPUT_FILE 2>&1
     fi
 
     if [ "$INPUT_FILE" == "" ] ; then

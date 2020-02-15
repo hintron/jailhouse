@@ -52,9 +52,11 @@ CSBM_FASTER=1
 CSBM_FASTEST=2 # default
 
 # Interference Workloads
-INTF_NONE=0
-INTF_HANDBRAKE=1
-INTF_RANDOM=2
+INTF_NONE="none"
+INTF_HANDBRAKE="handbrake"
+INTF_RA="random-access"
+INTF_CSB="count-set-bits"
+INTF_SHA3="sha-3"
 
 # VTune Analysis Modes
 VTUNE_MODE_MA=0 # Memory Access
@@ -145,26 +147,7 @@ function log_parameters {
         ;;
     esac
     echo "WORKLOAD_MODE_RAW: $WORKLOAD_MODE" >> $EXPERIMENT_OUTPUT_FILE
-
-    printf "INTERFERENCE_WORKLOAD: " >> $EXPERIMENT_OUTPUT_FILE
-    case "$INTERFERENCE_WORKLOAD" in
-    "$INTF_NONE")
-        echo "INTF_NONE" >> $EXPERIMENT_OUTPUT_FILE
-        ;;
-    "$INTF_HANDBRAKE")
-        echo "INTF_HANDBRAKE" >> $EXPERIMENT_OUTPUT_FILE
-        ;;
-    "$INTF_RANDOM")
-        echo "INTF_RANDOM" >> $EXPERIMENT_OUTPUT_FILE
-        ;;
-    ""|"Unspecified")
-        echo "Unspecified" >> $EXPERIMENT_OUTPUT_FILE
-        ;;
-    *)
-        echo "Unknown" >> $EXPERIMENT_OUTPUT_FILE
-        ;;
-    esac
-    echo "INTERFERENCE_WORKLOAD_RAW: $INTERFERENCE_WORKLOAD" >> $EXPERIMENT_OUTPUT_FILE
+    echo "INTERFERENCE_WORKLOAD: $INTERFERENCE_WORKLOAD" >> $EXPERIMENT_OUTPUT_FILE
 
     echo "#########################" >> $EXPERIMENT_OUTPUT_FILE
     echo "# Linux-only Parameters #" >> $EXPERIMENT_OUTPUT_FILE
@@ -831,6 +814,8 @@ function start_handbrake {
     local OUTPUT="$2"
 
     HandBrakeCLI -i $INPUT -o $OUTPUT
+    workload_pid="$!"
+    # NOTE: $! doesn't get the proper PID of HandBrakeCLI
 }
 
 function start_handbrake_demo {
@@ -839,15 +824,8 @@ function start_handbrake_demo {
     local INPUT="/home/hintron/Videos/sources/i_am_legend.m2ts"
     local OUTPUT="/home/hintron/Videos/jailhouse_outputs/run_$TIMESTAMP"
 
-    start_handbrake $INPUT $OUTPUT
-
-    # Delete output?
-    # Pass video file to sha function?
-    # Specify chapters with -c? Doesn't seem to work...
-}
-
-function start_random_access_demo {
-    echo "TODO: Need to implement start_random_access_demo"
+    start_handbrake $INPUT $OUTPUT >> $INTERFERENCE_WORKLOAD_OUTPUT 2>&1 &
+    workload_pid=$!
 }
 
 function stop_handbrake {
@@ -856,24 +834,36 @@ function stop_handbrake {
     # NOTE: $! doesn't get the proper PID of HandBrakeCLI, so kill it by name
 }
 
-function stop_random_demo {
-    echo "TODO: Need to implement stop_random_demo"
-    # TODO: Killall on a program name?
+function start_workload_demo {
+    $SCRIPTS_DIR/workload-demo.sh "$1" >> $INTERFERENCE_WORKLOAD_OUTPUT 2>&1 &
+    workload_pid=$!
 }
 
+function stop_workload_demo {
+    local pid=$1
+    kill $pid
+}
+
+# Starts the interference workload in the background and set the global
+# workload_pid.
 function start_interference_workload {
-    if [ "$1" == $INTF_HANDBRAKE ]; then
+    local workload="$1"
+    if [ "$workload" == $INTF_HANDBRAKE ]; then
         start_handbrake_demo
-    elif [ "$1" == $INTF_RANDOM ]; then
-        start_random_access_demo
+    elif [ "$workload" != $INTF_NONE ]; then
+        start_workload_demo $workload
     fi
 }
 
+# Stop the interference workload.
+# If handbrake, kill it by name, else kill it by pid.
 function stop_interference_workload {
-    if [ "$1" == $INTF_HANDBRAKE ]; then
+    local workload="$1"
+    if [ "$workload" == $INTF_HANDBRAKE ]; then
         stop_handbrake
-    elif [ "$1" == $INTF_RANDOM ]; then
-        stop_random_demo
+    elif [ "$workload" != $INTF_NONE ]; then
+        local pid="$2"
+        stop_workload_demo "$pid"
     fi
 }
 
