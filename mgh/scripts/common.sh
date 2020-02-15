@@ -946,12 +946,14 @@ function post_process_data_jailhouse {
     local unthrottled_avg_dur_s="$output_dir/unthrottled_avg_dur_s_${time}.csv"
     local unthrottled_avg_dur_ms="$output_dir/unthrottled_avg_dur_ms_${time}.csv"
     local unthrottled_freq="$output_dir/unthrottled_freq_${time}.csv"
+    local unthrottled_freq_avg="$output_dir/unthrottled_freq_avg_${time}.csv"
 
     local throttled_data="$output_dir/throttled_${time}.csv"
     local throttled_avg_data="$output_dir/throttled_avg_${time}.csv"
     local throttled_avg_dur_s="$output_dir/throttled_avg_dur_s_${time}.csv"
     local throttled_avg_dur_ms="$output_dir/throttled_avg_dur_ms_${time}.csv"
     local throttled_freq="$output_dir/throttled_freq_${time}.csv"
+    local throttled_freq_avg="$output_dir/throttled_freq_avg_${time}.csv"
 
     # Do not print out all MGHFREQ lines. Avg freq is already in MGHOUT
     local input_sizes=()
@@ -969,6 +971,7 @@ function post_process_data_jailhouse {
             grep_token_columns_csv "$input_size" 2 3 $unthrottled_data "$input_size|" >> $unthrottled_avg_data
             grep_token_columns_csv "$input_size" 2 3 $unthrottled_data "=AVERAGE(" ")\/$tsc_freq" >> $unthrottled_avg_dur_s
             grep_token_columns_csv "$input_size" 2 3 $unthrottled_data "=AVERAGE(" ")*1000\/$tsc_freq" >> $unthrottled_avg_dur_ms
+            grep_token_columns_csv "$input_size" 2 3 $unthrottled_freq >> $unthrottled_freq_avg
         done
     elif [ "$INPUT_FILE" == "$LOCAL_INPUT_TOKEN" ]; then
         grep_token_columns_csv "$LOCAL_INPUT_SIZE" 2 3 $unthrottled_data "$input_size|" >> $unthrottled_avg_data
@@ -985,6 +988,7 @@ function post_process_data_jailhouse {
                 grep_token_columns_csv "$input_size" 2 3 $throttled_data "$input_size|" >> $throttled_avg_data
                 grep_token_columns_csv "$input_size" 2 3 $throttled_data "=AVERAGE(" ")\/$tsc_freq" >> $throttled_avg_dur_s
                 grep_token_columns_csv "$input_size" 2 3 $throttled_data "=AVERAGE(" ")*1000\/$tsc_freq" >> $throttled_avg_dur_ms
+                grep_token_columns_csv "$input_size" 2 3 $throttled_freq >> $throttled_freq_avg
             done
         else
             grep_token_columns_csv "$(get_size_of_file_bytes $INPUT_FILE)" 2 3 $throttled_data "$input_size|" >> $throttled_avg_data
