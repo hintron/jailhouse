@@ -177,7 +177,8 @@ static void clear_freq_perf_counters(void)
  * Sample and print the average frequency over the time period when
  * clear_freq_perf_counters() was last called.
  */
-static void print_freq(bool is_throttled, unsigned long workload_counter)
+static void print_freq(bool is_throttled, unsigned long workload_counter,
+		       unsigned long input_len)
 {
 	static u64 max_ratio = 0;
 	static u64 max_freq = 0;
@@ -186,7 +187,7 @@ static void print_freq(bool is_throttled, unsigned long workload_counter)
 
 	/* Print out column headers for subsequent frequency data.*/
 	if (workload_counter == 0) {
-		printk("MGHFREQ:is_throttled,workload_counter,max_freq,aperf,mperf\n");
+		printk("MGHFREQ:is_throttled,workload_counter,input_len,max_freq,aperf,mperf\n");
 		max_ratio = query_max_freq_ratio();
 		 /* max_freq and tsc_freq are basically the same */
 		max_freq = query_max_freq(max_ratio);
@@ -208,8 +209,8 @@ static void print_freq(bool is_throttled, unsigned long workload_counter)
 	 */
 	aperf = read_msr(MSR_IA32_APERF);
 	mperf = read_msr(MSR_IA32_MPERF);
-	printk("MGHFREQ:%d,%lu,%llu,%llu,%llu\n", is_throttled,
-	       workload_counter, max_freq, aperf, mperf);
+	printk("MGHFREQ:%d,%lu,%lu,%llu,%llu,%llu\n", is_throttled,
+	       workload_counter, input_len, max_freq, aperf, mperf);
 
 	// TODO: How to avoid preemption-timer interrupt between sampling aperf
 	// and mperf?
@@ -1120,7 +1121,7 @@ void inmate_main(void)
 		end = tsc_read_ns();
 
 		/* Print out the average frequency during the workload */
-		print_freq(is_throttled, workload_counter);
+		print_freq(is_throttled, workload_counter, input_len);
 
 		if (MGH_DEBUG_MODE) {
 			printk("workload output: 0x");
