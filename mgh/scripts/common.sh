@@ -736,8 +736,7 @@ function grep_freq_data {
 
 # Use awk to get all lines of a csv where $token == $token_column.
 # Then, grab the value in $output_column and append to a comma-separated list.
-# Output as "$before$csv_list$after". If $before and $after are not specified,
-# $before defaults to "$token|" and $after to ""
+# Output as "$before$csv_list$after". If $before and $after default to "".
 function grep_token_columns_csv {
     local token="$1"
     local token_column="$2"
@@ -745,10 +744,6 @@ function grep_token_columns_csv {
     local in_file="$4"
     local before="$5"
     local after="$6"
-
-    if [ "$before" == "" ]; then
-        before="$token|"
-    fi
 
     # Use awk to find the lines where $token_column == $token and print out
     # column $output_column, replace all newlines with commas, replace the
@@ -971,14 +966,14 @@ function post_process_data_jailhouse {
         for input_size in "${input_sizes[@]}"; do
             echo "$input_size" >> $input_sizes_b_data
             echo "=$input_size/$MiB" >> $input_sizes_mb_data
-            grep_token_columns_csv "$input_size" 2 3 $unthrottled_data >> $unthrottled_avg_data
+            grep_token_columns_csv "$input_size" 2 3 $unthrottled_data "$input_size|" >> $unthrottled_avg_data
             grep_token_columns_csv "$input_size" 2 3 $unthrottled_data "=AVERAGE(" ")\/$tsc_freq" >> $unthrottled_avg_dur_s
             grep_token_columns_csv "$input_size" 2 3 $unthrottled_data "=AVERAGE(" ")*1000\/$tsc_freq" >> $unthrottled_avg_dur_ms
         done
     elif [ "$INPUT_FILE" == "$LOCAL_INPUT_TOKEN" ]; then
-        grep_token_columns_csv "$LOCAL_INPUT_SIZE" 2 3 $unthrottled_data >> $unthrottled_avg_data
+        grep_token_columns_csv "$LOCAL_INPUT_SIZE" 2 3 $unthrottled_data "$input_size|" >> $unthrottled_avg_data
     else
-        grep_token_columns_csv "$(get_size_of_file_bytes $INPUT_FILE)" 2 3 $unthrottled_data >> $unthrottled_avg_data
+        grep_token_columns_csv "$(get_size_of_file_bytes $INPUT_FILE)" 2 3 $unthrottled_data "$input_size|" >> $unthrottled_avg_data
     fi
 
     if [ "$THROTTLE_MODE" != "$TMODE_DISABLED" ]; then
@@ -987,12 +982,12 @@ function post_process_data_jailhouse {
         if [ "$INPUT_FILE" == "" ]; then
             # Aggregate iterations for each input size
             for input_size in "${input_sizes[@]}"; do
-                grep_token_columns_csv "$input_size" 2 3 $throttled_data >> $throttled_avg_data
+                grep_token_columns_csv "$input_size" 2 3 $throttled_data "$input_size|" >> $throttled_avg_data
                 grep_token_columns_csv "$input_size" 2 3 $throttled_data "=AVERAGE(" ")\/$tsc_freq" >> $throttled_avg_dur_s
                 grep_token_columns_csv "$input_size" 2 3 $throttled_data "=AVERAGE(" ")*1000\/$tsc_freq" >> $throttled_avg_dur_ms
             done
         else
-            grep_token_columns_csv "$(get_size_of_file_bytes $INPUT_FILE)" 2 3 $throttled_data >> $throttled_avg_data
+            grep_token_columns_csv "$(get_size_of_file_bytes $INPUT_FILE)" 2 3 $throttled_data "$input_size|" >> $throttled_avg_data
         fi
     fi
 }
