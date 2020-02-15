@@ -785,6 +785,17 @@ function grep_output_freq_unthrottled {
     grep_token_in_file "MGHFREQ:is_throttled,\|MGHFREQ:0," $in_file
 }
 
+# input file should be the output of grep_output_freq_[un]throttled
+# freq = (max_freq * aperf) / mperf
+# max_perf = $3
+# aperf = $4
+# mperf = $5
+function aggregate_avg_freq {
+    local input_file="$1"
+    local input_size="$2"
+    aggregate_custom_csv "$input_size" 2 "\$3,\"*\",\$4,\"/\",\$5" $input_file "=AVERAGE(" ")"
+}
+
 function grep_all_but_token_in_file {
     local token="$1"
     local in_file="$2"
@@ -975,7 +986,7 @@ function post_process_data_jailhouse {
             aggregate_column_csv "$input_size" 2 3 $unthrottled_data "$input_size|" >> $unthrottled_avg_data
             aggregate_column_csv "$input_size" 2 3 $unthrottled_data "=AVERAGE(" ")\/$tsc_freq" >> $unthrottled_avg_dur_s
             aggregate_column_csv "$input_size" 2 3 $unthrottled_data "=AVERAGE(" ")*1000\/$tsc_freq" >> $unthrottled_avg_dur_ms
-            aggregate_column_csv "$input_size" 2 3 $unthrottled_freq >> $unthrottled_freq_avg
+            aggregate_avg_freq $unthrottled_freq "$input_size" >> $unthrottled_freq_avg
         done
     elif [ "$INPUT_FILE" == "$LOCAL_INPUT_TOKEN" ]; then
         aggregate_column_csv "$LOCAL_INPUT_SIZE" 2 3 $unthrottled_data "$input_size|" >> $unthrottled_avg_data
@@ -992,7 +1003,7 @@ function post_process_data_jailhouse {
                 aggregate_column_csv "$input_size" 2 3 $throttled_data "$input_size|" >> $throttled_avg_data
                 aggregate_column_csv "$input_size" 2 3 $throttled_data "=AVERAGE(" ")\/$tsc_freq" >> $throttled_avg_dur_s
                 aggregate_column_csv "$input_size" 2 3 $throttled_data "=AVERAGE(" ")*1000\/$tsc_freq" >> $throttled_avg_dur_ms
-                aggregate_column_csv "$input_size" 2 3 $throttled_freq >> $throttled_freq_avg
+                aggregate_avg_freq $throttled_freq "$input_size" >> $throttled_freq_avg
             done
         else
             aggregate_column_csv "$(get_size_of_file_bytes $INPUT_FILE)" 2 3 $throttled_data "$input_size|" >> $throttled_avg_data
