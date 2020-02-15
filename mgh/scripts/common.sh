@@ -24,6 +24,7 @@ RA_BIN="$WORKLOAD_BIN_DIR/random-access"
 # Note that the inmate libraries assume that the cmdline string will be stored
 # at 0x1000 and will have a size of CMDLINE_BUFFER_SIZE.
 CMDLINE_OFFSET=0x1000
+GiB=$((2 ** 30))
 MiB=$((2 ** 20))
 KiB=$((2 ** 10))
 
