@@ -860,6 +860,22 @@ function stop_interference_workload {
     fi
 }
 
+# Jailhouse currently prints newlines as carriage return + line feed, which can
+# mess up awk big time. So strip out all carriage returns.
+# See https://stackoverflow.com/questions/60203007/awk-is-only-matching-the-first-line-when-matching-against-first-column
+function sanitize_console_output {
+    local input_file="$1"
+    local output_file="$2"
+
+    # Remove all carriage return characters
+    tr -d '\r' < "$input_file" > "$output_file"
+
+    # To turn newlines into CR + LF (e.g. for UARTs or Windows), do this instead
+    # Remove all \r, add a \n to end of file if dne, and add \r before all \n
+    # tr -d '\r' < "$input_file" | sed -e '$a\' | sed 's/$/\r/' > "$output_file"
+}
+
+
 # Global inputs:
 # $RUN_MODE
 # $INMATE_DEBUG
@@ -910,13 +926,17 @@ function post_process_data_jailhouse {
     fi
 
     # local inputs:
-    local input_data_file="$1"
+    local input_data_file_dirty="$1"
     local output_dir="$2"
     local time="$3"
 
     # TSC freq shouldn't ever change for my system, but it will on other systems
     # local tsc_freq=$(grep_token_in_file "MGH: Maximum Non-Turbo Frequency: " $input_data_file)
     local tsc_freq=3700000000
+
+    # # Use a sanitized version of the input
+    local input_data_file="$output_dir/jailhouse_clean_${time}.txt"
+    sanitize_console_output $input_data_file_dirty $input_data_file
 
     # Create a file for potential columns in a spreadsheet
     local input_sizes_b_data="$output_dir/input_sizes_b_${time}.csv"
