@@ -952,30 +952,31 @@ function post_process_data_jailhouse {
     sanitize_console_output $input_data_file_dirty $input_data_file
 
     # Create a file for potential columns in a spreadsheet
-    local input_sizes_b_data="$output_dir/input_sizes_b_${time}.csv"
-    local input_sizes_mb_data="$output_dir/input_sizes_mb_${time}.csv"
+    local input_sizes_b_data="$output_dir/input_sizes_b_${time}.txt"
+    local input_sizes_mb_data="$output_dir/input_sizes_mb_${time}.txt"
 
+    # _<file_name> means it's only an intermediate file ('private')
+    # <file_name> means it's a drop in for a spreadsheet column ('public')
+    local unthrottled_cycles="$output_dir/_cycles_unthrottled_${time}.csv"
+    local unthrottled_cycles_flat="$output_dir/_cycles_flat_unthrottled_${time}.txt"
+    local unthrottled_avg_dur_s="$output_dir/dur_avg_s_unthrottled_${time}.txt"
+    local unthrottled_avg_dur_ms="$output_dir/dur_avg_ms_unthrottled_${time}.txt"
+    local unthrottled_freq="$output_dir/_freq_unthrottled_${time}.csv"
+    local unthrottled_freq_avg="$output_dir/freq_avg_unthrottled_${time}.txt"
 
-    local unthrottled_data="$output_dir/unthrottled_${time}.csv"
-    local unthrottled_avg_data="$output_dir/unthrottled_avg_${time}.csv"
-    local unthrottled_avg_dur_s="$output_dir/unthrottled_avg_dur_s_${time}.csv"
-    local unthrottled_avg_dur_ms="$output_dir/unthrottled_avg_dur_ms_${time}.csv"
-    local unthrottled_freq="$output_dir/unthrottled_freq_${time}.csv"
-    local unthrottled_freq_avg="$output_dir/unthrottled_freq_avg_${time}.csv"
-
-    local throttled_data="$output_dir/throttled_${time}.csv"
-    local throttled_avg_data="$output_dir/throttled_avg_${time}.csv"
-    local throttled_avg_dur_s="$output_dir/throttled_avg_dur_s_${time}.csv"
-    local throttled_avg_dur_ms="$output_dir/throttled_avg_dur_ms_${time}.csv"
-    local throttled_freq="$output_dir/throttled_freq_${time}.csv"
-    local throttled_freq_avg="$output_dir/throttled_freq_avg_${time}.csv"
+    local throttled_cycles="$output_dir/_cycles_throttled_${time}.csv"
+    local throttled_cycles_flat="$output_dir/_cycles_flat_throttled_${time}.txt"
+    local throttled_avg_dur_s="$output_dir/dur_avg_s_throttled_${time}.txt"
+    local throttled_avg_dur_ms="$output_dir/dur_avg_ms_throttled_${time}.txt"
+    local throttled_freq="$output_dir/_freq_throttled_${time}.csv"
+    local throttled_freq_avg="$output_dir/freq_avg_throttled_${time}.txt"
 
     # Do not print out all MGHFREQ lines. Avg freq is already in MGHOUT
     local input_sizes=()
     generate_input_size_range $INPUT_SIZE_START $INPUT_SIZE_END $INPUT_SIZE_STEP
 
     # Separate throttled and unthrottled data
-    grep_output_data_unthrottled $input_data_file > $unthrottled_data
+    grep_output_data_unthrottled $input_data_file > $unthrottled_cycles
     grep_output_freq_unthrottled $input_data_file > $unthrottled_freq
 
     if [ "$INPUT_FILE" == "" ]; then
@@ -983,9 +984,9 @@ function post_process_data_jailhouse {
         for input_size in "${input_sizes[@]}"; do
             echo "$input_size" >> $input_sizes_b_data
             echo "=$input_size/$MiB" >> $input_sizes_mb_data
-            aggregate_column_csv "$input_size" 2 3 $unthrottled_data "$input_size|" >> $unthrottled_avg_data
-            aggregate_column_csv "$input_size" 2 3 $unthrottled_data "=AVERAGE(" ")\/$tsc_freq" >> $unthrottled_avg_dur_s
-            aggregate_column_csv "$input_size" 2 3 $unthrottled_data "=AVERAGE(" ")*1000\/$tsc_freq" >> $unthrottled_avg_dur_ms
+            aggregate_column_csv "$input_size" 2 3 $unthrottled_cycles "$input_size|" >> $unthrottled_cycles_flat
+            aggregate_column_csv "$input_size" 2 3 $unthrottled_cycles "=AVERAGE(" ")\/$tsc_freq" >> $unthrottled_avg_dur_s
+            aggregate_column_csv "$input_size" 2 3 $unthrottled_cycles "=AVERAGE(" ")*1000\/$tsc_freq" >> $unthrottled_avg_dur_ms
             aggregate_avg_freq $unthrottled_freq "$input_size" >> $unthrottled_freq_avg
         done
     else
@@ -994,18 +995,18 @@ function post_process_data_jailhouse {
         else
             input_size="$(get_size_of_file_bytes $INPUT_FILE)"
         fi
-        aggregate_column_csv "$input_size" 2 3 $unthrottled_data "$input_size|" >> $unthrottled_avg_data
+        aggregate_column_csv "$input_size" 2 3 $unthrottled_cycles "$input_size|" >> $unthrottled_cycles_flat
     fi
 
     if [ "$THROTTLE_MODE" != "$TMODE_DISABLED" ]; then
-        grep_output_data_throttled $input_data_file > $throttled_data
+        grep_output_data_throttled $input_data_file > $throttled_cycles
         grep_output_freq_throttled $input_data_file > $throttled_freq
         if [ "$INPUT_FILE" == "" ]; then
             # Aggregate iterations for each input size
             for input_size in "${input_sizes[@]}"; do
-                aggregate_column_csv "$input_size" 2 3 $throttled_data "$input_size|" >> $throttled_avg_data
-                aggregate_column_csv "$input_size" 2 3 $throttled_data "=AVERAGE(" ")\/$tsc_freq" >> $throttled_avg_dur_s
-                aggregate_column_csv "$input_size" 2 3 $throttled_data "=AVERAGE(" ")*1000\/$tsc_freq" >> $throttled_avg_dur_ms
+                aggregate_column_csv "$input_size" 2 3 $throttled_cycles "$input_size|" >> $throttled_cycles_flat
+                aggregate_column_csv "$input_size" 2 3 $throttled_cycles "=AVERAGE(" ")\/$tsc_freq" >> $throttled_avg_dur_s
+                aggregate_column_csv "$input_size" 2 3 $throttled_cycles "=AVERAGE(" ")*1000\/$tsc_freq" >> $throttled_avg_dur_ms
                 aggregate_avg_freq $throttled_freq "$input_size" >> $throttled_freq_avg
             done
         else
@@ -1014,7 +1015,7 @@ function post_process_data_jailhouse {
             else
                 input_size="$(get_size_of_file_bytes $INPUT_FILE)"
             fi
-            aggregate_column_csv "$input_size" 2 3 $throttled_data "$input_size|" >> $throttled_avg_data
+            aggregate_column_csv "$input_size" 2 3 $throttled_cycles "$input_size|" >> $throttled_cycles_flat
         fi
     fi
 }
