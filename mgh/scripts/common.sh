@@ -988,10 +988,13 @@ function post_process_data_jailhouse {
             aggregate_column_csv "$input_size" 2 3 $unthrottled_data "=AVERAGE(" ")*1000\/$tsc_freq" >> $unthrottled_avg_dur_ms
             aggregate_avg_freq $unthrottled_freq "$input_size" >> $unthrottled_freq_avg
         done
-    elif [ "$INPUT_FILE" == "$LOCAL_INPUT_TOKEN" ]; then
-        aggregate_column_csv "$LOCAL_INPUT_SIZE" 2 3 $unthrottled_data "$input_size|" >> $unthrottled_avg_data
     else
-        aggregate_column_csv "$(get_size_of_file_bytes $INPUT_FILE)" 2 3 $unthrottled_data "$input_size|" >> $unthrottled_avg_data
+        if [ "$INPUT_FILE" == "$LOCAL_INPUT_TOKEN" ]; then
+            input_size="$LOCAL_INPUT_SIZE"
+        else
+            input_size="$(get_size_of_file_bytes $INPUT_FILE)"
+        fi
+        aggregate_column_csv "$input_size" 2 3 $unthrottled_data "$input_size|" >> $unthrottled_avg_data
     fi
 
     if [ "$THROTTLE_MODE" != "$TMODE_DISABLED" ]; then
@@ -1005,10 +1008,13 @@ function post_process_data_jailhouse {
                 aggregate_column_csv "$input_size" 2 3 $throttled_data "=AVERAGE(" ")*1000\/$tsc_freq" >> $throttled_avg_dur_ms
                 aggregate_avg_freq $throttled_freq "$input_size" >> $throttled_freq_avg
             done
-        elif [ "$INPUT_FILE" == "$LOCAL_INPUT_TOKEN" ]; then
-            aggregate_column_csv "$LOCAL_INPUT_SIZE" 2 3 $throttled_data "$input_size|" >> $throttled_avg_data
         else
-            aggregate_column_csv "$(get_size_of_file_bytes $INPUT_FILE)" 2 3 $throttled_data "$input_size|" >> $throttled_avg_data
+            if [ "$INPUT_FILE" == "$LOCAL_INPUT_TOKEN" ]; then
+                input_size="$LOCAL_INPUT_SIZE"
+            else
+                input_size="$(get_size_of_file_bytes $INPUT_FILE)"
+            fi
+            aggregate_column_csv "$input_size" 2 3 $throttled_data "$input_size|" >> $throttled_avg_data
         fi
     fi
 }
