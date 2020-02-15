@@ -14,13 +14,13 @@ function main {
 
     WORKLOAD_BIN=""
     case "$WORKLOAD" in
-        "sha3" )
+        "sha3"|"sha-3" )
             WORKLOAD_BIN="$SHA3_BIN -f"
             ;;
-        "csb" )
+        "csb"|"count-set-bits" )
             WORKLOAD_BIN=$CSB_BIN
             ;;
-        "ra" )
+        "ra"|"random-access" )
             WORKLOAD_BIN=$RA_BIN
             ;;
         * )
