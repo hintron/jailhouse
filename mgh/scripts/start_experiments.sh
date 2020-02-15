@@ -11,10 +11,19 @@ INPUT_FILE=tmp.input
 #       for all the iterations of the workload. The input range vars will be
 #       ignored
 function main {
-    # Run three types of inmate workloads with interference workload + throttle
+    # Run different combinations of interference workloads and inmate workloads
     ./start_experiment.sh $WM_SHA3           $INTF_HANDBRAKE $RM_INMATE
-    ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_HANDBRAKE $RM_INMATE
-    ./start_experiment.sh $WM_RANDOM_ACCESS  $INTF_HANDBRAKE $RM_INMATE
+    ./start_experiment.sh $WM_SHA3           $INTF_SHA3      $RM_INMATE
+    ./start_experiment.sh $WM_SHA3           $INTF_CSB       $RM_INMATE
+    ./start_experiment.sh $WM_SHA3           $INTF_RA        $RM_INMATE
+    ./start_experiment.sh $WM_SHA3           $INTF_NONE      $RM_INMATE
+
+    # Run three types of inmate workloads with interference workload + throttle
+    # ./start_experiment.sh $WM_SHA3           $INTF_HANDBRAKE $RM_INMATE
+    # ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_HANDBRAKE $RM_INMATE
+    # ./start_experiment.sh $WM_RANDOM_ACCESS  $INTF_HANDBRAKE $RM_INMATE
+
+    # ./start_experiment.sh $WM_SHA3           $INTF_NONE $RM_INMATE
 
     # # Run three types of inmate workloads without interference workload + throttle
     # ./start_experiment.sh $WM_RANDOM_ACCESS  $INTF_NONE $RM_INMATE

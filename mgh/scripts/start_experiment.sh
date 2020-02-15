@@ -21,17 +21,17 @@ RUN_WITH_VTUNE=0
 DISABLE_TURBO_BOOST=1
 # DISABLE_TURBO_BOOST=0
 
-# # 1-40 MiB Data Set
-# ITERATIONS=10
-# INPUT_SIZE_START=$((1 * $MiB))
-# INPUT_SIZE_END=$((40 * $MiB))
-# INPUT_SIZE_STEP=$((1 * $MiB))
-
-# Short Range Data Set
-ITERATIONS=2
-INPUT_SIZE_START=$((20 * $MiB))
-INPUT_SIZE_END=$((21 * $MiB))
+# 1-40 MiB Data Set
+ITERATIONS=10
+INPUT_SIZE_START=$((1 * $MiB))
+INPUT_SIZE_END=$((40 * $MiB))
 INPUT_SIZE_STEP=$((1 * $MiB))
+
+# # Short Range Data Set
+# ITERATIONS=2
+# INPUT_SIZE_START=$((20 * $MiB))
+# INPUT_SIZE_END=$((21 * $MiB))
+# INPUT_SIZE_STEP=$((1 * $MiB))
 
 # # Short Step Data Set
 # ITERATIONS=4
