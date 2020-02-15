@@ -729,11 +729,6 @@ function timestamp {
     date +"%Y-%m-%d_%H-%M-%S"
 }
 
-function grep_freq_data {
-    local in_file="$1"
-    grep_token_in_file_to_file "MGHFREQ:" $in_file
-}
-
 # Use awk to get all lines of a csv where $token == $token_column.
 # Then, grab the value in $output_column and append to a comma-separated list.
 # Output as "$before$csv_list$after". If $before and $after default to "".
@@ -755,36 +750,25 @@ function grep_token_columns_csv {
 
 function grep_output_data_throttled {
     local in_file="$1"
-    grep_token_in_file_to_file "MGHOUT:is_throttled,\|MGHOUT:1," $in_file
+    grep_token_in_file "MGHOUT:is_throttled,\|MGHOUT:1," $in_file
 }
 
 function grep_output_data_unthrottled {
     local in_file="$1"
-    grep_token_in_file_to_file "MGHOUT:is_throttled,\|MGHOUT:0," $in_file
+    grep_token_in_file "MGHOUT:is_throttled,\|MGHOUT:0," $in_file
 }
 
 function grep_output_freq_throttled {
     local in_file="$1"
-    grep_token_in_file_to_file "MGHFREQ:is_throttled,\|MGHFREQ:1," $in_file
+    grep_token_in_file "MGHFREQ:is_throttled,\|MGHFREQ:1," $in_file
 }
 
 function grep_output_freq_unthrottled {
     local in_file="$1"
-    grep_token_in_file_to_file "MGHFREQ:is_throttled,\|MGHFREQ:0," $in_file
+    grep_token_in_file "MGHFREQ:is_throttled,\|MGHFREQ:0," $in_file
 }
 
-# Grep a file for all lines with a token, remove that token from the output,
-# remove additional carriage returns (since grep puts a single carriage return
-# at the start, then adds carriage returns to all newlines), and store the
-# output in a file.
-function grep_token_in_file_to_file {
-    local token="$1"
-    local in_file="$2"
-
-    grep_token_in_file $token $in_file
-}
-
-function grep_all_but_token_in_file_to_file {
+function grep_all_but_token_in_file {
     local token="$1"
     local in_file="$2"
 
@@ -792,6 +776,9 @@ function grep_all_but_token_in_file_to_file {
     grep -v "$token" $in_file | sed "s/${token}//" | sed "s/\r//"
 }
 
+# Grep a file for all lines with a token, remove that token from the output,
+# remove additional carriage returns (since grep puts a single carriage return
+# at the start, then adds carriage returns to all newlines)
 function grep_token_in_file {
     local token="$1"
     local in_file="$2"
@@ -907,7 +894,7 @@ function post_process_data_linux {
     # Create a condensed list of VTune output folders
     grep_token_in_file "amplxe: Using result path " $input_data_file > $vtune_runs_file
     # grep_token_in_file "Elapsed Time: " $input_data_file > $vtune_times_file
-    # grep_all_but_token_in_file_to_file "amplxe:" $input_data_file > $vtune_runs_file
+    # grep_all_but_token_in_file "amplxe:" $input_data_file > $vtune_runs_file
 }
 
 # Global inputs:
