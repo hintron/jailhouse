@@ -747,10 +747,11 @@ function grep_token_columns_csv {
         before="$token|"
     fi
 
-    # Use awk to find the lines where $token_column == $token, use cut to get
-    # the column $output_column, replace all newlines with commas, replace the
-    awk  -F ',' "\$$token_column == $token" $in_file | cut -f$output_column -d, | tr '\n' ',' | sed "s/.$/\n/" | sed "s/^/$before/" | sed "s/$/$after/"
+    # Use awk to find the lines where $token_column == $token and print out
+    # column $output_column, replace all newlines with commas, replace the
     # last comma with a newline, prepend $before, and append $after.
+    tmp="\$$token_column == \"$token\" {print(\$$output_column)}"
+    awk -F ',' "$tmp" $in_file | tr '\n' ',' | sed "s/,$/\n/" | sed "s/^/$before/" | sed "s/$/$after/"
 }
 # https://stackoverflow.com/questions/26148546/grep-keeping-lines-that-has-specific-string-in-certain-column
 
