@@ -3,8 +3,8 @@ source ../scripts/common.sh
 
 INPUT="workload_demo_input.bin"
 
-# trap ctrl-c and call ctrl_c()
-trap ctrl_c INT
+# trap ctrl-c and call clean_up()
+trap clean_up SIGHUP SIGINT SIGTERM
 
 function main {
     HELP_STR="Please specify a workload (\`sha3\`, \`csb\`, or \`ra\`)"
@@ -64,8 +64,8 @@ function main {
 }
 
 # For proper cleanup, either do ctrl-c in foreground or do `kill -s INT <pid>`
-function ctrl_c() {
-    echo "Cancelling all background workload tasks"
+function clean_up() {
+    echo "Canceling all background workload tasks"
     for pid in "${pids[@]}"
     do
        echo "Killing PID $pid"
