@@ -1005,6 +1005,8 @@ function post_process_data_jailhouse {
                 aggregate_column_csv "$input_size" 2 3 $throttled_data "=AVERAGE(" ")*1000\/$tsc_freq" >> $throttled_avg_dur_ms
                 aggregate_avg_freq $throttled_freq "$input_size" >> $throttled_freq_avg
             done
+        elif [ "$INPUT_FILE" == "$LOCAL_INPUT_TOKEN" ]; then
+            aggregate_column_csv "$LOCAL_INPUT_SIZE" 2 3 $throttled_data "$input_size|" >> $throttled_avg_data
         else
             aggregate_column_csv "$(get_size_of_file_bytes $INPUT_FILE)" 2 3 $throttled_data "$input_size|" >> $throttled_avg_data
         fi
