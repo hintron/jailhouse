@@ -12,11 +12,23 @@ INPUT_FILE=tmp.input
 #       ignored
 function main {
     # Run different combinations of interference workloads and inmate workloads
-    ./start_experiment.sh $WM_SHA3           $INTF_HANDBRAKE $RM_INMATE
-    ./start_experiment.sh $WM_SHA3           $INTF_SHA3      $RM_INMATE
-    ./start_experiment.sh $WM_SHA3           $INTF_CSB       $RM_INMATE
-    ./start_experiment.sh $WM_SHA3           $INTF_RA        $RM_INMATE
-    ./start_experiment.sh $WM_SHA3           $INTF_NONE      $RM_INMATE
+    # ./start_experiment.sh $WM_SHA3           $INTF_HANDBRAKE $RM_INMATE
+    # ./start_experiment.sh $WM_SHA3           $INTF_SHA3      $RM_INMATE
+    # ./start_experiment.sh $WM_SHA3           $INTF_CSB       $RM_INMATE
+    # ./start_experiment.sh $WM_SHA3           $INTF_RA        $RM_INMATE
+    # ./start_experiment.sh $WM_SHA3           $INTF_NONE      $RM_INMATE
+
+    ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_HANDBRAKE $RM_INMATE
+    ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_SHA3      $RM_INMATE
+    ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_CSB       $RM_INMATE
+    ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_RA        $RM_INMATE
+    ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_NONE      $RM_INMATE
+
+    ./start_experiment.sh $WM_RANDOM_ACCESS  $INTF_HANDBRAKE $RM_INMATE
+    ./start_experiment.sh $WM_RANDOM_ACCESS  $INTF_SHA3      $RM_INMATE
+    ./start_experiment.sh $WM_RANDOM_ACCESS  $INTF_CSB       $RM_INMATE
+    ./start_experiment.sh $WM_RANDOM_ACCESS  $INTF_RA        $RM_INMATE
+    ./start_experiment.sh $WM_RANDOM_ACCESS  $INTF_NONE      $RM_INMATE
 
     # Run three types of inmate workloads with interference workload + throttle
     # ./start_experiment.sh $WM_SHA3           $INTF_HANDBRAKE $RM_INMATE
