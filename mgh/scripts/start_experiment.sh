@@ -58,6 +58,7 @@ INMATE_PROGRAM=$JAILHOUSE_DIR/inmates/demos/x86/mgh-demo.bin
 experiment_time="$(timestamp)"
 OUTPUT_DIR="$SCRIPTS_DIR/output/${experiment_time}"
 INPUT_DIR="$SCRIPTS_DIR/input"
+SOURCES_DIR="$SCRIPTS_DIR/sources"
 JAILHOUSE_OUTPUT_BASENAME="jailhouse_${experiment_time}.txt"
 JAILHOUSE_OUTPUT_FILE="$OUTPUT_DIR/$JAILHOUSE_OUTPUT_BASENAME"
 LINUX_OUTPUT_BASENAME="linux_output_${experiment_time}.txt"

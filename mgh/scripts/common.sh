@@ -809,22 +809,12 @@ function grep_token_in_str {
     echo "$str" | grep "$token" | sed "s/${token}//" | sed "s/\r//"
 }
 
-function start_handbrake {
-    local INPUT="$1"
-    local OUTPUT="$2"
-
-    HandBrakeCLI -i $INPUT -o $OUTPUT
-    workload_pid="$!"
-    # NOTE: $! doesn't get the proper PID of HandBrakeCLI
-}
-
 function start_handbrake_demo {
     local TIMESTAMP=$(timestamp)
+    local INPUT="$SOURCES_DIR/i_am_legend.m2ts"
+    local OUTPUT="$OUTPUT_DIR/handbrake_$TIMESTAMP.bin"
 
-    local INPUT="/home/hintron/Videos/sources/i_am_legend.m2ts"
-    local OUTPUT="/home/hintron/Videos/jailhouse_outputs/run_$TIMESTAMP"
-
-    start_handbrake $INPUT $OUTPUT >> $INTERFERENCE_WORKLOAD_OUTPUT 2>&1 &
+    HandBrakeCLI -i $INPUT -o $OUTPUT >> $INTERFERENCE_WORKLOAD_OUTPUT 2>&1 &
     workload_pid=$!
 }
 
