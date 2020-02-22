@@ -6,12 +6,14 @@
 # Byte        0: Synchronization Byte. A u8 with the following values:
 #   If 0, the inmate has not yet been initialized.
 #   If 1, the inmate is initialized and ready for (more) work.
-#   If 2, Tells the inmate to calculate the sha3 of byte 2-(N+1). This will
+#   If 2, Tells the inmate to do the workload on Data. This will
 #         immediately set byte 0 to 3.
-#   If 3, the inmate is currently calculating sha3.
+#   If 3, the inmate is currently running the workload.
 # Byte      1-3: Reserved.
 # Byte      4-7: Data Length. u32
-# Byte      8-1MB: Data.
+# Byte      8-N: Data.
+#
+# N (the total size of the IVSHMEM region) is currently set to 40 MiB.
 
 #################################
 # How this demo will work:
