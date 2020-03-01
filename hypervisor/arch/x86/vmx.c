@@ -31,29 +31,7 @@
 #define PIO_BITMAP_PAGES	2
 
 #ifdef MGH_X86_THROTTLE_CAPABILITY
-// MGH: Set a relatively high max CPU count
-#define CPUS_THROTTLED_COUNT	256
-
-typedef enum {
-	CLOCK,
-	SPIN,
-	PAUSE,
-	STOP,
-	NONE,
-	STOP_CLOCK,
-	STOP_SPIN,
-	STOP_PAUSE,
-} throttle_cmd_t;
-
 static bool spin_loop_throttle = false;
-
-// Things are very laggy, but usable
-// #define SPIN_LOOP_ITERATIONS	10000
-#define SPIN_LOOP_ITERATIONS	50000
-// Makes things super slow (almost unusable), but still can do some things
-// #define SPIN_LOOP_ITERATIONS	100000
-// This seems to mostly freeze everything (can't see prints)
-// #define SPIN_LOOP_ITERATIONS	1000000
 #endif
 
 static const struct segment invalid_seg = {

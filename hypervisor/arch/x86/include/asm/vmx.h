@@ -362,5 +362,30 @@ void vmx_vmexit(void);
  * actual timings seen. */
 #define PREEMPTION_TIMEOUT	1000
 
+#ifdef MGH_X86_THROTTLE_CAPABILITY
+
+// MGH: Set a relatively high max CPU count
+#define CPUS_THROTTLED_COUNT	256
+
+typedef enum {
+	CLOCK,
+	SPIN,
+	PAUSE,
+	STOP,
+	NONE,
+	STOP_CLOCK,
+	STOP_SPIN,
+	STOP_PAUSE,
+} throttle_cmd_t;
+
+// Things are very laggy, but usable
+// #define SPIN_LOOP_ITERATIONS	10000
+#define SPIN_LOOP_ITERATIONS	50000
+// Makes things super slow (almost unusable), but still can do some things
+// #define SPIN_LOOP_ITERATIONS	100000
+// This seems to mostly freeze everything (can't see prints)
+// #define SPIN_LOOP_ITERATIONS	1000000
+
+#endif
 
 #endif /* !_JAILHOUSE_ASM_VMX_H */
