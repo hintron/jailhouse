@@ -923,7 +923,7 @@ void vcpu_vendor_reset(unsigned int sipi_vector)
 
 #ifdef MGH_X86_THROTTLE_CAPABILITY
 /*
- * Returns SPIN, CLOCK, or PAUSE if throttle needs to be turned ON
+ * Returns SPIN or CLOCK if throttle needs to be turned ON
  * Returns STOP if throttle needs to be turned OFF
  * Returns NONE if no action should be taken
  */
@@ -987,12 +987,6 @@ static void enable_throttle_spin_loop(void)
 	}
 }
 
-static void enable_throttle_pause(void)
-{
-	printk("MGH HYPER: CPU %2d: TODO: Implement enable pause instruction throttle\n",
-	       this_cpu_id());
-}
-
 /* NOTE: Clock modulation will fail in QEMU/KVM and cause a #GP fault UNLESS
  * kvm.ignore_msrs=1 is set in /etc/default/grub. If set, all
  * unimplemented MSRs will be ignored (writes are no-ops, reads return 0). */
@@ -1028,12 +1022,6 @@ static void disable_throttle_spin_loop(void)
 	}
 }
 
-static void disable_throttle_pause(void)
-{
-	printk("MGH HYPER: CPU %2d: TODO: Implement disable pause instruction throttle\n",
-	       this_cpu_id());
-}
-
 static void disable_throttle_clock_modulation(void)
 {
 	unsigned long feature_ctrl = read_msr(MSR_IA32_CLOCK_MODULATION);
@@ -1055,9 +1043,6 @@ static void disable_throttling(throttle_cmd_t type)
 	switch(type) {
 	case SPIN:
 		disable_throttle_spin_loop();
-		break;
-	case PAUSE:
-		disable_throttle_pause();
 		break;
 	case CLOCK:
 		disable_throttle_clock_modulation();
@@ -1184,15 +1169,6 @@ static void preemption_timer_handler_mgh(void)
 			       cpu_id);
 		}
 		enable_throttle_spin_loop();
-		break;
-	case PAUSE:
-		cpus_throtted[cpu_id] = 1;
-		if (throttle_mechanism == NONE) {
-			throttle_mechanism = PAUSE;
-			printk("MGH HYPER: CPU %2d: Setting throttle mechanism to pause\n",
-			       cpu_id);
-		}
-		enable_throttle_pause();
 		break;
 	case STOP:
 		cpus_throtted[cpu_id] = 0;

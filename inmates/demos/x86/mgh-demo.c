@@ -65,7 +65,6 @@ typedef enum {
 typedef enum {
 	CLOCK = 0,
 	SPIN = 1,
-	PAUSE = 2, // Not yet implemented
 } throttle_t;
 
 typedef enum {
@@ -492,9 +491,6 @@ static void command_line_params(bool *local_buffer,
 	case SPIN:
 		printk("MGH: throttle_mechanism=SPIN\n");
 		break;
-	case PAUSE:
-		printk("MGH: throttle_mechanism=PAUSE\n");
-		break;
 	default:
 		printk("MGH: throttle_mechanism=?\n");
 		break;
@@ -632,9 +628,6 @@ static void enable_throttle(throttle_t throttle_mechanism)
 	/* Communicate to the hypervisor via the Jailhouse
 	 * communication region of this cell */
 	switch (throttle_mechanism) {
-	case PAUSE:
-		printk("MGH: ERROR: PAUSE throttle mechanism not yet implemented. Defaulting to SPIN.\n");
-		/* Fall through */
 	case SPIN:
 		jailhouse_send_msg_to_cell(comm_region,
 						JAILHOUSE_MSG_THROTTLE_SPIN);

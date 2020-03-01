@@ -370,12 +370,10 @@ void vmx_vmexit(void);
 typedef enum {
 	CLOCK,
 	SPIN,
-	PAUSE,
 	STOP,
 	NONE,
 	STOP_CLOCK,
 	STOP_SPIN,
-	STOP_PAUSE,
 } throttle_cmd_t;
 
 // Things are very laggy, but usable

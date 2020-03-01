@@ -37,7 +37,6 @@ TMODE_DISABLED=3
 # Throttle mechanism values
 TMECH_CLOCK=0
 TMECH_SPIN=1 # default
-TMECH_PAUSE=2 # Not yet implemented
 
 # Workload mode values
 WM_SHA3=0
@@ -209,9 +208,6 @@ function log_parameters {
         ;;
     "$TMECH_SPIN")
         echo "TMECH_SPIN" >> $EXPERIMENT_OUTPUT_FILE
-        ;;
-    "$TMECH_PAUSE")
-        echo "TMECH_PAUSE" >> $EXPERIMENT_OUTPUT_FILE
         ;;
     ""|"Unspecified")
         echo "Unspecified" >> $EXPERIMENT_OUTPUT_FILE
