@@ -56,6 +56,7 @@ INMATE_CELL=$JAILHOUSE_DIR/configs/x86/bazooka-inmate.cell
 INMATE_NAME=bazooka-inmate
 INMATE_PROGRAM=$JAILHOUSE_DIR/inmates/demos/x86/mgh-demo.bin
 experiment_time="$(timestamp)"
+COMMIT="$(get_git_commit)"
 OUTPUT_DIR="$SCRIPTS_DIR/output/${experiment_time}"
 INPUT_DIR="$SCRIPTS_DIR/input"
 SOURCES_DIR="~/Videos/sources"

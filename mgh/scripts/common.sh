@@ -85,6 +85,7 @@ function log_parameters {
     echo "# Common Parameters #" >> $EXPERIMENT_OUTPUT_FILE
     echo "#####################" >> $EXPERIMENT_OUTPUT_FILE
     echo "TIMESTAMP: $experiment_time" >> $EXPERIMENT_OUTPUT_FILE
+    echo "Jailhouse Git commit: $COMMIT" >> $EXPERIMENT_OUTPUT_FILE
     echo "JAILHOUSE_OUTPUT_BASENAME: $JAILHOUSE_OUTPUT_BASENAME" >> $EXPERIMENT_OUTPUT_FILE
     echo "JAILHOUSE_OUTPUT_FILE: $JAILHOUSE_OUTPUT_FILE" >> $EXPERIMENT_OUTPUT_FILE
     printf "RUN_MODE: " >> $EXPERIMENT_OUTPUT_FILE
@@ -720,7 +721,9 @@ function vtune_uarch_explore {
 function timestamp {
     date +"%Y-%m-%d_%H-%M-%S"
 }
-
+function get_git_commit {
+    git rev-parse HEAD
+}
 
 # Get the $output_column of all lines where $token == $token_column and merge
 # them together into a single comman-separated list.
