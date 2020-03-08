@@ -83,7 +83,7 @@
 #ifdef MGH_X86_THROTTLE_CAPABILITY
 /* This number represents the count of preemption timer VM exits not including
  * those hijacked as a deferred NMI handler. */
-#define JAILHOUSE_CPU_STAT_VMEXITS_PREEMPTION 4
+#define JAILHOUSE_CPU_STAT_VMEXITS_PREEMPTION	4
 #endif
 #define JAILHOUSE_GENERIC_CPU_STATS		5
 
@@ -93,7 +93,7 @@
 #define JAILHOUSE_MSG_SHUTDOWN_REQUEST		1
 #define JAILHOUSE_MSG_RECONFIG_COMPLETED	2
 #define JAILHOUSE_MSG_STOP_THROTTLING		3
-#define JAILHOUSE_MSG_THROTTLE_SPIN			4
+#define JAILHOUSE_MSG_THROTTLE_SPIN		4
 #define JAILHOUSE_MSG_THROTTLE_CLOCK		5
 
 /* replies from cell */
