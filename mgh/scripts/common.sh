@@ -442,6 +442,11 @@ function show_cells {
 
 function build_jailhouse {
     pushd $JAILHOUSE_DIR > /dev/null
+
+    # Setting CFLAGS somehow royally screws things up, but this is how to do it
+    # make CFLAGS=-DMGH_X86_THROTTLE_CAPABILITY CC=gcc-7 > /dev/null
+    # sudo make install CFLAGS=-DMGH_X86_THROTTLE_CAPABILITY CC=gcc-7 > /dev/null
+
     make CC=gcc-7 > /dev/null
     sudo make install CC=gcc-7 > /dev/null
 
