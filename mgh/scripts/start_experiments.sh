@@ -18,17 +18,17 @@ function main {
     # ./start_experiment.sh $WM_SHA3           $INTF_RA        $RM_INMATE
     # ./start_experiment.sh $WM_SHA3           $INTF_NONE      $RM_INMATE
 
-    ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_HANDBRAKE $RM_INMATE
-    ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_SHA3      $RM_INMATE
-    ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_CSB       $RM_INMATE
-    ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_RA        $RM_INMATE
-    ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_NONE      $RM_INMATE
+    # ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_HANDBRAKE $RM_INMATE
+    # ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_SHA3      $RM_INMATE
+    # ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_CSB       $RM_INMATE
+    # ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_RA        $RM_INMATE
+    # ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_NONE      $RM_INMATE
 
-    ./start_experiment.sh $WM_RANDOM_ACCESS  $INTF_HANDBRAKE $RM_INMATE
-    ./start_experiment.sh $WM_RANDOM_ACCESS  $INTF_SHA3      $RM_INMATE
-    ./start_experiment.sh $WM_RANDOM_ACCESS  $INTF_CSB       $RM_INMATE
-    ./start_experiment.sh $WM_RANDOM_ACCESS  $INTF_RA        $RM_INMATE
-    ./start_experiment.sh $WM_RANDOM_ACCESS  $INTF_NONE      $RM_INMATE
+    # ./start_experiment.sh $WM_RANDOM_ACCESS  $INTF_HANDBRAKE $RM_INMATE
+    # ./start_experiment.sh $WM_RANDOM_ACCESS  $INTF_SHA3      $RM_INMATE
+    # ./start_experiment.sh $WM_RANDOM_ACCESS  $INTF_CSB       $RM_INMATE
+    # ./start_experiment.sh $WM_RANDOM_ACCESS  $INTF_RA        $RM_INMATE
+    # ./start_experiment.sh $WM_RANDOM_ACCESS  $INTF_NONE      $RM_INMATE
 
     # Run three types of inmate workloads with interference workload + throttle
     # ./start_experiment.sh $WM_SHA3           $INTF_HANDBRAKE $RM_INMATE
@@ -103,6 +103,24 @@ function main {
     # ./start_experiment.sh $WM_RANDOM_ACCESS  $INTF_NONE $RM_INMATE          $TMODE_DISABLED $INPUT_FILE
     # ./start_experiment.sh $WM_RANDOM_ACCESS  $INTF_NONE $RM_LINUX_JAILHOUSE $TMODE_DISABLED $INPUT_FILE
     # rm $INPUT_FILE
+
+
+    # Test different throttling parameters on a 20 MiB input with RA interference workload and RA inmate workload
+    create_inmate_local_input_file $INPUT_FILE
+    # This is the default setting
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE 1000 50000
+    # Try some deviations in spin loop iterations
+    ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 50000
+    ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 45000
+    ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 40000
+    ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 35000
+    ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 30000
+    ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 25000
+    ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 20000
+    ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 15000
+    ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 10000
+    ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 5000
+    rm $INPUT_FILE
 }
 
 # Call main here to allow for forward declaration (like Python)
