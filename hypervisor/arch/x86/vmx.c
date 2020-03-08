@@ -24,6 +24,7 @@
 #include <asm/iommu.h>
 #include <asm/vcpu.h>
 #include <asm/vmx.h>
+#include <asm/spinlock.h>
 
 #define CR0_IDX			0
 #define CR4_IDX			1
@@ -922,6 +923,8 @@ void vcpu_vendor_reset(unsigned int sipi_vector)
 }
 
 #ifdef MGH_X86_THROTTLE_CAPABILITY
+static DEFINE_SPINLOCK(cell_comms_spinlock);
+
 /*
  * Returns SPIN or CLOCK if throttle needs to be turned ON
  * Returns STOP if throttle needs to be turned OFF
@@ -933,6 +936,8 @@ static throttle_cmd_t check_throttle_request(int cpu_id)
 	struct cell *cell;
 	struct jailhouse_comm_region *comm_region;
 
+	/* Make sure that only 1 core is talking with the inmates at a time */
+	spin_lock(&cell_comms_spinlock);
 	// For now, there is only one inmate to iterate over
 	for_each_non_root_cell(cell) {
 		comm_region = &(cell->comm_page.comm_region);
@@ -942,31 +947,21 @@ static throttle_cmd_t check_throttle_request(int cpu_id)
 		switch (comm_region->msg_to_cell) {
 		case JAILHOUSE_MSG_THROTTLE_SPIN:
 			throttle_req = SPIN;
-			printk("MGH HYPER: CPU %2d: Enable throttling request (spin) from cell %s\n",
-			       cpu_id, cell->config->name);
 			jailhouse_send_reply_from_cell(comm_region,
 						       JAILHOUSE_MSG_REQUEST_APPROVED);
 			break;
 		case JAILHOUSE_MSG_THROTTLE_CLOCK:
 			throttle_req = CLOCK;
-			printk("MGH HYPER: CPU %2d: Enable throttling request (clock) from cell %s\n",
-			       cpu_id, cell->config->name);
 			jailhouse_send_reply_from_cell(comm_region,
 						       JAILHOUSE_MSG_REQUEST_APPROVED);
 			break;
 		case JAILHOUSE_MSG_STOP_THROTTLING:
 			throttle_req = STOP;
-			printk("MGH HYPER: CPU %2d: Disable throttling request from cell %s\n",
-			       cpu_id, cell->config->name);
 			jailhouse_send_reply_from_cell(comm_region,
 						       JAILHOUSE_MSG_REQUEST_APPROVED);
 			break;
 		case JAILHOUSE_MSG_NONE:
-			// printk("MGH HYPER: CPU %2d: No message found", cpu_id);
-			break;
 		default:
-			jailhouse_send_reply_from_cell(comm_region,
-						       JAILHOUSE_MSG_UNKNOWN);
 			break;
 		}
 
@@ -975,6 +970,7 @@ static throttle_cmd_t check_throttle_request(int cpu_id)
 		if (throttle_req == STOP)
 			break;
 	}
+	spin_unlock(&cell_comms_spinlock);
 	return throttle_req;
 }
 
