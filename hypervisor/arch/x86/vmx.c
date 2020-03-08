@@ -606,8 +606,6 @@ static bool vmcs_setup(void)
 	ok &= vmcs_write32(VMX_PREEMPTION_TIMER_VALUE, 0);
 
 	/* MGH: Initialize helper fields for the preemption timer */
-	// NOTE: preemption_enabled is currently unused
-	cpu_data->preemption_enabled = false;
 	cpu_data->immediate_exit = 0;
 #endif
 

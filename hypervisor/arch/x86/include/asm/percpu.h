@@ -118,7 +118,4 @@
 	/** MGH: This is incremented every time an NMI needs the VMX	\
 	 *  preemption timer to trigger an immediately VM exit on the	\
 	 *  next VM entry. */						\
-	int immediate_exit;						\
-	/** MGH: Used to make sure the VMX preemption timer is only	\
-	 *  enabled once. (Currently unused) */						\
-	bool preemption_enabled;
+	int immediate_exit;
