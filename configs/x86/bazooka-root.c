@@ -33,7 +33,7 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  *
  * Configuration for Micro-Star International Co., Ltd. MS-7B24
- * created with './tools/jailhouse config create --console ttyS4 2019-06-26_ttyS4'
+ * created with './tools/jailhouse config create --console ttyS4 2020-03-08_ttyS4.c'
  *
  * NOTE: This config expects the following to be appended to your kernel cmdline
  *       "memmap=0x5200000$0x3a000000"
@@ -121,26 +121,26 @@ struct {
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_EXECUTE | JAILHOUSE_MEM_DMA,
 		},
-		/* MemRegion: 3f200000-87f7cfff : System RAM */
+		/* MemRegion: 3f200000-87ec3fff : System RAM */
 		{
 			.phys_start = 0x3f200000,
 			.virt_start = 0x3f200000,
-			.size = 0x48d7d000,
+			.size = 0x48cc4000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_EXECUTE | JAILHOUSE_MEM_DMA,
 		},
-		/* MemRegion: 87f7d000-87f7dfff : ACPI Non-volatile Storage */
+		/* MemRegion: 87ec4000-87ec4fff : ACPI Non-volatile Storage */
 		{
-			.phys_start = 0x87f7d000,
-			.virt_start = 0x87f7d000,
+			.phys_start = 0x87ec4000,
+			.virt_start = 0x87ec4000,
 			.size = 0x1000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE,
 		},
-		/* MemRegion: 87f7f000-8e52efff : System RAM */
+		/* MemRegion: 87ec6000-8e52efff : System RAM */
 		{
-			.phys_start = 0x87f7f000,
-			.virt_start = 0x87f7f000,
-			.size = 0x65b0000,
+			.phys_start = 0x87ec6000,
+			.virt_start = 0x87ec6000,
+			.size = 0x6669000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_EXECUTE | JAILHOUSE_MEM_DMA,
 		},
