@@ -449,7 +449,9 @@ static void command_line_params(bool *local_buffer,
 				throttle_mode_t *throttle_mode,
 				workload_t *workload_mode,
 				throttle_t *throttle_mechanism,
-				int *throttle_iterations, bool *local_input)
+				int *throttle_iterations, bool *local_input,
+				int *preemption_timeout,
+				int *spin_loop_iterations)
 {
 	*local_buffer = cmdline_parse_bool("lb",
 					   DEFAULT_LOCAL_BUFFER);
@@ -545,6 +547,9 @@ static void command_line_params(bool *local_buffer,
 
 	*local_input = cmdline_parse_bool("li", DEFAULT_LOCAL_INPUT);
 	printk("MGH: local_input=%d\n", *local_input);
+
+	*preemption_timeout = cmdline_parse_int("pt", 0);
+	*spin_loop_iterations = cmdline_parse_int("sli", 0);
 }
 /*
  * Returns true if hardware setup was successful.
@@ -565,6 +570,36 @@ static bool hardware_setup(void)
 	init_cache_line_size();
 
 	return true;
+}
+
+/* Tell the hypervisor to */
+static void set_throttle_params_hypervisor(int preemption_timeout,
+					   int spin_loop_iterations)
+{
+	/* Don't disturb the hypervisor unnecessarily */
+	if (preemption_timeout == 0 && spin_loop_iterations == 0)
+		return;
+
+	printk("MGH: Sending reconfiguration request to hypervisor\n");
+	/* Dynamically set the preemption timer and spin loop iterations */
+	comm_region->preemption_timeout = (u32)preemption_timeout;
+	comm_region->spin_loop_iterations = (u32)spin_loop_iterations;
+
+	/* Make the hypervisor reconfigure the throttling mechanism */
+	jailhouse_send_msg_to_cell(comm_region, JAILHOUSE_MSG_THROTTLE_CFG);
+
+	printk("MGH: Waiting on hypervisor to reconfigure...\n");
+	/* Only proceed once all cores in the root cell have reconfigured */
+	while (comm_region->reply_from_cell != JAILHOUSE_MSG_REQUEST_APPROVED) {
+		cpu_relax();
+	}
+	printk("MGH: Hypervisor reconfiguring was successful!\n");
+	if (preemption_timeout)
+		printk("MGH: Hypervisor has been reconfigured with preemption_timeout=%d for all root cell cores\n",
+		       preemption_timeout);
+	if (spin_loop_iterations)
+		printk("MGH: Hypervisor has been reconfigured with spin_loop_iterations=%d for all root cell cores\n",
+		       spin_loop_iterations);
 }
 
 /*
@@ -967,11 +1002,15 @@ void inmate_main(void)
 	 */
 	bool local_buffer = DEFAULT_LOCAL_BUFFER;
 	bool local_input = DEFAULT_LOCAL_INPUT;
+	/* If 0, don't change the default */
+	int preemption_timeout = 0;
+	int spin_loop_iterations = 0;
 
 	/* Process custom command line parameters for inmate */
 	command_line_params(&local_buffer, &throttle_mode, &workload_mode,
 			    &throttle_mechanism, &throttle_iterations,
-			    &local_input);
+			    &local_input, &preemption_timeout,
+			    &spin_loop_iterations);
 
 	if (local_buffer && local_input) {
 		printk("MGH: ERROR: local_buffer and local_input are both set, which is incompatible. Exiting...\n");
@@ -983,6 +1022,11 @@ void inmate_main(void)
 
 	if (!device_setup(devs))
 		return;
+
+	printk("MGH: set_throttle_params_hypervisor(preemption_timeout=%d, spin_loop_iterations=%d)\n",
+	       preemption_timeout, spin_loop_iterations);
+	set_throttle_params_hypervisor(preemption_timeout,
+				       spin_loop_iterations);
 
 	if (workload_mode == INMATE_DEBUG) {
 		inmate_debug();

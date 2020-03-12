@@ -132,6 +132,11 @@ void arch_cell_reset(struct cell *cell)
 		comm_region->num_cpus++;
 	comm_region->tsc_khz = system_config->platform_info.x86.tsc_khz;
 	comm_region->apic_khz = system_config->platform_info.x86.apic_khz;
+#ifdef MGH_X86_THROTTLE_CAPABILITY
+	/* Clear values. This will be overwritten by inmate as needed. */
+	comm_region->preemption_timeout = 0;
+	comm_region->spin_loop_iterations = 0;
+#endif /* MGH_X86_THROTTLE_CAPABILITY */
 
 	ioapic_cell_reset(cell);
 }

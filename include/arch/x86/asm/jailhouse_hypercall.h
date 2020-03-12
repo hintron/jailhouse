@@ -110,6 +110,11 @@ struct jailhouse_comm_region {
 	/** Calibrated APIC timer frequency in kHz or 0 if TSC deadline timer
 	 * is available (x86-specific). */
 	__u32 apic_khz;
+#ifdef MGH_X86_THROTTLE_CAPABILITY
+	/* Allow the inmate to dynamically configure the hypervisor's throttling */
+	__u32 preemption_timeout;
+	__u32 spin_loop_iterations;
+#endif /* MGH_X86_THROTTLE_CAPABILITY */
 };
 
 /**

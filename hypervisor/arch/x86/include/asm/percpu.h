@@ -115,6 +115,8 @@
 				__attribute__((aligned(PAGE_SIZE)));	\
 		};							\
 	};								\
+	u32 preemption_timeout;						\
+	u32 spin_loop_iterations;					\
 	/** MGH: This is incremented every time an NMI needs the VMX	\
 	 *  preemption timer to trigger an immediately VM exit on the	\
 	 *  next VM entry. */						\

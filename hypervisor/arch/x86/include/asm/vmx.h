@@ -347,6 +347,8 @@ void vmx_entry_failure(void);
 
 void vmx_vmexit(void);
 
+#ifdef MGH_X86_THROTTLE_CAPABILITY
+
 /* MGH: Aim for a 5-second timeout.
  * TSC bit being monitored is 5, so 2^5 = 16 cycles per timer tick.
  * Assume clock frequency of 2.7 GHz.
@@ -360,9 +362,7 @@ void vmx_vmexit(void);
  * 100 is about a 100 us period.
  * Since this is based on cycle count, the way CPUs sleep could affect the
  * actual timings seen. */
-#define PREEMPTION_TIMEOUT	1000
-
-#ifdef MGH_X86_THROTTLE_CAPABILITY
+#define PREEMPTION_TIMEOUT_DEFAULT 1000
 
 // MGH: Set a relatively high max CPU count
 #define CPUS_THROTTLED_COUNT	256
@@ -378,7 +378,7 @@ typedef enum {
 
 // Things are very laggy, but usable
 // #define SPIN_LOOP_ITERATIONS	10000
-#define SPIN_LOOP_ITERATIONS	50000
+#define SPIN_LOOP_ITERATIONS_DEFAULT	50000
 // Makes things super slow (almost unusable), but still can do some things
 // #define SPIN_LOOP_ITERATIONS	100000
 // This seems to mostly freeze everything (can't see prints)

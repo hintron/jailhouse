@@ -217,6 +217,8 @@ function log_parameters {
         ;;
     esac
     echo "THROTTLE_MECHANISM_RAW: $THROTTLE_MECHANISM" >> $EXPERIMENT_OUTPUT_FILE
+    echo "PREEMPTION_TIMEOUT: $PREEMPTION_TIMEOUT" >> $EXPERIMENT_OUTPUT_FILE
+    echo "SPIN_LOOP_ITERATIONS: $SPIN_LOOP_ITERATIONS" >> $EXPERIMENT_OUTPUT_FILE
 
     echo "##################" >> $EXPERIMENT_OUTPUT_FILE
     echo "# End Parameters #" >> $EXPERIMENT_OUTPUT_FILE
@@ -233,6 +235,8 @@ function log_parameters {
 #   POLLUTE_CACHE
 #   THROTTLE_ITERATIONS
 #   INPUT_FILE
+#   PREEMPTION_TIMEOUT
+#   SPIN_LOOP_ITERATIONS
 #
 # Do `CMDLINE=$(set_cmdline)` to capture the output of this function
 # Make sure to use " " later whenever using $CMDLINE, or else only first item
@@ -265,6 +269,12 @@ function set_cmdline {
     fi
     if [ "$INPUT_FILE" == "$LOCAL_INPUT_TOKEN" ]; then
         CMDLINE="${CMDLINE} li=1"
+    fi
+    if [ ! -z $PREEMPTION_TIMEOUT ]; then
+        CMDLINE="${CMDLINE} pt=$PREEMPTION_TIMEOUT"
+    fi
+    if [ ! -z $SPIN_LOOP_ITERATIONS ]; then
+        CMDLINE="${CMDLINE} sli=$SPIN_LOOP_ITERATIONS"
     fi
 
     # Remove leading whitespace

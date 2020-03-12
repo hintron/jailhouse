@@ -585,6 +585,8 @@ static bool vmcs_setup(void)
 	ok &= vmcs_write32(VMX_PREEMPTION_TIMER_VALUE, 0);
 
 	/* MGH: Initialize helper fields for the preemption timer */
+	cpu_data->preemption_timeout = PREEMPTION_TIMEOUT_DEFAULT;
+	cpu_data->spin_loop_iterations = SPIN_LOOP_ITERATIONS_DEFAULT;
 	cpu_data->immediate_exit = 0;
 #endif
 
@@ -926,6 +928,113 @@ void vcpu_vendor_reset(unsigned int sipi_vector)
 static DEFINE_SPINLOCK(cell_comms_spinlock);
 
 /*
+ * If an inmate send a throttle param reconfig request, change the throttle
+ * parameters for the current core, and then check if all other cores have been
+ * configured. If so, respond to the inmate so it knows to continue with the
+ * next workload.
+ */
+static void handle_throttle_reconfig_request(int this_cpu_id,
+                                             struct per_cpu *this_cpu_data)
+{
+	struct cell *cell;
+	struct jailhouse_comm_region *comm_region;
+	bool reconfig = false;
+	static bool all_configured = true;
+	static unsigned int cpus_configed[CPUS_THROTTLED_COUNT];
+
+	/* Make sure that only 1 core is talking with the inmates at a time */
+	spin_lock(&cell_comms_spinlock);
+
+	/* Initialize/reset cpus_configed */
+	if (all_configured) {
+		for (int i = 0; i < hypervisor_header.max_cpus; ++i) {
+			cpus_configed[i] = 0;
+		}
+		all_configured = false;
+	}
+
+	/* See if any inmates request the hypervisor to reconfig throttling */
+	for_each_non_root_cell(cell) {
+		comm_region = &(cell->comm_page.comm_region);
+		/* Check for and process any pending messages to the root cell
+		 * from the inmate in order to know whether to start or stop
+		 * throttling */
+		switch (comm_region->msg_to_cell) {
+		case JAILHOUSE_MSG_THROTTLE_CFG:
+			printk("HYPER: CPU %d: Handling throttle request\n",
+			       this_cpu_id);
+			reconfig = true;
+			/*
+			 * Set throttle parameters for the current CPU.
+			 * There is no need to write the preemption timeout to
+			 * vcms here - it will happen right after
+			 * preemption_timer_handler_mgh() returns. A 0 value
+			 * means the value should not be set. Avoid setting
+			 * preemption_timeout to 0, or else that will cause an
+			 * infinite preemption timer loop.
+			 */
+			if (comm_region->preemption_timeout > 0) {
+				this_cpu_data->preemption_timeout =
+					comm_region->preemption_timeout;
+				printk("HYPER: CPU %d: Set preemption_timeout to %d\n",
+				       this_cpu_id,
+				       comm_region->preemption_timeout);
+			}
+			if (comm_region->spin_loop_iterations > 0) {
+				this_cpu_data->spin_loop_iterations =
+					comm_region->spin_loop_iterations;
+				printk("HYPER: CPU %d: Set spin_loop_iterations to %d\n",
+				       this_cpu_id,
+				       comm_region->spin_loop_iterations);
+			}
+			cpus_configed[this_cpu_id] = 1;
+			break;
+		/* We only care about throttle configure messages */
+		default:
+			break;
+		}
+		/* Break on the first inmate to request reconfig */
+		if (reconfig)
+			break;
+	}
+
+	if (!reconfig) {
+		spin_unlock(&cell_comms_spinlock);
+		return;
+	}
+
+	/*
+	 * Check if all cores were configured (i.e., if this core was the last
+	 * core to configure itself).
+	 */
+	printk("HYPER: CPU %d: Looking to see if other CPUs have been configured...\n",
+	       this_cpu_id);
+	all_configured = true;
+	for (int i = 0; i < hypervisor_header.max_cpus; ++i) {
+		if (cpus_configed[i] == 0) {
+			printk("HYPER: CPU %d: CPU %d has not yet been reconfigured\n",
+			       this_cpu_id, i);
+			all_configured = false;
+			break;
+		}
+	}
+
+	/*
+	 * If all cores have been reconfigred with the new throttling
+	 * parameters, clear JAILHOUSE_MSG_THROTTLE_CFG from the comm region and
+	 * respond to the inmate so it can start running the workload.
+	 */
+	if (all_configured) {
+		printk("HYPER: CPU %d: Hypervisor configured! Telling inmate...\n",
+		       this_cpu_id);
+		jailhouse_send_reply_from_cell(comm_region,
+					       JAILHOUSE_MSG_REQUEST_APPROVED);
+		printk("HYPER: CPU %d: Message sent\n", this_cpu_id);
+	}
+	spin_unlock(&cell_comms_spinlock);
+}
+
+/*
  * Returns SPIN or CLOCK if throttle needs to be turned ON
  * Returns STOP if throttle needs to be turned OFF
  * Returns NONE if no action should be taken
@@ -1127,6 +1236,9 @@ static void preemption_timer_handler_mgh(void)
 		throttle_mechanism = NONE;
 	}
 
+	/* Change throttle parameters for all cpus if requested by inmate */
+	handle_throttle_reconfig_request(cpu_id, cpu_data);
+
 	// If it's the inmate's CPU, don't throttle it
 	if (cell != &root_cell) {
 		if (!print_inmate_cpu) {
@@ -1182,7 +1294,7 @@ static void preemption_timer_handler_mgh(void)
 	 */
 	if (spin_loop_throttle) {
 		unsigned long count = 0;
-		while (count++ < SPIN_LOOP_ITERATIONS)
+		while (count++ < cpu_data->spin_loop_iterations)
 			cpu_relax();
 	}
 }
@@ -1259,8 +1371,8 @@ static void vmx_check_events(void)
 	/* MGH: Reset the timer back to a normal value on next vm entry.
 	 * Do it this way to avoid issues with non-atomic checking of
 	 * immediate_exit (in case an NMI happens to come right now!). */
-	vmcs_write32(VMX_PREEMPTION_TIMER_VALUE, PREEMPTION_TIMEOUT);
-	// printk("MGH HYPER: CPU %2d: Setting preemption timer to %d\n", cpu_data->public.cpu_id, PREEMPTION_TIMEOUT);
+	vmcs_write32(VMX_PREEMPTION_TIMER_VALUE, cpu_data->preemption_timeout);
+	// printk("MGH HYPER: CPU %2d: Setting preemption timer to %d\n", cpu_data->public.cpu_id, cpu_data->preemption_timeout);
 	if (cpu_data->immediate_exit > 0) {
 		/* Undo setting the timeout to return the value to 0 to trigger
 		 * the preemption timer immediately on next vm entry */

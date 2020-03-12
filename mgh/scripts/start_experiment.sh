@@ -94,6 +94,8 @@ function main {
     RUN_MODE=${3:-$RM_INMATE}
     THROTTLE_MODE=${4:-$TMODE_ITERATION}
     INPUT_FILE=${5:-""}
+    PREEMPTION_TIMEOUT=${6:-""}
+    SPIN_LOOP_ITERATIONS=${7:-""}
 
     # VTune doesn't work under a hypervisor, at least not out of the box
     if [ "$RUN_MODE" == "$RM_LINUX_JAILHOUSE" ] && [ "$RUN_WITH_VTUNE" == 1 ]; then
