@@ -580,6 +580,9 @@ static void set_throttle_params_hypervisor(int preemption_timeout,
 	if (preemption_timeout == 0 && spin_loop_iterations == 0)
 		return;
 
+	printk("MGH: set_throttle_params_hypervisor(preemption_timeout=%d, spin_loop_iterations=%d)\n",
+	       preemption_timeout, spin_loop_iterations);
+
 	printk("MGH: Sending reconfiguration request to hypervisor\n");
 	/* Dynamically set the preemption timer and spin loop iterations */
 	comm_region->preemption_timeout = (u32)preemption_timeout;
@@ -1023,8 +1026,6 @@ void inmate_main(void)
 	if (!device_setup(devs))
 		return;
 
-	printk("MGH: set_throttle_params_hypervisor(preemption_timeout=%d, spin_loop_iterations=%d)\n",
-	       preemption_timeout, spin_loop_iterations);
 	set_throttle_params_hypervisor(preemption_timeout,
 				       spin_loop_iterations);
 

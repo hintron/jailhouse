@@ -1196,9 +1196,14 @@ static void preemption_timer_handler_mgh(void)
 		return;
 	}
 
-	if (cycle_count == 0)
+	if (cycle_count == 0) {
 		printk("MGH HYPER: CPU %2d: TSC bit %d being monitored\n", cpu_id,
 		       get_preemption_tsc_bit());
+		printk("MGH HYPER: CPU %2d: initial preemption_timeout: %d\n",
+		       cpu_id, cpu_data->preemption_timeout);
+		printk("MGH HYPER: CPU %2d: initial spin_loop_iterations: %d\n",
+		       cpu_id, cpu_data->spin_loop_iterations);
+	}
 	cycle_count++;
 
 	// printk("MGH HYPER: CPU %2d: (%d) Running special preemption timer handler\n",
