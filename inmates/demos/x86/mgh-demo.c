@@ -572,7 +572,7 @@ static bool hardware_setup(void)
 	return true;
 }
 
-/* Tell the hypervisor to */
+/* Tell the hypervisor to reconfigure throttle parameters for all CPUs */
 static void set_throttle_params_hypervisor(int preemption_timeout,
 					   int spin_loop_iterations)
 {
