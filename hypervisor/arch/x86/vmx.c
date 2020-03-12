@@ -961,7 +961,7 @@ static void handle_throttle_reconfig_request(int this_cpu_id,
 		 * throttling */
 		switch (comm_region->msg_to_cell) {
 		case JAILHOUSE_MSG_THROTTLE_CFG:
-			printk("HYPER: CPU %d: Handling throttle request\n",
+			printk("MGH HYPER: CPU %d: Handling throttle request\n",
 			       this_cpu_id);
 			reconfig = true;
 			/*
@@ -976,14 +976,14 @@ static void handle_throttle_reconfig_request(int this_cpu_id,
 			if (comm_region->preemption_timeout > 0) {
 				this_cpu_data->preemption_timeout =
 					comm_region->preemption_timeout;
-				printk("HYPER: CPU %d: Set preemption_timeout to %d\n",
+				printk("MGH HYPER: CPU %d: Set preemption_timeout to %d\n",
 				       this_cpu_id,
 				       comm_region->preemption_timeout);
 			}
 			if (comm_region->spin_loop_iterations > 0) {
 				this_cpu_data->spin_loop_iterations =
 					comm_region->spin_loop_iterations;
-				printk("HYPER: CPU %d: Set spin_loop_iterations to %d\n",
+				printk("MGH HYPER: CPU %d: Set spin_loop_iterations to %d\n",
 				       this_cpu_id,
 				       comm_region->spin_loop_iterations);
 			}
@@ -1007,12 +1007,12 @@ static void handle_throttle_reconfig_request(int this_cpu_id,
 	 * Check if all cores were configured (i.e., if this core was the last
 	 * core to configure itself).
 	 */
-	printk("HYPER: CPU %d: Looking to see if other CPUs have been configured...\n",
+	printk("MGH HYPER: CPU %d: Looking to see if other CPUs have been configured...\n",
 	       this_cpu_id);
 	all_configured = true;
 	for (int i = 0; i < hypervisor_header.max_cpus; ++i) {
 		if (cpus_configed[i] == 0) {
-			printk("HYPER: CPU %d: CPU %d has not yet been reconfigured\n",
+			printk("MGH HYPER: CPU %d: CPU %d has not yet been reconfigured\n",
 			       this_cpu_id, i);
 			all_configured = false;
 			break;
@@ -1025,11 +1025,11 @@ static void handle_throttle_reconfig_request(int this_cpu_id,
 	 * respond to the inmate so it can start running the workload.
 	 */
 	if (all_configured) {
-		printk("HYPER: CPU %d: Hypervisor configured! Telling inmate...\n",
+		printk("MGH HYPER: CPU %d: Hypervisor configured! Telling inmate...\n",
 		       this_cpu_id);
 		jailhouse_send_reply_from_cell(comm_region,
 					       JAILHOUSE_MSG_REQUEST_APPROVED);
-		printk("HYPER: CPU %d: Message sent\n", this_cpu_id);
+		printk("MGH HYPER: CPU %d: Message sent\n", this_cpu_id);
 	}
 	spin_unlock(&cell_comms_spinlock);
 }
