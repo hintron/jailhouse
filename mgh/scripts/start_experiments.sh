@@ -72,17 +72,18 @@ function main {
     # ./start_experiment.sh $WM_SHA3 $INTF_NONE $RM_INMATE $TMODE_DISABLED tmp.input
     # ./start_experiment.sh $WM_SHA3 $INTF_NONE $RM_LINUX  $TMODE_DISABLED tmp.input
 
-    # # Create a 20 MiB random file
-    # create_random_file $((2**20 * 20)) $INPUT_FILE
-    # ./start_experiment.sh $WM_SHA3           $INTF_NONE $RM_LINUX           $TMODE_DISABLED $INPUT_FILE
-    # ./start_experiment.sh $WM_SHA3           $INTF_NONE $RM_LINUX_JAILHOUSE $TMODE_DISABLED $INPUT_FILE
-    # ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_NONE $RM_INMATE          $TMODE_DISABLED $INPUT_FILE
-    # ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_NONE $RM_LINUX           $TMODE_DISABLED $INPUT_FILE
-    # ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_NONE $RM_LINUX_JAILHOUSE $TMODE_DISABLED $INPUT_FILE
-    # ./start_experiment.sh $WM_RANDOM_ACCESS  $INTF_NONE $RM_INMATE          $TMODE_DISABLED $INPUT_FILE
-    # ./start_experiment.sh $WM_RANDOM_ACCESS  $INTF_NONE $RM_LINUX           $TMODE_DISABLED $INPUT_FILE
-    # ./start_experiment.sh $WM_RANDOM_ACCESS  $INTF_NONE $RM_LINUX_JAILHOUSE $TMODE_DISABLED $INPUT_FILE
-    # rm $INPUT_FILE
+    # Create a 20 MiB random file
+    create_random_file $((2**20 * 20)) $INPUT_FILE
+    ./start_experiment.sh $WM_SHA3           $INTF_NONE $RM_INMATE          $TMODE_DISABLED $INPUT_FILE
+    ./start_experiment.sh $WM_SHA3           $INTF_NONE $RM_LINUX           $TMODE_DISABLED $INPUT_FILE
+    ./start_experiment.sh $WM_SHA3           $INTF_NONE $RM_LINUX_JAILHOUSE $TMODE_DISABLED $INPUT_FILE
+    ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_NONE $RM_INMATE          $TMODE_DISABLED $INPUT_FILE
+    ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_NONE $RM_LINUX           $TMODE_DISABLED $INPUT_FILE
+    ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_NONE $RM_LINUX_JAILHOUSE $TMODE_DISABLED $INPUT_FILE
+    ./start_experiment.sh $WM_RANDOM_ACCESS  $INTF_NONE $RM_INMATE          $TMODE_DISABLED $INPUT_FILE
+    ./start_experiment.sh $WM_RANDOM_ACCESS  $INTF_NONE $RM_LINUX           $TMODE_DISABLED $INPUT_FILE
+    ./start_experiment.sh $WM_RANDOM_ACCESS  $INTF_NONE $RM_LINUX_JAILHOUSE $TMODE_DISABLED $INPUT_FILE
+    rm $INPUT_FILE
 
     # # Create a 20 MiB file of all 'X' characters
     # create_inmate_local_input_file $INPUT_FILE
@@ -105,22 +106,54 @@ function main {
     # rm $INPUT_FILE
 
 
-    # Test different throttling parameters on a 20 MiB input with RA interference workload and RA inmate workload
-    create_inmate_local_input_file $INPUT_FILE
-    # This is the default setting
-    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE 1000 50000
-    # Try some deviations in spin loop iterations
-    ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 50000
-    ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 45000
-    ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 40000
-    ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 35000
-    ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 30000
-    ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 25000
-    ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 20000
-    ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 15000
-    ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 10000
-    ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 5000
-    rm $INPUT_FILE
+    # # Test different throttling parameters on 10x of a 20 MiB LOCAL input with RA interference workload and RA inmate workload
+    # create_inmate_local_input_file $INPUT_FILE
+    # # This is the default setting
+    # # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE 1000 50000
+    # # Try some deviations in spin loop iterations
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE
+    # # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 50000
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 45000
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 40000
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 35000
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 30000
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 25000
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 20000
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 15000
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 10000
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 9000
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 8000
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 7000
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 6000
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 5000
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 4000
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 3000
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 2000
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 1000
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 500
+    # # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE 500 5000
+    # rm $INPUT_FILE
+
+    # # Test different throttling parameters on 10x of a 20 MiB LOCAL input with RA interference workload and RA inmate workload
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION "" "" 50000
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION "" "" 45000
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION "" "" 40000
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION "" "" 35000
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION "" "" 30000
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION "" "" 25000
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION "" "" 20000
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION "" "" 15000
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION "" "" 10000
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION "" "" 9000
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION "" "" 8000
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION "" "" 7000
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION "" "" 6000
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION "" "" 5000
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION "" "" 4000
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION "" "" 3000
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION "" "" 2000
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION "" "" 1000
+    # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION "" "" 500
 }
 
 # Call main here to allow for forward declaration (like Python)
