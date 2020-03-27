@@ -26,19 +26,6 @@ jailhouse_x86_inc = include_directories(
 # inmate library, make sure to build Jailhouse first!
 
 executable(
-    'sha3-512', # name
-    ['src/sha3-512.c',],
-    objects: ['../../inmates/lib/mgh-sha3.o',],
-    install: true,
-    include_directories: [
-        inmate_x86_inc,
-        inmate_common_inc,
-        jailhouse_inc,
-        jailhouse_x86_inc
-    ],
-)
-
-executable(
     'count-set-bits', # name
     ['src/count-set-bits.c',],
     objects: ['../../inmates/lib/mgh-count-set-bits.o',],
@@ -64,7 +51,20 @@ executable(
     ],
 )
 
+executable(
+    'sha3-512', # name
+    ['src/sha3-512.c',],
+    objects: ['../../inmates/lib/mgh-sha3.o',],
+    install: true,
+    include_directories: [
+        inmate_x86_inc,
+        inmate_common_inc,
+        jailhouse_inc,
+        jailhouse_x86_inc
+    ],
+)
+
 # Run test through ninja install
-test('sha3-512', find_program('test-sha3-512.sh'))
 test('count-set-bits', find_program('test-count-set-bits.sh'))
 test('random-access', find_program('test-random-access.sh'))
+test('sha3-512', find_program('test-sha3-512.sh'))
