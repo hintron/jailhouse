@@ -263,6 +263,7 @@ void pci_msix_set_vector(u16 bdf, unsigned int vector, u32 index);
 
 // MGH: Add workloads
 int count_set_bits_mgh(unsigned char *, int, int);
+int prng_mgh(unsigned int *, int, unsigned int);
 u64 random_access_mgh(unsigned char *, int);
 int sha3_mgh(const void *, int, void *, int);
 

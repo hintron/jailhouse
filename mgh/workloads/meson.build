@@ -39,6 +39,19 @@ executable(
 )
 
 executable(
+    'prng', # name
+    ['src/prng.c',],
+    objects: ['../../inmates/lib/mgh-prng.o',],
+    install: true,
+    include_directories: [
+        inmate_x86_inc,
+        inmate_common_inc,
+        jailhouse_inc,
+        jailhouse_x86_inc
+    ],
+)
+
+executable(
     'random-access', # name
     ['src/random-access.c',],
     objects: ['../../inmates/lib/mgh-random-access.o',],
@@ -66,5 +79,6 @@ executable(
 
 # Run test through ninja install
 test('count-set-bits', find_program('test-count-set-bits.sh'))
+# test('prng', find_program('test-prng.sh'))
 test('random-access', find_program('test-random-access.sh'))
 test('sha3-512', find_program('test-sha3-512.sh'))

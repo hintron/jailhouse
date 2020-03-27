@@ -45,6 +45,7 @@ TARGETS += setup.o uart.o
 TARGETS += ../alloc.o ../pci.o ../string.o ../cmdline.o ../setup.o ../test.o
 TARGETS += ../uart-8250.o ../printk.o
 TARGETS += ../mgh-count-set-bits.o
+TARGETS += ../mgh-prng.o
 TARGETS += ../mgh-random-access.o
 TARGETS += ../mgh-sha3.o
 TARGETS_32_ONLY := header-32.o
