@@ -78,7 +78,8 @@ executable(
 )
 
 # Run test through ninja install
-test('count-set-bits', find_program('test-count-set-bits.sh'))
-# test('prng', find_program('test-prng.sh'))
-test('random-access', find_program('test-random-access.sh'))
-test('sha3-512', find_program('test-sha3-512.sh'))
+# Do NOT run them in parallel to avoid conflicts with temp files
+test('count-set-bits', find_program('test-count-set-bits.sh'), is_parallel : false)
+# test('prng', find_program('test-prng.sh'), is_parallel : false)
+test('random-access', find_program('test-random-access.sh'), is_parallel : false)
+test('sha3-512', find_program('test-sha3-512.sh'), is_parallel : false)
