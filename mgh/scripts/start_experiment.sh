@@ -225,7 +225,7 @@ function main {
     fi
 
     # Clean up any leftover stuff
-    rm_drivers
+    rm_drivers >> $EXPERIMENT_OUTPUT_FILE 2>&1
 
     echo "Ending experiments at $end_time" >> $EXPERIMENT_OUTPUT_FILE
 
