@@ -68,6 +68,12 @@ typedef enum {
 } throttle_t;
 
 typedef enum {
+	LOCAL_INPUT_NONE = 0,
+	LOCAL_INPUT_RANDOM = 1,
+	LOCAL_INPUT_UNIFORM = 2,
+} local_input_t;
+
+typedef enum {
 	SHA3 = 0,
 	CACHE_ANALYSIS = 1,
 	COUNT_SET_BITS = 2,
@@ -83,7 +89,7 @@ typedef enum {
 
 #define DEFAULT_DEBUG_MODE		false
 #define DEFAULT_LOCAL_BUFFER		false
-#define DEFAULT_LOCAL_INPUT		false
+#define DEFAULT_LOCAL_INPUT		LOCAL_INPUT_NONE
 #define DEFAULT_THROTTLE_MODE		ALTERNATING
 #define DEFAULT_THROTTLE_MECHANISM	SPIN
 #define DEFAULT_WORKLOAD_MODE		COUNT_SET_BITS
@@ -449,7 +455,8 @@ static void command_line_params(bool *local_buffer,
 				throttle_mode_t *throttle_mode,
 				workload_t *workload_mode,
 				throttle_t *throttle_mechanism,
-				int *throttle_iterations, bool *local_input,
+				int *throttle_iterations,
+				local_input_t *local_input,
 				int *preemption_timeout,
 				int *spin_loop_iterations)
 {
@@ -545,8 +552,21 @@ static void command_line_params(bool *local_buffer,
 		       CACHE_ANALYSIS_POLLUTE_CACHE);
 	}
 
-	*local_input = cmdline_parse_bool("li", DEFAULT_LOCAL_INPUT);
-	printk("MGH: local_input=%d\n", *local_input);
+	*local_input = cmdline_parse_int("li", DEFAULT_LOCAL_INPUT);
+	switch (*local_input) {
+	case LOCAL_INPUT_NONE:
+		printk("MGH: local_input=LOCAL_INPUT_NONE\n");
+		break;
+	case LOCAL_INPUT_RANDOM:
+		printk("MGH: local_input=LOCAL_INPUT_RANDOM\n");
+		break;
+	case LOCAL_INPUT_UNIFORM:
+		printk("MGH: local_input=LOCAL_INPUT_UNIFORM\n");
+		break;
+	default:
+		printk("MGH: ERROR: local_input=%d\n", *local_input);
+		break;
+	}
 
 	*preemption_timeout = cmdline_parse_int("pt", 0);
 	*spin_loop_iterations = cmdline_parse_int("sli", 0);
@@ -1004,7 +1024,7 @@ void inmate_main(void)
 	 * than helps.
 	 */
 	bool local_buffer = DEFAULT_LOCAL_BUFFER;
-	bool local_input = DEFAULT_LOCAL_INPUT;
+	local_input_t local_input;
 	/* If 0, don't change the default */
 	int preemption_timeout = 0;
 	int spin_loop_iterations = 0;
@@ -1015,7 +1035,7 @@ void inmate_main(void)
 			    &local_input, &preemption_timeout,
 			    &spin_loop_iterations);
 
-	if (local_buffer && local_input) {
+	if (local_buffer && (local_input != LOCAL_INPUT_NONE)) {
 		printk("MGH: ERROR: local_buffer and local_input are both set, which is incompatible. Exiting...\n");
 		return;
 	}
@@ -1106,15 +1126,24 @@ void inmate_main(void)
 		/* Indicate that we are now executing the workload */
 		shmem[OFFSET_SYNC] = 3;
 
-		if (local_input) {
+		if (local_input != LOCAL_INPUT_NONE) {
 			input_len = LOCAL_INPUT_SIZE;
 			/* Make inout a local buffer that avoids shmem */
-			inout = alloc_heap(LOCAL_INPUT_SIZE);
-			/* Create a 20 MiB input of all 'X' characters */
-			for (int i = 0; i < LOCAL_INPUT_SIZE; i++) {
-				inout[i] = 'X';
+			inout = alloc_heap(input_len);
+			if (local_input == LOCAL_INPUT_UNIFORM) {
+				printk("MGH: Generating local input of all 'X' characters of size %lu\n",
+				       input_len);
+				for (int i = 0; i < input_len; i++) {
+					inout[i] = 'X';
+				}
+			} else { /* LOCAL_INPUT_RANDOM */
+				u32 tsc_seed = (u32)(rdtsc() & 0xffffffffLL);
+				printk("MGH: Generating local input of size %lu using a pseudo-random number generator with current TSC-derived seed %u\n",
+				       input_len, tsc_seed);
+				prng_mgh((u32 *)inout, input_len, tsc_seed);
 			}
 		} else {
+			/* Get input passed from root cell over IVSHMEM */
 			input_len = get_data_length(shmem);
 			inout = get_inout(shmem);
 		}

@@ -22,13 +22,13 @@ DISABLE_TURBO_BOOST=1
 # DISABLE_TURBO_BOOST=0
 
 # # 1-39 MiB Data Set
-ITERATIONS=10
+# ITERATIONS=10
 # INPUT_SIZE_START=$((1 * $MiB))
 # INPUT_SIZE_END=$((40 * $MiB))
 # INPUT_SIZE_STEP=$((1 * $MiB))
 
 # Short Range Data Set
-# ITERATIONS=2
+ITERATIONS=2
 INPUT_SIZE_START=$((20 * $MiB))
 INPUT_SIZE_END=$((21 * $MiB))
 INPUT_SIZE_STEP=$((1 * $MiB))
@@ -74,6 +74,10 @@ OUTPUT_FREQ_FILE="$OUTPUT_DIR/freq_${experiment_time}.csv"
 INTERFERENCE_WORKLOAD_OUTPUT="$OUTPUT_DIR/interference_${experiment_time}.txt"
 INTERFERENCE_RAMPUP_TIME=30
 
+LOCAL_INPUT_UNIFORM_TOKEN="<local-input-uniform>"
+LOCAL_INPUT_RANDOM_TOKEN="<local-input-random>"
+LOCAL_INPUT_MODE=$LI_NONE # Must be initialized
+
 input_sizes=()
 input_sizes_count=0
 
@@ -97,6 +101,18 @@ function main {
     PREEMPTION_TIMEOUT=${6:-""}
     SPIN_LOOP_ITERATIONS=${7:-""}
 
+    # See if local input mode is used
+    case "$INPUT_FILE" in
+    "$LOCAL_INPUT_UNIFORM_TOKEN")
+        LOCAL_INPUT_MODE=$LI_UNIFORM
+        ;;
+    "$LOCAL_INPUT_RANDOM_TOKEN")
+        LOCAL_INPUT_MODE=$LI_RANDOM
+        ;;
+    *)
+        ;;
+    esac
+
     # VTune doesn't work under a hypervisor, at least not out of the box
     if [ "$RUN_MODE" == "$RM_LINUX_JAILHOUSE" ] && [ "$RUN_WITH_VTUNE" == 1 ]; then
         echo "Error: Cannot run Linux under Jailhouse while also running a Linux workload under VTune. Canceling experiment." >> $EXPERIMENT_OUTPUT_FILE
@@ -113,8 +129,8 @@ function main {
         return
     fi
 
-    if [ "$INPUT_FILE" == "$LOCAL_INPUT_TOKEN" ] && [ "$RUN_MODE" != "$RM_INMATE" ]; then
-        echo "Error: File input mode `$LOCAL_INPUT_TOKEN` can only be used with run mode RM_INMATE. Canceling experiment..." >> $EXPERIMENT_OUTPUT_FILE
+    if [ "$LOCAL_INPUT_MODE" != "$LI_NONE" ] && [ "$RUN_MODE" != "$RM_INMATE" ]; then
+        echo "Error: Local file input mode ($LOCAL_INPUT_MODE) can only be used with run mode RM_INMATE. Canceling experiment..." >> $EXPERIMENT_OUTPUT_FILE
         return
     fi
 
@@ -326,14 +342,25 @@ function start_experiment {
 
     # If $INPUT_FILE is specified, $input_sizes_count is just 1
     for ((i = 0 ; i < $input_sizes_count ; i++)); do
-        local input_size="$LOCAL_INPUT_TOKEN"
         if [ "$INPUT_FILE" == "" ]; then
-            input_size=${input_sizes[$i]}
-        elif [ "$INPUT_FILE" != "$LOCAL_INPUT_TOKEN" ]; then
-            input_size=$(get_size_of_file_bytes $INPUT_FILE)
+            local input_size=${input_sizes[$i]}
+        elif [ "$LOCAL_INPUT_MODE" == "$LI_NONE" ]; then
+            local input_size=$(get_size_of_file_bytes $INPUT_FILE)
         fi
         echo "*********************************************************" >> $EXPERIMENT_OUTPUT_FILE
-        echo "Input Size=$input_size" >> $EXPERIMENT_OUTPUT_FILE
+        case "$LOCAL_INPUT_MODE" in
+        "$LI_NONE")
+            echo "Input Size=$input_size" >> $EXPERIMENT_OUTPUT_FILE
+            ;;
+        "$LI_UNIFORM")
+            echo "Input Local UNIFORM" >> $EXPERIMENT_OUTPUT_FILE
+            ;;
+        "$LI_RANDOM")
+            echo "Input Local RANDOM" >> $EXPERIMENT_OUTPUT_FILE
+            ;;
+        *)
+            ;;
+        esac
         echo "Time=$(timestamp)" >> $EXPERIMENT_OUTPUT_FILE
         echo "*********************************************************" >> $EXPERIMENT_OUTPUT_FILE
         for ((j = 0 ; j < $ITERATIONS ; j++)); do
@@ -417,7 +444,7 @@ function start_experiment {
             # echo "sudo rm $input_file" >> $EXPERIMENT_OUTPUT_FILE
             sudo rm $input_file >> $EXPERIMENT_OUTPUT_FILE 2>&1
         done
-    elif [ "$INPUT_FILE" != "$LOCAL_INPUT_TOKEN" ]; then
+    elif [ "$LOCAL_INPUT_MODE" == "$LI_NONE" ]; then
         # Skip input file deletion if input was specified
         # copy the input file for future reference
         cp "$INPUT_FILE" "$OUTPUT_DIR/${experiment_time}.input"

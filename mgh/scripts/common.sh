@@ -20,6 +20,7 @@ WORKLOAD_BIN_DIR="$WORKLOAD_DIR/build"
 SHA3_BIN="$WORKLOAD_BIN_DIR/sha3-512"
 CSB_BIN="$WORKLOAD_BIN_DIR/count-set-bits"
 RA_BIN="$WORKLOAD_BIN_DIR/random-access"
+PRNG_BIN="$WORKLOAD_BIN_DIR/prng"
 
 # Note that the inmate libraries assume that the cmdline string will be stored
 # at 0x1000 and will have a size of CMDLINE_BUFFER_SIZE.
@@ -77,7 +78,11 @@ DEBUG_MODE="true"
 
 # local input is currently hardwired to 20 MiB
 LOCAL_INPUT_SIZE="20971520"
-LOCAL_INPUT_TOKEN="<local-input>"
+
+# Local Input modes
+LI_NONE=0 # No local input
+LI_RANDOM=1 # Generate a local input file with random data
+LI_UNIFORM=2 # Generate a local input file of all Xs
 
 function log_parameters {
     echo "#####################" >> $EXPERIMENT_OUTPUT_FILE
@@ -116,7 +121,7 @@ function log_parameters {
         echo "INPUT_SIZE_STEP: $INPUT_SIZE_STEP" >> $EXPERIMENT_OUTPUT_FILE
     else
         echo "INPUT_FILE: $INPUT_FILE" >> $EXPERIMENT_OUTPUT_FILE
-        if [ "$INPUT_FILE" != "$LOCAL_INPUT_TOKEN" ]; then
+        if [ "$LOCAL_INPUT_MODE" == "$LI_NONE" ]; then
             echo "INPUT_FILE size: $(get_size_of_file_bytes $INPUT_FILE) Bytes" >> $EXPERIMENT_OUTPUT_FILE
         fi
     fi
@@ -217,6 +222,21 @@ function log_parameters {
         ;;
     esac
     echo "THROTTLE_MECHANISM_RAW: $THROTTLE_MECHANISM" >> $EXPERIMENT_OUTPUT_FILE
+    printf "LOCAL_INPUT_MODE: " >> $EXPERIMENT_OUTPUT_FILE
+    case "$LOCAL_INPUT_MODE" in
+    "$LI_NONE")
+        echo "NONE" >> $EXPERIMENT_OUTPUT_FILE
+        ;;
+    "$LI_RANDOM")
+        echo "RANDOM" >> $EXPERIMENT_OUTPUT_FILE
+        ;;
+    "$LI_UNIFORM")
+        echo "UNIFORM" >> $EXPERIMENT_OUTPUT_FILE
+        ;;
+    *)
+        echo "Unknown" >> $EXPERIMENT_OUTPUT_FILE
+        ;;
+    esac
     echo "PREEMPTION_TIMEOUT: $PREEMPTION_TIMEOUT" >> $EXPERIMENT_OUTPUT_FILE
     echo "SPIN_LOOP_ITERATIONS: $SPIN_LOOP_ITERATIONS" >> $EXPERIMENT_OUTPUT_FILE
 
@@ -267,8 +287,8 @@ function set_cmdline {
     if [ ! -z $THROTTLE_ITERATIONS ]; then
         CMDLINE="${CMDLINE} throttleiter=$THROTTLE_ITERATIONS"
     fi
-    if [ "$INPUT_FILE" == "$LOCAL_INPUT_TOKEN" ]; then
-        CMDLINE="${CMDLINE} li=1"
+    if [ ! -z "$LOCAL_INPUT_MODE" ] && [ "$LOCAL_INPUT_MODE" != "$LI_NONE" ]; then
+        CMDLINE="${CMDLINE} li=$LOCAL_INPUT_MODE"
     fi
     if [ ! -z $PREEMPTION_TIMEOUT ]; then
         CMDLINE="${CMDLINE} pt=$PREEMPTION_TIMEOUT"
@@ -528,6 +548,11 @@ function create_inmate_local_input_file {
     create_repeated_char_file 'X' $1 $((2**20 * 20))
 }
 
+# The inmate is hardcoded to generate a local 20 MiB input of all `X` characters
+function create_inmate_local_random_input_file {
+    prng $((2**20 * 20)) $1
+}
+
 # 1: String to repeatedly print to file (no newline)
 # 2: file name to write to
 # 3: Number of times to repeatedly print the string
@@ -564,10 +589,13 @@ function create_random_file {
 # $1: Input file to work on
 # $2: (optional) The workload mode. Defaults to Count Set Bits.
 function get_expected_output {
-    local input_file="$1"
-    if [ "$INPUT_FILE" == "$LOCAL_INPUT_TOKEN" ]; then
-        input_file="tmp.txt"
+    local input_file="tmp.txt"
+    if [ "$LOCAL_INPUT_MODE" == "$LI_UNIFORM" ]; then
         create_inmate_local_input_file $input_file
+    elif [ "$LOCAL_INPUT_MODE" == "$LI_RANDOM" ]; then
+        create_inmate_local_random_input_file $input_file
+    else
+        input_file="$1"
     fi
 
     if [ "$3" == $WM_SHA3 ]; then
@@ -584,8 +612,7 @@ function get_expected_output {
         # This is the default
         count_set_bits_linux_file $input_file "$2"
     fi
-
-    if [ "$INPUT_FILE" == "$LOCAL_INPUT_TOKEN" ]; then
+    if [ "$LOCAL_INPUT_MODE" != "$LI_NONE" ]; then
         rm $input_file
     fi
 }
@@ -640,7 +667,7 @@ function clear_sync_byte_shmem {
 # Send input to the inmate via file
 function send_inmate_input {
     local input_file="$1"
-    if [ "$input_file" == "$LOCAL_INPUT_TOKEN" ]; then
+    if [ "$LOCAL_INPUT_MODE" != "$LI_NONE" ]; then
         # Go through the motions so the inmate knows to generate its own input
         local input_file="bogus_input.txt"
         touch $input_file
@@ -654,7 +681,7 @@ function send_inmate_input {
     # Send input to inmate
     sudo $MGH_DEMO_PY -f $input_file
 
-    if [ "$input_file" == "$LOCAL_INPUT_TOKEN" ]; then
+    if [ "$LOCAL_INPUT_MODE" != "$LI_NONE" ]; then
         rm $input_file
     fi
 }
@@ -983,7 +1010,7 @@ function post_process_data_jailhouse {
             process_cycle_data_unthrottled
         done
     else
-        if [ "$INPUT_FILE" == "$LOCAL_INPUT_TOKEN" ]; then
+        if [ "$LOCAL_INPUT_MODE" != "$LI_NONE" ]; then
             input_size="$LOCAL_INPUT_SIZE"
         else
             input_size="$(get_size_of_file_bytes $INPUT_FILE)"
@@ -1000,7 +1027,7 @@ function post_process_data_jailhouse {
                 process_cycle_data_throttled
             done
         else
-            if [ "$INPUT_FILE" == "$LOCAL_INPUT_TOKEN" ]; then
+            if [ "$LOCAL_INPUT_MODE" != "$LI_NONE" ]; then
                 input_size="$LOCAL_INPUT_SIZE"
             else
                 input_size="$(get_size_of_file_bytes $INPUT_FILE)"
@@ -1038,3 +1065,15 @@ function generate_input_size_range {
         input_sizes+=($input_size)
     done
 }
+
+# Calculate a pseudo random number in a similar way as the inmate, and output
+# the binary data into an output file.
+function prng {
+    local size="$1"
+    local output="$2"
+    # Get a random seed based on the Unix timestamp
+    local seed=$(date +%s)
+
+    $PRNG_BIN $size $seed $output
+}
+# https://stackoverflow.com/questions/17066250/create-timestamp-variable-in-bash-script
