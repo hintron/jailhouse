@@ -489,7 +489,7 @@ static void command_line_params(bool *local_buffer,
 		printk("MGH: throttle_mode=DISABLED\n");
 		break;
 	default:
-		printk("MGH: throttle_mode=?\n");
+		printk("MGH: ERROR: throttle_mode=?\n");
 		break;
 	}
 
@@ -501,7 +501,7 @@ static void command_line_params(bool *local_buffer,
 		printk("MGH: throttle_mechanism=SPIN\n");
 		break;
 	default:
-		printk("MGH: throttle_mechanism=?\n");
+		printk("MGH: ERROR: throttle_mechanism=?\n");
 		break;
 	}
 
@@ -522,7 +522,7 @@ static void command_line_params(bool *local_buffer,
 		printk("MGH: workload_mode=INMATE_DEBUG\n");
 		break;
 	default:
-		printk("MGH: workload_mode=?\n");
+		printk("MGH: ERROR: workload_mode=?\n");
 		break;
 	}
 
@@ -540,7 +540,7 @@ static void command_line_params(bool *local_buffer,
 			printk("MGH: COUNT_SET_BITS_MODE=FASTEST\n");
 			break;
 		default:
-			printk("MGH: COUNT_SET_BITS_MODE=?\n");
+			printk("MGH: ERROR: COUNT_SET_BITS_MODE=?\n");
 			break;
 		}
 	}
