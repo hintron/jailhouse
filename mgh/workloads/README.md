@@ -28,6 +28,12 @@ To test, simply run:
 That will automatically run the test-\*.sh shell scripts and only print output
 when a test fails.
 
+To run an individual test script (e.g. prng) and print the output, do this:
+
+    meson test prng -C build/ --print-errorlogs
+
+Or, alternatively, just run the shell script directly for debug/development.
+
 SHA3 tests require `rhash`. To install `rhash`, do the following (on Ubuntu):
 
     sudo apt install rhash
