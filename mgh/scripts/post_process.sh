@@ -46,5 +46,24 @@ VTUNE_OUTPUT_FILE="$input_dir/$VTUNE_OUTPUT_BASENAME"
 WORKLOAD_MODE=$(grep_token_in_file "WORKLOAD_MODE_RAW: " $input_dir/experiment_*.txt)
 LOCAL_INPUT_MODE=$(grep_token_in_file "LOCAL_INPUT_MODE_RAW: " $input_dir/experiment_*.txt)
 
+# Temporary hack for backwards compatibility
+if [ "$LOCAL_INPUT_MODE" == "" ]; then
+    LOCAL_INPUT_MODE=$(grep_token_in_file "LOCAL_INPUT_MODE: " $input_dir/experiment_*.txt)
+    case "$LOCAL_INPUT_MODE" in
+    "NONE")
+        LOCAL_INPUT_MODE=$LI_NONE
+        ;;
+    "RANDOM")
+        LOCAL_INPUT_MODE=$LI_NONE
+        ;;
+    "UNIFORM")
+        LOCAL_INPUT_MODE=$LI_NONE
+        ;;
+    *)
+        echo "ERROR: Unknown local input mode"
+        ;;
+    esac
+fi
+
 
 post_process_data $new_output_dir $TIMESTAMP
