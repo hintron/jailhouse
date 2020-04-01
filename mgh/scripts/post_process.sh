@@ -61,10 +61,10 @@ if [ "$LOCAL_INPUT_MODE" == "" ]; then
         LOCAL_INPUT_MODE=$LI_NONE
         ;;
     "RANDOM")
-        LOCAL_INPUT_MODE=$LI_NONE
+        LOCAL_INPUT_MODE=$LI_RANDOM
         ;;
     "UNIFORM")
-        LOCAL_INPUT_MODE=$LI_NONE
+        LOCAL_INPUT_MODE=$LI_UNIFORM
         ;;
     *)
         echo "ERROR: Unknown local input mode"
