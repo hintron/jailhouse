@@ -125,6 +125,7 @@ function log_parameters {
             echo "INPUT_FILE size: $(get_size_of_file_bytes $INPUT_FILE) Bytes" >> $EXPERIMENT_OUTPUT_FILE
         fi
     fi
+    echo "LOCAL_INPUT_MODE_RAW: $LOCAL_INPUT_MODE"
     echo "ITERATIONS: $ITERATIONS" >> $EXPERIMENT_OUTPUT_FILE
 
     printf "WORKLOAD_MODE: " >> $EXPERIMENT_OUTPUT_FILE

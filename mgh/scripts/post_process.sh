@@ -44,5 +44,6 @@ TIMESTAMP=$(grep_token_in_file "TIMESTAMP: " $data_output_dir/experiment_*.txt)
 VTUNE_OUTPUT_BASENAME=$(grep_token_in_file "VTUNE_OUTPUT_BASENAME: " $data_output_dir/experiment_*.txt)
 VTUNE_OUTPUT_FILE="$data_output_dir/$VTUNE_OUTPUT_BASENAME"
 WORKLOAD_MODE=$(grep_token_in_file "WORKLOAD_MODE_RAW: " $data_output_dir/experiment_*.txt)
+LOCAL_INPUT_MODE=$(grep_token_in_file "LOCAL_INPUT_MODE_RAW: " $data_output_dir/experiment_*.txt)
 
 post_process_data $new_output_dir $TIMESTAMP
