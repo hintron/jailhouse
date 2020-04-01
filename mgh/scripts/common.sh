@@ -925,25 +925,29 @@ function post_process_data {
     local output_dir="$1"
     local time="$2"
     if [[ "$RUN_MODE" > "$RM_INMATE" ]]; then
-        post_process_data_linux $VTUNE_OUTPUT_FILE $output_dir $time
+        post_process_data_linux $LINUX_OUTPUT_FILE $output_dir $time
+        if [ "$RUN_WITH_VTUNE" == 1 ]; then
+            post_process_data_vtune $VTUNE_OUTPUT_FILE $output_dir $time
+        fi
     else
         post_process_data_jailhouse $JAILHOUSE_OUTPUT_FILE $output_dir $time
     fi
 }
 
-# Global inputs:
-# $RUN_WITH_VTUNE
 function post_process_data_linux {
     local input_data_file="$1"
     local output_dir="$2"
     local time="$3"
+    local linux_runtimes_file="$output_dir/dur-avg-ms-linux_${time}.txt"
 
-    if [ "$RUN_WITH_VTUNE" != 1 ]; then
-        return
-    fi
+    aggregate_column_csv "$LOCAL_INPUT_SIZE" 2 3 $input_data_file "=AVERAGE(" ")" >> $linux_runtimes_file
+}
 
+function post_process_data_vtune {
+    local input_data_file="$1"
+    local output_dir="$2"
+    local time="$3"
     local vtune_runs_file="$output_dir/vtune_runs_${time}.txt"
-    # vtune_times_file="$OUTPUT_DIR/vtune_times_${time}.txt"
 
     # Create a condensed list of VTune output folders
     grep_token_in_file "amplxe: Using result path " $input_data_file > $vtune_runs_file
