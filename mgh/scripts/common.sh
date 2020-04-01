@@ -940,7 +940,7 @@ function post_process_data_linux {
     local time="$3"
     local linux_runtimes_file="$output_dir/dur-avg-ms-linux_${time}.txt"
 
-    aggregate_column_csv "$LOCAL_INPUT_SIZE" 2 3 $input_data_file "=AVERAGE(" ")" >> $linux_runtimes_file
+    aggregate_column_csv "$LOCAL_INPUT_SIZE" 2 3 $input_data_file "=AVERAGE(" ")" > $linux_runtimes_file
 }
 
 function post_process_data_vtune {
@@ -1001,9 +1001,36 @@ function post_process_data_jailhouse {
     local throttled_freq="$output_dir/_freq_throttled_${time}.csv"
     local throttled_freq_avg="$output_dir/freq_avg_throttled_${time}.txt"
 
-    # Do not print out all MGHFREQ lines. Avg freq is already in MGHOUT
-    local input_sizes=()
-    generate_input_size_range $INPUT_SIZE_START $INPUT_SIZE_END $INPUT_SIZE_STEP
+    # Clear these 8 files first, since we append instead of truncate
+    if [ -f $input_sizes_b_data ]; then
+        rm $input_sizes_b_data
+    fi
+    if [ -f $input_sizes_mb_data ]; then
+        rm $input_sizes_mb_data
+    fi
+    if [ -f $unthrottled_avg_dur_s ]; then
+        rm $unthrottled_avg_dur_s
+    fi
+    if [ -f $unthrottled_avg_dur_ms ]; then
+        rm $unthrottled_avg_dur_ms
+    fi
+    if [ -f $unthrottled_freq_avg ]; then
+        rm $unthrottled_freq_avg
+    fi
+    if [ -f $throttled_avg_dur_s ]; then
+        rm $throttled_avg_dur_s
+    fi
+    if [ -f $throttled_avg_dur_ms ]; then
+        rm $throttled_avg_dur_ms
+    fi
+    if [ -f $throttled_freq_avg ]; then
+        rm $throttled_freq_avg
+    fi
+
+    if [ "$INPUT_FILE" == "" ]; then
+        local input_sizes=()
+        generate_input_size_range $INPUT_SIZE_START $INPUT_SIZE_END $INPUT_SIZE_STEP
+    fi
 
     # Separate throttled and unthrottled data for further processing
     grep_output_data_unthrottled $input_data_file > $unthrottled_cycles

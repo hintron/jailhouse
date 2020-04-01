@@ -3,6 +3,7 @@ source ./common.sh > /dev/null
 
 # Point to the input data directory
 input_dir="$1"
+output_dir="$2"
 
 # Allow the input data directory to be a relative path
 case $input_dir in
@@ -15,14 +16,20 @@ if [[ "$input_dir" == "$(pwd)" ]]; then
     exit
 fi
 
-new_output_dir=$(pwd)/tmp_pp_output
-rm -rf $new_output_dir
-mkdir -p $new_output_dir
+if [ -z "$output_dir" ]; then
+    echo "Using ./tmp_pp_output/ as output dir"
+    output_dir=$(pwd)/tmp_pp_output
+    rm -rf $output_dir
+    mkdir -p $output_dir
+else
+    echo "Using input dir as output dir"
+    output_dir=$input_dir
+fi
 
 input_sizes=()
 
 echo "Input: $input_dir"
-echo "Output: $new_output_dir"
+echo "Output: $output_dir"
 
 # Extract parameters from the experiment file!
 INMATE_DEBUG=$(grep_token_in_file "INMATE_DEBUG: " $input_dir/experiment_*.txt)
@@ -65,5 +72,8 @@ if [ "$LOCAL_INPUT_MODE" == "" ]; then
     esac
 fi
 
+if [ -f "$input_dir/$TIMESTAMP.input" ]; then
+    INPUT_FILE=$input_dir/$TIMESTAMP.input
+fi
 
-post_process_data $new_output_dir $TIMESTAMP
+post_process_data $output_dir $TIMESTAMP
