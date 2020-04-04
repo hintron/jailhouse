@@ -11,8 +11,8 @@ source ./common.sh > /dev/null
 # send inputs.
 INMATE_DEBUG=0
 
-# VTUNE_MODE=$VTUNE_MODE_UE
-VTUNE_MODE=$VTUNE_MODE_MA
+VTUNE_MODE=$VTUNE_MODE_UE
+# VTUNE_MODE=$VTUNE_MODE_MA
 
 # This says to run the workloads under Intel VTune (Linux-only)
 # RUN_WITH_VTUNE=1

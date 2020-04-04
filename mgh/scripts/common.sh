@@ -702,7 +702,7 @@ function run_vtune {
         vtune_uarch_explore $vtune_result_dir "$@"
     fi
     # Create a report and save it
-    amplxe-cl -report summary -r $vtune_result_dir -format=csv > $vtune_report_file 2>&1
+    $VTUNE_BIN -report summary -r $vtune_result_dir -format=csv > $vtune_report_file 2>&1
 }
 
 function vtune_mem_access {
@@ -712,6 +712,9 @@ function vtune_mem_access {
 
     echo "$VTUNE_BIN \
     -collect memory-access \
+    -allow-multiple-runs \
+    -knob sampling-mode=hw \
+    -knob sampling-interval=0.01 \
     -knob analyze-mem-objects=true \
     -knob mem-object-size-min-thres=1 \
     -app-working-dir=$VTUNE_OUTPUT_DIR \
@@ -736,6 +739,9 @@ function vtune_uarch_explore {
 
     echo "$VTUNE_BIN \
     -collect uarch-exploration \
+    -allow-multiple-runs \
+    -knob sampling-mode=hw \
+    -knob sampling-interval=0.01 \
     -knob collect-memory-bandwidth=true \
     -app-working-dir=$VTUNE_OUTPUT_DIR \
     -result-dir=$result_dir \
