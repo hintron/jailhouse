@@ -80,6 +80,8 @@ LOCAL_INPUT_MODE=$LI_NONE # Must be initialized
 
 input_sizes=()
 input_sizes_count=0
+workload_pid=""
+
 
 function main {
     ############################################################################
@@ -324,7 +326,6 @@ function start_experiment {
     fi
 
     if [ "$INTERFERENCE_WORKLOAD" != "$INTF_NONE" ]; then
-        local workload_pid=""
         start_interference_workload $INTERFERENCE_WORKLOAD
         echo "Wait $INTERFERENCE_RAMPUP_TIME seconds for interference workload $INTERFERENCE_WORKLOAD (PID $workload_pid) to ramp up" >> $EXPERIMENT_OUTPUT_FILE
         sleep $INTERFERENCE_RAMPUP_TIME
@@ -451,6 +452,22 @@ function start_experiment {
     fi
 
 }
+
+function handle_ctlc()
+{
+    echo ""
+    echo "Handling ctrl-c"
+    if [ "$workload_pid" != "" ]; then
+        echo "Cancelling interference workload $INTERFERENCE_WORKLOAD"
+        stop_interference_workload $INTERFERENCE_WORKLOAD $workload_pid
+    fi
+    end_jailhouse
+    rm_drivers
+    exit
+}
+
+trap handle_ctlc SIGINT
+
 
 # Call main here to allow for forward declaration (like Python)
 # See https://stackoverflow.com/questions/13588457/forward-function-declarations-in-a-bash-or-a-shell-script
