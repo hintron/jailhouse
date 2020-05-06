@@ -79,33 +79,33 @@ function main {
     # ./start_experiment.sh $WM_SHA3 $INTF_NONE $RM_INMATE $TMODE_DISABLED tmp.input
     # ./start_experiment.sh $WM_SHA3 $INTF_NONE $RM_LINUX  $TMODE_DISABLED tmp.input
 
-    # # Create a 20 MiB random file
-    # create_random_file $((2**20 * 20)) $INPUT_FILE
-    # # Create a 20 MiB file of all 'X' characters
-    # create_inmate_local_input_file $INPUT_FILE
-    # Create a 20 MiB random file using the prng as the inmate
-    create_inmate_local_random_input_file $INPUT_FILE
-    # If the workload is executed in the inmate, and the input file is
-    # `<local-input-uniform>`, then make the inmate generate its own 20 MiB input of all
-    # X's.
-    ./start_experiment.sh $WM_SHA3           $INTF_NONE $RM_INMATE          $TMODE_DISABLED "<local-input-uniform>"
-    ./start_experiment.sh $WM_SHA3           $INTF_NONE $RM_INMATE          $TMODE_DISABLED "<local-input-random>"
-    ./start_experiment.sh $WM_SHA3           $INTF_NONE $RM_INMATE          $TMODE_DISABLED $INPUT_FILE
-    ./start_experiment.sh $WM_SHA3           $INTF_NONE $RM_LINUX           $TMODE_DISABLED $INPUT_FILE
-    ./start_experiment.sh $WM_SHA3           $INTF_NONE $RM_LINUX_JAILHOUSE $TMODE_DISABLED $INPUT_FILE
+    # # # Create a 20 MiB random file
+    # # create_random_file $((2**20 * 20)) $INPUT_FILE
+    # # # Create a 20 MiB file of all 'X' characters
+    # # create_inmate_local_input_file $INPUT_FILE
+    # # Create a 20 MiB random file using the prng as the inmate
+    # create_inmate_local_random_input_file $INPUT_FILE
+    # # If the workload is executed in the inmate, and the input file is
+    # # `<local-input-uniform>`, then make the inmate generate its own 20 MiB input of all
+    # # X's.
+    # # ./start_experiment.sh $WM_SHA3           $INTF_NONE $RM_INMATE          $TMODE_DISABLED "<local-input-uniform>"
+    # # ./start_experiment.sh $WM_SHA3           $INTF_NONE $RM_INMATE          $TMODE_DISABLED "<local-input-random>"
+    # # ./start_experiment.sh $WM_SHA3           $INTF_NONE $RM_INMATE          $TMODE_DISABLED $INPUT_FILE
+    # ./start_experiment.sh $WM_SHA3           $INTF_NONE $RM_LINUX           $TMODE_DISABLED $INPUT_FILE
+    # # ./start_experiment.sh $WM_SHA3           $INTF_NONE $RM_LINUX_JAILHOUSE $TMODE_DISABLED $INPUT_FILE
 
-    ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_NONE $RM_INMATE          $TMODE_DISABLED "<local-input-uniform>"
-    ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_NONE $RM_INMATE          $TMODE_DISABLED "<local-input-random>"
-    ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_NONE $RM_INMATE          $TMODE_DISABLED $INPUT_FILE
-    ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_NONE $RM_LINUX           $TMODE_DISABLED $INPUT_FILE
-    ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_NONE $RM_LINUX_JAILHOUSE $TMODE_DISABLED $INPUT_FILE
+    # # ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_NONE $RM_INMATE          $TMODE_DISABLED "<local-input-uniform>"
+    # # ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_NONE $RM_INMATE          $TMODE_DISABLED "<local-input-random>"
+    # # ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_NONE $RM_INMATE          $TMODE_DISABLED $INPUT_FILE
+    # ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_NONE $RM_LINUX           $TMODE_DISABLED $INPUT_FILE
+    # # ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_NONE $RM_LINUX_JAILHOUSE $TMODE_DISABLED $INPUT_FILE
 
-    ./start_experiment.sh $WM_RANDOM_ACCESS  $INTF_NONE $RM_INMATE          $TMODE_DISABLED "<local-input-uniform>"
-    ./start_experiment.sh $WM_RANDOM_ACCESS  $INTF_NONE $RM_INMATE          $TMODE_DISABLED "<local-input-random>"
-    ./start_experiment.sh $WM_RANDOM_ACCESS  $INTF_NONE $RM_INMATE          $TMODE_DISABLED $INPUT_FILE
-    ./start_experiment.sh $WM_RANDOM_ACCESS  $INTF_NONE $RM_LINUX           $TMODE_DISABLED $INPUT_FILE
-    ./start_experiment.sh $WM_RANDOM_ACCESS  $INTF_NONE $RM_LINUX_JAILHOUSE $TMODE_DISABLED $INPUT_FILE
-    rm $INPUT_FILE
+    # # ./start_experiment.sh $WM_RANDOM_ACCESS  $INTF_NONE $RM_INMATE          $TMODE_DISABLED "<local-input-uniform>"
+    # # ./start_experiment.sh $WM_RANDOM_ACCESS  $INTF_NONE $RM_INMATE          $TMODE_DISABLED "<local-input-random>"
+    # # ./start_experiment.sh $WM_RANDOM_ACCESS  $INTF_NONE $RM_INMATE          $TMODE_DISABLED $INPUT_FILE
+    # ./start_experiment.sh $WM_RANDOM_ACCESS  $INTF_NONE $RM_LINUX           $TMODE_DISABLED $INPUT_FILE
+    # # ./start_experiment.sh $WM_RANDOM_ACCESS  $INTF_NONE $RM_LINUX_JAILHOUSE $TMODE_DISABLED $INPUT_FILE
+    # rm $INPUT_FILE
 
 
     # # Test different throttling parameters on 10x of a 20 MiB LOCAL input with RA interference workload and RA inmate workload
@@ -156,6 +156,74 @@ function main {
     # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION "" "" 2000
     # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION "" "" 1000
     # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION "" "" 500
+
+    # ##########################################################################
+    # Throttle Response Take 2: 2020-5-4; 2020-5-5
+    # ##########################################################################
+    # See how output reacts to changes in spin loop iterations
+    # 20 MiB random input over IVSHMEM for RA, CSB, and SHA3 inmate workloads
+    # RA interference workload
+    # Do 10 runs at each setting
+    # Cool down for 1 minute after completing 10-run sets at each setting
+    # Cool down for 30 minutes after each workload so the next workload has a fresh start
+    # (Defaults are a 1000 ms preemption timer loop and 50000 spin loop iterations)
+    # (Sudo timeout happens every 15 minutes, so disable it)
+    create_random_file $((2**20 * 20)) $INPUT_FILE
+
+    # # Initial test run to make sure things look ok
+    # ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 10000
+
+    # SHA3
+    for (( i = 80000; i >= 10000; i=i-5000 )); do
+        ./start_experiment.sh $WM_SHA3 $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" $i
+        sleep 60
+    done
+    for (( i = 9000; i >= 1000; i=i-1000 )); do
+        ./start_experiment.sh $WM_SHA3 $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" $i
+        sleep 60
+    done
+    ./start_experiment.sh $WM_SHA3 $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 500
+    sleep 60
+    ./start_experiment.sh $WM_SHA3 $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 0
+
+    # Allow the CPU to cool down for 30 min
+    sleep 1800
+
+    # CSB
+    for (( i = 80000; i >= 10000; i=i-5000 )); do
+        ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" $i
+        sleep 60
+    done
+    for (( i = 9000; i >= 1000; i=i-1000 )); do
+        ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" $i
+        sleep 60
+    done
+    ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 500
+    sleep 60
+    ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 0
+
+    # Allow the CPU to cool down for 30 min
+    sleep 1800
+
+    # RA
+    for (( i = 80000; i >= 10000; i=i-5000 )); do
+        ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" $i
+        sleep 60
+    done
+    for (( i = 9000; i >= 1000; i=i-1000 )); do
+        ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" $i
+        sleep 60
+    done
+    ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 500
+    sleep 60
+    ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 0
+
+    rm $INPUT_FILE
+    # # #####################################
+    # # End
+    # # #####################################
+
+
 }
 
 # Call main here to allow for forward declaration (like Python)
