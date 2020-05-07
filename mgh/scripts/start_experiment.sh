@@ -218,7 +218,9 @@ function main {
 
         echo "sudo kill $tailf_pid" >> $EXPERIMENT_OUTPUT_FILE
         sudo kill $tailf_pid >> $EXPERIMENT_OUTPUT_FILE 2>&1
-        # end_jailhouse_processes >> $EXPERIMENT_OUTPUT_FILE 2>&1
+
+        echo "Killing any Jailhouse processes workload at $(timestamp)" >> $EXPERIMENT_OUTPUT_FILE 2>&1
+        end_jailhouse_processes >> $EXPERIMENT_OUTPUT_FILE 2>&1
 
         if [ "$RUN_MODE" == "$RM_INMATE" ]; then
             echo "Shutting down Jailhouse inmate at $(timestamp)" >> $EXPERIMENT_OUTPUT_FILE 2>&1
