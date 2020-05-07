@@ -465,7 +465,7 @@ function handle_ctlc()
     echo ""
     echo "Handling ctrl-c"
     if [ "$workload_pid" != "" ]; then
-        echo "Cancelling interference workload $INTERFERENCE_WORKLOAD"
+        echo "Canceling interference workload $INTERFERENCE_WORKLOAD"
         stop_interference_workload $INTERFERENCE_WORKLOAD $workload_pid
     fi
     end_jailhouse
