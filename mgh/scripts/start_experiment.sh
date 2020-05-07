@@ -208,30 +208,34 @@ function main {
         enable_turbo_boost >> $EXPERIMENT_OUTPUT_FILE
     fi
 
-    # Flush any buffers
-    end_time="$(timestamp)"
-
     if [ "$RUN_MODE" == "$RM_INMATE" ] || [ "$RUN_MODE" == "$RM_LINUX_JAILHOUSE" ]; then
+        # Flush any buffers
         echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
-        echo "Ending experiments at $end_time" >> $JAILHOUSE_OUTPUT_FILE
+        echo "Ending experiments at $(timestamp)" >> $JAILHOUSE_OUTPUT_FILE
         echo "*******************************************************" >> $JAILHOUSE_OUTPUT_FILE
+
+        echo "Killing interference workload at $(timestamp)" >> $EXPERIMENT_OUTPUT_FILE 2>&1
 
         echo "sudo kill $tailf_pid" >> $EXPERIMENT_OUTPUT_FILE
         sudo kill $tailf_pid >> $EXPERIMENT_OUTPUT_FILE 2>&1
         # end_jailhouse_processes >> $EXPERIMENT_OUTPUT_FILE 2>&1
 
         if [ "$RUN_MODE" == "$RM_INMATE" ]; then
+            echo "Shutting down Jailhouse inmate at $(timestamp)" >> $EXPERIMENT_OUTPUT_FILE 2>&1
             end_inmate >> $EXPERIMENT_OUTPUT_FILE 2>&1
         fi
+        echo "Shutting down Jailhouse root at $(timestamp)" >> $EXPERIMENT_OUTPUT_FILE 2>&1
         end_root >> $EXPERIMENT_OUTPUT_FILE 2>&1
     fi
 
     # Clean up any leftover stuff
+    echo "Removing drivers at $(timestamp)" >> $EXPERIMENT_OUTPUT_FILE 2>&1
     rm_drivers >> $EXPERIMENT_OUTPUT_FILE 2>&1
 
-    echo "Ending experiments at $end_time" >> $EXPERIMENT_OUTPUT_FILE
-
+    echo "Post processing data at $(timestamp)" >> $EXPERIMENT_OUTPUT_FILE 2>&1
     post_process_data $OUTPUT_DIR $experiment_time
+
+    echo "Ending experiments at $(timestamp)" >> $EXPERIMENT_OUTPUT_FILE
 }
 
 # Generates random inputs and stores them in random_inputs
@@ -362,7 +366,7 @@ function start_experiment {
         *)
             ;;
         esac
-        echo "Time=$(timestamp)" >> $EXPERIMENT_OUTPUT_FILE
+        echo "Starting at $(timestamp)" >> $EXPERIMENT_OUTPUT_FILE
         echo "*********************************************************" >> $EXPERIMENT_OUTPUT_FILE
         for ((j = 0 ; j < $ITERATIONS ; j++)); do
             local vmexits_start=0
@@ -372,7 +376,7 @@ function start_experiment {
             if [ "$j" != "0" ]; then
                 echo "---------------------------------------------------------" >> $EXPERIMENT_OUTPUT_FILE
             fi
-            echo "Iteration $j ($index):" >> $EXPERIMENT_OUTPUT_FILE
+            echo "Iteration $j ($index) starting at $(timestamp):" >> $EXPERIMENT_OUTPUT_FILE
 
             if [ "$INPUT_FILE" == "" ]; then
                 local expected_output_value="${expected_outputs[$index]}"
@@ -429,17 +433,18 @@ function start_experiment {
                     echo "Workload output matches expected output" >> $EXPERIMENT_OUTPUT_FILE 2>&1
                 fi
             fi
+            echo "Iteration $j ($index) ending at $(timestamp)" >> $EXPERIMENT_OUTPUT_FILE 2>&1
         done
     done
     echo "*********************************************************" >> $EXPERIMENT_OUTPUT_FILE
 
     if [ "$INTERFERENCE_WORKLOAD" != "$INTF_NONE" ]; then
-        echo "Stopping workload $INTERFERENCE_WORKLOAD (pid=$workload_pid)" >> $EXPERIMENT_OUTPUT_FILE
+        echo "Stopping workload $INTERFERENCE_WORKLOAD (pid=$workload_pid) at $(timestamp)" >> $EXPERIMENT_OUTPUT_FILE
         stop_interference_workload $INTERFERENCE_WORKLOAD $workload_pid >> $EXPERIMENT_OUTPUT_FILE 2>&1
     fi
 
     if [ "$INPUT_FILE" == "" ] ; then
-        echo "Removing all generated random input files..." >> $EXPERIMENT_OUTPUT_FILE
+        echo "Removing all generated random input files at $(timestamp)" >> $EXPERIMENT_OUTPUT_FILE
         for input_file in ${random_inputs[@]}; do
             # The input is just random data, so really no sense in keeping it around rn
             # echo "sudo rm $input_file" >> $EXPERIMENT_OUTPUT_FILE
@@ -450,7 +455,7 @@ function start_experiment {
         # copy the input file for future reference
         cp "$INPUT_FILE" "$OUTPUT_DIR/${experiment_time}.input"
     fi
-
+    echo "Ending start_experiment at $(timestamp)" >> $EXPERIMENT_OUTPUT_FILE 2>&1
 }
 
 function handle_ctlc()
