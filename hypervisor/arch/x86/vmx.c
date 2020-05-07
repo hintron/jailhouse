@@ -973,14 +973,14 @@ static void handle_throttle_reconfig_request(int this_cpu_id,
 			 * preemption_timeout to 0, or else that will cause an
 			 * infinite preemption timer loop.
 			 */
-			if (comm_region->preemption_timeout > 0) {
+			if (comm_region->preemption_timeout != UNSET_U32) {
 				this_cpu_data->preemption_timeout =
 					comm_region->preemption_timeout;
 				printk("MGH HYPER: CPU %d: Set preemption_timeout to %d\n",
 				       this_cpu_id,
 				       comm_region->preemption_timeout);
 			}
-			if (comm_region->spin_loop_iterations > 0) {
+			if (comm_region->spin_loop_iterations != UNSET_U32) {
 				this_cpu_data->spin_loop_iterations =
 					comm_region->spin_loop_iterations;
 				printk("MGH HYPER: CPU %d: Set spin_loop_iterations to %d\n",

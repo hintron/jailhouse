@@ -384,6 +384,8 @@ typedef enum {
 // This seems to mostly freeze everything (can't see prints)
 // #define SPIN_LOOP_ITERATIONS	1000000
 
+#define UNSET_U32 0xffffffff
+
 #endif
 
 #endif /* !_JAILHOUSE_ASM_VMX_H */

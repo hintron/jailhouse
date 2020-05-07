@@ -44,6 +44,8 @@ static unsigned long tsc_freq = 0;
 #define EXPECTED_CPU_CACHE_LINE_SIZE 64
 static unsigned long cpu_cache_line_size = 64;
 
+#define UNSET_U32 0xffffffff
+
 /* NOTE: The stack size is the same size as a page (4 kb) */
 
 static char str[32] = "Hello From MGH      ";
@@ -568,8 +570,8 @@ static void command_line_params(bool *local_buffer,
 		break;
 	}
 
-	*preemption_timeout = cmdline_parse_int("pt", 0);
-	*spin_loop_iterations = cmdline_parse_int("sli", 0);
+	*preemption_timeout = cmdline_parse_int("pt", UNSET_U32);
+	*spin_loop_iterations = cmdline_parse_int("sli", UNSET_U32);
 }
 /*
  * Returns true if hardware setup was successful.
@@ -597,7 +599,8 @@ static void set_throttle_params_hypervisor(int preemption_timeout,
 					   int spin_loop_iterations)
 {
 	/* Don't disturb the hypervisor unnecessarily */
-	if (preemption_timeout == 0 && spin_loop_iterations == 0)
+	if ((preemption_timeout == UNSET_U32) &&
+	    (spin_loop_iterations == UNSET_U32))
 		return;
 
 	printk("MGH: set_throttle_params_hypervisor(preemption_timeout=%d, spin_loop_iterations=%d)\n",
@@ -1025,9 +1028,9 @@ void inmate_main(void)
 	 */
 	bool local_buffer = DEFAULT_LOCAL_BUFFER;
 	local_input_t local_input;
-	/* If 0, don't change the default */
-	int preemption_timeout = 0;
-	int spin_loop_iterations = 0;
+	/* If UNSET_U32, don't change the default */
+	int preemption_timeout = UNSET_U32;
+	int spin_loop_iterations = UNSET_U32;
 
 	/* Process custom command line parameters for inmate */
 	command_line_params(&local_buffer, &throttle_mode, &workload_mode,
