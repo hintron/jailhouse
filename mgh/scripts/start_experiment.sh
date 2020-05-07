@@ -468,7 +468,9 @@ function handle_ctlc()
         echo "Canceling interference workload $INTERFERENCE_WORKLOAD"
         stop_interference_workload $INTERFERENCE_WORKLOAD $workload_pid
     fi
+    echo "Ending Jailhouse"
     end_jailhouse
+    echo "Removing Drivers"
     rm_drivers
     exit
 }
