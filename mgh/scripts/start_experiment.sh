@@ -21,6 +21,11 @@ RUN_WITH_VTUNE=0
 DISABLE_TURBO_BOOST=1
 # DISABLE_TURBO_BOOST=0
 
+# If 1, check the inmate's output to make sure it matches expected output
+# This can cause extra slowdown when enabled. Only applicable with RM_INMATE.
+VALIDATE_INMATE_RESULT=0
+# VALIDATE_INMATE_RESULT=1
+
 # # 1-39 MiB Data Set
 ITERATIONS=10
 # INPUT_SIZE_START=$((1 * $MiB))
@@ -327,7 +332,7 @@ function start_experiment {
 
     # If running on Linux, don't do this step until the interference workload
     # is running!
-    if [ "$RUN_MODE" == "$RM_INMATE" ] && [ "$INPUT_FILE" == "" ]; then
+    if [ "$RUN_MODE" == "$RM_INMATE" ] && [ "$INPUT_FILE" == "" ] && [ "$VALIDATE_INMATE_RESULT" == 1 ]; then
         generate_expected_outputs
     fi
 
@@ -380,20 +385,22 @@ function start_experiment {
             fi
             echo "Iteration $j ($index) starting at $(timestamp):" >> $EXPERIMENT_OUTPUT_FILE
 
-            if [ "$INPUT_FILE" == "" ]; then
-                local expected_output_value="${expected_outputs[$index]}"
-            else
-                local start_time_ns=$(date +%s%N)
-                if [[ "$RUN_MODE" == "$RM_LINUX_JAILHOUSE" ]]; then
-                    vmexits_start=$(jailhouse_root_total_vmexits)
+            if [ "$VALIDATE_INMATE_RESULT" == 1 ] || [ "$RUN_MODE" != "$RM_INMATE" ]; then
+                if [ "$INPUT_FILE" == "" ]; then
+                    local expected_output_value="${expected_outputs[$index]}"
+                else
+                    local start_time_ns=$(date +%s%N)
+                    if [[ "$RUN_MODE" == "$RM_LINUX_JAILHOUSE" ]]; then
+                        vmexits_start=$(jailhouse_root_total_vmexits)
+                    fi
+                    local expected_output_value=$(get_expected_output $INPUT_FILE $index $WORKLOAD_MODE)
+                    if [[ "$RUN_MODE" == "$RM_LINUX_JAILHOUSE" ]]; then
+                        vmexits_end=$(jailhouse_root_total_vmexits)
+                    fi
+                    local end_time_ns=$(date +%s%N)
+                    local duration_ns=$(($end_time_ns-$start_time_ns))
+                    local duration_ms=$(ns_to_ms $duration_ns)
                 fi
-                local expected_output_value=$(get_expected_output $INPUT_FILE $index $WORKLOAD_MODE)
-                if [[ "$RUN_MODE" == "$RM_LINUX_JAILHOUSE" ]]; then
-                    vmexits_end=$(jailhouse_root_total_vmexits)
-                fi
-                local end_time_ns=$(date +%s%N)
-                local duration_ns=$(($end_time_ns-$start_time_ns))
-                local duration_ms=$(ns_to_ms $duration_ns)
             fi
 
             if [[ "$RUN_MODE" > "$RM_INMATE" ]]; then
@@ -426,13 +433,15 @@ function start_experiment {
                 local vmexits_delta=$((vmexits_end - vmexits_start))
                 echo "Inmate vmexits delta: $vmexits_delta = ($vmexits_end - $vmexits_start)" >> $EXPERIMENT_OUTPUT_FILE 2>&1
 
-                # Validate workload output against pre-calculated values
-                if [ "$workload_output_value" != "$expected_output_value" ]; then
-                    echo "Error: workload output != expected!" >> $EXPERIMENT_OUTPUT_FILE 2>&1
-                    echo "    workload_output_value  : $workload_output_value" >> $EXPERIMENT_OUTPUT_FILE 2>&1
-                    echo "    expected_output_value: $expected_output_value" >> $EXPERIMENT_OUTPUT_FILE 2>&1
-                else
-                    echo "Workload output matches expected output" >> $EXPERIMENT_OUTPUT_FILE 2>&1
+                if [ "$VALIDATE_INMATE_RESULT" == 1 ]; then
+                    # Validate workload output against pre-calculated values
+                    if [ "$workload_output_value" != "$expected_output_value" ]; then
+                        echo "Error: workload output != expected!" >> $EXPERIMENT_OUTPUT_FILE 2>&1
+                        echo "    workload_output_value  : $workload_output_value" >> $EXPERIMENT_OUTPUT_FILE 2>&1
+                        echo "    expected_output_value: $expected_output_value" >> $EXPERIMENT_OUTPUT_FILE 2>&1
+                    else
+                        echo "Workload output matches expected output" >> $EXPERIMENT_OUTPUT_FILE 2>&1
+                    fi
                 fi
             fi
             echo "Iteration $j ($index) ending at $(timestamp)" >> $EXPERIMENT_OUTPUT_FILE 2>&1
