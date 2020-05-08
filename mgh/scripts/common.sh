@@ -679,9 +679,9 @@ function send_inmate_input {
         return
     fi
 
-    # Send input to inmate
+    # Send input to inmate. Make it high priority in case root is throttled hard
     echo "Sending inmate input via python at $(timestamp)" >> $EXPERIMENT_OUTPUT_FILE 2>&1
-    sudo $MGH_DEMO_PY -f $input_file
+    sudo nice --20 $MGH_DEMO_PY -f $input_file
     echo "Returned from python script at $(timestamp)" >> $EXPERIMENT_OUTPUT_FILE 2>&1
 
     if [ "$LOCAL_INPUT_MODE" != "$LI_NONE" ]; then
