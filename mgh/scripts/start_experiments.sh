@@ -158,14 +158,13 @@ function main {
     # ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION "" "" 500
 
     # ##########################################################################
-    # Throttle Response Take 2: 2020-5-4; 2020-5-5
+    # Throttle Response Take 2: 2020-5-4; 2020-5-5; 2020-5-7
     # ##########################################################################
     # See how output reacts to changes in spin loop iterations
     # 20 MiB random input over IVSHMEM for RA, CSB, and SHA3 inmate workloads
     # RA interference workload
     # Do 10 runs at each setting
-    # Cool down for 1 minute after completing 10-run sets at each setting
-    # Cool down for 30 minutes after each workload so the next workload has a fresh start
+    # Cool down for 10 minutes after each workload so the next workload has a fresh start
     # (Defaults are a 1000 ms preemption timer loop and 50000 spin loop iterations)
     # (Sudo timeout happens every 15 minutes, so disable it)
     create_random_file $((2**20 * 20)) $INPUT_FILE
@@ -173,79 +172,69 @@ function main {
     # # Initial test run to make sure things look ok
     # ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 10000
 
+    # Do 5 measurements per decade
+
     # SHA3
-    for (( i = 80000; i >= 10000; i = i - 5000 )); do
+    for (( i = 100000; i >= 20000; i = i - 20000 )); do
         ./start_experiment.sh $WM_SHA3 $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" $i
-        sleep 60
     done
-    for (( i = 9000; i >= 1000; i = i - 1000 )); do
+    for (( i = 10000; i >= 2000; i = i - 2000 )); do
         ./start_experiment.sh $WM_SHA3 $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" $i
-        sleep 60
     done
-    ./start_experiment.sh $WM_SHA3 $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 500
-    sleep 60
-    ./start_experiment.sh $WM_SHA3 $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 100
-    sleep 60
-    ./start_experiment.sh $WM_SHA3 $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 50
-    sleep 60
-    ./start_experiment.sh $WM_SHA3 $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 10
-    sleep 60
-    ./start_experiment.sh $WM_SHA3 $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 5
-    sleep 60
+    for (( i = 1000; i >= 200; i = i - 200 )); do
+        ./start_experiment.sh $WM_SHA3 $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" $i
+    done
+    for (( i = 100; i >= 20; i = i - 20 )); do
+        ./start_experiment.sh $WM_SHA3 $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" $i
+    done
+    for (( i = 10; i >= 2; i = i - 2 )); do
+        ./start_experiment.sh $WM_SHA3 $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" $i
+    done
     ./start_experiment.sh $WM_SHA3 $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 1
-    sleep 60
     ./start_experiment.sh $WM_SHA3 $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 0
 
-    # Allow the CPU to cool down for 30 min
-    sleep 1800
+    # Allow the CPU to cool down for 10 min
+    sleep 600
 
     # CSB
-    for (( i = 80000; i >= 10000; i = i - 5000 )); do
+    for (( i = 100000; i >= 20000; i = i - 20000 )); do
         ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" $i
-        sleep 60
     done
-    for (( i = 9000; i >= 1000; i = i - 1000 )); do
+    for (( i = 10000; i >= 2000; i = i - 2000 )); do
         ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" $i
-        sleep 60
     done
-    ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 500
-    sleep 60
-    ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 100
-    sleep 60
-    ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 50
-    sleep 60
-    ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 10
-    sleep 60
-    ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 5
-    sleep 60
+    for (( i = 1000; i >= 200; i = i - 200 )); do
+        ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" $i
+    done
+    for (( i = 100; i >= 20; i = i - 20 )); do
+        ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" $i
+    done
+    for (( i = 10; i >= 2; i = i - 2 )); do
+        ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" $i
+    done
     ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 1
-    sleep 60
     ./start_experiment.sh $WM_COUNT_SET_BITS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 0
 
-    # Allow the CPU to cool down for 30 min
-    sleep 1800
+    # Allow the CPU to cool down for 10 min
+    sleep 600
 
     # RA
-    for (( i = 80000; i >= 10000; i = i - 5000 )); do
+    for (( i = 100000; i >= 20000; i = i - 20000 )); do
         ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" $i
-        sleep 60
     done
-    for (( i = 9000; i >= 1000; i = i - 1000 )); do
+    for (( i = 10000; i >= 2000; i = i - 2000 )); do
         ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" $i
-        sleep 60
     done
-    ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 500
-    sleep 60
-    ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 100
-    sleep 60
-    ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 50
-    sleep 60
-    ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 10
-    sleep 60
-    ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 5
-    sleep 60
+    for (( i = 1000; i >= 200; i = i - 200 )); do
+        ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" $i
+    done
+    for (( i = 100; i >= 20; i = i - 20 )); do
+        ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" $i
+    done
+    for (( i = 10; i >= 2; i = i - 2 )); do
+        ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" $i
+    done
     ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 1
-    sleep 60
     ./start_experiment.sh $WM_RANDOM_ACCESS $INTF_RA $RM_INMATE $TMODE_ITERATION $INPUT_FILE "" 0
 
     rm $INPUT_FILE
