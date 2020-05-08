@@ -393,7 +393,9 @@ function start_experiment {
                     if [[ "$RUN_MODE" == "$RM_LINUX_JAILHOUSE" ]]; then
                         vmexits_start=$(jailhouse_root_total_vmexits)
                     fi
+                    echo "Starting get_expected_output() at $(timestamp)" >> $EXPERIMENT_OUTPUT_FILE 2>&1
                     local expected_output_value=$(get_expected_output $INPUT_FILE $index $WORKLOAD_MODE)
+                    echo "Returning from get_expected_output() at $(timestamp)" >> $EXPERIMENT_OUTPUT_FILE 2>&1
                     if [[ "$RUN_MODE" == "$RM_LINUX_JAILHOUSE" ]]; then
                         vmexits_end=$(jailhouse_root_total_vmexits)
                     fi
@@ -421,14 +423,20 @@ function start_experiment {
                 # Put Linux workload timing data into jailhouse output file
                 echo "MGHOUT:$index,$input_size,$workload_output_duration" >> $LINUX_OUTPUT_FILE
             else
+                echo "Measuring vmexits_start at $(timestamp)" >> $EXPERIMENT_OUTPUT_FILE 2>&1
                 vmexits_start=$(jailhouse_inmate_total_vmexits)
+                echo "Done measuring vmexits_start at $(timestamp)" >> $EXPERIMENT_OUTPUT_FILE 2>&1
                 if [ "$INPUT_FILE" == "" ]; then
                     workload_output=$(send_inmate_input ${random_inputs[$index]})
                 else
                     workload_output=$(send_inmate_input $INPUT_FILE)
                 fi
+                echo "Measuring vmexits_end at $(timestamp)" >> $EXPERIMENT_OUTPUT_FILE 2>&1
                 vmexits_end=$(jailhouse_inmate_total_vmexits)
+                echo "Done measuring vmexits_end at $(timestamp)" >> $EXPERIMENT_OUTPUT_FILE 2>&1
+                echo "workload_output START:" >> $EXPERIMENT_OUTPUT_FILE 2>&1
                 echo "$workload_output" >> $EXPERIMENT_OUTPUT_FILE 2>&1
+                echo "workload_output END:" >> $EXPERIMENT_OUTPUT_FILE 2>&1
                 workload_output_value=$(grep_token_in_str "Inmate output: " "$workload_output")
                 local vmexits_delta=$((vmexits_end - vmexits_start))
                 echo "Inmate vmexits delta: $vmexits_delta = ($vmexits_end - $vmexits_start)" >> $EXPERIMENT_OUTPUT_FILE 2>&1
