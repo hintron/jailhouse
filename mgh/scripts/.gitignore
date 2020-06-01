@@ -1,4 +1,7 @@
 output/*
-*.txt
-*.csv
-*.input
+# *.txt
+# *.csv
+X.input
+Y.input
+root/*
+tmp_pp_output/*
