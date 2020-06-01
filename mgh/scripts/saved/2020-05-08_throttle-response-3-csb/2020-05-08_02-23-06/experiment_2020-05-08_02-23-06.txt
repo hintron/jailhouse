@@ -1,0 +1,289 @@
+=======================================================
+Starting script at 2020-05-08_02-23-06
+=======================================================
+Disabling Turbo Boost
+1
+No inmate was running
+opening /dev/jailhouse: No such file or directory
+jailhouse: no process found
+rmmod: ERROR: Module jailhouse is not currently loaded
+rmmod: ERROR: Module uio_ivshmem is not currently loaded
+At main.c:160:
+- SSL error:02001002:system library:fopen:No such file or directory: ../crypto/bio/bss_file.c:72
+- SSL error:2006D080:BIO routines:BIO_new_file:no such file: ../crypto/bio/bss_file.c:79
+sign-file: certs/signing_key.pem: No such file or directory
+Warning: modules_install: missing 'System.map' file. Skipping depmod.
+uio_ivshmem            16384  0
+uio                    20480  1 uio_ivshmem
+jailhouse              32768  0
+tailf_pid: 28872
+#####################
+# Common Parameters #
+#####################
+TIMESTAMP: 2020-05-08_02-23-06
+Jailhouse Git commit: 2523c4161e0873ba7b8da2f21183552f455da6c7
+JAILHOUSE_OUTPUT_BASENAME: jailhouse_2020-05-08_02-23-06.txt
+JAILHOUSE_OUTPUT_FILE: /home/hintron/code/jailhouse/mgh/scripts/output/2020-05-08_02-23-06/jailhouse_2020-05-08_02-23-06.txt
+RUN_MODE: RM_INMATE
+RUN_MODE_RAW: 0
+DISABLE_TURBO_BOOST: 1
+DEBUG_MODE: true
+INMATE_DEBUG: 0
+INPUT_FILE: tmp.input
+INPUT_FILE size: 20971520 Bytes
+LOCAL_INPUT_MODE_RAW: 0
+ITERATIONS: 10
+WORKLOAD_MODE: WM_COUNT_SET_BITS
+WORKLOAD_MODE_RAW: 2
+INTERFERENCE_WORKLOAD: random-access
+#########################
+# Linux-only Parameters #
+#########################
+RUN_WITH_VTUNE: 0
+VTUNE_OUTPUT_BASENAME: vtune_output_2020-05-08_02-23-06.txt
+VTUNE_OUTPUT_FILE: /home/hintron/code/jailhouse/mgh/scripts/output/2020-05-08_02-23-06/vtune_output_2020-05-08_02-23-06.txt
+LINUX_OUTPUT_BASENAME: linux_output_2020-05-08_02-23-06.txt
+LINUX_OUTPUT_FILE: /home/hintron/code/jailhouse/mgh/scripts/output/2020-05-08_02-23-06/linux_output_2020-05-08_02-23-06.txt
+VTUNE_MODE: VTUNE_MODE_UE
+VTUNE_MODE_RAW: 1
+##########################
+# Inmate-only Parameters #
+##########################
+THROTTLE_ITERATIONS: 5
+THROTTLE_MODE: TMODE_ITERATION
+THROTTLE_MODE_RAW: 2
+THROTTLE_MECHANISM: Unspecified
+THROTTLE_MECHANISM_RAW: 
+LOCAL_INPUT_MODE: NONE
+PREEMPTION_TIMEOUT: 
+SPIN_LOOP_ITERATIONS: 20
+##################
+# End Parameters #
+##################
+################################################################################
+# Starting Experiment
+################################################################################
+sudo /home/hintron/code/jailhouse/tools/jailhouse enable /home/hintron/code/jailhouse/configs/x86/bazooka-root.cell
+Setting sync byte in shmem to 0
+sudo /home/hintron/code/jailhouse/tools/jailhouse cell create /home/hintron/code/jailhouse/configs/x86/bazooka-inmate.cell
+sudo /home/hintron/code/jailhouse/tools/jailhouse cell load bazooka-inmate /home/hintron/code/jailhouse/inmates/demos/x86/mgh-demo.bin -s "debug=true tmode=2 wm=2 throttleiter=5 sli=20" -a 0x1000
+sudo /home/hintron/code/jailhouse/tools/jailhouse cell start bazooka-inmate
+Wait 30 seconds for interference workload random-access (PID 28901) to ramp up
+*********************************************************
+Input Size=20971520
+Starting at 2020-05-08_02-24-20
+*********************************************************
+Iteration 0 (0) starting at 2020-05-08_02-24-20:
+Measuring vmexits_start at 2020-05-08_02-24-20
+Done measuring vmexits_start at 2020-05-08_02-24-21
+Sending inmate input via python at 2020-05-08_02-24-21
+Returned from python script at 2020-05-08_02-24-21
+Measuring vmexits_end at 2020-05-08_02-24-21
+Done measuring vmexits_end at 2020-05-08_02-24-21
+workload_output START:
+Inmate is ready!
+Input length: 20971520
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600853 us
+Inmate output length: 4
+Assuming output is an int (little-endian)
+Inmate output: 83884465
+workload_output END:
+Inmate vmexits delta: 7433 = (877907 - 870474)
+Iteration 0 (0) ending at 2020-05-08_02-24-21
+---------------------------------------------------------
+Iteration 1 (1) starting at 2020-05-08_02-24-21:
+Measuring vmexits_start at 2020-05-08_02-24-21
+Done measuring vmexits_start at 2020-05-08_02-24-21
+Sending inmate input via python at 2020-05-08_02-24-21
+Returned from python script at 2020-05-08_02-24-22
+Measuring vmexits_end at 2020-05-08_02-24-22
+Done measuring vmexits_end at 2020-05-08_02-24-22
+workload_output START:
+Inmate is ready!
+Input length: 20971520
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 300444 us
+Inmate output length: 4
+Assuming output is an int (little-endian)
+Inmate output: 83884465
+workload_output END:
+Inmate vmexits delta: 7077 = (888732 - 881655)
+Iteration 1 (1) ending at 2020-05-08_02-24-22
+---------------------------------------------------------
+Iteration 2 (2) starting at 2020-05-08_02-24-22:
+Measuring vmexits_start at 2020-05-08_02-24-22
+Done measuring vmexits_start at 2020-05-08_02-24-22
+Sending inmate input via python at 2020-05-08_02-24-22
+Returned from python script at 2020-05-08_02-24-23
+Measuring vmexits_end at 2020-05-08_02-24-23
+Done measuring vmexits_end at 2020-05-08_02-24-23
+workload_output START:
+Inmate is ready!
+Input length: 20971520
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 300445 us
+Inmate output length: 4
+Assuming output is an int (little-endian)
+Inmate output: 83884465
+workload_output END:
+Inmate vmexits delta: 7418 = (900468 - 893050)
+Iteration 2 (2) ending at 2020-05-08_02-24-23
+---------------------------------------------------------
+Iteration 3 (3) starting at 2020-05-08_02-24-23:
+Measuring vmexits_start at 2020-05-08_02-24-23
+Done measuring vmexits_start at 2020-05-08_02-24-23
+Sending inmate input via python at 2020-05-08_02-24-23
+Returned from python script at 2020-05-08_02-24-23
+Measuring vmexits_end at 2020-05-08_02-24-23
+Done measuring vmexits_end at 2020-05-08_02-24-23
+workload_output START:
+Inmate is ready!
+Input length: 20971520
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 300446 us
+Inmate output length: 4
+Assuming output is an int (little-endian)
+Inmate output: 83884465
+workload_output END:
+Inmate vmexits delta: 7757 = (911746 - 903989)
+Iteration 3 (3) ending at 2020-05-08_02-24-23
+---------------------------------------------------------
+Iteration 4 (4) starting at 2020-05-08_02-24-23:
+Measuring vmexits_start at 2020-05-08_02-24-23
+Done measuring vmexits_start at 2020-05-08_02-24-24
+Sending inmate input via python at 2020-05-08_02-24-24
+Returned from python script at 2020-05-08_02-24-24
+Measuring vmexits_end at 2020-05-08_02-24-24
+Done measuring vmexits_end at 2020-05-08_02-24-24
+workload_output START:
+Inmate is ready!
+Input length: 20971520
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 300439 us
+Inmate output length: 4
+Assuming output is an int (little-endian)
+Inmate output: 83884465
+workload_output END:
+Inmate vmexits delta: 5643 = (922045 - 916402)
+Iteration 4 (4) ending at 2020-05-08_02-24-24
+---------------------------------------------------------
+Iteration 5 (5) starting at 2020-05-08_02-24-24:
+Measuring vmexits_start at 2020-05-08_02-24-24
+Done measuring vmexits_start at 2020-05-08_02-24-24
+Sending inmate input via python at 2020-05-08_02-24-24
+Returned from python script at 2020-05-08_02-24-25
+Measuring vmexits_end at 2020-05-08_02-24-25
+Done measuring vmexits_end at 2020-05-08_02-24-25
+workload_output START:
+Inmate is ready!
+Input length: 20971520
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 300432 us
+Inmate output length: 4
+Assuming output is an int (little-endian)
+Inmate output: 83884465
+workload_output END:
+Inmate vmexits delta: 8211 = (933743 - 925532)
+Iteration 5 (5) ending at 2020-05-08_02-24-25
+---------------------------------------------------------
+Iteration 6 (6) starting at 2020-05-08_02-24-25:
+Measuring vmexits_start at 2020-05-08_02-24-25
+Done measuring vmexits_start at 2020-05-08_02-24-25
+Sending inmate input via python at 2020-05-08_02-24-25
+Returned from python script at 2020-05-08_02-24-26
+Measuring vmexits_end at 2020-05-08_02-24-26
+Done measuring vmexits_end at 2020-05-08_02-24-26
+workload_output START:
+Inmate is ready!
+Input length: 20971520
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 300446 us
+Inmate output length: 4
+Assuming output is an int (little-endian)
+Inmate output: 83884465
+workload_output END:
+Inmate vmexits delta: 7419 = (945707 - 938288)
+Iteration 6 (6) ending at 2020-05-08_02-24-26
+---------------------------------------------------------
+Iteration 7 (7) starting at 2020-05-08_02-24-26:
+Measuring vmexits_start at 2020-05-08_02-24-26
+Done measuring vmexits_start at 2020-05-08_02-24-26
+Sending inmate input via python at 2020-05-08_02-24-26
+Returned from python script at 2020-05-08_02-24-26
+Measuring vmexits_end at 2020-05-08_02-24-26
+Done measuring vmexits_end at 2020-05-08_02-24-26
+workload_output START:
+Inmate is ready!
+Input length: 20971520
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 300452 us
+Inmate output length: 4
+Assuming output is an int (little-endian)
+Inmate output: 83884465
+workload_output END:
+Inmate vmexits delta: 7759 = (956987 - 949228)
+Iteration 7 (7) ending at 2020-05-08_02-24-26
+---------------------------------------------------------
+Iteration 8 (8) starting at 2020-05-08_02-24-26:
+Measuring vmexits_start at 2020-05-08_02-24-26
+Done measuring vmexits_start at 2020-05-08_02-24-26
+Sending inmate input via python at 2020-05-08_02-24-26
+Returned from python script at 2020-05-08_02-24-27
+Measuring vmexits_end at 2020-05-08_02-24-27
+Done measuring vmexits_end at 2020-05-08_02-24-27
+workload_output START:
+Inmate is ready!
+Input length: 20971520
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 300443 us
+Inmate output length: 4
+Assuming output is an int (little-endian)
+Inmate output: 83884465
+workload_output END:
+Inmate vmexits delta: 7419 = (968268 - 960849)
+Iteration 8 (8) ending at 2020-05-08_02-24-27
+---------------------------------------------------------
+Iteration 9 (9) starting at 2020-05-08_02-24-27:
+Measuring vmexits_start at 2020-05-08_02-24-27
+Done measuring vmexits_start at 2020-05-08_02-24-27
+Sending inmate input via python at 2020-05-08_02-24-27
+Returned from python script at 2020-05-08_02-24-28
+Measuring vmexits_end at 2020-05-08_02-24-28
+Done measuring vmexits_end at 2020-05-08_02-24-28
+workload_output START:
+Inmate is ready!
+Input length: 20971520
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 300418 us
+Inmate output length: 4
+Assuming output is an int (little-endian)
+Inmate output: 83884465
+workload_output END:
+Inmate vmexits delta: 5313 = (976949 - 971636)
+Iteration 9 (9) ending at 2020-05-08_02-24-28
+*********************************************************
+Stopping workload random-access (pid=28901) at 2020-05-08_02-24-28
+Ending start_experiment at 2020-05-08_02-24-28
+Enabling Turbo Boost
+0
+Killing interference workload at 2020-05-08_02-24-33
+sudo kill 28872
+Killing any Jailhouse processes workload at 2020-05-08_02-24-33
+Shutting down Jailhouse inmate at 2020-05-08_02-24-34
+sudo /home/hintron/code/jailhouse/tools/jailhouse cell destroy bazooka-inmate
+Shutting down Jailhouse root at 2020-05-08_02-24-34
+Removing drivers at 2020-05-08_02-24-35
+jailhouse: no process found
+Post processing data at 2020-05-08_02-24-36
+Ending experiments at 2020-05-08_02-24-36

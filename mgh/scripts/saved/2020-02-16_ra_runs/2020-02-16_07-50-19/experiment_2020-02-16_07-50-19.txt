@@ -1,0 +1,4873 @@
+=======================================================
+Starting script at 2020-02-16_07-50-19
+=======================================================
+Disabling Turbo Boost
+1
+No inmate was running
+opening /dev/jailhouse: No such file or directory
+jailhouse: no process found
+rmmod: ERROR: Module jailhouse is not currently loaded
+rmmod: ERROR: Module uio_ivshmem is not currently loaded
+At main.c:160:
+- SSL error:02001002:system library:fopen:No such file or directory: ../crypto/bio/bss_file.c:72
+- SSL error:2006D080:BIO routines:BIO_new_file:no such file: ../crypto/bio/bss_file.c:79
+sign-file: certs/signing_key.pem: No such file or directory
+Warning: modules_install: missing 'System.map' file. Skipping depmod.
+uio_ivshmem            16384  0
+uio                    20480  1 uio_ivshmem
+jailhouse              32768  0
+tailf_pid: 29245
+#####################
+# Common Parameters #
+#####################
+TIMESTAMP: 2020-02-16_07-50-19
+JAILHOUSE_OUTPUT_BASENAME: jailhouse_2020-02-16_07-50-19.txt
+JAILHOUSE_OUTPUT_FILE: /home/hintron/code/jailhouse/mgh/scripts/output/2020-02-16_07-50-19/jailhouse_2020-02-16_07-50-19.txt
+RUN_MODE: RM_INMATE
+RUN_MODE_RAW: 0
+DISABLE_TURBO_BOOST: 1
+DEBUG_MODE: true
+INMATE_DEBUG: 0
+INPUT_SIZE_START: 1048576
+INPUT_SIZE_END: 41943040
+INPUT_SIZE_STEP: 1048576
+ITERATIONS: 10
+WORKLOAD_MODE: WM_RANDOM_ACCESS
+WORKLOAD_MODE_RAW: 3
+INTERFERENCE_WORKLOAD: handbrake
+#########################
+# Linux-only Parameters #
+#########################
+RUN_WITH_VTUNE: 0
+VTUNE_OUTPUT_BASENAME: vtune_output_2020-02-16_07-50-19.txt
+VTUNE_OUTPUT_FILE: /home/hintron/code/jailhouse/mgh/scripts/output/2020-02-16_07-50-19/vtune_output_2020-02-16_07-50-19.txt
+LINUX_OUTPUT_BASENAME: linux_output_2020-02-16_07-50-19.txt
+LINUX_OUTPUT_FILE: /home/hintron/code/jailhouse/mgh/scripts/output/2020-02-16_07-50-19/linux_output_2020-02-16_07-50-19.txt
+VTUNE_MODE: VTUNE_MODE_MA
+VTUNE_MODE_RAW: 0
+##########################
+# Inmate-only Parameters #
+##########################
+THROTTLE_ITERATIONS: 5
+THROTTLE_MODE: TMODE_ITERATION
+THROTTLE_MODE_RAW: 2
+THROTTLE_MECHANISM: Unspecified
+THROTTLE_MECHANISM_RAW: 
+##################
+# End Parameters #
+##################
+################################################################################
+# Starting Experiment
+################################################################################
+sudo /home/hintron/code/jailhouse/tools/jailhouse enable /home/hintron/code/jailhouse/configs/x86/bazooka-root.cell
+Setting sync byte in shmem to 0
+sudo /home/hintron/code/jailhouse/tools/jailhouse cell create /home/hintron/code/jailhouse/configs/x86/bazooka-inmate.cell
+sudo /home/hintron/code/jailhouse/tools/jailhouse cell load bazooka-inmate /home/hintron/code/jailhouse/inmates/demos/x86/mgh-demo.bin -s "debug=true tmode=2 wm=3 throttleiter=5" -a 0x1000
+sudo /home/hintron/code/jailhouse/tools/jailhouse cell start bazooka-inmate
+Wait 30 seconds for interference workload handbrake (PID 32040) to ramp up
+*********************************************************
+Input Size=1048576
+Time=2020-02-16_07-53-06
+*********************************************************
+Iteration 0 (0):
+Inmate is ready!
+Input length: 1048576
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600752 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 133794849
+Inmate vmexits delta: 3862 = (4223880 - 4220018)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (1):
+Inmate is ready!
+Input length: 1048576
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 300386 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 133829701
+Inmate vmexits delta: 3203 = (4227879 - 4224676)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (2):
+Inmate is ready!
+Input length: 1048576
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 300882 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 133725410
+Inmate vmexits delta: 3312 = (4231703 - 4228391)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (3):
+Inmate is ready!
+Input length: 1048576
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 300401 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 133818966
+Inmate vmexits delta: 3083 = (4235287 - 4232204)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (4):
+Inmate is ready!
+Input length: 1048576
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 1 s 114245 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 133651556
+Inmate vmexits delta: 16091 = (4251815 - 4235724)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (5):
+Inmate is ready!
+Input length: 1048576
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 303014 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 133597568
+Inmate vmexits delta: 166749 = (4433255 - 4266506)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (6):
+Inmate is ready!
+Input length: 1048576
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 304051 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 133625427
+Inmate vmexits delta: 157305 = (4601981 - 4444676)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (7):
+Inmate is ready!
+Input length: 1048576
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 309287 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 133752270
+Inmate vmexits delta: 157577 = (4769814 - 4612237)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (8):
+Inmate is ready!
+Input length: 1048576
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 304055 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 133745560
+Inmate vmexits delta: 146569 = (4927354 - 4780785)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (9):
+Inmate is ready!
+Input length: 1048576
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 1 s 44456 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 133699439
+Inmate vmexits delta: 124151 = (5060774 - 4936623)
+Workload output matches expected output
+*********************************************************
+Input Size=2097152
+Time=2020-02-16_07-53-40
+*********************************************************
+Iteration 0 (10):
+Inmate is ready!
+Input length: 2097152
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 300389 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 267161847
+Inmate vmexits delta: 2293 = (5063072 - 5060779)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (11):
+Inmate is ready!
+Input length: 2097152
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 300392 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 267312212
+Inmate vmexits delta: 4341 = (5067983 - 5063642)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (12):
+Inmate is ready!
+Input length: 2097152
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 300385 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 267266383
+Inmate vmexits delta: 4288 = (5072612 - 5068324)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (13):
+Inmate is ready!
+Input length: 2097152
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 300391 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 267417467
+Inmate vmexits delta: 3823 = (5077236 - 5073413)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (14):
+Inmate is ready!
+Input length: 2097152
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 593317 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 267425585
+Inmate vmexits delta: 5311 = (5082878 - 5077567)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (15):
+Inmate is ready!
+Input length: 2097152
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 304048 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 267537704
+Inmate vmexits delta: 242754 = (5341075 - 5098321)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (16):
+Inmate is ready!
+Input length: 2097152
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 304051 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 267575838
+Inmate vmexits delta: 245907 = (5596990 - 5351083)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (17):
+Inmate is ready!
+Input length: 2097152
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 306049 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 267288292
+Inmate vmexits delta: 234233 = (5843428 - 5609195)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (18):
+Inmate is ready!
+Input length: 2097152
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 322260 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 267209578
+Inmate vmexits delta: 242163 = (6095323 - 5853160)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (19):
+Inmate is ready!
+Input length: 2097152
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 1 s 56655 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 267263827
+Inmate vmexits delta: 211210 = (6318275 - 6107065)
+Workload output matches expected output
+*********************************************************
+Input Size=3145728
+Time=2020-02-16_07-54-28
+*********************************************************
+Iteration 0 (20):
+Inmate is ready!
+Input length: 3145728
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 300387 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 400852348
+Inmate vmexits delta: 5331 = (6323631 - 6318300)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (21):
+Inmate is ready!
+Input length: 3145728
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 300386 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 401385728
+Inmate vmexits delta: 5250 = (6329390 - 6324140)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (22):
+Inmate is ready!
+Input length: 3145728
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 300387 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 400883905
+Inmate vmexits delta: 5115 = (6335269 - 6330154)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (23):
+Inmate is ready!
+Input length: 3145728
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 302890 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 401320818
+Inmate vmexits delta: 5155 = (6340777 - 6335622)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (24):
+Inmate is ready!
+Input length: 3145728
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 879828 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 401058629
+Inmate vmexits delta: 20614 = (6361921 - 6341307)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (25):
+Inmate is ready!
+Input length: 3145728
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 304041 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 401145286
+Inmate vmexits delta: 328545 = (6702142 - 6373597)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (26):
+Inmate is ready!
+Input length: 3145728
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 317184 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 400618103
+Inmate vmexits delta: 288028 = (7000766 - 6712738)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (27):
+Inmate is ready!
+Input length: 3145728
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 306322 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 400898745
+Inmate vmexits delta: 320874 = (7332861 - 7011987)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (28):
+Inmate is ready!
+Input length: 3145728
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 308106 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 400909168
+Inmate vmexits delta: 319233 = (7664780 - 7345547)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (29):
+Inmate is ready!
+Input length: 3145728
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 1 s 57062 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 400922377
+Inmate vmexits delta: 339252 = (8019244 - 7679992)
+Workload output matches expected output
+*********************************************************
+Input Size=4194304
+Time=2020-02-16_07-55-33
+*********************************************************
+Iteration 0 (30):
+Inmate is ready!
+Input length: 4194304
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 400513 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 534811979
+Inmate vmexits delta: 7318 = (8026566 - 8019248)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (31):
+Inmate is ready!
+Input length: 4194304
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 300391 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 534481479
+Inmate vmexits delta: 6054 = (8033075 - 8027021)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (32):
+Inmate is ready!
+Input length: 4194304
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 400510 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 534907214
+Inmate vmexits delta: 9257 = (8042840 - 8033583)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (33):
+Inmate is ready!
+Input length: 4194304
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 303551 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 534895990
+Inmate vmexits delta: 6444 = (8049790 - 8043346)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (34):
+Inmate is ready!
+Input length: 4194304
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 896452 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 534585843
+Inmate vmexits delta: 18571 = (8068815 - 8050244)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (35):
+Inmate is ready!
+Input length: 4194304
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 320248 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 535079456
+Inmate vmexits delta: 422354 = (8502454 - 8080100)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (36):
+Inmate is ready!
+Input length: 4194304
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 306061 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 534800614
+Inmate vmexits delta: 343852 = (8855676 - 8511824)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (37):
+Inmate is ready!
+Input length: 4194304
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 306053 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 534574020
+Inmate vmexits delta: 382830 = (9246489 - 8863659)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (38):
+Inmate is ready!
+Input length: 4194304
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 310131 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 534785319
+Inmate vmexits delta: 378324 = (9634125 - 9255801)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (39):
+Inmate is ready!
+Input length: 4194304
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 1 s 58956 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 534534418
+Inmate vmexits delta: 361721 = (10004117 - 9642396)
+Workload output matches expected output
+*********************************************************
+Input Size=5242880
+Time=2020-02-16_07-56-47
+*********************************************************
+Iteration 0 (40):
+Inmate is ready!
+Input length: 5242880
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 401243 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 668498699
+Inmate vmexits delta: 9639 = (10013767 - 10004128)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (41):
+Inmate is ready!
+Input length: 5242880
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 400504 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 668656080
+Inmate vmexits delta: 9935 = (10024589 - 10014654)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (42):
+Inmate is ready!
+Input length: 5242880
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 400856 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 668437495
+Inmate vmexits delta: 9804 = (10035181 - 10025377)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (43):
+Inmate is ready!
+Input length: 5242880
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 400501 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 668402926
+Inmate vmexits delta: 10257 = (10045802 - 10035545)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (44):
+Inmate is ready!
+Input length: 5242880
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 1 s 38863 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 668313468
+Inmate vmexits delta: 22657 = (10069045 - 10046388)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (45):
+Inmate is ready!
+Input length: 5242880
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 314187 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 668705452
+Inmate vmexits delta: 457061 = (10535961 - 10078900)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (46):
+Inmate is ready!
+Input length: 5242880
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 316194 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 668847636
+Inmate vmexits delta: 504321 = (11048925 - 10544604)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (47):
+Inmate is ready!
+Input length: 5242880
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 304042 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 668379230
+Inmate vmexits delta: 475805 = (11534564 - 11058759)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (48):
+Inmate is ready!
+Input length: 5242880
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 304060 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 668178442
+Inmate vmexits delta: 417284 = (11964311 - 11547027)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (49):
+Inmate is ready!
+Input length: 5242880
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 838231 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 668535903
+Inmate vmexits delta: 474271 = (12447836 - 11973565)
+Workload output matches expected output
+*********************************************************
+Input Size=6291456
+Time=2020-02-16_07-58-17
+*********************************************************
+Iteration 0 (50):
+Inmate is ready!
+Input length: 6291456
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 400512 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 802118327
+Inmate vmexits delta: 11388 = (12459263 - 12447875)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (51):
+Inmate is ready!
+Input length: 6291456
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 400528 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 801983780
+Inmate vmexits delta: 11831 = (12471997 - 12460166)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (52):
+Inmate is ready!
+Input length: 6291456
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 400506 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 801918229
+Inmate vmexits delta: 10805 = (12483145 - 12472340)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (53):
+Inmate is ready!
+Input length: 6291456
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 400496 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 802069555
+Inmate vmexits delta: 10860 = (12494928 - 12484068)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (54):
+Inmate is ready!
+Input length: 6291456
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 1 s 59168 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 802616445
+Inmate vmexits delta: 19227 = (12514254 - 12495027)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (55):
+Inmate is ready!
+Input length: 6291456
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 407436 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 801596982
+Inmate vmexits delta: 563152 = (13089201 - 12526049)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (56):
+Inmate is ready!
+Input length: 6291456
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 312190 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 802050176
+Inmate vmexits delta: 497664 = (13593286 - 13095622)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (57):
+Inmate is ready!
+Input length: 6291456
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 407153 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 801970046
+Inmate vmexits delta: 522699 = (14126891 - 13604192)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (58):
+Inmate is ready!
+Input length: 6291456
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 417594 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 802106036
+Inmate vmexits delta: 530593 = (14665840 - 14135247)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (59):
+Inmate is ready!
+Input length: 6291456
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 579073 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 801891646
+Inmate vmexits delta: 510154 = (15184670 - 14674516)
+Workload output matches expected output
+*********************************************************
+Input Size=7340032
+Time=2020-02-16_07-59-57
+*********************************************************
+Iteration 0 (60):
+Inmate is ready!
+Input length: 7340032
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 400511 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 936240600
+Inmate vmexits delta: 11891 = (15196574 - 15184683)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (61):
+Inmate is ready!
+Input length: 7340032
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 400406 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 936099567
+Inmate vmexits delta: 12748 = (15210119 - 15197371)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (62):
+Inmate is ready!
+Input length: 7340032
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 400491 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 936157521
+Inmate vmexits delta: 12398 = (15222968 - 15210570)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (63):
+Inmate is ready!
+Input length: 7340032
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 400503 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 936052688
+Inmate vmexits delta: 12747 = (15236523 - 15223776)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (64):
+Inmate is ready!
+Input length: 7340032
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 1 s 46182 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 935666702
+Inmate vmexits delta: 26050 = (15263144 - 15237094)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (65):
+Inmate is ready!
+Input length: 7340032
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 407458 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 935543129
+Inmate vmexits delta: 601588 = (15876068 - 15274480)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (66):
+Inmate is ready!
+Input length: 7340032
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 405446 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 935786829
+Inmate vmexits delta: 591632 = (16475960 - 15884328)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (67):
+Inmate is ready!
+Input length: 7340032
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 405464 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 935307531
+Inmate vmexits delta: 592828 = (17076579 - 16483751)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (68):
+Inmate is ready!
+Input length: 7340032
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 405350 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 935773411
+Inmate vmexits delta: 603893 = (17691170 - 17087277)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (69):
+Inmate is ready!
+Input length: 7340032
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 715840 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 935790939
+Inmate vmexits delta: 591933 = (18292291 - 17700358)
+Workload output matches expected output
+*********************************************************
+Input Size=8388608
+Time=2020-02-16_08-01-51
+*********************************************************
+Iteration 0 (70):
+Inmate is ready!
+Input length: 8388608
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 400508 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1069540463
+Inmate vmexits delta: 11940 = (18304237 - 18292297)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (71):
+Inmate is ready!
+Input length: 8388608
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 400511 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1069375770
+Inmate vmexits delta: 13773 = (18318694 - 18304921)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (72):
+Inmate is ready!
+Input length: 8388608
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 401920 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1069134902
+Inmate vmexits delta: 13179 = (18332354 - 18319175)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (73):
+Inmate is ready!
+Input length: 8388608
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 400504 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1069449430
+Inmate vmexits delta: 13115 = (18345857 - 18332742)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (74):
+Inmate is ready!
+Input length: 8388608
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 1 s 84697 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1069591826
+Inmate vmexits delta: 21757 = (18367728 - 18345971)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (75):
+Inmate is ready!
+Input length: 8388608
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 315996 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1069571309
+Inmate vmexits delta: 736279 = (19115220 - 18378941)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (76):
+Inmate is ready!
+Input length: 8388608
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 405462 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1069725844
+Inmate vmexits delta: 683423 = (19810625 - 19127202)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (77):
+Inmate is ready!
+Input length: 8388608
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 352866 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1069088480
+Inmate vmexits delta: 699961 = (20519068 - 19819107)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (78):
+Inmate is ready!
+Input length: 8388608
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 407465 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1069697883
+Inmate vmexits delta: 693364 = (21219097 - 20525733)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (79):
+Inmate is ready!
+Input length: 8388608
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 981193 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1069353550
+Inmate vmexits delta: 645989 = (21871180 - 21225191)
+Workload output matches expected output
+*********************************************************
+Input Size=9437184
+Time=2020-02-16_08-04-01
+*********************************************************
+Iteration 0 (80):
+Inmate is ready!
+Input length: 9437184
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 400524 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1203263167
+Inmate vmexits delta: 2701 = (21873881 - 21871180)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (81):
+Inmate is ready!
+Input length: 9437184
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 400514 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1202961339
+Inmate vmexits delta: 5106 = (21879672 - 21874566)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (82):
+Inmate is ready!
+Input length: 9437184
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 400528 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1203409942
+Inmate vmexits delta: 5418 = (21885574 - 21880156)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (83):
+Inmate is ready!
+Input length: 9437184
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 400515 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1203289326
+Inmate vmexits delta: 4992 = (21891249 - 21886257)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (84):
+Inmate is ready!
+Input length: 9437184
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 790634 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1202984363
+Inmate vmexits delta: 13390 = (21904996 - 21891606)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (85):
+Inmate is ready!
+Input length: 9437184
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 407490 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1203276980
+Inmate vmexits delta: 136097 = (22053012 - 21916915)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (86):
+Inmate is ready!
+Input length: 9437184
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 405481 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1203320565
+Inmate vmexits delta: 118261 = (22178318 - 22060057)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (87):
+Inmate is ready!
+Input length: 9437184
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 407476 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1202795740
+Inmate vmexits delta: 116901 = (22302779 - 22185878)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (88):
+Inmate is ready!
+Input length: 9437184
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 409518 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1203765928
+Inmate vmexits delta: 107960 = (22419819 - 22311859)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (89):
+Inmate is ready!
+Input length: 9437184
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 852631 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1203590432
+Inmate vmexits delta: 94524 = (22523190 - 22428666)
+Workload output matches expected output
+*********************************************************
+Input Size=10485760
+Time=2020-02-16_08-04-28
+*********************************************************
+Iteration 0 (90):
+Inmate is ready!
+Input length: 10485760
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500626 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1336664531
+Inmate vmexits delta: 3397 = (22526587 - 22523190)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (91):
+Inmate is ready!
+Input length: 10485760
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 400508 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1336920443
+Inmate vmexits delta: 4784 = (22531941 - 22527157)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (92):
+Inmate is ready!
+Input length: 10485760
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 400509 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1336604873
+Inmate vmexits delta: 4639 = (22536828 - 22532189)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (93):
+Inmate is ready!
+Input length: 10485760
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 400428 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1336452474
+Inmate vmexits delta: 4614 = (22541832 - 22537218)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (94):
+Inmate is ready!
+Input length: 10485760
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 1 s 105831 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1336756478
+Inmate vmexits delta: 23264 = (22565293 - 22542029)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (95):
+Inmate is ready!
+Input length: 10485760
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 423809 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1337331860
+Inmate vmexits delta: 145087 = (22723751 - 22578664)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (96):
+Inmate is ready!
+Input length: 10485760
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 407527 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1336821607
+Inmate vmexits delta: 123230 = (22855882 - 22732652)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (97):
+Inmate is ready!
+Input length: 10485760
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 405502 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1336532458
+Inmate vmexits delta: 122662 = (22986714 - 22864052)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (98):
+Inmate is ready!
+Input length: 10485760
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 405499 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1336792446
+Inmate vmexits delta: 106987 = (23102909 - 22995922)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (99):
+Inmate is ready!
+Input length: 10485760
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 732188 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1336997955
+Inmate vmexits delta: 99706 = (23215975 - 23116269)
+Workload output matches expected output
+*********************************************************
+Input Size=11534336
+Time=2020-02-16_08-04-57
+*********************************************************
+Iteration 0 (100):
+Inmate is ready!
+Input length: 11534336
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 602452 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1470371274
+Inmate vmexits delta: 3233 = (23219208 - 23215975)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (101):
+Inmate is ready!
+Input length: 11534336
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 400509 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1470404834
+Inmate vmexits delta: 5640 = (23225947 - 23220307)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (102):
+Inmate is ready!
+Input length: 11534336
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 400504 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1470735895
+Inmate vmexits delta: 4963 = (23231280 - 23226317)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (103):
+Inmate is ready!
+Input length: 11534336
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 400509 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1470655719
+Inmate vmexits delta: 5078 = (23237042 - 23231964)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (104):
+Inmate is ready!
+Input length: 11534336
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 1 s 122707 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1470887948
+Inmate vmexits delta: 18507 = (23255976 - 23237469)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (105):
+Inmate is ready!
+Input length: 11534336
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 407559 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1470281786
+Inmate vmexits delta: 126919 = (23395729 - 23268810)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (106):
+Inmate is ready!
+Input length: 11534336
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 407606 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1471097100
+Inmate vmexits delta: 112376 = (23522120 - 23409744)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (107):
+Inmate is ready!
+Input length: 11534336
+Signaling inmate...
+Inmate is finished (polled 3 times at 0.100s/poll)
+Inmate duration (python): 0 s 369201 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1470658957
+Inmate vmexits delta: 130757 = (23665775 - 23535018)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (108):
+Inmate is ready!
+Input length: 11534336
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 408335 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1470597712
+Inmate vmexits delta: 114403 = (23790024 - 23675621)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (109):
+Inmate is ready!
+Input length: 11534336
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 607995 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1470273213
+Inmate vmexits delta: 102997 = (23900077 - 23797080)
+Workload output matches expected output
+*********************************************************
+Input Size=12582912
+Time=2020-02-16_08-05-26
+*********************************************************
+Iteration 0 (110):
+Inmate is ready!
+Input length: 12582912
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500617 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1604852423
+Inmate vmexits delta: 2937 = (23903016 - 23900079)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (111):
+Inmate is ready!
+Input length: 12582912
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 400513 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1604302667
+Inmate vmexits delta: 4612 = (23908066 - 23903454)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (112):
+Inmate is ready!
+Input length: 12582912
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 400416 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1604455088
+Inmate vmexits delta: 4610 = (23913599 - 23908989)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (113):
+Inmate is ready!
+Input length: 12582912
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 400520 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1604132274
+Inmate vmexits delta: 5151 = (23919251 - 23914100)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (114):
+Inmate is ready!
+Input length: 12582912
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 985406 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1603931143
+Inmate vmexits delta: 13368 = (23933082 - 23919714)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (115):
+Inmate is ready!
+Input length: 12582912
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 407689 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1603387666
+Inmate vmexits delta: 113916 = (24060217 - 23946301)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (116):
+Inmate is ready!
+Input length: 12582912
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 411816 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1603989394
+Inmate vmexits delta: 124040 = (24194060 - 24070020)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (117):
+Inmate is ready!
+Input length: 12582912
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 415832 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1604320175
+Inmate vmexits delta: 117751 = (24320603 - 24202852)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (118):
+Inmate is ready!
+Input length: 12582912
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 409771 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1603751151
+Inmate vmexits delta: 128612 = (24458123 - 24329511)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (119):
+Inmate is ready!
+Input length: 12582912
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 1 s 19237 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1604175475
+Inmate vmexits delta: 108839 = (24575906 - 24467067)
+Workload output matches expected output
+*********************************************************
+Input Size=13631488
+Time=2020-02-16_08-05-54
+*********************************************************
+Iteration 0 (120):
+Inmate is ready!
+Input length: 13631488
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 400509 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1738429136
+Inmate vmexits delta: 3766 = (24579686 - 24575920)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (121):
+Inmate is ready!
+Input length: 13631488
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 400947 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1737784495
+Inmate vmexits delta: 4792 = (24585530 - 24580738)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (122):
+Inmate is ready!
+Input length: 13631488
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 400534 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1737569931
+Inmate vmexits delta: 4775 = (24590693 - 24585918)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (123):
+Inmate is ready!
+Input length: 13631488
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 400519 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1737594150
+Inmate vmexits delta: 5459 = (24596929 - 24591470)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (124):
+Inmate is ready!
+Input length: 13631488
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 986304 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1737602523
+Inmate vmexits delta: 8352 = (24605927 - 24597575)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (125):
+Inmate is ready!
+Input length: 13631488
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 418025 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1738112460
+Inmate vmexits delta: 142946 = (24759909 - 24616963)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (126):
+Inmate is ready!
+Input length: 13631488
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 407859 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1737690429
+Inmate vmexits delta: 137892 = (24906755 - 24768863)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (127):
+Inmate is ready!
+Input length: 13631488
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 407867 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1738244046
+Inmate vmexits delta: 140511 = (25057214 - 24916703)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (128):
+Inmate is ready!
+Input length: 13631488
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 411909 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1738089468
+Inmate vmexits delta: 122626 = (25190181 - 25067555)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (129):
+Inmate is ready!
+Input length: 13631488
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 1 s 128206 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1737747633
+Inmate vmexits delta: 103663 = (25305122 - 25201459)
+Workload output matches expected output
+*********************************************************
+Input Size=14680064
+Time=2020-02-16_08-06-25
+*********************************************************
+Iteration 0 (130):
+Inmate is ready!
+Input length: 14680064
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500628 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1871525068
+Inmate vmexits delta: 6337 = (25311464 - 25305127)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (131):
+Inmate is ready!
+Input length: 14680064
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500649 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1872010765
+Inmate vmexits delta: 8848 = (25320891 - 25312043)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (132):
+Inmate is ready!
+Input length: 14680064
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500629 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1871791660
+Inmate vmexits delta: 7884 = (25329570 - 25321686)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (133):
+Inmate is ready!
+Input length: 14680064
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500626 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1872188484
+Inmate vmexits delta: 8149 = (25338126 - 25329977)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (134):
+Inmate is ready!
+Input length: 14680064
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 1 s 19831 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1871927634
+Inmate vmexits delta: 15896 = (25354364 - 25338468)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (135):
+Inmate is ready!
+Input length: 14680064
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 421546 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1871074735
+Inmate vmexits delta: 108409 = (25477794 - 25369385)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (136):
+Inmate is ready!
+Input length: 14680064
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 405858 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1871817918
+Inmate vmexits delta: 115127 = (25602696 - 25487569)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (137):
+Inmate is ready!
+Input length: 14680064
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 407762 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1871939683
+Inmate vmexits delta: 131539 = (25743240 - 25611701)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (138):
+Inmate is ready!
+Input length: 14680064
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 405868 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1871449043
+Inmate vmexits delta: 122872 = (25878504 - 25755632)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (139):
+Inmate is ready!
+Input length: 14680064
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 1 s 141387 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1871236216
+Inmate vmexits delta: 119663 = (26009131 - 25889468)
+Workload output matches expected output
+*********************************************************
+Input Size=15728640
+Time=2020-02-16_08-06-54
+*********************************************************
+Iteration 0 (140):
+Inmate is ready!
+Input length: 15728640
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500627 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2005584413
+Inmate vmexits delta: 8277 = (26017524 - 26009247)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (141):
+Inmate is ready!
+Input length: 15728640
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500633 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2005190439
+Inmate vmexits delta: 7427 = (26025345 - 26017918)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (142):
+Inmate is ready!
+Input length: 15728640
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500634 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2005758454
+Inmate vmexits delta: 8163 = (26033850 - 26025687)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (143):
+Inmate is ready!
+Input length: 15728640
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500652 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2005303276
+Inmate vmexits delta: 8165 = (26042699 - 26034534)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (144):
+Inmate is ready!
+Input length: 15728640
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 860269 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2005604310
+Inmate vmexits delta: 6883 = (26050200 - 26043317)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (145):
+Inmate is ready!
+Input length: 15728640
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 408056 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2005583577
+Inmate vmexits delta: 138828 = (26202452 - 26063624)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (146):
+Inmate is ready!
+Input length: 15728640
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 406008 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2005406808
+Inmate vmexits delta: 141454 = (26358965 - 26217511)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (147):
+Inmate is ready!
+Input length: 15728640
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 407929 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2005011755
+Inmate vmexits delta: 130906 = (26502549 - 26371643)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (148):
+Inmate is ready!
+Input length: 15728640
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 414026 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2005121908
+Inmate vmexits delta: 137252 = (26649668 - 26512416)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (149):
+Inmate is ready!
+Input length: 15728640
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 925811 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2005423764
+Inmate vmexits delta: 138989 = (26796292 - 26657303)
+Workload output matches expected output
+*********************************************************
+Input Size=16777216
+Time=2020-02-16_08-07-26
+*********************************************************
+Iteration 0 (150):
+Inmate is ready!
+Input length: 16777216
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500641 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2139675361
+Inmate vmexits delta: 6330 = (26802627 - 26796297)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (151):
+Inmate is ready!
+Input length: 16777216
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500631 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2138684159
+Inmate vmexits delta: 7777 = (26811416 - 26803639)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (152):
+Inmate is ready!
+Input length: 16777216
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500589 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2138487343
+Inmate vmexits delta: 7718 = (26819421 - 26811703)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (153):
+Inmate is ready!
+Input length: 16777216
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 501561 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2138730824
+Inmate vmexits delta: 7799 = (26827576 - 26819777)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (154):
+Inmate is ready!
+Input length: 16777216
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 727485 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2139263661
+Inmate vmexits delta: 23235 = (26851724 - 26828489)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (155):
+Inmate is ready!
+Input length: 16777216
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 424393 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2138571992
+Inmate vmexits delta: 136443 = (26998235 - 26861792)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (156):
+Inmate is ready!
+Input length: 16777216
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 407896 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2139182232
+Inmate vmexits delta: 117893 = (27125036 - 27007143)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (157):
+Inmate is ready!
+Input length: 16777216
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 407421 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2139192401
+Inmate vmexits delta: 132012 = (27264517 - 27132505)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (158):
+Inmate is ready!
+Input length: 16777216
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 409857 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2139289837
+Inmate vmexits delta: 121697 = (27395447 - 27273750)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (159):
+Inmate is ready!
+Input length: 16777216
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 669253 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2139370854
+Inmate vmexits delta: 119690 = (27523177 - 27403487)
+Workload output matches expected output
+*********************************************************
+Input Size=17825792
+Time=2020-02-16_08-07-56
+*********************************************************
+Iteration 0 (160):
+Inmate is ready!
+Input length: 17825792
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600750 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2273142517
+Inmate vmexits delta: 7251 = (27530428 - 27523177)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (161):
+Inmate is ready!
+Input length: 17825792
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500670 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2272675780
+Inmate vmexits delta: 8235 = (27539850 - 27531615)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (162):
+Inmate is ready!
+Input length: 17825792
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500643 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2272945773
+Inmate vmexits delta: 7710 = (27548354 - 27540644)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (163):
+Inmate is ready!
+Input length: 17825792
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500629 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2273017777
+Inmate vmexits delta: 8310 = (27557091 - 27548781)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (164):
+Inmate is ready!
+Input length: 17825792
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 1 s 19482 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2272793784
+Inmate vmexits delta: 19340 = (27577229 - 27557889)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (165):
+Inmate is ready!
+Input length: 17825792
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 507015 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2273555760
+Inmate vmexits delta: 135969 = (27722326 - 27586357)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (166):
+Inmate is ready!
+Input length: 17825792
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 507562 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2272835881
+Inmate vmexits delta: 153490 = (27887877 - 27734387)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (167):
+Inmate is ready!
+Input length: 17825792
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 509563 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2272778057
+Inmate vmexits delta: 144961 = (28050545 - 27905584)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (168):
+Inmate is ready!
+Input length: 17825792
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 506708 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2272787466
+Inmate vmexits delta: 127331 = (28186421 - 28059090)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (169):
+Inmate is ready!
+Input length: 17825792
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 728593 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2272136634
+Inmate vmexits delta: 131247 = (28328194 - 28196947)
+Workload output matches expected output
+*********************************************************
+Input Size=18874368
+Time=2020-02-16_08-08-29
+*********************************************************
+Iteration 0 (170):
+Inmate is ready!
+Input length: 18874368
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500629 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2406030821
+Inmate vmexits delta: 6143 = (28334339 - 28328196)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (171):
+Inmate is ready!
+Input length: 18874368
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500643 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2406604728
+Inmate vmexits delta: 8393 = (28343650 - 28335257)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (172):
+Inmate is ready!
+Input length: 18874368
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500630 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2406178692
+Inmate vmexits delta: 8042 = (28352048 - 28344006)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (173):
+Inmate is ready!
+Input length: 18874368
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500636 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2406625932
+Inmate vmexits delta: 8282 = (28361009 - 28352727)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (174):
+Inmate is ready!
+Input length: 18874368
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 1 s 185527 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2406213542
+Inmate vmexits delta: 28451 = (28390260 - 28361809)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (175):
+Inmate is ready!
+Input length: 18874368
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 507661 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2405511472
+Inmate vmexits delta: 141864 = (28542064 - 28400200)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (176):
+Inmate is ready!
+Input length: 18874368
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 428646 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2406569516
+Inmate vmexits delta: 153168 = (28708694 - 28555526)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (177):
+Inmate is ready!
+Input length: 18874368
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 509479 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2406450571
+Inmate vmexits delta: 161067 = (28879969 - 28718902)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (178):
+Inmate is ready!
+Input length: 18874368
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 509094 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2406855904
+Inmate vmexits delta: 134304 = (29023932 - 28889628)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (179):
+Inmate is ready!
+Input length: 18874368
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 1 s 88069 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2406073544
+Inmate vmexits delta: 120088 = (29152453 - 29032365)
+Workload output matches expected output
+*********************************************************
+Input Size=19922944
+Time=2020-02-16_08-09-03
+*********************************************************
+Iteration 0 (180):
+Inmate is ready!
+Input length: 19922944
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500638 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2539620385
+Inmate vmexits delta: 7370 = (29159850 - 29152480)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (181):
+Inmate is ready!
+Input length: 19922944
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500641 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2540049684
+Inmate vmexits delta: 8110 = (29168913 - 29160803)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (182):
+Inmate is ready!
+Input length: 19922944
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500650 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2539994452
+Inmate vmexits delta: 8156 = (29177547 - 29169391)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (183):
+Inmate is ready!
+Input length: 19922944
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500634 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2540161778
+Inmate vmexits delta: 8637 = (29186763 - 29178126)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (184):
+Inmate is ready!
+Input length: 19922944
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 1 s 287179 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2540898791
+Inmate vmexits delta: 23203 = (29210358 - 29187155)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (185):
+Inmate is ready!
+Input length: 19922944
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 509489 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2540086791
+Inmate vmexits delta: 143320 = (29365346 - 29222026)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (186):
+Inmate is ready!
+Input length: 19922944
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 510180 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2540061081
+Inmate vmexits delta: 147547 = (29521485 - 29373938)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (187):
+Inmate is ready!
+Input length: 19922944
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 511707 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2539984797
+Inmate vmexits delta: 133760 = (29667966 - 29534206)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (188):
+Inmate is ready!
+Input length: 19922944
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 438764 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2539997233
+Inmate vmexits delta: 158555 = (29836755 - 29678200)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (189):
+Inmate is ready!
+Input length: 19922944
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 828023 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2539803153
+Inmate vmexits delta: 128499 = (29975895 - 29847396)
+Workload output matches expected output
+*********************************************************
+Input Size=20971520
+Time=2020-02-16_08-09-36
+*********************************************************
+Iteration 0 (190):
+Inmate is ready!
+Input length: 20971520
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500650 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2674118783
+Inmate vmexits delta: 8200 = (29984115 - 29975915)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (191):
+Inmate is ready!
+Input length: 20971520
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500645 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2673162712
+Inmate vmexits delta: 8153 = (29992836 - 29984683)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (192):
+Inmate is ready!
+Input length: 20971520
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500628 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2673852408
+Inmate vmexits delta: 8156 = (30001822 - 29993666)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (193):
+Inmate is ready!
+Input length: 20971520
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500583 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2673313299
+Inmate vmexits delta: 7834 = (30010225 - 30002391)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (194):
+Inmate is ready!
+Input length: 20971520
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 901168 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2673745175
+Inmate vmexits delta: 16376 = (30026985 - 30010609)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (195):
+Inmate is ready!
+Input length: 20971520
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 508207 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2673597204
+Inmate vmexits delta: 164257 = (30202237 - 30037980)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (196):
+Inmate is ready!
+Input length: 20971520
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 519861 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2673497291
+Inmate vmexits delta: 160067 = (30374561 - 30214494)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (197):
+Inmate is ready!
+Input length: 20971520
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 505712 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2673877004
+Inmate vmexits delta: 191133 = (30578455 - 30387322)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (198):
+Inmate is ready!
+Input length: 20971520
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 507740 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2673706460
+Inmate vmexits delta: 182403 = (30773293 - 30590890)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (199):
+Inmate is ready!
+Input length: 20971520
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 968878 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2673752399
+Inmate vmexits delta: 202073 = (30985930 - 30783857)
+Workload output matches expected output
+*********************************************************
+Input Size=22020096
+Time=2020-02-16_08-10-16
+*********************************************************
+Iteration 0 (200):
+Inmate is ready!
+Input length: 22020096
+Signaling inmate...
+Inmate is finished (polled 7 times at 0.100s/poll)
+Inmate duration (python): 0 s 702608 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2807424005
+Inmate vmexits delta: 7612 = (30993542 - 30985930)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (201):
+Inmate is ready!
+Input length: 22020096
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500623 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2807884815
+Inmate vmexits delta: 8220 = (31002341 - 30994121)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (202):
+Inmate is ready!
+Input length: 22020096
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 501592 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2807409493
+Inmate vmexits delta: 7984 = (31011265 - 31003281)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (203):
+Inmate is ready!
+Input length: 22020096
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500651 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2807272991
+Inmate vmexits delta: 8512 = (31020194 - 31011682)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (204):
+Inmate is ready!
+Input length: 22020096
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 1 s 198855 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2807763335
+Inmate vmexits delta: 22440 = (31043073 - 31020633)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (205):
+Inmate is ready!
+Input length: 22020096
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 507696 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2806834286
+Inmate vmexits delta: 211311 = (31267682 - 31056371)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (206):
+Inmate is ready!
+Input length: 22020096
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 527998 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2807590322
+Inmate vmexits delta: 191811 = (31476481 - 31284670)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (207):
+Inmate is ready!
+Input length: 22020096
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 507794 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2808374331
+Inmate vmexits delta: 194605 = (31685826 - 31491221)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (208):
+Inmate is ready!
+Input length: 22020096
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 552064 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2807539463
+Inmate vmexits delta: 169162 = (31867616 - 31698454)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (209):
+Inmate is ready!
+Input length: 22020096
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 1 s 109986 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2808050924
+Inmate vmexits delta: 160663 = (32044831 - 31884168)
+Workload output matches expected output
+*********************************************************
+Input Size=23068672
+Time=2020-02-16_08-10-58
+*********************************************************
+Iteration 0 (210):
+Inmate is ready!
+Input length: 23068672
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 501187 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2942163331
+Inmate vmexits delta: 8806 = (32053656 - 32044850)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (211):
+Inmate is ready!
+Input length: 23068672
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 503743 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2941092871
+Inmate vmexits delta: 9707 = (32064214 - 32054507)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (212):
+Inmate is ready!
+Input length: 23068672
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500650 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2941372448
+Inmate vmexits delta: 8150 = (32072636 - 32064486)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (213):
+Inmate is ready!
+Input length: 23068672
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500648 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2940462053
+Inmate vmexits delta: 8479 = (32081725 - 32073246)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (214):
+Inmate is ready!
+Input length: 23068672
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 1 s 215849 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2941314323
+Inmate vmexits delta: 14573 = (32096788 - 32082215)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (215):
+Inmate is ready!
+Input length: 23068672
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 508989 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2941567527
+Inmate vmexits delta: 146640 = (32253840 - 32107200)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (216):
+Inmate is ready!
+Input length: 23068672
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 509796 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2941694537
+Inmate vmexits delta: 158303 = (32423341 - 32265038)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (217):
+Inmate is ready!
+Input length: 23068672
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 509715 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2940936483
+Inmate vmexits delta: 171309 = (32614959 - 32443650)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (218):
+Inmate is ready!
+Input length: 23068672
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 509563 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2941818790
+Inmate vmexits delta: 160036 = (32785348 - 32625312)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (219):
+Inmate is ready!
+Input length: 23068672
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 854939 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 2942161805
+Inmate vmexits delta: 149245 = (32947087 - 32797842)
+Workload output matches expected output
+*********************************************************
+Input Size=24117248
+Time=2020-02-16_08-11-34
+*********************************************************
+Iteration 0 (220):
+Inmate is ready!
+Input length: 24117248
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600760 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3074142926
+Inmate vmexits delta: 6837 = (32953925 - 32947088)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (221):
+Inmate is ready!
+Input length: 24117248
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500610 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3074858001
+Inmate vmexits delta: 8559 = (32962898 - 32954339)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (222):
+Inmate is ready!
+Input length: 24117248
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 501652 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3075143158
+Inmate vmexits delta: 8401 = (32971755 - 32963354)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (223):
+Inmate is ready!
+Input length: 24117248
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500553 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3074946806
+Inmate vmexits delta: 8927 = (32981638 - 32972711)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (224):
+Inmate is ready!
+Input length: 24117248
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 1 s 309214 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3075219217
+Inmate vmexits delta: 21260 = (33003731 - 32982471)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (225):
+Inmate is ready!
+Input length: 24117248
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 509868 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3075887567
+Inmate vmexits delta: 176631 = (33190567 - 33013936)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (226):
+Inmate is ready!
+Input length: 24117248
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 536074 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3075119584
+Inmate vmexits delta: 166628 = (33368146 - 33201518)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (227):
+Inmate is ready!
+Input length: 24117248
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 509715 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3074362589
+Inmate vmexits delta: 138759 = (33519123 - 33380364)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (228):
+Inmate is ready!
+Input length: 24117248
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 511654 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3074849278
+Inmate vmexits delta: 158059 = (33684751 - 33526692)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (229):
+Inmate is ready!
+Input length: 24117248
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 993167 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3074827291
+Inmate vmexits delta: 132207 = (33824560 - 33692353)
+Workload output matches expected output
+*********************************************************
+Input Size=25165824
+Time=2020-02-16_08-12-10
+*********************************************************
+Iteration 0 (230):
+Inmate is ready!
+Input length: 25165824
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600757 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3209800968
+Inmate vmexits delta: 7436 = (33831996 - 33824560)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (231):
+Inmate is ready!
+Input length: 25165824
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500551 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3208642479
+Inmate vmexits delta: 8265 = (33840644 - 33832379)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (232):
+Inmate is ready!
+Input length: 25165824
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500648 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3208938244
+Inmate vmexits delta: 8174 = (33849502 - 33841328)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (233):
+Inmate is ready!
+Input length: 25165824
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500667 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3208147765
+Inmate vmexits delta: 9088 = (33859048 - 33849960)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (234):
+Inmate is ready!
+Input length: 25165824
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 1 s 337516 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3208192059
+Inmate vmexits delta: 28349 = (33888195 - 33859846)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (235):
+Inmate is ready!
+Input length: 25165824
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 507908 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3208082357
+Inmate vmexits delta: 177857 = (34075537 - 33897680)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (236):
+Inmate is ready!
+Input length: 25165824
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 509923 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3208793763
+Inmate vmexits delta: 192083 = (34275530 - 34083447)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (237):
+Inmate is ready!
+Input length: 25165824
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 509920 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3208771874
+Inmate vmexits delta: 174959 = (34460300 - 34285341)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (238):
+Inmate is ready!
+Input length: 25165824
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 509767 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3209330600
+Inmate vmexits delta: 142672 = (34611461 - 34468789)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (239):
+Inmate is ready!
+Input length: 25165824
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 1 s 229492 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3208128588
+Inmate vmexits delta: 159508 = (34780294 - 34620786)
+Workload output matches expected output
+*********************************************************
+Input Size=26214400
+Time=2020-02-16_08-12-48
+*********************************************************
+Iteration 0 (240):
+Inmate is ready!
+Input length: 26214400
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600762 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3342707393
+Inmate vmexits delta: 10221 = (34790527 - 34780306)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (241):
+Inmate is ready!
+Input length: 26214400
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600780 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3342097469
+Inmate vmexits delta: 11709 = (34802732 - 34791023)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (242):
+Inmate is ready!
+Input length: 26214400
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600769 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3342655938
+Inmate vmexits delta: 11720 = (34815138 - 34803418)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (243):
+Inmate is ready!
+Input length: 26214400
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 502911 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3342789821
+Inmate vmexits delta: 9086 = (34825129 - 34816043)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (244):
+Inmate is ready!
+Input length: 26214400
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 1 s 340176 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3343038403
+Inmate vmexits delta: 26962 = (34852774 - 34825812)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (245):
+Inmate is ready!
+Input length: 26214400
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 509903 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3342912518
+Inmate vmexits delta: 206700 = (35070339 - 34863639)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (246):
+Inmate is ready!
+Input length: 26214400
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 504399 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3342218590
+Inmate vmexits delta: 166607 = (35244720 - 35078113)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (247):
+Inmate is ready!
+Input length: 26214400
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 507917 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3342499909
+Inmate vmexits delta: 161791 = (35414352 - 35252561)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (248):
+Inmate is ready!
+Input length: 26214400
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 507922 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3342506701
+Inmate vmexits delta: 185448 = (35607276 - 35421828)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (249):
+Inmate is ready!
+Input length: 26214400
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 1 s 9636 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3342063487
+Inmate vmexits delta: 151639 = (35768631 - 35616992)
+Workload output matches expected output
+*********************************************************
+Input Size=27262976
+Time=2020-02-16_08-13-27
+*********************************************************
+Iteration 0 (250):
+Inmate is ready!
+Input length: 27262976
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600756 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3476625383
+Inmate vmexits delta: 10267 = (35778914 - 35768647)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (251):
+Inmate is ready!
+Input length: 27262976
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600744 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3476340406
+Inmate vmexits delta: 11157 = (35790514 - 35779357)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (252):
+Inmate is ready!
+Input length: 27262976
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600760 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3476218793
+Inmate vmexits delta: 11525 = (35802680 - 35791155)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (253):
+Inmate is ready!
+Input length: 27262976
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600748 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3476756327
+Inmate vmexits delta: 11626 = (35815105 - 35803479)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (254):
+Inmate is ready!
+Input length: 27262976
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 807494 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3476514972
+Inmate vmexits delta: 8550 = (35824567 - 35816017)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (255):
+Inmate is ready!
+Input length: 27262976
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 538517 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3475651655
+Inmate vmexits delta: 197730 = (36032797 - 35835067)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (256):
+Inmate is ready!
+Input length: 27262976
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 508019 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3476771923
+Inmate vmexits delta: 188128 = (36233726 - 36045598)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (257):
+Inmate is ready!
+Input length: 27262976
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 509901 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3475996845
+Inmate vmexits delta: 192186 = (36434251 - 36242065)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (258):
+Inmate is ready!
+Input length: 27262976
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 507987 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3475882688
+Inmate vmexits delta: 186868 = (36634422 - 36447554)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (259):
+Inmate is ready!
+Input length: 27262976
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 1 s 242495 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3476136742
+Inmate vmexits delta: 137549 = (36782729 - 36645180)
+Workload output matches expected output
+*********************************************************
+Input Size=28311552
+Time=2020-02-16_08-14-08
+*********************************************************
+Iteration 0 (260):
+Inmate is ready!
+Input length: 28311552
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600752 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3610279728
+Inmate vmexits delta: 10538 = (36793288 - 36782750)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (261):
+Inmate is ready!
+Input length: 28311552
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600759 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3608711536
+Inmate vmexits delta: 11951 = (36806038 - 36794087)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (262):
+Inmate is ready!
+Input length: 28311552
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600764 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3609264557
+Inmate vmexits delta: 11373 = (36817973 - 36806600)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (263):
+Inmate is ready!
+Input length: 28311552
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600762 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3610407003
+Inmate vmexits delta: 11185 = (36829688 - 36818503)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (264):
+Inmate is ready!
+Input length: 28311552
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 972251 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3610919048
+Inmate vmexits delta: 23398 = (36853768 - 36830370)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (265):
+Inmate is ready!
+Input length: 28311552
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 508033 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3609178760
+Inmate vmexits delta: 176737 = (37042249 - 36865512)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (266):
+Inmate is ready!
+Input length: 28311552
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 509853 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3610934426
+Inmate vmexits delta: 184836 = (37236282 - 37051446)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (267):
+Inmate is ready!
+Input length: 28311552
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 518028 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3610379957
+Inmate vmexits delta: 164902 = (37409673 - 37244771)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (268):
+Inmate is ready!
+Input length: 28311552
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 507934 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3611001468
+Inmate vmexits delta: 158723 = (37575606 - 37416883)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (269):
+Inmate is ready!
+Input length: 28311552
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 759912 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3609058300
+Inmate vmexits delta: 163120 = (37750292 - 37587172)
+Workload output matches expected output
+*********************************************************
+Input Size=29360128
+Time=2020-02-16_08-14-46
+*********************************************************
+Iteration 0 (270):
+Inmate is ready!
+Input length: 29360128
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600756 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3743142285
+Inmate vmexits delta: 10462 = (37760771 - 37750309)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (271):
+Inmate is ready!
+Input length: 29360128
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 601572 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3743458186
+Inmate vmexits delta: 11894 = (37773233 - 37761339)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (272):
+Inmate is ready!
+Input length: 29360128
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600797 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3743028354
+Inmate vmexits delta: 11073 = (37784615 - 37773542)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (273):
+Inmate is ready!
+Input length: 29360128
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600799 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3743921288
+Inmate vmexits delta: 11590 = (37796819 - 37785229)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (274):
+Inmate is ready!
+Input length: 29360128
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 988855 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3744020790
+Inmate vmexits delta: 23378 = (37820890 - 37797512)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (275):
+Inmate is ready!
+Input length: 29360128
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 520209 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3743116355
+Inmate vmexits delta: 199134 = (38030606 - 37831472)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (276):
+Inmate is ready!
+Input length: 29360128
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 514150 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3743546631
+Inmate vmexits delta: 200547 = (38241858 - 38041311)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (277):
+Inmate is ready!
+Input length: 29360128
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 520181 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3743219858
+Inmate vmexits delta: 174669 = (38428871 - 38254202)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (278):
+Inmate is ready!
+Input length: 29360128
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 514100 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3743492796
+Inmate vmexits delta: 172248 = (38611818 - 38439570)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (279):
+Inmate is ready!
+Input length: 29360128
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 1 s 166857 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3744044228
+Inmate vmexits delta: 169449 = (38790646 - 38621197)
+Workload output matches expected output
+*********************************************************
+Input Size=30408704
+Time=2020-02-16_08-15-27
+*********************************************************
+Iteration 0 (280):
+Inmate is ready!
+Input length: 30408704
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600758 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3877320898
+Inmate vmexits delta: 9456 = (38800103 - 38790647)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (281):
+Inmate is ready!
+Input length: 30408704
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600769 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3877274399
+Inmate vmexits delta: 11115 = (38811673 - 38800558)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (282):
+Inmate is ready!
+Input length: 30408704
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600768 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3877055312
+Inmate vmexits delta: 12171 = (38824624 - 38812453)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (283):
+Inmate is ready!
+Input length: 30408704
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 602673 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3877031210
+Inmate vmexits delta: 11376 = (38836569 - 38825193)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (284):
+Inmate is ready!
+Input length: 30408704
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 832896 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3877498349
+Inmate vmexits delta: 16463 = (38853601 - 38837138)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (285):
+Inmate is ready!
+Input length: 30408704
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 538707 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3877234772
+Inmate vmexits delta: 192714 = (39061465 - 38868751)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (286):
+Inmate is ready!
+Input length: 30408704
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 519835 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3877431289
+Inmate vmexits delta: 178430 = (39254283 - 39075853)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (287):
+Inmate is ready!
+Input length: 30408704
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 510073 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3877398811
+Inmate vmexits delta: 163354 = (39430712 - 39267358)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (288):
+Inmate is ready!
+Input length: 30408704
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 513380 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3877407093
+Inmate vmexits delta: 160518 = (39597567 - 39437049)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (289):
+Inmate is ready!
+Input length: 30408704
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 512010 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 3876801370
+Inmate vmexits delta: 171250 = (39778604 - 39607354)
+Workload output matches expected output
+*********************************************************
+Input Size=31457280
+Time=2020-02-16_08-16-07
+*********************************************************
+Iteration 0 (290):
+Inmate is ready!
+Input length: 31457280
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 607493 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4010815956
+Inmate vmexits delta: 7988 = (39786592 - 39778604)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (291):
+Inmate is ready!
+Input length: 31457280
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600767 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4012295030
+Inmate vmexits delta: 11601 = (39798945 - 39787344)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (292):
+Inmate is ready!
+Input length: 31457280
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600742 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4010085070
+Inmate vmexits delta: 11774 = (39811248 - 39799474)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (293):
+Inmate is ready!
+Input length: 31457280
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 609720 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4010931641
+Inmate vmexits delta: 12139 = (39824242 - 39812103)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (294):
+Inmate is ready!
+Input length: 31457280
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 1 s 295790 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4011764103
+Inmate vmexits delta: 23465 = (39848311 - 39824846)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (295):
+Inmate is ready!
+Input length: 31457280
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 611462 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4011784930
+Inmate vmexits delta: 198528 = (40055617 - 39857089)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (296):
+Inmate is ready!
+Input length: 31457280
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 611226 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4011441714
+Inmate vmexits delta: 190997 = (40256945 - 40065948)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (297):
+Inmate is ready!
+Input length: 31457280
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 613611 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4010053447
+Inmate vmexits delta: 193663 = (40462554 - 40268891)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (298):
+Inmate is ready!
+Input length: 31457280
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 609484 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4011223638
+Inmate vmexits delta: 198626 = (40669734 - 40471108)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (299):
+Inmate is ready!
+Input length: 31457280
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 1 s 186686 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4010141942
+Inmate vmexits delta: 183541 = (40860910 - 40677369)
+Workload output matches expected output
+*********************************************************
+Input Size=32505856
+Time=2020-02-16_08-16-49
+*********************************************************
+Iteration 0 (300):
+Inmate is ready!
+Input length: 32505856
+Signaling inmate...
+Inmate is finished (polled 7 times at 0.100s/poll)
+Inmate duration (python): 0 s 700883 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4145446668
+Inmate vmexits delta: 10450 = (40871360 - 40860910)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (301):
+Inmate is ready!
+Input length: 32505856
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600794 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4144613375
+Inmate vmexits delta: 13094 = (40885366 - 40872272)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (302):
+Inmate is ready!
+Input length: 32505856
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600770 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4143518342
+Inmate vmexits delta: 11175 = (40897007 - 40885832)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (303):
+Inmate is ready!
+Input length: 32505856
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600717 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4144191876
+Inmate vmexits delta: 12192 = (40909823 - 40897631)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (304):
+Inmate is ready!
+Input length: 32505856
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 1 s 158118 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4144599475
+Inmate vmexits delta: 15189 = (40925931 - 40910742)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (305):
+Inmate is ready!
+Input length: 32505856
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 617592 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4144447799
+Inmate vmexits delta: 197773 = (41135903 - 40938130)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (306):
+Inmate is ready!
+Input length: 32505856
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 615325 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4144761454
+Inmate vmexits delta: 178231 = (41322956 - 41144725)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (307):
+Inmate is ready!
+Input length: 32505856
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 613584 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4143504071
+Inmate vmexits delta: 202306 = (41533437 - 41331131)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (308):
+Inmate is ready!
+Input length: 32505856
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 611355 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4144219555
+Inmate vmexits delta: 173507 = (41717281 - 41543774)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (309):
+Inmate is ready!
+Input length: 32505856
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 793506 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4144607103
+Inmate vmexits delta: 187980 = (41912593 - 41724613)
+Workload output matches expected output
+*********************************************************
+Input Size=33554432
+Time=2020-02-16_08-17-31
+*********************************************************
+Iteration 0 (310):
+Inmate is ready!
+Input length: 33554432
+Signaling inmate...
+Inmate is finished (polled 7 times at 0.100s/poll)
+Inmate duration (python): 0 s 702947 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4279443979
+Inmate vmexits delta: 10311 = (41922905 - 41912594)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (311):
+Inmate is ready!
+Input length: 33554432
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600807 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4277719141
+Inmate vmexits delta: 11476 = (41935029 - 41923553)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (312):
+Inmate is ready!
+Input length: 33554432
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 607143 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4278687301
+Inmate vmexits delta: 11866 = (41947722 - 41935856)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (313):
+Inmate is ready!
+Input length: 33554432
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600760 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4278007009
+Inmate vmexits delta: 11784 = (41959963 - 41948179)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (314):
+Inmate is ready!
+Input length: 33554432
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 862570 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4279484180
+Inmate vmexits delta: 15180 = (41975714 - 41960534)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (315):
+Inmate is ready!
+Input length: 33554432
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 609595 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4277916365
+Inmate vmexits delta: 197269 = (42185645 - 41988376)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (316):
+Inmate is ready!
+Input length: 33554432
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 607736 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4277468825
+Inmate vmexits delta: 218108 = (42413324 - 42195216)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (317):
+Inmate is ready!
+Input length: 33554432
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 607990 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4278586383
+Inmate vmexits delta: 186183 = (42609115 - 42422932)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (318):
+Inmate is ready!
+Input length: 33554432
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 613582 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4278055441
+Inmate vmexits delta: 206663 = (42830166 - 42623503)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (319):
+Inmate is ready!
+Input length: 33554432
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 932243 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4279165687
+Inmate vmexits delta: 184808 = (43024229 - 42839421)
+Workload output matches expected output
+*********************************************************
+Input Size=34603008
+Time=2020-02-16_08-18-14
+*********************************************************
+Iteration 0 (320):
+Inmate is ready!
+Input length: 34603008
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600750 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4411662087
+Inmate vmexits delta: 8245 = (43032474 - 43024229)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (321):
+Inmate is ready!
+Input length: 34603008
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600760 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4412184411
+Inmate vmexits delta: 11369 = (43044083 - 43032714)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (322):
+Inmate is ready!
+Input length: 34603008
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600748 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4410854986
+Inmate vmexits delta: 11441 = (43056093 - 43044652)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (323):
+Inmate is ready!
+Input length: 34603008
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 609030 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4412627799
+Inmate vmexits delta: 12792 = (43069181 - 43056389)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (324):
+Inmate is ready!
+Input length: 34603008
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 1 s 188342 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4412360052
+Inmate vmexits delta: 23163 = (43093435 - 43070272)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (325):
+Inmate is ready!
+Input length: 34603008
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 611898 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4412881960
+Inmate vmexits delta: 212034 = (43315757 - 43103723)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (326):
+Inmate is ready!
+Input length: 34603008
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 607658 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4411245194
+Inmate vmexits delta: 197677 = (43526925 - 43329248)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (327):
+Inmate is ready!
+Input length: 34603008
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 554798 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4411211140
+Inmate vmexits delta: 177282 = (43720099 - 43542817)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (328):
+Inmate is ready!
+Input length: 34603008
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 612640 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4411204814
+Inmate vmexits delta: 203557 = (43935117 - 43731560)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (329):
+Inmate is ready!
+Input length: 34603008
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 1 s 72805 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4411688180
+Inmate vmexits delta: 165852 = (44110137 - 43944285)
+Workload output matches expected output
+*********************************************************
+Input Size=35651584
+Time=2020-02-16_08-18-57
+*********************************************************
+Iteration 0 (330):
+Inmate is ready!
+Input length: 35651584
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600763 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4545642255
+Inmate vmexits delta: 11334 = (44121497 - 44110163)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (331):
+Inmate is ready!
+Input length: 35651584
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600770 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4546161421
+Inmate vmexits delta: 11705 = (44134000 - 44122295)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (332):
+Inmate is ready!
+Input length: 35651584
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600790 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4545032070
+Inmate vmexits delta: 11956 = (44146958 - 44135002)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (333):
+Inmate is ready!
+Input length: 35651584
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600760 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4544147643
+Inmate vmexits delta: 11692 = (44159737 - 44148045)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (334):
+Inmate is ready!
+Input length: 35651584
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 1 s 176185 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4546324315
+Inmate vmexits delta: 27064 = (44187381 - 44160317)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (335):
+Inmate is ready!
+Input length: 35651584
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 613565 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4546539546
+Inmate vmexits delta: 184525 = (44385478 - 44200953)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (336):
+Inmate is ready!
+Input length: 35651584
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 611710 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4545733396
+Inmate vmexits delta: 188145 = (44583186 - 44395041)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (337):
+Inmate is ready!
+Input length: 35651584
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 615754 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4547416711
+Inmate vmexits delta: 187821 = (44778949 - 44591128)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (338):
+Inmate is ready!
+Input length: 35651584
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 609531 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4545604886
+Inmate vmexits delta: 207795 = (44997646 - 44789851)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (339):
+Inmate is ready!
+Input length: 35651584
+Signaling inmate...
+Inmate is finished (polled 4 times at 0.100s/poll)
+Inmate duration (python): 0 s 816944 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4546160430
+Inmate vmexits delta: 174915 = (45180137 - 45005222)
+Workload output matches expected output
+*********************************************************
+Input Size=36700160
+Time=2020-02-16_08-19-39
+*********************************************************
+Iteration 0 (340):
+Inmate is ready!
+Input length: 36700160
+Signaling inmate...
+Inmate is finished (polled 7 times at 0.100s/poll)
+Inmate duration (python): 0 s 700923 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4680654843
+Inmate vmexits delta: 10195 = (45190332 - 45180137)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (341):
+Inmate is ready!
+Input length: 36700160
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600762 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4678505288
+Inmate vmexits delta: 11350 = (45202168 - 45190818)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (342):
+Inmate is ready!
+Input length: 36700160
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 602228 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4680036351
+Inmate vmexits delta: 11355 = (45213701 - 45202346)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (343):
+Inmate is ready!
+Input length: 36700160
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600752 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4679206635
+Inmate vmexits delta: 11650 = (45226131 - 45214481)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (344):
+Inmate is ready!
+Input length: 36700160
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 1 s 193606 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4679181533
+Inmate vmexits delta: 18159 = (45244958 - 45226799)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (345):
+Inmate is ready!
+Input length: 36700160
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 615658 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4678658492
+Inmate vmexits delta: 226676 = (45481588 - 45254912)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (346):
+Inmate is ready!
+Input length: 36700160
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 609721 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4679054159
+Inmate vmexits delta: 210005 = (45703910 - 45493905)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (347):
+Inmate is ready!
+Input length: 36700160
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 607862 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4679031135
+Inmate vmexits delta: 277433 = (45995397 - 45717964)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (348):
+Inmate is ready!
+Input length: 36700160
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 621970 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4679114545
+Inmate vmexits delta: 250212 = (46262701 - 46012489)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (349):
+Inmate is ready!
+Input length: 36700160
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 825005 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4678522819
+Inmate vmexits delta: 194874 = (46466812 - 46271938)
+Workload output matches expected output
+*********************************************************
+Input Size=37748736
+Time=2020-02-16_08-20-29
+*********************************************************
+Iteration 0 (350):
+Inmate is ready!
+Input length: 37748736
+Signaling inmate...
+Inmate is finished (polled 7 times at 0.100s/poll)
+Inmate duration (python): 0 s 700877 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4813673777
+Inmate vmexits delta: 12775 = (46479589 - 46466814)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (351):
+Inmate is ready!
+Input length: 37748736
+Signaling inmate...
+Inmate is finished (polled 7 times at 0.100s/poll)
+Inmate duration (python): 0 s 700811 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4813796401
+Inmate vmexits delta: 15156 = (46495227 - 46480071)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (352):
+Inmate is ready!
+Input length: 37748736
+Signaling inmate...
+Inmate is finished (polled 7 times at 0.100s/poll)
+Inmate duration (python): 0 s 703335 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4812887921
+Inmate vmexits delta: 14801 = (46510560 - 46495759)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (353):
+Inmate is ready!
+Input length: 37748736
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 600751 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4812546788
+Inmate vmexits delta: 11672 = (46523042 - 46511370)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (354):
+Inmate is ready!
+Input length: 37748736
+Signaling inmate...
+Inmate is finished (polled 7 times at 0.100s/poll)
+Inmate duration (python): 1 s 427411 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4813560028
+Inmate vmexits delta: 25614 = (46549589 - 46523975)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (355):
+Inmate is ready!
+Input length: 37748736
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 611743 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4812562828
+Inmate vmexits delta: 247609 = (46806914 - 46559305)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (356):
+Inmate is ready!
+Input length: 37748736
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 648942 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4811898681
+Inmate vmexits delta: 262091 = (47079705 - 46817614)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (357):
+Inmate is ready!
+Input length: 37748736
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 611763 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4812480097
+Inmate vmexits delta: 211515 = (47298622 - 47087107)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (358):
+Inmate is ready!
+Input length: 37748736
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 634086 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4812587108
+Inmate vmexits delta: 218457 = (47527456 - 47308999)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (359):
+Inmate is ready!
+Input length: 37748736
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 832952 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4812299511
+Inmate vmexits delta: 212453 = (47752118 - 47539665)
+Workload output matches expected output
+*********************************************************
+Input Size=38797312
+Time=2020-02-16_08-21-19
+*********************************************************
+Iteration 0 (360):
+Inmate is ready!
+Input length: 38797312
+Signaling inmate...
+Inmate is finished (polled 7 times at 0.100s/poll)
+Inmate duration (python): 0 s 700892 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4945802758
+Inmate vmexits delta: 12768 = (47764887 - 47752119)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (361):
+Inmate is ready!
+Input length: 38797312
+Signaling inmate...
+Inmate is finished (polled 7 times at 0.100s/poll)
+Inmate duration (python): 0 s 700878 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4946357994
+Inmate vmexits delta: 18521 = (47784206 - 47765685)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (362):
+Inmate is ready!
+Input length: 38797312
+Signaling inmate...
+Inmate is finished (polled 7 times at 0.100s/poll)
+Inmate duration (python): 0 s 703767 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4946392915
+Inmate vmexits delta: 17655 = (47802530 - 47784875)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (363):
+Inmate is ready!
+Input length: 38797312
+Signaling inmate...
+Inmate is finished (polled 7 times at 0.100s/poll)
+Inmate duration (python): 0 s 700870 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4946661554
+Inmate vmexits delta: 16436 = (47819330 - 47802894)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (364):
+Inmate is ready!
+Input length: 38797312
+Signaling inmate...
+Inmate is finished (polled 7 times at 0.100s/poll)
+Inmate duration (python): 1 s 51488 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4946110931
+Inmate vmexits delta: 16689 = (47836361 - 47819672)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (365):
+Inmate is ready!
+Input length: 38797312
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 609904 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4946775480
+Inmate vmexits delta: 247676 = (48095730 - 47848054)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (366):
+Inmate is ready!
+Input length: 38797312
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 609892 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4947668070
+Inmate vmexits delta: 228479 = (48331555 - 48103076)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (367):
+Inmate is ready!
+Input length: 38797312
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 607853 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4945603999
+Inmate vmexits delta: 226189 = (48571735 - 48345546)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (368):
+Inmate is ready!
+Input length: 38797312
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 615529 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4946267887
+Inmate vmexits delta: 238053 = (48817510 - 48579457)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (369):
+Inmate is ready!
+Input length: 38797312
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 1 s 331582 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 4946877958
+Inmate vmexits delta: 209384 = (49037959 - 48828575)
+Workload output matches expected output
+*********************************************************
+Input Size=39845888
+Time=2020-02-16_08-22-09
+*********************************************************
+Iteration 0 (370):
+Inmate is ready!
+Input length: 39845888
+Signaling inmate...
+Inmate is finished (polled 7 times at 0.100s/poll)
+Inmate duration (python): 0 s 700834 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 5081182251
+Inmate vmexits delta: 15798 = (49053762 - 49037964)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (371):
+Inmate is ready!
+Input length: 39845888
+Signaling inmate...
+Inmate is finished (polled 7 times at 0.100s/poll)
+Inmate duration (python): 0 s 700876 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 5080159286
+Inmate vmexits delta: 16335 = (49070741 - 49054406)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (372):
+Inmate is ready!
+Input length: 39845888
+Signaling inmate...
+Inmate is finished (polled 7 times at 0.100s/poll)
+Inmate duration (python): 0 s 700873 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 5080894605
+Inmate vmexits delta: 16132 = (49087120 - 49070988)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (373):
+Inmate is ready!
+Input length: 39845888
+Signaling inmate...
+Inmate is finished (polled 7 times at 0.100s/poll)
+Inmate duration (python): 0 s 700880 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 5079448439
+Inmate vmexits delta: 16479 = (49103876 - 49087397)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (374):
+Inmate is ready!
+Input length: 39845888
+Signaling inmate...
+Inmate is finished (polled 7 times at 0.100s/poll)
+Inmate duration (python): 0 s 914523 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 5080314182
+Inmate vmexits delta: 17899 = (49122567 - 49104668)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (375):
+Inmate is ready!
+Input length: 39845888
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 636167 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 5080177460
+Inmate vmexits delta: 237238 = (49372509 - 49135271)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (376):
+Inmate is ready!
+Input length: 39845888
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 609902 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 5080596053
+Inmate vmexits delta: 228073 = (49610552 - 49382479)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (377):
+Inmate is ready!
+Input length: 39845888
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 610605 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 5081567471
+Inmate vmexits delta: 236350 = (49856993 - 49620643)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (378):
+Inmate is ready!
+Input length: 39845888
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 614112 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 5080590414
+Inmate vmexits delta: 215350 = (50079258 - 49863908)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (379):
+Inmate is ready!
+Input length: 39845888
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 985745 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 5081385607
+Inmate vmexits delta: 202994 = (50290873 - 50087879)
+Workload output matches expected output
+*********************************************************
+Input Size=40894464
+Time=2020-02-16_08-22-57
+*********************************************************
+Iteration 0 (380):
+Inmate is ready!
+Input length: 40894464
+Signaling inmate...
+Inmate is finished (polled 7 times at 0.100s/poll)
+Inmate duration (python): 0 s 700892 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 5214415725
+Inmate vmexits delta: 10675 = (50301548 - 50290873)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (381):
+Inmate is ready!
+Input length: 40894464
+Signaling inmate...
+Inmate is finished (polled 7 times at 0.100s/poll)
+Inmate duration (python): 0 s 702562 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 5213593827
+Inmate vmexits delta: 16849 = (50318698 - 50301849)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (382):
+Inmate is ready!
+Input length: 40894464
+Signaling inmate...
+Inmate is finished (polled 7 times at 0.100s/poll)
+Inmate duration (python): 0 s 700872 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 5213267763
+Inmate vmexits delta: 17249 = (50336471 - 50319222)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (383):
+Inmate is ready!
+Input length: 40894464
+Signaling inmate...
+Inmate is finished (polled 7 times at 0.100s/poll)
+Inmate duration (python): 0 s 704391 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 5213108068
+Inmate vmexits delta: 17673 = (50354685 - 50337012)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (384):
+Inmate is ready!
+Input length: 40894464
+Signaling inmate...
+Inmate is finished (polled 7 times at 0.100s/poll)
+Inmate duration (python): 1 s 64104 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 5214755541
+Inmate vmexits delta: 22525 = (50378015 - 50355490)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (385):
+Inmate is ready!
+Input length: 40894464
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 614068 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 5215028333
+Inmate vmexits delta: 255108 = (50642710 - 50387602)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (386):
+Inmate is ready!
+Input length: 40894464
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 613846 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 5212692697
+Inmate vmexits delta: 220302 = (50871991 - 50651689)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (387):
+Inmate is ready!
+Input length: 40894464
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 611966 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 5214035453
+Inmate vmexits delta: 216178 = (51096886 - 50880708)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (388):
+Inmate is ready!
+Input length: 40894464
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 612070 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 5214412320
+Inmate vmexits delta: 241501 = (51345781 - 51104280)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (389):
+Inmate is ready!
+Input length: 40894464
+Signaling inmate...
+Inmate is finished (polled 6 times at 0.100s/poll)
+Inmate duration (python): 0 s 996514 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 5214307739
+Inmate vmexits delta: 205339 = (51560366 - 51355027)
+Workload output matches expected output
+*********************************************************
+Stopping workload handbrake (pid=32040)
+sudo killall HandBrakeCLI
+Removing all generated random input files...
+Enabling Turbo Boost
+0
+sudo kill 29245
+sudo /home/hintron/code/jailhouse/tools/jailhouse cell destroy bazooka-inmate
+Ending experiments at 2020-02-16_08-23-54

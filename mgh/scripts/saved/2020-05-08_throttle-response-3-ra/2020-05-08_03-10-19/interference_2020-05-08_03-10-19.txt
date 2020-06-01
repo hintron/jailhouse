@@ -1,0 +1,11 @@
+Creating a 1 GiB (1073741824 B) file of random data to run the workloads on
+Starting up 6 random-access workloads in parallel
+Iteration 0: Workload PIDs: 22003 22004 22005 22006 22007 22008
+Canceling all background workload tasks
+Killing PID 22003
+Killing PID 22004
+Killing PID 22005
+Killing PID 22006
+Killing PID 22007
+Killing PID 22008
+Removing workload_demo_input.bin

@@ -1,0 +1,157 @@
+=======================================================
+*******************************************************
+Starting script at 2020-05-08_01-13-15
+*******************************************************
+=======================================================
+*******************************************************
+Starting Experiment
+*******************************************************
+<missed 1179 bytes of console log>
+terrupt(s) for device 00:16.0 at index 131
+Adding PCI device 00:17.0 to cell "RootCell"
+Reserving 1 interrupt(s) for device 00:17.0 at index 132
+Adding PCI device 00:1c.0 to cell "RootCell"
+Reserving 1 interrupt(s) for device 00:1c.0 at index 133
+Adding PCI device 00:1c.5 to cell "RootCell"
+Reserving 1 interrupt(s) for device 00:1c.5 at index 134
+Adding PCI device 00:1f.0 to cell "RootCell"
+Adding PCI device 00:1f.3 to cell "RootCell"
+Reserving 1 interrupt(s) for device 00:1f.3 at index 135
+Adding PCI device 00:1f.4 to cell "RootCell"
+Adding PCI device 00:1f.5 to cell "RootCell"
+Adding PCI device 01:00.0 to cell "RootCell"
+Reserving 1 interrupt(s) for device 01:00.0 at index 136
+Adding PCI device 01:00.1 to cell "RootCell"
+Reserving 1 interrupt(s) for device 01:00.1 at index 137
+Adding PCI device 02:00.0 to cell "RootCell"
+Reserving 4 interrupt(s) for device 02:00.0 at index 138
+Adding PCI device 03:00.0 to cell "RootCell"
+Reserving 16 interrupt(s) for device 03:00.0 at index 142
+Adding virtual PCI device 00:0f.0 to cell "RootCell"
+Page pool usage after late setup: mem 319/973, remap 65543/131072
+Activating hypervisor
+MGH HYPER: CPU  2: TSC bit 7 being monitored
+MGH HYPER: CPU  1: TSC bit 7 being monitored
+MGH HYPER: CPU  3: TSC bit 7 being monitored
+MGH HYPER: CPU  5: TSC bit 7 being monitored
+MGH HYPER: CPU  0: TSC bit 7 being monitored
+MGH HYPER: CPU  4: TSC bit 7 being monitored
+MGH HYPER: CPU  2: initial preemption_timeout: 1000
+MGH HYPER: CPU  1: initial preemption_timeout: 1000
+MGH HYPER: CPU  3: initial preemption_timeout: 1000
+MGH HYPER: CPU  5: initial preemption_timeout: 1000
+MGH HYPER: CPU  0: initial preemption_timeout: 1000
+MGH HYPER: CPU  4: initial preemption_timeout: 1000
+MGH HYPER: CPU  2: initial spin_loop_iterations: 50000
+MGH HYPER: CPU  1: initial spin_loop_iterations: 50000
+MGH HYPER: CPU  3: initial spin_loop_iterations: 50000
+MGH HYPER: CPU  5: initial spin_loop_iterations: 50000
+MGH HYPER: CPU  0: initial spin_loop_iterations: 50000
+MGH HYPER: CPU  4: initial spin_loop_iterations: 50000
+WARNING: CAT is unsupported
+Adding virtual PCI device 00:0f.0 to cell "bazooka-inmate"
+Shared memory connection established: "bazooka-inmate" <--> "RootCell"
+MGH HYPER: CPU  2: This is the inmate's CPU!
+Created cell "bazooka-inmate"
+Page pool usage after cell creation: mem 352/973, remap 65543/131072
+Cell "bazooka-inmate" can be loaded
+CPU 2 received SIPI, vector 100
+Started cell "bazooka-inmate"
+MGH: local_buffer=0
+MGH: MGH_DEBUG_MODE=1
+MGH: throttle_mode=ITERATION
+MGH: throttle_iterations=5
+MGH: throttle_mechanism=SPIN
+MGH: workload_mode=SHA3
+MGH: local_input=LOCAL_INPUT_NONE
+MGH: TSC frequency is 3696002000 Hz.
+MGH: cache_line_size = 64
+MGH: Found 1af4:1110 at 00:0f.0
+MGH: shmem is at 0x000000003ca00000
+MGH: bar0 is at 0x000000003f200000
+MGH: bar2 is at 0x000000003f201000
+MGH: mapped the bars got position 1
+MGH: set_throttle_params_hypervisor(preemption_timeout=-1, spin_loop_iterations=4000)
+MGH: Sending reconfiguration request to hypervisor
+MGH HYPER: CPU 3: Handling throttle request
+MMGH HYPER: CPU 3: Set spin_loop_iterations to 4000
+GMGH HYPER: CPU 3: Looking to see if other CPUs have been configured...
+HMGH HYPER: CPU 3: CPU 0 has not yet been reconfigured
+MGH HYPER: CPU 0: Handling throttle request
+MGH HYPER: CPU 0: Set spin_loop_iterations to 4000
+MGH HYPER: CPU 0: Looking to see if other CPUs have been configured...
+MGH HYPER: CPU 0: CPU 1 has not yet been reconfigured
+MGH HYPER: CPU 1: Handling throttle request
+MGH HYPER: CPU 1: Set spin_loop_iterations to 4000
+MGH HYPER: CPU 1: Looking to see if other CPUs have been configured...
+MGH HYPER: CPU 1: CPU 2 has not yet been reconfigured
+MGH HYPER: CPU 5: Handling throttle request
+MGH HYPER: CPU 5: Set spin_loop_iterations to 4000
+MGH HYPER: CPU 5: Looking to see if other CPUs have been configured...
+MGH HYPER: CPU 5: CPU 2 has not yet been reconfigured
+MGH HYPER: CPU 4: Handling throttle request
+MGH HYPER: CPU 4: Set spin_loop_iterations to 4000
+MGH HYPER: CPU 4: Looking to see if other CPUs have been configured...
+MGH HYPER: CPU 4: CPU 2 has not yet been reconfigured
+MGH HYPER: CPU 2: Handling throttle request
+MGH HYPER: CPU 2: Set spin_loop_iterations to 4000
+MGH HYPER: CPU 2: Looking to see if other CPUs have been configured...
+MGH HYPER: CPU 2: Hypervisor configured! Telling inmate...
+MGH HYPER: CPU 2: Message sent
+: Waiting on hypervisor to reconfigure...
+MGH: Hypervisor reconfiguring was successful!
+MGH: Hypervisor has been reconfigured with preemption_timeout=-1 for all root cell cores
+MGH: Hypervisor has been reconfigured with spin_loop_iterations=4000 for all root cell cores
+Starting workload iterations...
+MGHOUT:is_throttled,workload_counter,input_len,workload_cycles
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:is_throttled,workload_counter,input_len,max_freq,aperf,mperf
+MGH: Maximum Non-Turbo Ratio: 37
+MGH: Maximum Non-Turbo Frequency: 3700000000
+MGHFREQ:0,0,20971520,3700000000,5901215559,5598589947
+workload output: 0x0cbf38c87093833d3566a89c18f6b53fcb631fd7062dd86cfaee1c0146f3a8d142945f61fac5ca24b9162501c675dada1ddb38689b484db2c01a488007a146d8
+MGHOUT:0,0,20971520,4574465674
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:0,1,20971520,3700000000,4814619071,4567716217
+workload output: 0x0cbf38c87093833d3566a89c18f6b53fcb631fd7062dd86cfaee1c0146f3a8d142945f61fac5ca24b9162501c675dada1ddb38689b484db2c01a488007a146d8
+MGHOUT:0,1,20971520,4573407836
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:0,2,20971520,3700000000,4813429998,4566587750
+workload output: 0x0cbf38c87093833d3566a89c18f6b53fcb631fd7062dd86cfaee1c0146f3a8d142945f61fac5ca24b9162501c675dada1ddb38689b484db2c01a488007a146d8
+MGHOUT:0,2,20971520,4572279478
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:0,3,20971520,3700000000,4815190201,4568257815
+workload output: 0x0cbf38c87093833d3566a89c18f6b53fcb631fd7062dd86cfaee1c0146f3a8d142945f61fac5ca24b9162501c675dada1ddb38689b484db2c01a488007a146d8
+MGHOUT:0,3,20971520,4573951218
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:0,4,20971520,3700000000,4814835096,4567921085
+workload output: 0x0cbf38c87093833d3566a89c18f6b53fcb631fd7062dd86cfaee1c0146f3a8d142945f61fac5ca24b9162501c675dada1ddb38689b484db2c01a488007a146d8
+MGHOUT:0,4,20971520,4573614626
+MGH HYPER: CPU  1: Setting throttle mechanism to spin
+MMGH HYPER: CPU  1: Enabling spin loop throttle
+GH: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:1,5,20971520,3700000000,4771524307,4526831198
+workload output: 0x0cbf38c87093833d3566a89c18f6b53fcb631fd7062dd86cfaee1c0146f3a8d142945f61fac5ca24b9162501c675dada1ddb38689b484db2c01a488007a146d8
+MGHOUT:1,5,20971520,4532473498
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:1,6,20971520,3700000000,4773280245,4528496917
+workload output: 0x0cbf38c87093833d3566a89c18f6b53fcb631fd7062dd86cfaee1c0146f3a8d142945f61fac5ca24b9162501c675dada1ddb38689b484db2c01a488007a146d8
+MGHOUT:1,6,20971520,4534141010
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:1,7,20971520,3700000000,4772684626,4527932016
+workload output: 0x0cbf38c87093833d3566a89c18f6b53fcb631fd7062dd86cfaee1c0146f3a8d142945f61fac5ca24b9162501c675dada1ddb38689b484db2c01a488007a146d8
+MGHOUT:1,7,20971520,4533576032
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:1,8,20971520,3700000000,4772676714,4527924390
+workload output: 0x0cbf38c87093833d3566a89c18f6b53fcb631fd7062dd86cfaee1c0146f3a8d142945f61fac5ca24b9162501c675dada1ddb38689b484db2c01a488007a146d8
+MGHOUT:1,8,20971520,4533568244
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:1,9,20971520,3700000000,4771592758,4526896001
+workload output: 0x0cbf38c87093833d3566a89c18f6b53fcb631fd7062dd86cfaee1c0146f3a8d142945f61fac5ca24b9162501c675dada1ddb38689b484db2c01a488007a146d8
+MGHOUT:1,9,20971520,4532538854
+MMGH HYPER: CPU  5: Disabling spin loop throttle
+GH: Sent disable throttle request
+*******************************************************
+Ending experiments at 2020-05-08_01-14-43
+*******************************************************

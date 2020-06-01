@@ -1,0 +1,17 @@
+Creating a 1 GiB (1073741824 B) file of random data to run the workloads on
+Starting up 6 sha-3 workloads in parallel
+Iteration 0: Workload PIDs: 8519 8520 8521 8522 8523 8524
+Iteration 1: Workload PIDs: 9852 9853 9854 9855 9856 9857
+Iteration 2: Workload PIDs: 11315 11316 11317 11318 11319 11320
+Iteration 3: Workload PIDs: 12660 12661 12662 12663 12664 12665
+Iteration 4: Workload PIDs: 13823 13824 13825 13826 13827 13828
+Iteration 5: Workload PIDs: 14844 14845 14846 14847 14848 14849
+Iteration 6: Workload PIDs: 15758 15759 15760 15761 15762 15763
+Canceling all background workload tasks
+Killing PID 15758
+Killing PID 15759
+Killing PID 15760
+Killing PID 15761
+Killing PID 15762
+Killing PID 15763
+Removing workload_demo_input.bin

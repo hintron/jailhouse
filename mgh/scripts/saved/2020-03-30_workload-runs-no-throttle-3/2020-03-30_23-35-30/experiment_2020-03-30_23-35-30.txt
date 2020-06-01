@@ -1,0 +1,133 @@
+=======================================================
+Starting script at 2020-03-30_23-35-30
+=======================================================
+Disabling Turbo Boost
+1
+No inmate was running
+opening /dev/jailhouse: No such file or directory
+jailhouse: no process found
+rmmod: ERROR: Module jailhouse is not currently loaded
+rmmod: ERROR: Module uio_ivshmem is not currently loaded
+At main.c:160:
+- SSL error:02001002:system library:fopen:No such file or directory: ../crypto/bio/bss_file.c:72
+- SSL error:2006D080:BIO routines:BIO_new_file:no such file: ../crypto/bio/bss_file.c:79
+sign-file: certs/signing_key.pem: No such file or directory
+Warning: modules_install: missing 'System.map' file. Skipping depmod.
+uio_ivshmem            16384  0
+uio                    20480  1 uio_ivshmem
+jailhouse              32768  0
+tailf_pid: 4171
+sudo /home/hintron/code/jailhouse/tools/jailhouse enable /home/hintron/code/jailhouse/configs/x86/bazooka-root.cell
+#####################
+# Common Parameters #
+#####################
+TIMESTAMP: 2020-03-30_23-35-30
+Jailhouse Git commit: b984f7764424daa30388e9e7c02cf709896d106c
+JAILHOUSE_OUTPUT_BASENAME: jailhouse_2020-03-30_23-35-30.txt
+JAILHOUSE_OUTPUT_FILE: /home/hintron/code/jailhouse/mgh/scripts/output/2020-03-30_23-35-30/jailhouse_2020-03-30_23-35-30.txt
+RUN_MODE: RM_LINUX_JAILHOUSE
+RUN_MODE_RAW: 2
+DISABLE_TURBO_BOOST: 1
+DEBUG_MODE: true
+INMATE_DEBUG: 0
+INPUT_FILE: tmp.input
+INPUT_FILE size: 20971520 Bytes
+ITERATIONS: 10
+WORKLOAD_MODE: WM_SHA3
+WORKLOAD_MODE_RAW: 0
+INTERFERENCE_WORKLOAD: none
+#########################
+# Linux-only Parameters #
+#########################
+RUN_WITH_VTUNE: 0
+VTUNE_OUTPUT_BASENAME: vtune_output_2020-03-30_23-35-30.txt
+VTUNE_OUTPUT_FILE: /home/hintron/code/jailhouse/mgh/scripts/output/2020-03-30_23-35-30/vtune_output_2020-03-30_23-35-30.txt
+LINUX_OUTPUT_BASENAME: linux_output_2020-03-30_23-35-30.txt
+LINUX_OUTPUT_FILE: /home/hintron/code/jailhouse/mgh/scripts/output/2020-03-30_23-35-30/linux_output_2020-03-30_23-35-30.txt
+VTUNE_MODE: VTUNE_MODE_MA
+VTUNE_MODE_RAW: 0
+##########################
+# Inmate-only Parameters #
+##########################
+THROTTLE_ITERATIONS: 5
+THROTTLE_MODE: TMODE_DISABLED
+THROTTLE_MODE_RAW: 3
+THROTTLE_MECHANISM: Unspecified
+THROTTLE_MECHANISM_RAW: 
+LOCAL_INPUT_MODE: NONE
+PREEMPTION_TIMEOUT: 
+SPIN_LOOP_ITERATIONS: 
+##################
+# End Parameters #
+##################
+################################################################################
+# Starting Experiment
+################################################################################
+*********************************************************
+Input Size=20971520
+Time=2020-03-30_23-35-44
+*********************************************************
+Iteration 0 (0):
+Linux input size: 20971520
+Linux output: ce633f75284f3d3de0ebe2f484fda744454bd50e4ffeff5d4d5537eafd3602b270c305c877443538908292002311341fa395a872bc8b6c35238d41ba5fe1e1e0
+Linux output duration: 1239.558788
+Root cell vmexits delta: 199047 = (244263 - 45216)
+---------------------------------------------------------
+Iteration 1 (1):
+Linux input size: 20971520
+Linux output: ce633f75284f3d3de0ebe2f484fda744454bd50e4ffeff5d4d5537eafd3602b270c305c877443538908292002311341fa395a872bc8b6c35238d41ba5fe1e1e0
+Linux output duration: 1238.685812
+Root cell vmexits delta: 190970 = (437595 - 246625)
+---------------------------------------------------------
+Iteration 2 (2):
+Linux input size: 20971520
+Linux output: ce633f75284f3d3de0ebe2f484fda744454bd50e4ffeff5d4d5537eafd3602b270c305c877443538908292002311341fa395a872bc8b6c35238d41ba5fe1e1e0
+Linux output duration: 1238.945505
+Root cell vmexits delta: 212120 = (652075 - 439955)
+---------------------------------------------------------
+Iteration 3 (3):
+Linux input size: 20971520
+Linux output: ce633f75284f3d3de0ebe2f484fda744454bd50e4ffeff5d4d5537eafd3602b270c305c877443538908292002311341fa395a872bc8b6c35238d41ba5fe1e1e0
+Linux output duration: 1238.292905
+Root cell vmexits delta: 212055 = (866466 - 654411)
+---------------------------------------------------------
+Iteration 4 (4):
+Linux input size: 20971520
+Linux output: ce633f75284f3d3de0ebe2f484fda744454bd50e4ffeff5d4d5537eafd3602b270c305c877443538908292002311341fa395a872bc8b6c35238d41ba5fe1e1e0
+Linux output duration: 1238.246748
+Root cell vmexits delta: 205041 = (1073846 - 868805)
+---------------------------------------------------------
+Iteration 5 (5):
+Linux input size: 20971520
+Linux output: ce633f75284f3d3de0ebe2f484fda744454bd50e4ffeff5d4d5537eafd3602b270c305c877443538908292002311341fa395a872bc8b6c35238d41ba5fe1e1e0
+Linux output duration: 1240.919076
+Root cell vmexits delta: 212542 = (1288724 - 1076182)
+---------------------------------------------------------
+Iteration 6 (6):
+Linux input size: 20971520
+Linux output: ce633f75284f3d3de0ebe2f484fda744454bd50e4ffeff5d4d5537eafd3602b270c305c877443538908292002311341fa395a872bc8b6c35238d41ba5fe1e1e0
+Linux output duration: 1254.286193
+Root cell vmexits delta: 211904 = (1505958 - 1294054)
+---------------------------------------------------------
+Iteration 7 (7):
+Linux input size: 20971520
+Linux output: ce633f75284f3d3de0ebe2f484fda744454bd50e4ffeff5d4d5537eafd3602b270c305c877443538908292002311341fa395a872bc8b6c35238d41ba5fe1e1e0
+Linux output duration: 1238.140766
+Root cell vmexits delta: 209678 = (1717978 - 1508300)
+---------------------------------------------------------
+Iteration 8 (8):
+Linux input size: 20971520
+Linux output: ce633f75284f3d3de0ebe2f484fda744454bd50e4ffeff5d4d5537eafd3602b270c305c877443538908292002311341fa395a872bc8b6c35238d41ba5fe1e1e0
+Linux output duration: 1239.410412
+Root cell vmexits delta: 211006 = (1931337 - 1720331)
+---------------------------------------------------------
+Iteration 9 (9):
+Linux input size: 20971520
+Linux output: ce633f75284f3d3de0ebe2f484fda744454bd50e4ffeff5d4d5537eafd3602b270c305c877443538908292002311341fa395a872bc8b6c35238d41ba5fe1e1e0
+Linux output duration: 1238.241584
+Root cell vmexits delta: 211960 = (2145644 - 1933684)
+*********************************************************
+Enabling Turbo Boost
+0
+sudo kill 4171
+Ending experiments at 2020-03-30_23-36-02

@@ -1,0 +1,16 @@
+Creating a 1 GiB (1073741824 B) file of random data to run the workloads on
+Starting up 6 random-access workloads in parallel
+Iteration 0: Workload PIDs: 32514 32515 32516 32517 32518 32519
+Canceling all background workload tasks
+Killing PID 32514
+/home/hintron/code/jailhouse/mgh/scripts/workload-demo.sh: line 72: kill: (32514) - No such process
+Killing PID 32515
+Killing PID 32516
+/home/hintron/code/jailhouse/mgh/scripts/workload-demo.sh: line 72: kill: (32516) - No such process
+Killing PID 32517
+/home/hintron/code/jailhouse/mgh/scripts/workload-demo.sh: line 72: kill: (32517) - No such process
+Killing PID 32518
+/home/hintron/code/jailhouse/mgh/scripts/workload-demo.sh: line 72: kill: (32518) - No such process
+Killing PID 32519
+/home/hintron/code/jailhouse/mgh/scripts/workload-demo.sh: line 72: kill: (32519) - No such process
+Removing workload_demo_input.bin

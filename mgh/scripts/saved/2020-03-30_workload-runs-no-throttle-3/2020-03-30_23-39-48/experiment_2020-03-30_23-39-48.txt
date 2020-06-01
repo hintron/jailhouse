@@ -1,0 +1,107 @@
+=======================================================
+Starting script at 2020-03-30_23-39-48
+=======================================================
+Disabling Turbo Boost
+1
+#####################
+# Common Parameters #
+#####################
+TIMESTAMP: 2020-03-30_23-39-48
+Jailhouse Git commit: b984f7764424daa30388e9e7c02cf709896d106c
+JAILHOUSE_OUTPUT_BASENAME: jailhouse_2020-03-30_23-39-48.txt
+JAILHOUSE_OUTPUT_FILE: /home/hintron/code/jailhouse/mgh/scripts/output/2020-03-30_23-39-48/jailhouse_2020-03-30_23-39-48.txt
+RUN_MODE: RM_LINUX
+RUN_MODE_RAW: 1
+DISABLE_TURBO_BOOST: 1
+DEBUG_MODE: true
+INMATE_DEBUG: 0
+INPUT_FILE: tmp.input
+INPUT_FILE size: 20971520 Bytes
+ITERATIONS: 10
+WORKLOAD_MODE: WM_RANDOM_ACCESS
+WORKLOAD_MODE_RAW: 3
+INTERFERENCE_WORKLOAD: none
+#########################
+# Linux-only Parameters #
+#########################
+RUN_WITH_VTUNE: 0
+VTUNE_OUTPUT_BASENAME: vtune_output_2020-03-30_23-39-48.txt
+VTUNE_OUTPUT_FILE: /home/hintron/code/jailhouse/mgh/scripts/output/2020-03-30_23-39-48/vtune_output_2020-03-30_23-39-48.txt
+LINUX_OUTPUT_BASENAME: linux_output_2020-03-30_23-39-48.txt
+LINUX_OUTPUT_FILE: /home/hintron/code/jailhouse/mgh/scripts/output/2020-03-30_23-39-48/linux_output_2020-03-30_23-39-48.txt
+VTUNE_MODE: VTUNE_MODE_MA
+VTUNE_MODE_RAW: 0
+##########################
+# Inmate-only Parameters #
+##########################
+THROTTLE_ITERATIONS: 5
+THROTTLE_MODE: TMODE_DISABLED
+THROTTLE_MODE_RAW: 3
+THROTTLE_MECHANISM: Unspecified
+THROTTLE_MECHANISM_RAW: 
+LOCAL_INPUT_MODE: NONE
+PREEMPTION_TIMEOUT: 
+SPIN_LOOP_ITERATIONS: 
+##################
+# End Parameters #
+##################
+################################################################################
+# Starting Experiment
+################################################################################
+*********************************************************
+Input Size=20971520
+Time=2020-03-30_23-39-48
+*********************************************************
+Iteration 0 (0):
+Linux input size: 20971520
+Linux output: 2339648017
+Linux output duration: 148.308685
+---------------------------------------------------------
+Iteration 1 (1):
+Linux input size: 20971520
+Linux output: 2339648017
+Linux output duration: 151.179161
+---------------------------------------------------------
+Iteration 2 (2):
+Linux input size: 20971520
+Linux output: 2339648017
+Linux output duration: 152.669624
+---------------------------------------------------------
+Iteration 3 (3):
+Linux input size: 20971520
+Linux output: 2339648017
+Linux output duration: 150.289347
+---------------------------------------------------------
+Iteration 4 (4):
+Linux input size: 20971520
+Linux output: 2339648017
+Linux output duration: 149.010942
+---------------------------------------------------------
+Iteration 5 (5):
+Linux input size: 20971520
+Linux output: 2339648017
+Linux output duration: 151.044137
+---------------------------------------------------------
+Iteration 6 (6):
+Linux input size: 20971520
+Linux output: 2339648017
+Linux output duration: 149.745656
+---------------------------------------------------------
+Iteration 7 (7):
+Linux input size: 20971520
+Linux output: 2339648017
+Linux output duration: 148.327516
+---------------------------------------------------------
+Iteration 8 (8):
+Linux input size: 20971520
+Linux output: 2339648017
+Linux output duration: 150.46287
+---------------------------------------------------------
+Iteration 9 (9):
+Linux input size: 20971520
+Linux output: 2339648017
+Linux output duration: 151.533332
+*********************************************************
+Enabling Turbo Boost
+0
+Ending experiments at 2020-03-30_23-39-55

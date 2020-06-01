@@ -1,0 +1,218 @@
+=======================================================
+Starting script at 2020-03-30_23-38-06
+=======================================================
+Disabling Turbo Boost
+1
+No inmate was running
+opening /dev/jailhouse: No such file or directory
+jailhouse: no process found
+rmmod: ERROR: Module jailhouse is not currently loaded
+rmmod: ERROR: Module uio_ivshmem is not currently loaded
+At main.c:160:
+- SSL error:02001002:system library:fopen:No such file or directory: ../crypto/bio/bss_file.c:72
+- SSL error:2006D080:BIO routines:BIO_new_file:no such file: ../crypto/bio/bss_file.c:79
+sign-file: certs/signing_key.pem: No such file or directory
+Warning: modules_install: missing 'System.map' file. Skipping depmod.
+uio_ivshmem            16384  0
+uio                    20480  1 uio_ivshmem
+jailhouse              32768  0
+tailf_pid: 16015
+#####################
+# Common Parameters #
+#####################
+TIMESTAMP: 2020-03-30_23-38-06
+Jailhouse Git commit: b984f7764424daa30388e9e7c02cf709896d106c
+JAILHOUSE_OUTPUT_BASENAME: jailhouse_2020-03-30_23-38-06.txt
+JAILHOUSE_OUTPUT_FILE: /home/hintron/code/jailhouse/mgh/scripts/output/2020-03-30_23-38-06/jailhouse_2020-03-30_23-38-06.txt
+RUN_MODE: RM_INMATE
+RUN_MODE_RAW: 0
+DISABLE_TURBO_BOOST: 1
+DEBUG_MODE: true
+INMATE_DEBUG: 0
+INPUT_FILE: <local-input-uniform>
+ITERATIONS: 10
+WORKLOAD_MODE: WM_RANDOM_ACCESS
+WORKLOAD_MODE_RAW: 3
+INTERFERENCE_WORKLOAD: none
+#########################
+# Linux-only Parameters #
+#########################
+RUN_WITH_VTUNE: 0
+VTUNE_OUTPUT_BASENAME: vtune_output_2020-03-30_23-38-06.txt
+VTUNE_OUTPUT_FILE: /home/hintron/code/jailhouse/mgh/scripts/output/2020-03-30_23-38-06/vtune_output_2020-03-30_23-38-06.txt
+LINUX_OUTPUT_BASENAME: linux_output_2020-03-30_23-38-06.txt
+LINUX_OUTPUT_FILE: /home/hintron/code/jailhouse/mgh/scripts/output/2020-03-30_23-38-06/linux_output_2020-03-30_23-38-06.txt
+VTUNE_MODE: VTUNE_MODE_MA
+VTUNE_MODE_RAW: 0
+##########################
+# Inmate-only Parameters #
+##########################
+THROTTLE_ITERATIONS: 5
+THROTTLE_MODE: TMODE_DISABLED
+THROTTLE_MODE_RAW: 3
+THROTTLE_MECHANISM: Unspecified
+THROTTLE_MECHANISM_RAW: 
+LOCAL_INPUT_MODE: UNIFORM
+PREEMPTION_TIMEOUT: 
+SPIN_LOOP_ITERATIONS: 
+##################
+# End Parameters #
+##################
+################################################################################
+# Starting Experiment
+################################################################################
+sudo /home/hintron/code/jailhouse/tools/jailhouse enable /home/hintron/code/jailhouse/configs/x86/bazooka-root.cell
+Setting sync byte in shmem to 0
+sudo /home/hintron/code/jailhouse/tools/jailhouse cell create /home/hintron/code/jailhouse/configs/x86/bazooka-inmate.cell
+sudo /home/hintron/code/jailhouse/tools/jailhouse cell load bazooka-inmate /home/hintron/code/jailhouse/inmates/demos/x86/mgh-demo.bin -s "debug=true tmode=3 wm=3 throttleiter=5 li=2" -a 0x1000
+sudo /home/hintron/code/jailhouse/tools/jailhouse cell start bazooka-inmate
+*********************************************************
+Input Local UNIFORM
+Time=2020-03-30_23-38-24
+*********************************************************
+Iteration 0 (0):
+Inmate is not yet ready...
+Inmate is ready!
+Input length: 0
+Input:
+b''
+Signaling inmate...
+Inmate is finished (polled 8 times at 0.100s/poll)
+Inmate duration (python): 0 s 800881 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1845493496
+Inmate vmexits delta: 139060 = (146640 - 7580)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 1 (1):
+Inmate is ready!
+Input length: 0
+Input:
+b''
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500577 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1845493496
+Inmate vmexits delta: 3453 = (153086 - 149633)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 2 (2):
+Inmate is ready!
+Input length: 0
+Input:
+b''
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500494 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1845493496
+Inmate vmexits delta: 3444 = (159540 - 156096)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 3 (3):
+Inmate is ready!
+Input length: 0
+Input:
+b''
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500579 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1845493496
+Inmate vmexits delta: 3469 = (166003 - 162534)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 4 (4):
+Inmate is ready!
+Input length: 0
+Input:
+b''
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500572 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1845493496
+Inmate vmexits delta: 3453 = (172491 - 169038)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 5 (5):
+Inmate is ready!
+Input length: 0
+Input:
+b''
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500570 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1845493496
+Inmate vmexits delta: 3457 = (178995 - 175538)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 6 (6):
+Inmate is ready!
+Input length: 0
+Input:
+b''
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500575 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1845493496
+Inmate vmexits delta: 3464 = (185524 - 182060)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 7 (7):
+Inmate is ready!
+Input length: 0
+Input:
+b''
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500581 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1845493496
+Inmate vmexits delta: 3448 = (191969 - 188521)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 8 (8):
+Inmate is ready!
+Input length: 0
+Input:
+b''
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500506 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1845493496
+Inmate vmexits delta: 3446 = (198425 - 194979)
+Workload output matches expected output
+---------------------------------------------------------
+Iteration 9 (9):
+Inmate is ready!
+Input length: 0
+Input:
+b''
+Signaling inmate...
+Inmate is finished (polled 5 times at 0.100s/poll)
+Inmate duration (python): 0 s 500574 us
+Inmate output length: 8
+Assuming output is an int (little-endian)
+Inmate output: 1845493496
+Inmate vmexits delta: 3453 = (204886 - 201433)
+Workload output matches expected output
+*********************************************************
+Enabling Turbo Boost
+0
+sudo kill 16015
+sudo /home/hintron/code/jailhouse/tools/jailhouse cell destroy bazooka-inmate
+Ending experiments at 2020-03-30_23-38-37

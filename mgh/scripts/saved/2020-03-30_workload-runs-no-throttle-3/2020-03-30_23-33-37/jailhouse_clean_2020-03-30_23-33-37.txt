@@ -1,0 +1,141 @@
+=======================================================
+*******************************************************
+Starting script at 2020-03-30_23-33-37
+*******************************************************
+=======================================================
+*******************************************************
+Starting Experiment
+*******************************************************
+<missed 1179 bytes of console log>
+terrupt(s) for device 00:16.0 at index 131
+Adding PCI device 00:17.0 to cell "RootCell"
+Reserving 1 interrupt(s) for device 00:17.0 at index 132
+Adding PCI device 00:1c.0 to cell "RootCell"
+Reserving 1 interrupt(s) for device 00:1c.0 at index 133
+Adding PCI device 00:1c.5 to cell "RootCell"
+Reserving 1 interrupt(s) for device 00:1c.5 at index 134
+Adding PCI device 00:1f.0 to cell "RootCell"
+Adding PCI device 00:1f.3 to cell "RootCell"
+Reserving 1 interrupt(s) for device 00:1f.3 at index 135
+Adding PCI device 00:1f.4 to cell "RootCell"
+Adding PCI device 00:1f.5 to cell "RootCell"
+Adding PCI device 01:00.0 to cell "RootCell"
+Reserving 1 interrupt(s) for device 01:00.0 at index 136
+Adding PCI device 01:00.1 to cell "RootCell"
+Reserving 1 interrupt(s) for device 01:00.1 at index 137
+Adding PCI device 02:00.0 to cell "RootCell"
+Reserving 4 interrupt(s) for device 02:00.0 at index 138
+Adding PCI device 03:00.0 to cell "RootCell"
+Reserving 16 interrupt(s) for device 03:00.0 at index 142
+Adding virtual PCI device 00:0f.0 to cell "RootCell"
+Page pool usage after late setup: mem 319/973, remap 65543/131072
+Activating hypervisor
+MGH HYPER: CPU  1: TSC bit 7 being monitored
+MGH HYPER: CPU  3: TSC bit 7 being monitored
+MGH HYPER: CPU  2: TSC bit 7 being monitored
+MGH HYPER: CPU  5: TSC bit 7 being monitored
+MGH HYPER: CPU  0: TSC bit 7 being monitored
+MGH HYPER: CPU  4: TSC bit 7 being monitored
+MGH HYPER: CPU  1: initial preemption_timeout: 1000
+MGH HYPER: CPU  3: initial preemption_timeout: 1000
+MGH HYPER: CPU  2: initial preemption_timeout: 1000
+MGH HYPER: CPU  5: initial preemption_timeout: 1000
+MGH HYPER: CPU  0: initial preemption_timeout: 1000
+MGH HYPER: CPU  4: initial preemption_timeout: 1000
+MGH HYPER: CPU  1: initial spin_loop_iterations: 50000
+MGH HYPER: CPU  3: initial spin_loop_iterations: 50000
+MGH HYPER: CPU  2: initial spin_loop_iterations: 50000
+MGH HYPER: CPU  5: initial spin_loop_iterations: 50000
+MGH HYPER: CPU  0: initial spin_loop_iterations: 50000
+MGH HYPER: CPU  4: initial spin_loop_iterations: 50000
+WARNING: CAT is unsupported
+Adding virtual PCI device 00:0f.0 to cell "bazooka-inmate"
+Shared memory connection established: "bazooka-inmate" <--> "RootCell"
+MGH HYPER: CPU  2: This is the inmate's CPU!
+Created cell "bazooka-inmate"
+Page pool usage after cell creation: mem 352/973, remap 65543/131072
+Cell "bazooka-inmate" can be loaded
+CPU 2 received SIPI, vector 100
+Started cell "bazooka-inmate"
+MGH: local_buffer=0
+MGH: MGH_DEBUG_MODE=1
+MGH: throttle_mode=DISABLED
+MGH: throttle_mechanism=SPIN
+MGH: workload_mode=SHA3
+MGH: local_input=LOCAL_INPUT_RANDOM
+MGH: TSC frequency is 3695990000 Hz.
+MGH: cache_line_size = 64
+MGH: Found 1af4:1110 at 00:0f.0
+MGH: shmem is at 0x000000003ca00000
+MGH: bar0 is at 0x000000003f200000
+MGH: bar2 is at 0x000000003f201000
+MGH: mapped the bars got position 1
+Starting workload iterations...
+MGHOUT:is_throttled,workload_counter,input_len,workload_cycles
+MGH: Generating local input of size 20971520 using a pseudo-random number generator with current TSC-derived seed 3673037306
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:is_throttled,workload_counter,input_len,max_freq,aperf,mperf
+MGH: Maximum Non-Turbo Ratio: 37
+MGH: Maximum Non-Turbo Frequency: 3700000000
+MGHFREQ:0,0,20971520,3700000000,5852340130,5552220414
+workload output: 0x81afbfba59fdda382f1bf10bfc19f581084f4a6474a8a888a909b2acc7390461e27d776235ee33eb00741d815da5e8afb1b9c96be5895c887524b883a5cbf096
+MGHOUT:0,0,20971520,4528077116
+MGH: Generating local input of size 20971520 using a pseudo-random number generator with current TSC-derived seed 113688282
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:0,1,20971520,3700000000,4767077306,4522612062
+workload output: 0x30a60dbf0fc346d6c11c1d5ed55a2367e94df283beb4ff34ef8ef76a935305835026c8a3ce6b84aa8ce005e7eae87ccf67dd8619e9a53fd2280100e9574b7d98
+MGHOUT:0,1,20971520,4528248700
+MGH: Generating local input of size 20971520 using a pseudo-random number generator with current TSC-derived seed 4034193928
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:0,2,20971520,3700000000,4766787285,4522336915
+workload output: 0x24e6d796f5100cd7f74fba91302723e1e383322770eecb34ab01927a410358cedfe97e49d3c7949f61f41fecbf2f7802c197c09aae53d7342101dc82b8708ffb
+MGHOUT:0,2,20971520,4527974136
+MGH: Generating local input of size 20971520 using a pseudo-random number generator with current TSC-derived seed 3658880310
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:0,3,20971520,3700000000,4766876123,4522421246
+workload output: 0xf82552472dc1671f3b914866223350466b3264c07a3a5b130a0d8c10a7ddf872674f36123ed85acc8d81d8cf9cded2749f894310e6bf92139c7be08a2ab58d0e
+MGHOUT:0,3,20971520,4528058582
+MGH: Generating local input of size 20971520 using a pseudo-random number generator with current TSC-derived seed 3283699620
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:0,4,20971520,3700000000,4766923296,4522465959
+workload output: 0x89760b3f11b9e9dc3ffe9dc676c23e6598c66486953bce5947c2ea861ac7c4668db63b506b56e52c27cbfbde735e6d88dff6581a798aa1b8bba7be70ad6ed886
+MGHOUT:0,4,20971520,4528103592
+MGH: Generating local input of size 20971520 using a pseudo-random number generator with current TSC-derived seed 2923414174
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:0,5,20971520,3700000000,4766858253,4522404249
+workload output: 0x1f7c18cc313d278ab8ffd5638349488982b11acba5c2f23a4dd841e4fbe693e2f4db537672fc513ddc59f0b1e7c3b181dc1e94b0a0b9b20eb83aec73fd7854fc
+MGHOUT:0,5,20971520,4528041602
+MGH: Generating local input of size 20971520 using a pseudo-random number generator with current TSC-derived seed 2548262342
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:0,6,20971520,3700000000,4766855826,4522401963
+workload output: 0x9036f3cc8938a040c80fa514822bb5750f86813294f8639dcc7b0c926344c28ad8b16ede36d99400a78c965dfdc4fd69ad4c75102de4805fdad94c653a2a0ee9
+MGHOUT:0,6,20971520,4528039584
+MGH: Generating local input of size 20971520 using a pseudo-random number generator with current TSC-derived seed 2173381938
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:0,7,20971520,3700000000,4766733320,4522285750
+workload output: 0x542541c736988364ce80381b8754de6d48c3baee61c8a39cf63e5417cc39ca6f3e32ed85b3df3235e09a24c16be52137a1b696e69aa6523875f453cbe84afe71
+MGHOUT:0,7,20971520,4527922952
+MGH: Generating local input of size 20971520 using a pseudo-random number generator with current TSC-derived seed 1816593076
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:0,8,20971520,3700000000,4766941263,4522482997
+workload output: 0x81ba653bf80090db57dd535763d0139960f2ee696b7df0f823797359a15b76810a57406fabe967541c78f57ddd82f1213af7082f90c5bf1abcf95514ed83ae27
+MGHOUT:0,8,20971520,4528120724
+MGH: Generating local input of size 20971520 using a pseudo-random number generator with current TSC-derived seed 1456295516
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:0,9,20971520,3700000000,4766935772,4522477796
+workload output: 0x2733df1e3558efa61058fc95349381b0aa6d6431dd86f3ae0ff0d498559e67b04d475ec5980d4f750afef6873cf7edfd7e99cdf7a513c5017b529ae66caf40ed
+MGHOUT:0,9,20971520,4528115450
+*******************************************************
+Ending experiments at 2020-03-30_23-34-23
+*******************************************************
+MGH: Allowing inmate to be shut down
+Closing cell "bazooka-inmate"
+Page pool usage after cell destruction: mem 320/973, remap 65543/131072
+CPU 2 received SIPI, vector 97
+Shutting down hypervisor
+ Releasing CPU 4
+ Releasing CPU 5
+ Releasing CPU 1
+ Releasing CPU 2
+ Releasing CPU 0
+ Releasing CPU 3

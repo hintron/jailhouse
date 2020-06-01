@@ -1,0 +1,107 @@
+=======================================================
+Starting script at 2020-03-30_23-35-11
+=======================================================
+Disabling Turbo Boost
+1
+#####################
+# Common Parameters #
+#####################
+TIMESTAMP: 2020-03-30_23-35-11
+Jailhouse Git commit: b984f7764424daa30388e9e7c02cf709896d106c
+JAILHOUSE_OUTPUT_BASENAME: jailhouse_2020-03-30_23-35-11.txt
+JAILHOUSE_OUTPUT_FILE: /home/hintron/code/jailhouse/mgh/scripts/output/2020-03-30_23-35-11/jailhouse_2020-03-30_23-35-11.txt
+RUN_MODE: RM_LINUX
+RUN_MODE_RAW: 1
+DISABLE_TURBO_BOOST: 1
+DEBUG_MODE: true
+INMATE_DEBUG: 0
+INPUT_FILE: tmp.input
+INPUT_FILE size: 20971520 Bytes
+ITERATIONS: 10
+WORKLOAD_MODE: WM_SHA3
+WORKLOAD_MODE_RAW: 0
+INTERFERENCE_WORKLOAD: none
+#########################
+# Linux-only Parameters #
+#########################
+RUN_WITH_VTUNE: 0
+VTUNE_OUTPUT_BASENAME: vtune_output_2020-03-30_23-35-11.txt
+VTUNE_OUTPUT_FILE: /home/hintron/code/jailhouse/mgh/scripts/output/2020-03-30_23-35-11/vtune_output_2020-03-30_23-35-11.txt
+LINUX_OUTPUT_BASENAME: linux_output_2020-03-30_23-35-11.txt
+LINUX_OUTPUT_FILE: /home/hintron/code/jailhouse/mgh/scripts/output/2020-03-30_23-35-11/linux_output_2020-03-30_23-35-11.txt
+VTUNE_MODE: VTUNE_MODE_MA
+VTUNE_MODE_RAW: 0
+##########################
+# Inmate-only Parameters #
+##########################
+THROTTLE_ITERATIONS: 5
+THROTTLE_MODE: TMODE_DISABLED
+THROTTLE_MODE_RAW: 3
+THROTTLE_MECHANISM: Unspecified
+THROTTLE_MECHANISM_RAW: 
+LOCAL_INPUT_MODE: NONE
+PREEMPTION_TIMEOUT: 
+SPIN_LOOP_ITERATIONS: 
+##################
+# End Parameters #
+##################
+################################################################################
+# Starting Experiment
+################################################################################
+*********************************************************
+Input Size=20971520
+Time=2020-03-30_23-35-11
+*********************************************************
+Iteration 0 (0):
+Linux input size: 20971520
+Linux output: ce633f75284f3d3de0ebe2f484fda744454bd50e4ffeff5d4d5537eafd3602b270c305c877443538908292002311341fa395a872bc8b6c35238d41ba5fe1e1e0
+Linux output duration: 1226.915777
+---------------------------------------------------------
+Iteration 1 (1):
+Linux input size: 20971520
+Linux output: ce633f75284f3d3de0ebe2f484fda744454bd50e4ffeff5d4d5537eafd3602b270c305c877443538908292002311341fa395a872bc8b6c35238d41ba5fe1e1e0
+Linux output duration: 1223.528134
+---------------------------------------------------------
+Iteration 2 (2):
+Linux input size: 20971520
+Linux output: ce633f75284f3d3de0ebe2f484fda744454bd50e4ffeff5d4d5537eafd3602b270c305c877443538908292002311341fa395a872bc8b6c35238d41ba5fe1e1e0
+Linux output duration: 1235.463087
+---------------------------------------------------------
+Iteration 3 (3):
+Linux input size: 20971520
+Linux output: ce633f75284f3d3de0ebe2f484fda744454bd50e4ffeff5d4d5537eafd3602b270c305c877443538908292002311341fa395a872bc8b6c35238d41ba5fe1e1e0
+Linux output duration: 1241.512545
+---------------------------------------------------------
+Iteration 4 (4):
+Linux input size: 20971520
+Linux output: ce633f75284f3d3de0ebe2f484fda744454bd50e4ffeff5d4d5537eafd3602b270c305c877443538908292002311341fa395a872bc8b6c35238d41ba5fe1e1e0
+Linux output duration: 1223.40888
+---------------------------------------------------------
+Iteration 5 (5):
+Linux input size: 20971520
+Linux output: ce633f75284f3d3de0ebe2f484fda744454bd50e4ffeff5d4d5537eafd3602b270c305c877443538908292002311341fa395a872bc8b6c35238d41ba5fe1e1e0
+Linux output duration: 1236.463606
+---------------------------------------------------------
+Iteration 6 (6):
+Linux input size: 20971520
+Linux output: ce633f75284f3d3de0ebe2f484fda744454bd50e4ffeff5d4d5537eafd3602b270c305c877443538908292002311341fa395a872bc8b6c35238d41ba5fe1e1e0
+Linux output duration: 1236.348697
+---------------------------------------------------------
+Iteration 7 (7):
+Linux input size: 20971520
+Linux output: ce633f75284f3d3de0ebe2f484fda744454bd50e4ffeff5d4d5537eafd3602b270c305c877443538908292002311341fa395a872bc8b6c35238d41ba5fe1e1e0
+Linux output duration: 1222.077381
+---------------------------------------------------------
+Iteration 8 (8):
+Linux input size: 20971520
+Linux output: ce633f75284f3d3de0ebe2f484fda744454bd50e4ffeff5d4d5537eafd3602b270c305c877443538908292002311341fa395a872bc8b6c35238d41ba5fe1e1e0
+Linux output duration: 1224.509369
+---------------------------------------------------------
+Iteration 9 (9):
+Linux input size: 20971520
+Linux output: ce633f75284f3d3de0ebe2f484fda744454bd50e4ffeff5d4d5537eafd3602b270c305c877443538908292002311341fa395a872bc8b6c35238d41ba5fe1e1e0
+Linux output duration: 1257.809915
+*********************************************************
+Enabling Turbo Boost
+0
+Ending experiments at 2020-03-30_23-35-29

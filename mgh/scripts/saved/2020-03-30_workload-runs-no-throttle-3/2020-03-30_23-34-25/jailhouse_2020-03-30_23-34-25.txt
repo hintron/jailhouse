@@ -1,0 +1,131 @@
+=======================================================
+*******************************************************
+Starting script at 2020-03-30_23-34-25
+*******************************************************
+=======================================================
+*******************************************************
+Starting Experiment
+*******************************************************
+<missed 1179 bytes of console log>
+terrupt(s) for device 00:16.0 at index 131
+Adding PCI device 00:17.0 to cell "RootCell"
+Reserving 1 interrupt(s) for device 00:17.0 at index 132
+Adding PCI device 00:1c.0 to cell "RootCell"
+Reserving 1 interrupt(s) for device 00:1c.0 at index 133
+Adding PCI device 00:1c.5 to cell "RootCell"
+Reserving 1 interrupt(s) for device 00:1c.5 at index 134
+Adding PCI device 00:1f.0 to cell "RootCell"
+Adding PCI device 00:1f.3 to cell "RootCell"
+Reserving 1 interrupt(s) for device 00:1f.3 at index 135
+Adding PCI device 00:1f.4 to cell "RootCell"
+Adding PCI device 00:1f.5 to cell "RootCell"
+Adding PCI device 01:00.0 to cell "RootCell"
+Reserving 1 interrupt(s) for device 01:00.0 at index 136
+Adding PCI device 01:00.1 to cell "RootCell"
+Reserving 1 interrupt(s) for device 01:00.1 at index 137
+Adding PCI device 02:00.0 to cell "RootCell"
+Reserving 4 interrupt(s) for device 02:00.0 at index 138
+Adding PCI device 03:00.0 to cell "RootCell"
+Reserving 16 interrupt(s) for device 03:00.0 at index 142
+Adding virtual PCI device 00:0f.0 to cell "RootCell"
+Page pool usage after late setup: mem 319/973, remap 65543/131072
+Activating hypervisor
+MGH HYPER: CPU  2: TSC bit 7 being monitored
+MGH HYPER: CPU  4: TSC bit 7 being monitored
+MGH HYPER: CPU  3: TSC bit 7 being monitored
+MGH HYPER: CPU  0: TSC bit 7 being monitored
+MGH HYPER: CPU  1: TSC bit 7 being monitored
+MGH HYPER: CPU  5: TSC bit 7 being monitored
+MGH HYPER: CPU  2: initial preemption_timeout: 1000
+MGH HYPER: CPU  4: initial preemption_timeout: 1000
+MGH HYPER: CPU  3: initial preemption_timeout: 1000
+MGH HYPER: CPU  0: initial preemption_timeout: 1000
+MGH HYPER: CPU  1: initial preemption_timeout: 1000
+MGH HYPER: CPU  5: initial preemption_timeout: 1000
+MGH HYPER: CPU  2: initial spin_loop_iterations: 50000
+MGH HYPER: CPU  4: initial spin_loop_iterations: 50000
+MGH HYPER: CPU  3: initial spin_loop_iterations: 50000
+MGH HYPER: CPU  0: initial spin_loop_iterations: 50000
+MGH HYPER: CPU  1: initial spin_loop_iterations: 50000
+MGH HYPER: CPU  5: initial spin_loop_iterations: 50000
+WARNING: CAT is unsupported
+Adding virtual PCI device 00:0f.0 to cell "bazooka-inmate"
+Shared memory connection established: "bazooka-inmate" <--> "RootCell"
+MGH HYPER: CPU  2: This is the inmate's CPU!
+Created cell "bazooka-inmate"
+Page pool usage after cell creation: mem 352/973, remap 65543/131072
+Cell "bazooka-inmate" can be loaded
+CPU 2 received SIPI, vector 100
+Started cell "bazooka-inmate"
+MGH: local_buffer=0
+MGH: MGH_DEBUG_MODE=1
+MGH: throttle_mode=DISABLED
+MGH: throttle_mechanism=SPIN
+MGH: workload_mode=SHA3
+MGH: local_input=LOCAL_INPUT_NONE
+MGH: TSC frequency is 3695990000 Hz.
+MGH: cache_line_size = 64
+MGH: Found 1af4:1110 at 00:0f.0
+MGH: shmem is at 0x000000003ca00000
+MGH: bar0 is at 0x000000003f200000
+MGH: bar2 is at 0x000000003f201000
+MGH: mapped the bars got position 1
+Starting workload iterations...
+MGHOUT:is_throttled,workload_counter,input_len,workload_cycles
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:is_throttled,workload_counter,input_len,max_freq,aperf,mperf
+MGH: Maximum Non-Turbo Ratio: 37
+MGH: Maximum Non-Turbo Frequency: 3700000000
+MGHFREQ:0,0,20971520,3700000000,5852468539,5552342390
+workload output: 0xce633f75284f3d3de0ebe2f484fda744454bd50e4ffeff5d4d5537eafd3602b270c305c877443538908292002311341fa395a872bc8b6c35238d41ba5fe1e1e0
+MGHOUT:0,0,20971520,4528209986
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:0,1,20971520,3700000000,4767036215,4522573121
+workload output: 0xce633f75284f3d3de0ebe2f484fda744454bd50e4ffeff5d4d5537eafd3602b270c305c877443538908292002311341fa395a872bc8b6c35238d41ba5fe1e1e0
+MGHOUT:0,1,20971520,4528210584
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:0,2,20971520,3700000000,4767150180,4522681196
+workload output: 0xce633f75284f3d3de0ebe2f484fda744454bd50e4ffeff5d4d5537eafd3602b270c305c877443538908292002311341fa395a872bc8b6c35238d41ba5fe1e1e0
+MGHOUT:0,2,20971520,4528318806
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:0,3,20971520,3700000000,4766959180,4522499999
+workload output: 0xce633f75284f3d3de0ebe2f484fda744454bd50e4ffeff5d4d5537eafd3602b270c305c877443538908292002311341fa395a872bc8b6c35238d41ba5fe1e1e0
+MGHOUT:0,3,20971520,4528137526
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:0,4,20971520,3700000000,4766743557,4522295470
+workload output: 0xce633f75284f3d3de0ebe2f484fda744454bd50e4ffeff5d4d5537eafd3602b270c305c877443538908292002311341fa395a872bc8b6c35238d41ba5fe1e1e0
+MGHOUT:0,4,20971520,4527932638
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:0,5,20971520,3700000000,4766797425,4522346569
+workload output: 0xce633f75284f3d3de0ebe2f484fda744454bd50e4ffeff5d4d5537eafd3602b270c305c877443538908292002311341fa395a872bc8b6c35238d41ba5fe1e1e0
+MGHOUT:0,5,20971520,4527984078
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:0,6,20971520,3700000000,4767060959,4522596577
+workload output: 0xce633f75284f3d3de0ebe2f484fda744454bd50e4ffeff5d4d5537eafd3602b270c305c877443538908292002311341fa395a872bc8b6c35238d41ba5fe1e1e0
+MGHOUT:0,6,20971520,4528234470
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:0,7,20971520,3700000000,4766784620,4522334421
+workload output: 0xce633f75284f3d3de0ebe2f484fda744454bd50e4ffeff5d4d5537eafd3602b270c305c877443538908292002311341fa395a872bc8b6c35238d41ba5fe1e1e0
+MGHOUT:0,7,20971520,4527971704
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:0,8,20971520,3700000000,4766874755,4522419938
+workload output: 0xce633f75284f3d3de0ebe2f484fda744454bd50e4ffeff5d4d5537eafd3602b270c305c877443538908292002311341fa395a872bc8b6c35238d41ba5fe1e1e0
+MGHOUT:0,8,20971520,4528056180
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:0,9,20971520,3700000000,4766849673,4522396106
+workload output: 0xce633f75284f3d3de0ebe2f484fda744454bd50e4ffeff5d4d5537eafd3602b270c305c877443538908292002311341fa395a872bc8b6c35238d41ba5fe1e1e0
+MGHOUT:0,9,20971520,4528033626
+*******************************************************
+Ending experiments at 2020-03-30_23-35-09
+*******************************************************
+MGH: Allowing inmate to be shut down
+Closing cell "bazooka-inmate"
+Page pool usage after cell destruction: mem 320/973, remap 65543/131072
+CPU 2 received SIPI, vector 97
+Shutting down hypervisor
+ Releasing CPU 5
+ Releasing CPU 1
+ Releasing CPU 4
+ Releasing CPU 0
+ Releasing CPU 3
+ Releasing CPU 2

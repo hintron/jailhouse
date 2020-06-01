@@ -1,0 +1,2202 @@
+=======================================================
+*******************************************************
+Starting script at 2020-02-15_04-30-18
+*******************************************************
+=======================================================
+*******************************************************
+Starting Experiment
+*******************************************************
+<missed 537 bytes of console log>
+gy
+CAT: cbm_max: 0; cos_max: -1; 
+WARNING: CAT is unsupported
+Initializing unit: PCI
+Adding PCI device 00:00.0 to cell "RootCell"
+Adding PCI device 00:01.0 to cell "RootCell"
+Reserving 1 interrupt(s) for device 00:01.0 at index 120
+Adding PCI device 00:08.0 to cell "RootCell"
+Reserving 1 interrupt(s) for device 00:08.0 at index 121
+Adding PCI device 00:12.0 to cell "RootCell"
+Reserving 1 interrupt(s) for device 00:12.0 at index 122
+Adding PCI device 00:14.0 to cell "RootCell"
+Reserving 8 interrupt(s) for device 00:14.0 at index 123
+Adding PCI device 00:14.2 to cell "RootCell"
+Adding PCI device 00:16.0 to cell "RootCell"
+Reserving 1 interrupt(s) for device 00:16.0 at index 131
+Adding PCI device 00:17.0 to cell "RootCell"
+Reserving 1 interrupt(s) for device 00:17.0 at index 132
+Adding PCI device 00:1c.0 to cell "RootCell"
+Reserving 1 interrupt(s) for device 00:1c.0 at index 133
+Adding PCI device 00:1c.5 to cell "RootCell"
+Reserving 1 interrupt(s) for device 00:1c.5 at index 134
+Adding PCI device 00:1f.0 to cell "RootCell"
+Adding PCI device 00:1f.3 to cell "RootCell"
+Reserving 1 interrupt(s) for device 00:1f.3 at index 135
+Adding PCI device 00:1f.4 to cell "RootCell"
+Adding PCI device 00:1f.5 to cell "RootCell"
+Adding PCI device 01:00.0 to cell "RootCell"
+Reserving 1 interrupt(s) for device 01:00.0 at index 136
+Adding PCI device 01:00.1 to cell "RootCell"
+Reserving 1 interrupt(s) for device 01:00.1 at index 137
+Adding PCI device 02:00.0 to cell "RootCell"
+Reserving 4 interrupt(s) for device 02:00.0 at index 138
+Adding PCI device 03:00.0 to cell "RootCell"
+Reserving 16 interrupt(s) for device 03:00.0 at index 142
+Adding virtual PCI device 00:0f.0 to cell "RootCell"
+Page pool usage after late setup: mem 319/973, remap 65543/131072
+Activating hypervisor
+MGH HYPER: CPU  2: TSC bit 7 being monitored
+MGH HYPER: CPU  0: TSC bit 7 being monitored
+MGH HYPER: CPU  4: TSC bit 7 being monitored
+MGH HYPER: CPU  3: TSC bit 7 being monitored
+MGH HYPER: CPU  1: TSC bit 7 being monitored
+MGH HYPER: CPU  5: TSC bit 7 being monitored
+WARNING: CAT is unsupported
+Adding virtual PCI device 00:0f.0 to cell "bazooka-inmate"
+Shared memory connection established: "bazooka-inmate" <--> "RootCell"
+MGH HYPER: CPU  2: This is the inmate's CPU!
+Created cell "bazooka-inmate"
+Page pool usage after cell creation: mem 352/973, remap 65543/131072
+Cell "bazooka-inmate" can be loaded
+Started cell "bazooka-inmate"
+CPU 2 received SIPI, vector 100
+MGH: local_buffer=0
+MGH: MGH_DEBUG_MODE=1
+MGH: throttle_mode=ITERATION
+MGH: throttle_iterations=5
+MGH: throttle_mechanism=SPIN
+MGH: workload_mode=SHA3
+MGH: local_input=0
+MGH: TSC frequency is 3696012000 Hz.
+MGH: cache_line_size = 64
+MGH: Found 1af4:1110 at 00:0f.0
+MGH: shmem is at 0x000000003ca00000
+MGH: bar0 is at 0x000000003f200000
+MGH: bar2 is at 0x000000003f201000
+MGH: mapped the bars got position 1
+Starting workload iterations...
+MGHOUT:is_throttled,workload_counter,input_len,workload_cycles
+MGH DEBUG: Input data length: 1048576
+MGHFREQ:is_throttled,workload_counter,input_len,max_freq,aperf,mperf
+MGH: Maximum Non-Turbo Ratio: 37
+MGH: Maximum Non-Turbo Frequency: 3700000000
+MGHFREQ:0,0,1048576,3700000000,1339901783,1271189371
+workload output: 0x26d92d07730cf3e2df8da9c7f7eb1d954c38758d7824f8d19f205532b580e41a8d837f92cef0bd0b1526cf6343de0fa112ebd8f5ae3bdd79ed41697a207767d1
+MGHOUT:0,0,1048576,241697800
+MGH DEBUG: Input data length: 1048576
+MGHFREQ:0,1,1048576,3700000000,254538795,241486378
+workload output: 0xce3bbc1183b444409a2bbfde38a76e381773ca2d0c2fa5007667309004bd4852f033ebbb02edbf2375e72412f76b3403dccfdef4400404b7dd87b9af7a091a4c
+MGHOUT:0,1,1048576,241785162
+MGH DEBUG: Input data length: 1048576
+MGHFREQ:0,2,1048576,3700000000,254405223,241359131
+workload output: 0x1dc5f8b232079ea658168da1792ad1cdfff50eab6397eac81fcfccdedb8d90700e7e4b6c1538962c294c69ff5a41c587052a5968a3196d379e41cdec05cb1b0e
+MGHOUT:0,2,1048576,241658904
+MGH DEBUG: Input data length: 1048576
+MGHFREQ:0,3,1048576,3700000000,254412565,241366032
+workload output: 0x8b30f74c3836481ac194a5a8778d047ae3fa97877776c0b1d325f24b73e12f3bf25102bd39b5e33b0b0eecb3294cdcf156468d5b4430f8d4b69032ffdee89394
+MGHOUT:0,3,1048576,241665532
+MGH DEBUG: Input data length: 1048576
+MGHFREQ:0,4,1048576,3700000000,254463437,241414320
+workload output: 0x0d3f1214be0e6e700bb7493277b56783c5c600ffcc3cda34d905128fa8cc5dcfe645698d29dc0b7487eed2b5e84276f4aeb6c53fb04fe8f4060778a6065ccacc
+MGHOUT:0,4,1048576,241713434
+MGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+MMGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  0: Setting throttle mechanism to spin
+GMGH HYPER: CPU  5: Enabling spin loop throttle
+H: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 1048576
+MGHFREQ:1,5,1048576,3700000000,254337505,241294820
+workload output: 0xbfed80933769aeab3357e25dc28c27f2adcf48bdf93de5b4a4914178b6be0481671da5f269338812278f69636e22914a3bdc603aab428de8cec7a6b16a6cea40
+MGHOUT:1,5,1048576,241594704
+MGH DEBUG: Input data length: 1048576
+MGHFREQ:1,6,1048576,3700000000,254366049,241321935
+workload output: 0xd39ddbc106b8896d9b6ca9d0522918b8c5c4ee4ac967f3b6e593be95371acc81fa9fceda340342414eecd457d0a6991845e4b77f447c1dd2acdcc97ec51a1997
+MGHOUT:1,6,1048576,241621402
+MGH DEBUG: Input data length: 1048576
+MGHFREQ:1,7,1048576,3700000000,254388830,241343512
+workload output: 0x44701d38290008a945678719c716c7035414de1ef96df4e94f619b728680959b8401768c54a7f700c47e9f075f9763342f48cf365212ffaba47a0ab72c1c2737
+MGHOUT:1,7,1048576,241643160
+MGH DEBUG: Input data length: 1048576
+MGHFREQ:1,8,1048576,3700000000,254330546,241288236
+workload output: 0x80c1e63eae881adf71bbaaeb1e85b8dbf9926f92e8f9e309a4002f3c20cb49fa384c44aa4d9f57b953eb89e1a5de326d17b1c1af5aa0664c0017ff5ff4b6029d
+MGHOUT:1,8,1048576,241587784
+MGH DEBUG: Input data length: 1048576
+MGHFREQ:1,9,1048576,3700000000,254294667,241254199
+workload output: 0xc069cc5393e6001caba1fe7c7d7b5a527776c6bcc06742d92dcbc364588867c8025776f0be2e314fb6e52b91c7e2b6a4f008652a7fe57f214354d4ab5a1c4053
+MGHOUT:1,9,1048576,241553998
+MMGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  5: Disabling spin loop throttle
+H: Sent disable throttle request
+MGH DEBUG: Input data length: 2097152
+MGHFREQ:0,10,2097152,3700000000,511350206,485127581
+workload output: 0x5c4f255b39b9476c2efcece7d31450ef7fb62ef7430d8d054d22bc3263c7afbfa5d35a703156d7435591aefd5b216b3eca37f07aebf3f8aa3bd8b8325c810d02
+MGHOUT:0,10,2097152,485730744
+MGH DEBUG: Input data length: 2097152
+MGHFREQ:0,11,2097152,3700000000,508848231,482753915
+workload output: 0x4a16ddaa5b9ba07d1efa6622e71e89b32ed5246e365ad329592c2b01578bd4d2c16a83c734e05423fe05e6e19e8f8e126c89940111d47a66a9984b34b57b90e6
+MGHOUT:0,11,2097152,483354150
+MGH DEBUG: Input data length: 2097152
+MGHFREQ:0,12,2097152,3700000000,509828198,483683602
+workload output: 0xd4ac0869acefeec2cc2739b01a8474560cd9d2484f6032994e8f2aa45ec8a0dacff5047bb8cfc36cae435b87b090ace5d1d249fe6f78fc5c5f18937cb24732d2
+MGHOUT:0,12,2097152,484284600
+MGH DEBUG: Input data length: 2097152
+MGHFREQ:0,13,2097152,3700000000,508803046,482710865
+workload output: 0xfd4ed21568c73fdcf4b62b754c849b06834a1867b2339709329af7b55466fe82e6130c0f1f9f4428a2bfbcff1ab8e15ed9f33a0e30cbf53226776c23e1ffd382
+MGHOUT:0,13,2097152,483311284
+MGH DEBUG: Input data length: 2097152
+MGHFREQ:0,14,2097152,3700000000,508930292,482831624
+workload output: 0xd3d40557f94b31eed7e57d773f0e3cf51985af774b553ec97fb4656394e34bda9a2c6aba0d2194b5e20aba056df13380c5784250c024e072a47f882f4524ee04
+MGHOUT:0,14,2097152,483432036
+MGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+MMGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  4: Enabling spin loop throttle
+GH: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 2097152
+MGHFREQ:1,15,2097152,3700000000,508648964,482564677
+workload output: 0xed963cf0c58dc83f5fcad78ffd7fc0da219342b271aa57423505141be00fffd39d08b8adbe36026f0db00e70441999a37610505480be4674905557c8980ff697
+MGHOUT:1,15,2097152,483165342
+MGH DEBUG: Input data length: 2097152
+MGHFREQ:1,16,2097152,3700000000,508723735,482635636
+workload output: 0x3043b7077813688739e9255384c3359e8c30f8c12b1ee03c6a86a5a2e0a869494b62545b10d55ccf008b67c93565732a92392b7448f1e24d67cce93501f1447e
+MGHOUT:1,16,2097152,483236424
+MGH DEBUG: Input data length: 2097152
+MGHFREQ:1,17,2097152,3700000000,508708574,482621259
+workload output: 0xa4700fd7d5f6e3f55b5df4d10b124405fa912a5347e70d090c93deb21d15352f8096ef6c7bd22b3e28780c7efa86c969484d15761e99d1541b5beff5623ca21e
+MGHOUT:1,17,2097152,483221628
+MGH DEBUG: Input data length: 2097152
+MGHFREQ:1,18,2097152,3700000000,508765869,482675605
+workload output: 0x3c3a705edc5244c675929a46d86aa6acbf10eb3904a5165e5bf3ddad9b3e8119e82b540bf658f196d6e0123f548d80bf320b6836cddcbaec4b96dfd72ffe8c85
+MGHOUT:1,18,2097152,483276086
+MGH DEBUG: Input data length: 2097152
+MGHFREQ:1,19,2097152,3700000000,508687863,482601602
+workload output: 0x7439201530f4be97460edd761b3ad451f2cf4933e9dabbb7eea9767de20378da1b67f1019aebc26ed175cc34169469b9f94a52dd1b13331117bd0bffb3a59615
+MGHOUT:1,19,2097152,483202118
+MMGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  3: Disabling spin loop throttle
+H: Sent disable throttle request
+MGH DEBUG: Input data length: 3145728
+MGHFREQ:0,20,3145728,3700000000,763139457,724004365
+workload output: 0x143938f8bfec64617a0bdb3998e33c1a5473ecc75820f8f420cd8f94e03307ba8786460b8de0bdc4c63c66b2a5a0409d1b4a0d980d223f06d541f0c3332270a0
+MGHOUT:0,20,3145728,724906130
+MGH DEBUG: Input data length: 3145728
+MGHFREQ:0,21,3145728,3700000000,766692796,727375530
+workload output: 0x228e438820335b39b323ab6dad835cd909709cc045e9dd9bd611d9e2cfed5acdc98eb9acdfffb5102d14419ddaf824d3acee7e3343af9b38aac115a6668ccbc9
+MGHOUT:0,21,3145728,728280920
+MGH DEBUG: Input data length: 3145728
+MGHFREQ:0,22,3145728,3700000000,763285016,724142522
+workload output: 0x21e44fbdc21bba7ec9f2c903c9fbdff9b62abe7e5c1d8e903b0a011b975e9047ea1379a06798f1419af2b15a459d2f998f1b2a7fdeb91f1a684bde69861f1a7a
+MGHOUT:0,22,3145728,725042996
+MGH DEBUG: Input data length: 3145728
+MGHFREQ:0,23,3145728,3700000000,763822726,724652802
+workload output: 0xb4473a2be84c50bc5fa9e718d77eb11282af3f6ab68443f3b4cf14e2454b5a8cc42c900d9f42a6af9ed4bd28bdf10446e5d9dd3cc59dfdc148d31bc069085962
+MGHOUT:0,23,3145728,725554092
+MGH DEBUG: Input data length: 3145728
+MGHFREQ:0,24,3145728,3700000000,765872867,726597763
+workload output: 0x5d319bc00286c733b497fbf0852abc0b7c904e4196e6bf2c7b5210ea8c03088fc852900f59caf07281460e18dac299276f8d381fab14a9901f748fcf5bf88c67
+MGHOUT:0,24,3145728,727501488
+MMGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+GMGH HYPER: CPU  3: Enabling spin loop throttle
+H: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 3145728
+MGHFREQ:1,25,3145728,3700000000,762882554,723760661
+workload output: 0x40888b307d8141d83845dce02897ce5817b4bc96bf3c1933499244cd41428f04e4a40db057c2b1641d8391703df65e4e6b866e495cb49413b9c81b83b97612d0
+MGHOUT:1,25,3145728,724661778
+MGH DEBUG: Input data length: 3145728
+MGHFREQ:1,26,3145728,3700000000,762982759,723855719
+workload output: 0xc37d0e29f1ed84dff294e9a0af581349a2a7454722b31215897d163520336c10ff1e6d655b07223e644ba5fe0eb1f1e70542a408cad681cfa5e921ae2d37a533
+MGHOUT:1,26,3145728,724757164
+MGH DEBUG: Input data length: 3145728
+MGHFREQ:1,27,3145728,3700000000,763246308,724105773
+workload output: 0x572a64417a00cae4bf240654b04c1ca292ea398d4a0b7983aed5c2032cd7eb2e18530b65aced50515004763e80ae579c55710c9355a942bd8140cc0eb8588362
+MGHOUT:1,27,3145728,725007306
+MGH DEBUG: Input data length: 3145728
+MGHFREQ:1,28,3145728,3700000000,763070722,723939176
+workload output: 0x578b55ac6531afe6ad8846e50aa708f309708e79cca7894c6cc6eec92bc13f095a98365faebf684c633a393aa0c0f6b274b72a9a13602055c33042aa65b1ba8f
+MGHOUT:1,28,3145728,724840828
+MGH DEBUG: Input data length: 3145728
+MGHFREQ:1,29,3145728,3700000000,762929576,723805291
+workload output: 0x2a9e1c61731dd29b0ae02d772a4305378344effc85b4efd44e0fa351d922110a124ed225df01e55ff7562250b037034222bd07a83eb52025df20cf1992b90ae7
+MGHOUT:1,29,3145728,724706588
+MMGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  5: Disabling spin loop throttle
+H: Sent disable throttle request
+MGH DEBUG: Input data length: 4194304
+MGHFREQ:0,30,4194304,3700000000,1022200675,969781544
+workload output: 0x12f310b46e97f4e21258aa6a661b3452e5ed081a9c43bd282255496c194401f295ff76c2dc647e5d1d5bb8ee0a75b3289750f92057278e6cde12a63880f2933f
+MGHOUT:0,30,4194304,970987560
+MGH DEBUG: Input data length: 4194304
+MGHFREQ:0,31,4194304,3700000000,1017839970,965643352
+workload output: 0x13ba6e23c97c67cfb9ddbba2c1d0aa0ee5445048faa5dee79658743b4eb35a988daea998706788e10002824685afddade23b7c0914c156038c9f4dcbecda6307
+MGHOUT:0,31,4194304,966845920
+MGH DEBUG: Input data length: 4194304
+MGHFREQ:0,32,4194304,3700000000,1017463708,965286530
+workload output: 0x5a4779d46efb812d027d4462288b414413faae29b49879131c4b57327afcfba85b1fef95785a5277d348078720a1ee98b8d24846aae81ce67d411c2485d34f01
+MGHOUT:0,32,4194304,966488556
+MGH DEBUG: Input data length: 4194304
+MGHFREQ:0,33,4194304,3700000000,1022149966,969732492
+workload output: 0x4b4fb327fd40aa71efbd23c3b56a4cb29eca47b96d422ed0664244ef87c0ce02a22b6a394037252615f1add5d27811bdb16c44e1633f50b756ffbea1ffb0160b
+MGHOUT:0,33,4194304,970939432
+MGH DEBUG: Input data length: 4194304
+MGHFREQ:0,34,4194304,3700000000,1017568010,965385294
+workload output: 0x917c68fed8a72ab1123e120f23cf3e45f1eee4fe38b576b3c3072ace476e6c6d80f59018d29b05b674c8bcad1c6fd69bc44f08366131f2e7965396f0c43d7f55
+MGHOUT:0,34,4194304,966587648
+MGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MMGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  1: Enabling spin loop throttle
+GH: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 4194304
+MGHFREQ:1,35,4194304,3700000000,1017275222,965107547
+workload output: 0x2c0680d50a92bfb2e3145175fafa7f03b21e99f94daccb17d6810a33a8bd2c2d7acc9429a609871ca9c9d7fdde9caad9eb93fe225f1bab64ea7dd0ce766b36eb
+MGHOUT:1,35,4194304,966309872
+MGH DEBUG: Input data length: 4194304
+MGHFREQ:1,36,4194304,3700000000,1017364673,965192396
+workload output: 0xc10a8a478e06bcc31fe5f5161902718dc6e1d0c949a146da1a305102fe6a9bd59e874847bb0b12c21b523d9198f8d8439b261933c08e252b8d71f80cf40ba749
+MGHOUT:1,36,4194304,966394560
+MGH DEBUG: Input data length: 4194304
+MGHFREQ:1,37,4194304,3700000000,1017379721,965206692
+workload output: 0x2bfd4a8946bb29ebbe37413eb516cd075bb289e20b6988c23746969c67934b0ffc0abdc79a06394281d1e157135395cd383e88a771e5bbb7917432f1bcaa9dfe
+MGHOUT:1,37,4194304,966409146
+MGH DEBUG: Input data length: 4194304
+MGHFREQ:1,38,4194304,3700000000,1017298724,965129853
+workload output: 0x69551392dfbb15a477c80274f8d56fa55b8d2642404723f876631298b82dc2d0a64ff4231f0873ae3e0dee59d148b0deab6bdd360e0c4be3140b52192b2e9deb
+MGHOUT:1,38,4194304,966332230
+MGH DEBUG: Input data length: 4194304
+MGHFREQ:1,39,4194304,3700000000,1017326480,965156188
+workload output: 0xc38e8e5d499b24b5d5bcc1a42fe3e3e4cc0807b06d0815fc4d1e7f3f7ebef6e8e39770ad6d579bebaa771c975904fac40e5e2d96b04d543ab5cc443c813a7848
+MGHOUT:1,39,4194304,966358552
+MMGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  5: Disabling spin loop throttle
+H: Sent disable throttle request
+MGH DEBUG: Input data length: 5242880
+MGHFREQ:0,40,5242880,3700000000,1276913959,1211431655
+workload output: 0xe0749b523aca73767e68976a832b3c9a34693d3ebbbcf587433f52eab51b8616d9b05ae83cca432b80b3e635645f08846e80bcb436957d58ef606906bb3e79a5
+MGHOUT:0,40,5242880,1212940268
+MGH DEBUG: Input data length: 5242880
+MGHFREQ:0,41,5242880,3700000000,1274323859,1208974710
+workload output: 0x195684ae3fa6dcd7c48118a6a04be180b1b4bf69a5303c2bac926b479f79bad374f14854cee8f437c7c1a939fdc67f06228021c5b12a44e24f895a23bb51fe89
+MGHOUT:0,41,5242880,1210479686
+MGH DEBUG: Input data length: 5242880
+MGHFREQ:0,42,5242880,3700000000,1271978835,1206749421
+workload output: 0xdecc5ebe9bf3c4219e9b24fb1267c04757e0ca5a1b51359eef9b00ae4b17cb78ade547ccbdab88f2d753889aa44b952ccd63dd4cd0e0b4e5c5e533657351dc69
+MGHOUT:0,42,5242880,1208252324
+MGH DEBUG: Input data length: 5242880
+MGHFREQ:0,43,5242880,3700000000,1271751717,1206533945
+workload output: 0x59fafddd74de50a86cf2a0adb680651b8a721d31234ab8317042bea24143148cb287dcf506ff6bbd7d25cbbcb2f27da8da14bae6fe25dbe5c45da9a01b79c4bf
+MGHOUT:0,43,5242880,1208036968
+MGH DEBUG: Input data length: 5242880
+MGHFREQ:0,44,5242880,3700000000,1276963618,1211478743
+workload output: 0xcac8a8d576bf806a3f4dead0fe18282fca4b784e3b0c4f69cb7a24ad59d3273c788b862801a36ca8db7af615e0d677922d0e34dd4f392d8dbcd1fddb98e4bada
+MGHOUT:0,44,5242880,1212987546
+MGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+MMGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  0: Enabling spin loop throttle
+GH: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 5242880
+MGHFREQ:1,45,5242880,3700000000,1271808099,1206587455
+workload output: 0xb8fd1b29844909706b2ab407ad66b0c8d6d37dfda76d5497629f32ba9c4b8a6c8437a2787ffc3c53b9a68242fa55573dc24dc2049adef5f9a9fed6e58415edd6
+MGHOUT:1,45,5242880,1208090910
+MGH DEBUG: Input data length: 5242880
+MGHFREQ:1,46,5242880,3700000000,1271547330,1206340047
+workload output: 0xf74e255727eb1e1ef216fe13111d813a79c068301da83d83dd258b181a1e6f986bffdec953eb26ec4097f078f048a2586aa1e985c50976daa140447ef9bef41d
+MGHOUT:1,46,5242880,1207842850
+MGH DEBUG: Input data length: 5242880
+MGHFREQ:1,47,5242880,3700000000,1271787489,1206567907
+workload output: 0x50ca15d7fe0cea513831111e5dcd289ffc6d432fa42f0d7dda1c6b758822f931ee9209fd9eb2ed5b2d21115bcd0b912821d497e7a5792c543186c9a027ce48c3
+MGHOUT:1,47,5242880,1208070758
+MGH DEBUG: Input data length: 5242880
+MGHFREQ:1,48,5242880,3700000000,1271680432,1206466315
+workload output: 0x3bbd7254126e2580f10069f166ff01757f9e27924b1f63704907e8fc9b62041fac3b472e4b2e6d37146e88004778ee12feda0975d5d839b6ed7f89b4d179aefe
+MGHOUT:1,48,5242880,1207969606
+MGH DEBUG: Input data length: 5242880
+MGHFREQ:1,49,5242880,3700000000,1271817272,1206596163
+workload output: 0x24db6ba1d67009cf40c92a03553fb7368e84fd53de6c6ed0e99740897dff8b3b138f873152b3adebb1e862b8c9e353b8c8fb5e57ac54eb4e6b42116027f8baf5
+MGHOUT:1,49,5242880,1208099224
+MMGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  4: Disabling spin loop throttle
+H: Sent disable throttle request
+MGH DEBUG: Input data length: 6291456
+MGHFREQ:0,50,6291456,3700000000,1526349492,1448075427
+workload output: 0xe2d2d5c7d880009e87c047ab1b5719e4d1b047087276cb01c0a7c502b983bd23d6f5a7ffcae9ba6b36b2acdd004de4782373e0b4ff267c4451a75f25a9eb19aa
+MGHOUT:0,50,6291456,1449879312
+MGH DEBUG: Input data length: 6291456
+MGHFREQ:0,51,6291456,3700000000,1526251742,1447982704
+workload output: 0x2438f0a34f446cbc9a04883d825cf6ec0a603864985c9599a35699641546b16947eb7459a452893904aba5970ecc2f11c846af75d19df064ec9f65ee5ec7e51d
+MGHOUT:0,51,6291456,1449786472
+MGH DEBUG: Input data length: 6291456
+MGHFREQ:0,52,6291456,3700000000,1529862807,1451408750
+workload output: 0x7ada452f829d8c3cefc0e72b62c2a839d6bda95ad960561ef772c3e9ec05c57eb59aaf2079098a306d96081b414bcc05743566140be206ff87fe36aec8d9bc31
+MGHOUT:0,52,6291456,1453216712
+MGH DEBUG: Input data length: 6291456
+MGHFREQ:0,53,6291456,3700000000,1532901118,1454291370
+workload output: 0x849710f4f8ae084679f611eabe08bd651c8b21c110dc80883a779bb0adb8e1a019f5fcca5b077f18241da469dc293b8f9cf819809248d1adbe59c5bf2f260f4f
+MGHOUT:0,53,6291456,1456102424
+MGH DEBUG: Input data length: 6291456
+MGHFREQ:0,54,6291456,3700000000,1528397363,1450018510
+workload output: 0x214c0e0bb1d8fff75fc82c92591e14a03d84e88f43006425b12c31b9ab46f03cd6c5700daca3a98a1bb6e35cec23d992141737419b4beeb660244a7b2da71e0b
+MGHOUT:0,54,6291456,1451824358
+MGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+MMGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  5: Enabling spin loop throttle
+GH: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 6291456
+MGHFREQ:1,55,6291456,3700000000,1525790197,1447544817
+workload output: 0xc33c54f0f872772d68bb3c6b06f240154e8caab084c2b62f22e198bd1206f3448c653a354a1e9a7c4460f4e94ca1bf1d6432cf251d913e1928824f2d7b5f6495
+MGHOUT:1,55,6291456,1449348614
+MGH DEBUG: Input data length: 6291456
+MGHFREQ:1,56,6291456,3700000000,1526201122,1447934698
+workload output: 0xfcb53bab1ee0bd65b66bf928bfa830da1a3a8f490ce612fc8acde71ca2aff0e9c6698b14a3652dea42d82605aafd7c1e48fc5d9d82e97f49b33964100f8b174a
+MGHOUT:1,56,6291456,1449738696
+MGH DEBUG: Input data length: 6291456
+MGHFREQ:1,57,6291456,3700000000,1526067441,1447807837
+workload output: 0x66f668cc130800a2cfdda69a7753c302958eb60e902e8c0dd16737acc3f35e150662f9a1330385f3ccc5f4ac06b58c6b4b1b867b1fbcb1a3335a12fabb06e654
+MGHOUT:1,57,6291456,1449612088
+MGH DEBUG: Input data length: 6291456
+MGHFREQ:1,58,6291456,3700000000,1525970660,1447716032
+workload output: 0x4cd02e692df9024db89745ff6583348b9cdf13c1907dd30e3c2b0af23cc2f4846b2d6e0ef903f9f21fab7ec8ad9ad05476a5c68a8985b275652cf0db3806391a
+MGHOUT:1,58,6291456,1449519628
+MGH DEBUG: Input data length: 6291456
+MGHFREQ:1,59,6291456,3700000000,1526231070,1447963111
+workload output: 0xe1561779a80b484c337b6b3dbf48f9e7755021e730d4905ebd09b682c57fb6a4b54fb20153df25c6a4a42bea6e9f7319cb9cada7fa0c60d15f660d3ed4c1d753
+MGHOUT:1,59,6291456,1449767046
+MMGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  5: Disabling spin loop throttle
+H: Sent disable throttle request
+MGH DEBUG: Input data length: 7340032
+MGHFREQ:0,60,7340032,3700000000,1780840607,1689515735
+workload output: 0x4695179a5d84165343e926cf32b45589e6bde7ef276864c224be154f26956f6a06bc2a93aee309b78daea383273222ec412d7c670753304a2bbd51bbf31c3aed
+MGHOUT:0,60,7340032,1691620952
+MGH DEBUG: Input data length: 7340032
+MGHFREQ:0,61,7340032,3700000000,1780862644,1689536821
+workload output: 0x1943f0b9e0a64c2c4bebb44485f64e97d166d7011f86b1ae624437dafc5c52181679ee2015323e868a0007ea435e6847c16b1a45ae02108b3fcdb630a7f09544
+MGHOUT:0,61,7340032,1691641834
+MGH DEBUG: Input data length: 7340032
+MGHFREQ:0,62,7340032,3700000000,1780617761,1689304469
+workload output: 0x1d4b36eba5b7ac603f9ebbc72e2caf3ff9190691bd9a60972223752b2b7a5b325bcc7de69b95b804ccf5e4fd3a2679182a22570a3d9d9347de8c70ed9ab467a6
+MGHOUT:0,62,7340032,1691409094
+MGH DEBUG: Input data length: 7340032
+MGHFREQ:0,63,7340032,3700000000,1783796167,1692319891
+workload output: 0x26c40c46592c7d49118fa03497e71fd8c4247069b044b31f6ccb47218b108c5ec39cf94c3740bafcaf145297b1280bbb629fd2d8a4cf2c5081b0f34ad0a7ef1c
+MGHOUT:0,63,7340032,1694427380
+MGH DEBUG: Input data length: 7340032
+MGHFREQ:0,64,7340032,3700000000,1787056998,1695413369
+workload output: 0x3c8e269ab32cf988b792f7a4d602e9f3132c837eb277ff88d63d0b14408a71f457cd24b352c95148fe45a385759d059b6baccd72cffb010efd354e1e738307eb
+MGHOUT:0,64,7340032,1697525344
+MGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+MMGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  0: Enabling spin loop throttle
+GH: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 7340032
+MGHFREQ:1,65,7340032,3700000000,1780440896,1689136532
+workload output: 0x6f0692b2783158c14a6f7e8d124d830334a6f73d5cf5dd24e08cbad669a4b7902a0845375946f9c77d02048f714d287a9ea09759722ce04370375dd36218748d
+MGHOUT:1,65,7340032,1691241228
+MGH DEBUG: Input data length: 7340032
+MGHFREQ:1,66,7340032,3700000000,1780387983,1689086336
+workload output: 0x1111d5d9550ddd9d3c7e6df3ca5e0b4a06e511fc067fa7f2e9cb77bffc97aa61f0a2fd1912a687f053dff5577c12a5709f2f3ccd3a8359a3e6a6d73ebbf94b36
+MGHOUT:1,66,7340032,1691190926
+MGH DEBUG: Input data length: 7340032
+MGHFREQ:1,67,7340032,3700000000,1780109271,1688821874
+workload output: 0x9eac48a08818c959ea082604040a09e0496c7487e8f697d35643206d59800c4efb1b9c7ec0a917c8337f8788b0ec9653c5899c727cc574be2347f6a673fdf932
+MGHOUT:1,67,7340032,1690926572
+MGH DEBUG: Input data length: 7340032
+MGHFREQ:1,68,7340032,3700000000,1780454867,1689149770
+workload output: 0xdc20a57eb1c2348583fb02857c19b8ac5be0b3438336a3cf4908a8903ef17815349f28ce1f10410aa271cfc93cc264e85a934bc60b35089043c0e9189aa3836e
+MGHOUT:1,68,7340032,1691254606
+MGH DEBUG: Input data length: 7340032
+MGHFREQ:1,69,7340032,3700000000,1780321271,1689023034
+workload output: 0xa62cc32019976fdecad8ef66ce95857fece2e07492688ad7b48b9d2c8f4e85527a2cf730a6a47b9bc9afec1563a7ebe8769f42238dabf6dab7ba1ecacc1891eb
+MGHOUT:1,69,7340032,1691127750
+MMGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  4: Disabling spin loop throttle
+H: Sent disable throttle request
+MGH DEBUG: Input data length: 8388608
+MGHFREQ:0,70,8388608,3700000000,2042238529,1937508800
+workload output: 0x33a092f8d9de877f3ac2d3c4c0aa46e1058ff1522b4b7fe5532626b1b03120314aa7b98951a820731a876da3ee69827f3d2e970da1805ce726eba206d170e78a
+MGHOUT:0,70,8388608,1939922940
+MGH DEBUG: Input data length: 8388608
+MGHFREQ:0,71,8388608,3700000000,2043253224,1938471446
+workload output: 0xf8d31396b12d9b1740a9ef9a93483b4b7b6eadf179aecaccf983dacc7a5549a64873f501b581e0259abb02b4921086174cc7c967becf9f7b364449fb1b67db75
+MGHOUT:0,71,8388608,1940886656
+MGH DEBUG: Input data length: 8388608
+MGHFREQ:0,72,8388608,3700000000,2042982136,1938214292
+workload output: 0x04c7fd53b088478c7635092f7014d10b6417342380ebee1bf554bacb3d177183ef523c801663098c97ebab2155a9cbcc455ce6a0cff068d5f2897bbd60721911
+MGHOUT:0,72,8388608,1940628956
+MGH DEBUG: Input data length: 8388608
+MGHFREQ:0,73,8388608,3700000000,2042882615,1938119834
+workload output: 0x402b95b8aa339145828ff1fd42cc12c77a687fba0ae3870ba9f1e2459fef3cf6e270ba73452f3b790f01aba185a04400e2218d390e145cd105b7c69c3e567d69
+MGHOUT:0,73,8388608,1940534818
+MGH DEBUG: Input data length: 8388608
+MGHFREQ:0,74,8388608,3700000000,2042839707,1938079346
+workload output: 0xbdba20d9aa9b74fb0f1391307dce91a7ae91716fbf50337b2522f6641b8ee2931377c877c02bd2ecf4d4f0b3ca53fbb1ab8dbddf641d04d4518ed823aba873b1
+MGHOUT:0,74,8388608,1940493284
+MMGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+GMGH HYPER: CPU  4: Enabling spin loop throttle
+H: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 8388608
+MGHFREQ:1,75,8388608,3700000000,2034474220,1930142480
+workload output: 0xc80da3cd344e16b8117633b8b87937b7b0ac4719082fc16ec3cb04a99905c8ec27f5c0ca2a2ce5da7f0ae6c2725bdd59892a5ead2d43d7e9643d847f17344b84
+MGHOUT:1,75,8388608,1932547858
+MGH DEBUG: Input data length: 8388608
+MGHFREQ:1,76,8388608,3700000000,2034681633,1930339272
+workload output: 0x7ca6511f8362131677a6670c037e2840bc6068cea3f805fa9f09f5785759458e3cef6ef5dd070e43d16ff827a609d00ad777be74756c1ecdbc9a96f1da1fc97c
+MGHOUT:1,76,8388608,1932745032
+MGH DEBUG: Input data length: 8388608
+MGHFREQ:1,77,8388608,3700000000,2034813007,1930463900
+workload output: 0x87bf3507fc9f98cfb596ece76ae4f4ef2b3a0e1da29246c79fa7f043d0e482347e368c0f7620b76370ad2fef56bad2d46e94a1f6b69a74d5a5ea447b1cca23ec
+MGHOUT:1,77,8388608,1932869290
+MGH DEBUG: Input data length: 8388608
+MGHFREQ:1,78,8388608,3700000000,2034876802,1930524426
+workload output: 0x78003e0b33dd08bbbc4f6a2706be96ffd51c78e62c047d3c686cd01b60ba0319612236f4a8fab7f9d0ee8ef3f800fe81e4806f8443a4e78e154549d8078ae382
+MGHOUT:1,78,8388608,1932930122
+MGH DEBUG: Input data length: 8388608
+MGHFREQ:1,79,8388608,3700000000,2034560501,1930224336
+workload output: 0xcca01c9864f7353bc860eb343b9b913395dc6888be375b65851d36a4a6895b958d8a46ed9d538a7df5df232d737744a181768cab3a4499bacfdcdadade6b5a0d
+MGHOUT:1,79,8388608,1932629644
+MMGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  0: Disabling spin loop throttle
+H: Sent disable throttle request
+MGH DEBUG: Input data length: 9437184
+MGHFREQ:0,80,9437184,3700000000,2297951563,2180108155
+workload output: 0x9d8bc22fbb62c84de1f03e526fc21b91ed2b27cbb01766f36566d190663daedfa9d4c23fa6ff46d8700b03481c7dc5aee1692296a47ca4e54c6f37120f79c43e
+MGHOUT:0,80,9437184,2182825148
+MGH DEBUG: Input data length: 9437184
+MGHFREQ:0,81,9437184,3700000000,2295106704,2177409388
+workload output: 0x3b49b69f8f0cf7c6926a03710d578deb371dbc2d8a2265d105856664fe8ad140cfbad982d2cc3768c58a43dd084977e6790349371167bf5fe9050c75fda9d0bf
+MGHOUT:0,81,9437184,2180122266
+MGH DEBUG: Input data length: 9437184
+MGHFREQ:0,82,9437184,3700000000,2289519352,2172108387
+workload output: 0x0efb59e152cb3d4c0445e209435e977bece9ffcb77b8743cc68d527b2f2cdab3e4d0a7646799e5994195876dd609b171bdc4288ce491ceadb6069885661b217b
+MGHOUT:0,82,9437184,2174815088
+MGH DEBUG: Input data length: 9437184
+MGHFREQ:0,83,9437184,3700000000,2289374437,2171971052
+workload output: 0x3875c38ec21fa11b6e203022f38db0e7d86d4df051dd051eac140cde412b38cfa528e274f158b7386c435fc17dc92e8d0aa1b184c6f38aea5245fb5c5e4aa898
+MGHOUT:0,83,9437184,2174677322
+MGH DEBUG: Input data length: 9437184
+MGHFREQ:0,84,9437184,3700000000,2292899072,2175314789
+workload output: 0x14cf8a79eb69c992e9fd776de822b9a4d8ae4994de8323bd80d270cb61e55180c6f0d4432223aee2b7f31179d2f990a954e0d35ae391b5bfca98c96af272648c
+MGHOUT:0,84,9437184,2178024906
+MMGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+GMGH HYPER: CPU  5: Enabling spin loop throttle
+H: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 9437184
+MGHFREQ:1,85,9437184,3700000000,2288935289,2171554272
+workload output: 0x76d153d459af891ecba5010be9d01fb578677e2fd367f9933865f7176372e91275e3bc6d61d3c5b7d59ec61352001fcf24cab44a98faa8004cc7a45bc07af318
+MGHOUT:1,85,9437184,2174260478
+MGH DEBUG: Input data length: 9437184
+MGHFREQ:1,86,9437184,3700000000,2289145308,2171753513
+workload output: 0x9c7f95ab9a80e74ebac28587fee89bdb3d43cc81dd2b83af9d1b4eed4093e6ae6a7fa5f8df7c2b94915b8bc7e332aeca1d1c54bf900af997a3769b51ed75e7e3
+MGHOUT:1,86,9437184,2174460086
+MGH DEBUG: Input data length: 9437184
+MGHFREQ:1,87,9437184,3700000000,2288924051,2171543613
+workload output: 0x003e73051ce1cb308345a455ddd094bfb6c386cd0873e7093b19d62ec6e4af5e487dcb3e5850814771a0a9d78215417f36ae8778b330894768918f28fe3804a4
+MGHOUT:1,87,9437184,2174250036
+MGH DEBUG: Input data length: 9437184
+MGHFREQ:1,88,9437184,3700000000,2289129490,2171738520
+workload output: 0xcb748bdeef09044ec719e9cb305d62bae0d330533e19154ee21eb2b11380134cfe04dc58864d99ba3a34160abcb002340424c2f1d7e71966aec7280376d00ce0
+MGHOUT:1,88,9437184,2174445240
+MGH DEBUG: Input data length: 9437184
+MGHFREQ:1,89,9437184,3700000000,2289092580,2171703489
+workload output: 0xed728617d5a2836465d6e435680cd08f5addc5bb16515fc43a6160ff811f12da4cb8c369e1b89f58e342aaf6392a99b27a4151bc725834f18b767c1ac309257c
+MGHOUT:1,89,9437184,2174410182
+MMGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  4: Disabling spin loop throttle
+H: Sent disable throttle request
+MGH DEBUG: Input data length: 10485760
+MGHFREQ:0,90,10485760,3700000000,2544969704,2414458901
+workload output: 0xd7dd2b3111453f2ab9da4c1db4b52a02eb9cb04633ce4cdf40175c54c745e9ac0ede59e7f234e90334568a2ca34728eef0d3ab893216a6871680028af1374238
+MGHOUT:0,90,10485760,2417467716
+MGH DEBUG: Input data length: 10485760
+MGHFREQ:0,91,10485760,3700000000,2552181965,2421301149
+workload output: 0x2e2cbc812e9e4fc0b322d21b015eeb8eabe70a146e94b22ef79040cebcab7d4b79a77c0f6ce6e40536d4ce1b00268d93f3cba099536d5080756c137c190888d7
+MGHOUT:0,91,10485760,2424318604
+MGH DEBUG: Input data length: 10485760
+MGHFREQ:0,92,10485760,3700000000,2552164105,2421284377
+workload output: 0x67bd63e4ae3192b199c6b8348ff203109a4ebbbea9f7f2aed15a395130a4be4fe5a8013d259652f14aaff5305e6865ea415fd3d051d609fd6e3337b65880041a
+MGHOUT:0,92,10485760,2424301514
+MGH DEBUG: Input data length: 10485760
+MGHFREQ:0,93,10485760,3700000000,2546542864,2415951462
+workload output: 0x9fb192f121ed702de445c4dad16ce999cdd6d1ff0d33f686e3b4aefdb4ed7cb46ef33209fd89b3e55d756fefa7d6398de056e3ecdf0d623a1de5087306cbf612
+MGHOUT:0,93,10485760,2418960434
+MGH DEBUG: Input data length: 10485760
+MGHFREQ:0,94,10485760,3700000000,2543804185,2413352969
+workload output: 0xb79e1eb6eec09c30a9362ab7e789c96f8d4ef713844061e69e7558e5ee216598292d4b432fc73617efb800937a306785fb132ae95f6839c889524768c3db9536
+MGHOUT:0,94,10485760,2416360766
+MGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+MMGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  1: Enabling spin loop throttle
+GH: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 10485760
+MGHFREQ:1,95,10485760,3700000000,2543310442,2412884549
+workload output: 0xbc2df92eeb62ee62af28438fa9bccea04b496a9c4de5673aabbc4152df80a9184f79dc34e5d21bab8a88ce67d4a9f12b0cff536ecde87d05d43bdbfaefea8335
+MGHOUT:1,95,10485760,2415890992
+MGH DEBUG: Input data length: 10485760
+MGHFREQ:1,96,10485760,3700000000,2543430260,2412998219
+workload output: 0xbfb028f59f0c67ccf6a8613c96928542b8d728115c4715b8092ebcfc302e656caf63306275ce83fe8b8ab1da4226c19cea57a77166a1f666aed7eb344b119e1a
+MGHOUT:1,96,10485760,2416005466
+MGH DEBUG: Input data length: 10485760
+MGHFREQ:1,97,10485760,3700000000,2543145489,2412728037
+workload output: 0xa97eeb40149d9cf120c44f13af14227526ad21f2d013ccb091cb946f212b24c5de6d789c2a06909cf3ffe6a63c87f83162ea14f657321d3b114f168ea6e27519
+MGHOUT:1,97,10485760,2415735318
+MGH DEBUG: Input data length: 10485760
+MGHFREQ:1,98,10485760,3700000000,2543341001,2412913545
+workload output: 0x1da02b49f2dfd52f15dbd7cc5e462a8e31904ecaac95d528adec86ac32291f7ba94e879377fb7cb6b6eac1fcabeb5d9637b36ee3dc9c0693103199bbc2880cce
+MGHOUT:1,98,10485760,2415920270
+MGH DEBUG: Input data length: 10485760
+MGHFREQ:1,99,10485760,3700000000,2543447586,2413014656
+workload output: 0x0332d7fed323613f601e4bd2fb432d7479c53a77097981c996e6053184257a3eb9153068d5aa44f02a3aedd503248a6b4ddc69c1c59a38d938e574f2adab75f1
+MGHOUT:1,99,10485760,2416021970
+MMGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  3: Disabling spin loop throttle
+H: Sent disable throttle request
+MGH DEBUG: Input data length: 11534336
+MGHFREQ:0,100,11534336,3700000000,2798296102,2654794038
+workload output: 0x224e3659c493502bdd965eddbce9679edd172df3d1304033b7cdd6edf985240f2a98420d332e196d081f5304b2e71ca645da84b0e64f6033a9d1d16e1e8ec5c1
+MGHOUT:0,100,11534336,2658102836
+MGH DEBUG: Input data length: 11534336
+MGHFREQ:0,101,11534336,3700000000,2798101970,2654610010
+workload output: 0x113f404539b5f455d2c215523b52c3ad06ab3a4d5235f3aa350642a217cfe9cb1489e65784789791d3237c255de66a71c54796fd3f308acc16216283bd5dda98
+MGHOUT:0,101,11534336,2657917934
+MGH DEBUG: Input data length: 11534336
+MGHFREQ:0,102,11534336,3700000000,2798690250,2655167955
+workload output: 0x014ef04dd6bb44edab690810379820a0ee4864fcdfdea488337968375fbcb60a088a2aa84d1fd7bea0aa1c79701fe467738cb0962bf7186a23a8a230bcbdd390
+MGHOUT:0,102,11534336,2658477088
+MGH DEBUG: Input data length: 11534336
+MGHFREQ:0,103,11534336,3700000000,2799192746,2655644675
+workload output: 0xfab35ffb1846898c1147975782338a6d281ee5dab147f625ab5b1cd1d51d070667686256405c6aa9ffb3bd4f5bdc3027240bc61ddf6c01a9c773bc06d4932089
+MGHOUT:0,103,11534336,2658954086
+MGH DEBUG: Input data length: 11534336
+MGHFREQ:0,104,11534336,3700000000,2804464244,2660645870
+workload output: 0x68a1f87dced8ce2c5bce674c5fa259a72406fd2cf0b1b6c34d87984990f7188ae3e082760f0096d463964a9399e0afaaba1d8a0cdbd893ed10d49a90847d0b78
+MGHOUT:0,104,11534336,2663961472
+MGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+MMGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  3: Enabling spin loop throttle
+GH: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 11534336
+MGHFREQ:1,105,11534336,3700000000,2797541742,2654078352
+workload output: 0x0744bc27699069433a68ecd0b134754c333b02ff7715a8e36be0ed4b49d8f84ffd570ff382fa85cab3fbe6232ecce813b151ab0dc88f229ecade653564786b50
+MGHOUT:1,105,11534336,2657386236
+MGH DEBUG: Input data length: 11534336
+MGHFREQ:1,106,11534336,3700000000,2797762635,2654287917
+workload output: 0x9e155b71728f21416d8da727981ee298abab9339112b313979b1a5af104ff152bfa316bb6d66397517907d74bf248149eb13f0451314770a590b1c2c927bf950
+MGHOUT:1,106,11534336,2657596022
+MGH DEBUG: Input data length: 11534336
+MGHFREQ:1,107,11534336,3700000000,2797634015,2654165877
+workload output: 0xf1ad5439949ba0e03d7b2e6adf426c997f5e63a338459a39d8bab8082dc7f4e379dfa75f60794d275ced0f04acbb552494a20948179b168f5e71639a6a653fca
+MGHOUT:1,107,11534336,2657473802
+MGH DEBUG: Input data length: 11534336
+MGHFREQ:1,108,11534336,3700000000,2797842395,2654363578
+workload output: 0x05d4e002a0313e375e71bf9e3cf078f2af4b7a69c917ec53ed86bbed5207bab61235716b536050dfacba3c2331b0dfaa9bd1cb3b0ccd172bda672259bc5c2194
+MGHOUT:1,108,11534336,2657671830
+MGH DEBUG: Input data length: 11534336
+MGHFREQ:1,109,11534336,3700000000,2797433456,2653975622
+workload output: 0x246ad674b655258460110533535e7d74267d26425cbcf2d836852ac13c866cc73bbe0229a35c5db20f2b8a8340042fe62c5ac708e290d4c22533a1780a39c5b7
+MGHOUT:1,109,11534336,2657283374
+MMGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  4: Disabling spin loop throttle
+H: Sent disable throttle request
+MGH DEBUG: Input data length: 12582912
+MGHFREQ:0,110,12582912,3700000000,3053657205,2897059726
+workload output: 0x0b48d3068b79eb0dc8d45d534ca2f8909aa5d92be424f79d52ebb308cbf7b48b25131577c1775be2327b174f10b46199967bada99a4fe54c8aa6addd685d59f3
+MGHOUT:0,110,12582912,2900669678
+MGH DEBUG: Input data length: 12582912
+MGHFREQ:0,111,12582912,3700000000,3058140977,2901314170
+workload output: 0xc4fd02f5f747e20c5e03138f98c7f3689b026efea53dd11c98e6a434150d822997d4b3c9c2a7409427737cd22eb464ec824c34d739ead3acd1dab725f5629858
+MGHOUT:0,111,12582912,2904929556
+MGH DEBUG: Input data length: 12582912
+MGHFREQ:0,112,12582912,3700000000,3055924477,2899211018
+workload output: 0x8b718b8848c44b88e10d301311e26137ebac85ec5833c6c2c51e1f29c1a66d2769db3736a627cbbe75e6c763451e983314aced11a6652084c5ca427e8e1abe7a
+MGHOUT:0,112,12582912,2902823196
+MGH DEBUG: Input data length: 12582912
+MGHFREQ:0,113,12582912,3700000000,3052756113,2896204814
+workload output: 0x61d03fcb53a8f21079078c97e1ba2e2e92c48be30ad80856dbecbfe15f61fdea65b6db2989f8d0c11fb555ebad5d829f0e46a276f3bfb66c1628cd43f7d151fd
+MGHOUT:0,113,12582912,2899814120
+MGH DEBUG: Input data length: 12582912
+MGHFREQ:0,114,12582912,3700000000,3052380487,2895848452
+workload output: 0x3ada25f0d23d5122e01459db677f522ee7b52167fad104e62cbeba648239502e7901b9a952ea5b82e205e4afc957da2a8939c2a29d186c8638405b00e136cb61
+MGHOUT:0,114,12582912,2899457716
+MGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+MMGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  4: Enabling spin loop throttle
+GH: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 12582912
+MGHFREQ:1,115,12582912,3700000000,3051983679,2895471982
+workload output: 0x2bee2a28203de3d7d1bf9fedec8cd41fdf23558ccee6b43914df5d436d996d476bf7aa629fe1ba3704ed33bc8befadc04e7a48f66d061b6af68a283124b013d5
+MGHOUT:1,115,12582912,2899081040
+MGH DEBUG: Input data length: 12582912
+MGHFREQ:1,116,12582912,3700000000,3052079333,2895562724
+workload output: 0x3198ed97b79bc75a77d3b3d1085b494ed969fbb40093b1d303d5d72d4c2c7d8c49db150f338cd69cb3970295758e762daa0f9c91130a076ff8a09810e69435fb
+MGHOUT:1,116,12582912,2899171598
+MGH DEBUG: Input data length: 12582912
+MGHFREQ:1,117,12582912,3700000000,3052289758,2895762333
+workload output: 0x2ca0c03001188ec9311a40705eedce08474ae1d6e00ce0d1a502b31c83a40960d606ce7488df5aacf9abd76a8df19183df4741a0a1bf50000298cac125965d29
+MGHOUT:1,117,12582912,2899371598
+MGH DEBUG: Input data length: 12582912
+MGHFREQ:1,118,12582912,3700000000,3051908607,2895400767
+workload output: 0x5d263b748d9c3a11fbaf0cd1af7d42c421df8b8387a67b791b15042e38a9b4598a15d806f9fa83aa16e47209c4a9347603c838a20ca3f16c64740ed734a22f0f
+MGHOUT:1,118,12582912,2899009548
+MGH DEBUG: Input data length: 12582912
+MGHFREQ:1,119,12582912,3700000000,3051978495,2895467040
+workload output: 0x319b299277ed3e9f2f4b9c5cfed62d47c88c26ad38e1f5cb154d55ec8d3c8f1c3b1d616fd6bcd6dc89d021c7e781304ba7d4f8db48834a74a0ceb1b9c8209a0e
+MGHOUT:1,119,12582912,2899076184
+MMGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  3: Disabling spin loop throttle
+H: Sent disable throttle request
+MGH DEBUG: Input data length: 13631488
+MGHFREQ:0,120,13631488,3700000000,3310965452,3141172901
+workload output: 0x82981ca32d99f87077cddf497aa97a0e1e03f2094cb6761cab30b2d582b4643db2dcce4e1f19bda4515ed9e9e6df771b9dbef50b54fb779102bcc3d3777a5121
+MGHOUT:0,120,13631488,3145087330
+MGH DEBUG: Input data length: 13631488
+MGHFREQ:0,121,13631488,3700000000,3310127635,3140378087
+workload output: 0x4efcd377a41e746808d5b5aa0be04f280fd9acd7eda9f096eca53badf4dbd270a62c835444e4dba53d93b652ff29a2b427af2f415454d3aa3f18a2a3134f579c
+MGHOUT:0,121,13631488,3144291350
+MGH DEBUG: Input data length: 13631488
+MGHFREQ:0,122,13631488,3700000000,3309826312,3140092682
+workload output: 0x36685db7bd2ce00699357ebce55ff01c60ec8c6f0e9db29d1144c843f40b27ac91926c63499225ed1939296a392796d2d832d41563950b3587b5f7e81303cebf
+MGHOUT:0,122,13631488,3144005704
+MGH DEBUG: Input data length: 13631488
+MGHFREQ:0,123,13631488,3700000000,3309346730,3139637307
+workload output: 0x60b18f78e1f178e0d531a20f350ea3a0cf48779314ecd55f5a6eaeac903138df0b4235570dd6a0dc79a0702b8dc74d33779fea83a7367c01d07c8187ade258bf
+MGHOUT:0,123,13631488,3143549792
+MGH DEBUG: Input data length: 13631488
+MGHFREQ:0,124,13631488,3700000000,3309526734,3139807979
+workload output: 0xc497eba94f3c0e9b3a0ef44421c1722f956d4b42ff5fccdc6c747e35ca2a747e10d854af1ff2ea475ae52f163120486021e3e6903abd57f5a0b54e14aa6f9b73
+MGHOUT:0,124,13631488,3143720682
+MGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+MMGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  5: Enabling spin loop throttle
+GH: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 13631488
+MGHFREQ:1,125,13631488,3700000000,3306535274,3136969650
+workload output: 0xd8ed7ce98063eeb45c1de79e1d08d9ce4f6374d0127bc70858d3a311ee18e2e6eee90e350a2d7e8aa18da9ae3af313cd773a9b73ecec2e553663df643af88d68
+MGHOUT:1,125,13631488,3140879826
+MGH DEBUG: Input data length: 13631488
+MGHFREQ:1,126,13631488,3700000000,3306611438,3137041901
+workload output: 0x8a97056b6b132e9c1b99e8fdea578dc94c9e3c04d4ff279f7f21c965512a603f6aaa209d94f9d9c918de3c71642f6d673f9b6f44304632ce1b86a7f6decf55f4
+MGHOUT:1,126,13631488,3140951912
+MGH DEBUG: Input data length: 13631488
+MGHFREQ:1,127,13631488,3700000000,3306182298,3136634765
+workload output: 0x532fbe9b09779553f18d537838e21fea20b8ea6a10ae40de074167053df7082e385fb91ed6e3dee02f03924deea195aa32f2be7f92825ec1c95581d1c27297a3
+MGHOUT:1,127,13631488,3140544338
+MGH DEBUG: Input data length: 13631488
+MGHFREQ:1,128,13631488,3700000000,3306382006,3136824223
+workload output: 0x5eee288475e31e850310c798978662b574eaf41e83ad1a31e7f169ac6bb01a06c8ac43269110134a5d7634f94c973297d09146e3cff0cd31321c7b1460b30b3d
+MGHOUT:1,128,13631488,3140734308
+MGH DEBUG: Input data length: 13631488
+MGHFREQ:1,129,13631488,3700000000,3306266678,3136714821
+workload output: 0xc3965f9672b99f9000933ce6d40609b28225e89c0c98fa60e3e09ac2fbbba6cbd994de0268887b3bf1b3612eb9fd7964dca0a2c1cbc5465ddad791862a664867
+MGHOUT:1,129,13631488,3140624700
+MMGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  4: Disabling spin loop throttle
+H: Sent disable throttle request
+MGH DEBUG: Input data length: 14680064
+MGHFREQ:0,130,14680064,3700000000,3569725210,3386662667
+workload output: 0x8348eec7e7a407bf378c7b45f7979fd1d0e4beee4a39847f54b9add251fd33b3c2a6e96c15f867bd3e62a5973df128b1c351f8d618f24a07f036d02d471113bd
+MGHOUT:0,130,14680064,3390883898
+MGH DEBUG: Input data length: 14680064
+MGHFREQ:0,131,14680064,3700000000,3569341472,3386298608
+workload output: 0x7f8005dd8f2202e1b7e82311e84cbc4da8ce4dff2e72bf0c56e4b4e21678b5c719cc279e7cfca73a7ad2ca7ab4f7106219d22d2bd9a65513e6ce7181926fe87e
+MGHOUT:0,131,14680064,3390519298
+MGH DEBUG: Input data length: 14680064
+MGHFREQ:0,132,14680064,3700000000,3569819873,3386752479
+workload output: 0x5bc42f7685debfaf4b9b329bd8a4360277a486ab7bd251f2f27bb2135f2eb282669ac9acad653a05338f5ddd10983940bd3f48ca35c46a596b3f14e13c47cc2c
+MGHOUT:0,132,14680064,3390973424
+MGH DEBUG: Input data length: 14680064
+MGHFREQ:0,133,14680064,3700000000,3569180580,3386145944
+workload output: 0xf8b5d7aad0253b51b08fd6a65e88d8a14ccf1d82fd20000ca6ebf409fc2212960ebe18a672cbe81f3b20b4e7a7ce872045603d319a12f1e1ff821f4096b9bb49
+MGHOUT:0,133,14680064,3390366816
+MGH DEBUG: Input data length: 14680064
+MGHFREQ:0,134,14680064,3700000000,3569215248,3386178855
+workload output: 0x894480d07907843e985ebe97a7ab2aa1b0ea7f1cd59bd94e38bc3f9c8290d253e0401bf4082be2ade12757192cbab8bec2a8854f2155206b8db5f57d1a87cb87
+MGHOUT:0,134,14680064,3390399608
+MMGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+GMGH HYPER: CPU  5: Enabling spin loop throttle
+H: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 14680064
+MGHFREQ:1,135,14680064,3700000000,3560794321,3378189782
+workload output: 0xa2bbb2181a70a62560c1ceebf3d741ede8f4cbf31da634cf150fbce0e255830d4983e4e3467c1adfa9ed7148409ae5f943437f508e821509cefaf870fd53b486
+MGHOUT:1,135,14680064,3382400684
+MGH DEBUG: Input data length: 14680064
+MGHFREQ:1,136,14680064,3700000000,3560708222,3378108095
+workload output: 0x02319ebf9a50f4e4a63ce73f4cae2125714136f78f8ed82db0b586b1bdacbdd7c53c16706304d229a5f6a01f164c9eb47d3b6bd8b32680ffb2a76a218c0398a7
+MGHOUT:1,136,14680064,3382318628
+MGH DEBUG: Input data length: 14680064
+MGHFREQ:1,137,14680064,3700000000,3560402894,3377818401
+workload output: 0xfa58b04f1975c7408f9bdcafe9b6d9266be626c45ecff4f1d5e24e3fe96c6d564cc8eca6165e7d0ad99498b7eb3d3310dd9f68bc1730d32bdadf24b2e87695d5
+MGHOUT:1,137,14680064,3382028860
+MGH DEBUG: Input data length: 14680064
+MGHFREQ:1,138,14680064,3700000000,3560809086,3378203769
+workload output: 0xd0cf7a5736d761afb140ed83df755708fc7bf444cd8079ddea65f81e50f2e463f00d25cb79f4da327851f2738e277b14ef69aea381f1fea2b1984f7582d4ba3c
+MGHOUT:1,138,14680064,3382414800
+MGH DEBUG: Input data length: 14680064
+MGHFREQ:1,139,14680064,3700000000,3560827199,3378220980
+workload output: 0xdd77358d32a2e7d1522b1d84bfdd2bfdd18fcadbaac16613dd1eff357320d41d2315915342ed8b2a2d57e2cc0a958b3d986bda5a77c7e683dcbe8ccc323f8c1e
+MGHOUT:1,139,14680064,3382431712
+MMGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  5: Disabling spin loop throttle
+H: Sent disable throttle request
+MGH DEBUG: Input data length: 15728640
+MGHFREQ:0,140,15728640,3700000000,3822404567,3626384253
+workload output: 0x86414225ed3a2e55aad1027456e0baef049a39b02e5c1b2e20f64af00e421d9b130515b1dda4bba95475ba32fd74cf40a0221a3f8c37627625812e7f2edad8b8
+MGHOUT:0,140,15728640,3630903536
+MGH DEBUG: Input data length: 15728640
+MGHFREQ:0,141,15728640,3700000000,3821949170,3625952085
+workload output: 0x8a5dfd0b9bfdc1e5a2281119ad3a1ae2f6838524fdd45f66e7b2c9d3f71843f2f99d3bb0de5b4f9a8e5535bd2ab5c1059b2c8248f6038874923c68a1742c2c0c
+MGHOUT:0,141,15728640,3630471526
+MGH DEBUG: Input data length: 15728640
+MGHFREQ:0,142,15728640,3700000000,3823184611,3627124329
+workload output: 0xaea065b6493143069f0dc73d948b7a472ca564244f80838e469f6a7f37fee207e3206dcf1ec45e71fc8041c0ee95fd90ad07832ce900684b72d86da147ec34dd
+MGHOUT:0,142,15728640,3631645070
+MGH DEBUG: Input data length: 15728640
+MGHFREQ:0,143,15728640,3700000000,3823890734,3627794053
+workload output: 0x0e7a53e6c689268d1a1771e7222d360762e08ed32a147961917fbd45152b68350f50ae842bc472d65e21b5541afab027cd9017f848578d9415426a12f9cefd6d
+MGHOUT:0,143,15728640,3632315548
+MGH DEBUG: Input data length: 15728640
+MGHFREQ:0,144,15728640,3700000000,3823805682,3627713571
+workload output: 0xc1e11614426f38d6419106ad86c7a085d28537f24e6bc3783f856684be90ace7a4708f0ef67ca433722573f0cf1ecbba1d4f50f43e75cf5697ca2ca5518f4fff
+MGHOUT:0,144,15728640,3632235034
+MGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+MMGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  1: Enabling spin loop throttle
+GH: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 15728640
+MGHFREQ:1,145,15728640,3700000000,3814828967,3619197002
+workload output: 0x2a11b96bd3fde0eb8b1cbbf97010a075391bc70c68d01a6e9298cdc25c1fb2cc033872b8d91e131cb35e8e9b201e4572c1b4c55b74bc2c8099fa1b187a372209
+MGHOUT:1,145,15728640,3623708204
+MGH DEBUG: Input data length: 15728640
+MGHFREQ:1,146,15728640,3700000000,3814722218,3619095737
+workload output: 0x73e09c0d46aaf835ceb8e323b704f1be0bb0208a20125d15e25deee243ba2c247751c53812d87864c2778c1f73ce9e825d9b9ee5d094f348e5eca71f4a65d0f1
+MGHOUT:1,146,15728640,3623606778
+MGH DEBUG: Input data length: 15728640
+MGHFREQ:1,147,15728640,3700000000,3814743957,3619116351
+workload output: 0x7c67b027325ae09de810c87f589dec5942cedf305907774f1f51f36bfe07f40479f4ca8cdf8a5df9b24d87105d8484769e91e214a1954b5cb7b11e99f82c6c1c
+MGHOUT:1,147,15728640,3623627690
+MGH DEBUG: Input data length: 15728640
+MGHFREQ:1,148,15728640,3700000000,3814751995,3619123990
+workload output: 0xb24e7b95dd21337e56f1140755931616cbd631569ba6f604092feeeb2533350446df022d064a11b49ff5d6f066bf9d8b2747a42fd8e3269777df6f9b57da11f4
+MGHOUT:1,148,15728640,3623634972
+MGH DEBUG: Input data length: 15728640
+MGHFREQ:1,149,15728640,3700000000,3815224325,3619572076
+workload output: 0xda08f7f6b4b211e70d3d45afe673810a73ea45e3db733aaff6038cb83fecd821410ce6f91948a43ee3d0d310bf84b7e2bc4bf469133b8e071ff666349756d46d
+MGHOUT:1,149,15728640,3624084048
+MMGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  4: Disabling spin loop throttle
+H: Sent disable throttle request
+MGH DEBUG: Input data length: 16777216
+MGHFREQ:0,150,16777216,3700000000,4070558772,3861812438
+workload output: 0x93cd675b4de9a25efac343208687c0a24d25c5371ab23e95afafe77fa67d0b275f04d568686137e7cb6909183e90b44ca964d417dd8e7155af98ea3b01ff6e9c
+MGHOUT:0,150,16777216,3866625364
+MGH DEBUG: Input data length: 16777216
+MGHFREQ:0,151,16777216,3700000000,4078705173,3869541092
+workload output: 0x536dcae992df066173b6d429b8438dc16ad5014aa388801cf46c4486a1128e67a12b439fb303cc7709f5f92fd1119de2c3e061eb8208847d920842d784fb1b26
+MGHOUT:0,151,16777216,3874364178
+MGH DEBUG: Input data length: 16777216
+MGHFREQ:0,152,16777216,3700000000,4076794574,3867728454
+workload output: 0xa71efa276eeabe40555ba980f9a479e53a7b271576d778f1bbe37e7bb142ebb4713211c954e1325eff4e901b666e1656348b5e680239e8898f79cf1fd971d747
+MGHOUT:0,152,16777216,3872549346
+MGH DEBUG: Input data length: 16777216
+MGHFREQ:0,153,16777216,3700000000,4077455191,3868355232
+workload output: 0xc9e07ec4b8478f520df0a48165d60f6a84bbbacfbaa4c00d83d018f28d89e48f90286e0d564a63ff579438d77aedff9be29f66a70cda1ba00aaac2a16c47d8b2
+MGHOUT:0,153,16777216,3873176522
+MGH DEBUG: Input data length: 16777216
+MGHFREQ:0,154,16777216,3700000000,4078263791,3869122324
+workload output: 0xd386b713babc3747980e17e0ffbffd78a30939f67732a44ab4c6aa8f4f32d6db93655035f18a8e8bb5efabaeff68b6744563e8b994d423b797fe9218caacbf3c
+MGHOUT:0,154,16777216,3873945256
+MGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+MMGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  4: Enabling spin loop throttle
+GH: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 16777216
+MGHFREQ:1,155,16777216,3700000000,4069532136,3860838450
+workload output: 0x6e005d97a4c46ebf0b4f6fc02f40e50edee469ddab0b4b9280890b592746d92a8f54d57b6981c0069ed7a2f9bc1f9152261fd6146df699a27dda46ed0a6b7b34
+MGHOUT:1,155,16777216,3865650746
+MGH DEBUG: Input data length: 16777216
+MGHFREQ:1,156,16777216,3700000000,4069415323,3860727653
+workload output: 0x8f55179f18ba08052c9526d7cc0573052d372af46cf3b8b61595bc17aa53c4ccea2db11f541ac7ddfca3f515e36afe153eca502714b961f70912056d39733044
+MGHOUT:1,156,16777216,3865540308
+MGH DEBUG: Input data length: 16777216
+MGHFREQ:1,157,16777216,3700000000,4069391099,3860704649
+workload output: 0x0867055933ef9ff592253874b315983012448c21e2c92f3f5423321067e1b8b3d214e2f10f300149ffb1b3277505d0424a537389ef3f96951d321866aca8827e
+MGHOUT:1,157,16777216,3865516898
+MGH DEBUG: Input data length: 16777216
+MGHFREQ:1,158,16777216,3700000000,4069393962,3860707386
+workload output: 0x7552f1e8663bdf82054518743e86e71e627334b0a2abadf9102df6a9577b58ebfc9b91b585ea2aa9cd6c715edfe0856214a33b1e4290b072d16efa51b3e54dfc
+MGHOUT:1,158,16777216,3865519768
+MGH DEBUG: Input data length: 16777216
+MGHFREQ:1,159,16777216,3700000000,4069493126,3860801475
+workload output: 0xd67247b791a29f0e5776cc1cc8dc3be25181455b505feb9837c4226d2b547514943860929169745228bfa5062491301e34ece7d17c1540c3cd02991d9b15eb8d
+MGHOUT:1,159,16777216,3865613970
+MMGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  0: Disabling spin loop throttle
+H: Sent disable throttle request
+MGH DEBUG: Input data length: 17825792
+MGHFREQ:0,160,17825792,3700000000,4326260106,4104401066
+workload output: 0x0f1770b823c7944b023be2f975b663834bfa99f0b5a054ec976783d90b304cc136467e1f18c653c7daeb41f1b7eb168feb8edfabb54cbd56b0af3774c5e842cd
+MGHOUT:0,160,17825792,4109516554
+MGH DEBUG: Input data length: 17825792
+MGHFREQ:0,161,17825792,3700000000,4331092214,4108985550
+workload output: 0x20a73cecd5598bda970f30a7f39fbc3e1497c0b80ef0316ea41c57f77fbb58ef19d31ae1fef51f0a4605b38f889cc65d6c6b54bf6171c292381540c6e6c436d8
+MGHOUT:0,161,17825792,4114106942
+MGH DEBUG: Input data length: 17825792
+MGHFREQ:0,162,17825792,3700000000,4332896814,4110697472
+workload output: 0x61b06cae9188abe76efade8749cbbdc75bb54a4bae67409f55f0b475001b99877588c9aaa1cc2b52e53037093807901789fd5f0cf9f117937bddefbdf51b2ea8
+MGHOUT:0,162,17825792,4115820966
+MGH DEBUG: Input data length: 17825792
+MGHFREQ:0,163,17825792,3700000000,4332045508,4109889760
+workload output: 0x92f917c5f9906d4f170b3540fc60acb96b6da9adc978e6db1702e465a2972952f0056e822da5c00a8a0099d549cb1180a808c939f0cb0c535e04544368880a8a
+MGHOUT:0,163,17825792,4115012846
+MGH DEBUG: Input data length: 17825792
+MGHFREQ:0,164,17825792,3700000000,4332179199,4110016617
+workload output: 0x8eea2265328ffe02c8e3cda0fa08108746b6ee0a4f4671c0f464d53f924c30b555d6d288d8c44358f49c63431d573b1bdc797b4598470559e8656b7e08ceab6c
+MGHOUT:0,164,17825792,4115139346
+MGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+MMGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  4: Enabling spin loop throttle
+GH: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 17825792
+MGHFREQ:1,165,17825792,3700000000,4323554922,4101834453
+workload output: 0xc40eedf6268ddcdeb019cc5a3b7877311ad8da1215ef7a6b07ee3050aeb92bf5b066ae6d418a0380636de46c255e2a187cfa5ad8cf85c1ef30d19cdd076e4835
+MGHOUT:1,165,17825792,4106947642
+MGH DEBUG: Input data length: 17825792
+MGHFREQ:1,166,17825792,3700000000,4323789039,4102056540
+workload output: 0x360f0f2b60bcd597e41786a0ab7abeabaef0dedcb4504b6b99b580222f2571649c8660ecfe19c22721c547a0432bfcb7ee4218ec74d7ecf836b4f2987a36c3dc
+MGHOUT:1,166,17825792,4107169700
+MGH DEBUG: Input data length: 17825792
+MGHFREQ:1,167,17825792,3700000000,4323390847,4101678784
+workload output: 0xc8d203c921e88641ee8469e0acc92fb8f6b001d472ebfc448eb4ae6e04aea8f56aeb4b98e34532ada9fef5a0ac8a9f9ce5cf31d527eef8ff2c5273656009988c
+MGHOUT:1,167,17825792,4106791720
+MGH DEBUG: Input data length: 17825792
+MGHFREQ:1,168,17825792,3700000000,4323597082,4101874443
+workload output: 0xe1ea15ced9e34dc6af9abf7333fafc4e8917aa8f19849f0de9a510fd293b798d500b2e0dc37f475d8dcbd2360e875cb81620fc62db83419d5e6e549890ef0755
+MGHOUT:1,168,17825792,4106987532
+MGH DEBUG: Input data length: 17825792
+MGHFREQ:1,169,17825792,3700000000,4323675911,4101949219
+workload output: 0x7abf3cd0feb63843b7446321787c52fc1138ebb1cf100ac46ed18af1bf7b4c1c2d18686c8514eafce80411e257a96a80a2a7c31c8f2918010ba35cf2a0498a24
+MGHOUT:1,169,17825792,4107062282
+MMGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  1: Disabling spin loop throttle
+H: Sent disable throttle request
+MGH DEBUG: Input data length: 18874368
+MGHFREQ:0,170,18874368,3700000000,4579183917,4344354254
+workload output: 0xf7db0338ce440d82040bf6c64fc3b0b44888904a8834b536d70be3ea8e377e531b9de936b9a266dfe04f51b8238daf4e8880758b2f7be534b6e95c050fe76f52
+MGHOUT:0,170,18874368,4349769924
+MGH DEBUG: Input data length: 18874368
+MGHFREQ:0,171,18874368,3700000000,4580212403,4345330625
+workload output: 0x2e798addb196e0ab9722838d496f1daa0a019020416bb2d5bd6fea90aeaf31531ea55123550542e30862ee3c48344d8d9056d51603813e0db42c1ba538351de2
+MGHOUT:0,171,18874368,4350745758
+MGH DEBUG: Input data length: 18874368
+MGHFREQ:0,172,18874368,3700000000,4583842101,4348773727
+workload output: 0xae60cc9ebb3f089850580ad32ca26028d754f9c2c8b9a487af7cfd3a456e7a679327bb00677310efe420f38d52269bacb45e8a8dfbd30780b1d83419594d656d
+MGHOUT:0,172,18874368,4354193820
+MGH DEBUG: Input data length: 18874368
+MGHFREQ:0,173,18874368,3700000000,4585860069,4350688539
+workload output: 0x095949f2379fb4736fce445ef0d5b15bc3494e7f5eb359ebc397b8e01aa3d440c8a6ac94d554a0e5138378584fbdf286f9c3384e685b63d90c5dc3bdca5df460
+MGHOUT:0,173,18874368,4356110840
+MGH DEBUG: Input data length: 18874368
+MGHFREQ:0,174,18874368,3700000000,4585664856,4350503128
+workload output: 0x9a55ee24997b0c14645bcabdbc9331aaed7e0c41bd2c6fd35322f32a11584184a554569258410061d7fc6d3073133e113bda2adab2069e3f6759d37b86f39640
+MGHOUT:0,174,18874368,4355925408
+MMGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+GMGH HYPER: CPU  4: Enabling spin loop throttle
+H: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 18874368
+MGHFREQ:1,175,18874368,3700000000,4578281066,4343497721
+workload output: 0xac01761160d3530f246b672d21a284b635e39d44c53cb627f0291c9283324e1cd5dd570ae4c129a13fb63560f22e418b85a6371b5cb4f952a853b9dfbbe831ea
+MGHOUT:1,175,18874368,4348911930
+MGH DEBUG: Input data length: 18874368
+MGHFREQ:1,176,18874368,3700000000,4577525692,4342781056
+workload output: 0xe70fcad78f3af8f566fcea50e99de555ee6c994e41d6d37851c6664cd8f419a454a6450d1b1f8de53fb1af619478906a56ba35c64183caf149c5790c8028369e
+MGHOUT:1,176,18874368,4348194810
+MGH DEBUG: Input data length: 18874368
+MGHFREQ:1,177,18874368,3700000000,4578315943,4343530791
+workload output: 0xd194bcf83895d83d210b26ce9ec7039709c49e5994c1aa51c83cd16730f8cde5af75b5ad7772a7e684957cf24c9a83669901a4f579a2ca252b67a361270befc8
+MGHOUT:1,177,18874368,4348944894
+MGH DEBUG: Input data length: 18874368
+MGHFREQ:1,178,18874368,3700000000,4578056875,4343284999
+workload output: 0xd476becf89cb6f0829585df4389e8d41ca395452e8674f21eb1967e20a95a8cf9f63f102e1af71a412f79678cd8d7b3b81978f1b88d97f153024f42208492b98
+MGHOUT:1,178,18874368,4348698788
+MGH DEBUG: Input data length: 18874368
+MGHFREQ:1,179,18874368,3700000000,4577783630,4343025785
+workload output: 0x78aee9ba0dfa7b24e2d4d4970f983b7315980be91d1abba8f79df2ddce842ce6a5a9a1c66813a2b08c5991c6ef546422b99c5b45553585291f66a0221ce177e0
+MGHOUT:1,179,18874368,4348439414
+MMGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  5: Disabling spin loop throttle
+H: Sent disable throttle request
+MGH DEBUG: Input data length: 19922944
+MGHFREQ:0,180,19922944,3700000000,4841646282,4593357011
+workload output: 0xf38e5627099d9a84b6328fcfa653ac2c836d48db7618b5490aa42f78bebcd22e55fcac3f80d162dfd7113f13938587f500c1c3c30ad8bda5fc53c5f9dc5aaf28
+MGHOUT:0,180,19922944,4599082680
+MGH DEBUG: Input data length: 19922944
+MGHFREQ:0,181,19922944,3700000000,4834729768,4586795208
+workload output: 0xe22ec939f46e8382486c92f5c4cb939a380aee9d8c06c98a9d197829b6617dd8bdd01b09a9513304513d41dd3c8fb17c49f0d75cbdb2940d16cda74fc206ad9a
+MGHOUT:0,181,19922944,4592512634
+MGH DEBUG: Input data length: 19922944
+MGHFREQ:0,182,19922944,3700000000,4839972869,4591769415
+workload output: 0xd7e3ce737f03abdb53392ac02f87e0cefcec582cef23248e20b7eb274987d33cd8fd81173d75c552d247880f84359dc963aa479c606fbb5171a15301094be7f7
+MGHOUT:0,182,19922944,4597492954
+MGH DEBUG: Input data length: 19922944
+MGHFREQ:0,183,19922944,3700000000,4841703781,4593411762
+workload output: 0x2b2903a55eb379303f0b53305ee74dbec76bb60f346afa24a4e433b054b0f8f027a6e088895ccf5d34a6dc9a1ff2f0e3f526344559898c0dce0ea359de867552
+MGHOUT:0,183,19922944,4599137470
+MGH DEBUG: Input data length: 19922944
+MGHFREQ:0,184,19922944,3700000000,4841551375,4593266982
+workload output: 0xa8b358949c12c2cbf6dfe94fe24bc17889d5543f5b7a38d21fc91b3740033ed335576815976bfe1f29af048c01f6a3b86de3b624a4456d84f9913465fd7a9b87
+MGHOUT:0,184,19922944,4598992060
+MGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MMGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  5: Enabling spin loop throttle
+GH: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 19922944
+MGHFREQ:1,185,19922944,3700000000,4832212650,4584407155
+workload output: 0x20056fd0a34c28735268ebd157bc656269f4f8ca50ebeeee47f54594877c1ca9767b053671395976f0869284ce758f063a2fbf1419e17585b313ac9f4e8c2859
+MGHOUT:1,185,19922944,4590122104
+MGH DEBUG: Input data length: 19922944
+MGHFREQ:1,186,19922944,3700000000,4831964373,4584171624
+workload output: 0xcf4ccc132bbb56031ae58c9bb2fb33d7093694a77902e871115a90a361223169245bdbc2f6e4575449f22b1b6c92d10a4b1662bcd1092ae08eb0779f5c909b8d
+MGHOUT:1,186,19922944,4589886272
+MGH DEBUG: Input data length: 19922944
+MGHFREQ:1,187,19922944,3700000000,4832104708,4584304745
+workload output: 0x8639b809a4134df5e0fe51094128a589ff1019c9beb213cc6a589e78f9b19b04598e88302bef549d8f76e8216719ab1c33597c47c06b3a99f00f6ef1d2bc81bf
+MGHOUT:1,187,19922944,4590019248
+MGH DEBUG: Input data length: 19922944
+MGHFREQ:1,188,19922944,3700000000,4832644007,4584816418
+workload output: 0x08def88b05d1fe7bc1a49b73c706d93e7087acb8dd640b443e113cd92659060415c356b8c1345ea4acbe6a90c6902258c6dc187da51ea27e464eab1eee08b202
+MGHOUT:1,188,19922944,4590531480
+MGH DEBUG: Input data length: 19922944
+MGHFREQ:1,189,19922944,3700000000,4832257472,4584449698
+workload output: 0x1d1f3d85b665321aa6515cf11b20c9062a02fcdc78ff1b566682b0dbf2f10e57d52fe593bf2f467fa570a268e7814e5d6e85e96693fb6cfe5bc55bb4534c18bc
+MGHOUT:1,189,19922944,4590164162
+MMGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  1: Disabling spin loop throttle
+H: Sent disable throttle request
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:0,190,20971520,3700000000,5096111629,4834773001
+workload output: 0x6ebd3bb27abff2f3f002bd15ef66ab7dfdb09bb0d7910cd86aa482e20e8b1e7187869779b3e3df2ec1bff821af8981ded4ce3e2690dc7a310297c94a53fb202e
+MGHOUT:0,190,20971520,4840799250
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:0,191,20971520,3700000000,5095683733,4834367046
+workload output: 0x4e9f896679cbbdd93c8065f1282647d8e1d94d6a66b6f125a9ca4fb5222d8e2ab64a91a5115714992049ecb8da8d21be97360cae5dbca3a2b5f2a7d938959ccd
+MGHOUT:0,191,20971520,4840392828
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:0,192,20971520,3700000000,5095527776,4834218925
+workload output: 0x0ee96656c2eab7783dafae22c29e7fb895233b351c6233210f94c8b38f9623e72cb2e9f9bc21663a856cc3f28b0ca2e6d4aa2d1c83cbdb92e78406d45e09dcfb
+MGHOUT:0,192,20971520,4840245204
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:0,193,20971520,3700000000,5089037855,4828062316
+workload output: 0xfde590acef243a6cedef3a2202531fb10d85e9ec78c2d5b160d443e88ac93086533848c392a16cb904b74ce072808c3cd5b78be2dda444667b292e463f8d4055
+MGHOUT:0,193,20971520,4834079704
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:0,194,20971520,3700000000,5095942780,4834613185
+workload output: 0xee0dc151eaac342cb3482798f9427ac7856d87eeebc3365749fd9acb31e09e7db9bf8d168dc7972ffbd14384f7c0729814fc7ab3d1be8d69eb2ae4bd02d71537
+MGHOUT:0,194,20971520,4840638982
+MMGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+GMGH HYPER: CPU  4: Enabling spin loop throttle
+H: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:1,195,20971520,3700000000,5086642669,4825789458
+workload output: 0xaa1896d1a56442995f9f0b66af1be4cab20415fd72a2e7a62a3333e8bd49735423ceab761e6aae12a57700d05ba1a603271b4f23da40263f70744f938331be79
+MGHOUT:1,195,20971520,4831805072
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:1,196,20971520,3700000000,5086457374,4825613692
+workload output: 0xb47631255778f987adbe7dc097db3e6a8c4780091f01acd85159d63b92870a16cc5a27eee44efbdb2440d94e843138b29c54e3c8c9438f6ef650ea432ea76973
+MGHOUT:1,196,20971520,4831629370
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:1,197,20971520,3700000000,5086324227,4825487388
+workload output: 0x307c8a588a9c5dfcfbb29f0cf23180e4a85279e7fbb7991544b220352207982bfe943f1cbacbf5f7bda07dd430c0a21f3a2060fe8a9e2744ed6818a61a7afeb0
+MGHOUT:1,197,20971520,4831502202
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:1,198,20971520,3700000000,5086496197,4825650498
+workload output: 0x261fe809c471b4c7ab23b334a726814bfb1ceaabcb3c49cfef81b51f226a0618d2aaeeb2d87484a1fa35175db989144efa99e8c7d9f9a9838f8a1c25e4842a3b
+MGHOUT:1,198,20971520,4831666278
+MGH DEBUG: Input data length: 20971520
+MGHFREQ:1,199,20971520,3700000000,5086652197,4825798526
+workload output: 0xcf617c2d90379c86d41e2e2065a75fc5f879ae437e8d4bd71c3198f38b69354afab904a012391bb590c25d02cc5d739facc35f7a317ee927d8a9f926899ecc84
+MGHOUT:1,199,20971520,4831813918
+MMGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  0: Disabling spin loop throttle
+H: Sent disable throttle request
+MGH DEBUG: Input data length: 22020096
+MGHFREQ:0,200,22020096,3700000000,5349927820,5075573003
+workload output: 0xeb36a0a96dd0056bc4cdcdc52a8a64f8d4fd5b8ed64da631b3db99c7869dfde3cf51caeba56ad6d7026745a1b6a246ac1f1afaad548d1c9c01ec0c2fe36e6728
+MGHOUT:0,200,22020096,5081899380
+MGH DEBUG: Input data length: 22020096
+MGHFREQ:0,201,22020096,3700000000,5344409437,5070338515
+workload output: 0x7bd217b19439013b22ea7f5b4034229c7104d06101d49a2898fe7265a9d40a887a84c87c66c275756c72618e839a883cfe2cc4faaafd7f71cef117de6966dd03
+MGHOUT:0,201,22020096,5076657482
+MGH DEBUG: Input data length: 22020096
+MGHFREQ:0,202,22020096,3700000000,5350246558,5075875376
+workload output: 0xe2b77bd28e64661b732e2e7b66841936eb375e7315e477f88985a4d34462cddf8b7277464484d998d0e4936a0d10e2b55dde20ae994e3227ce7e5d3526a45d09
+MGHOUT:0,202,22020096,5082201312
+MGH DEBUG: Input data length: 22020096
+MGHFREQ:0,203,22020096,3700000000,5350603659,5076214058
+workload output: 0x5c6a3d8035618479560ceb2d7aa2265627fa3c8b02b43d689cc590c76d82830427d13dbfb17528fa9cea7a6769a4ab95a9897e472ef08112787868fb06c6d355
+MGHOUT:0,203,22020096,5082541380
+MGH DEBUG: Input data length: 22020096
+MGHFREQ:0,204,22020096,3700000000,5349961389,5075604863
+workload output: 0xecc281490626441cff1360583a1a4f56051c34721b959ad581375cb1b74d92b0eaebd30a1dd579c000aff9eee5a54574a720d6a94c0acae913109434bfc5ab5d
+MGHOUT:0,204,22020096,5081931654
+MGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MMGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  4: Enabling spin loop throttle
+GH: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 22020096
+MGHFREQ:1,205,22020096,3700000000,5341095209,5067193183
+workload output: 0x7b8d20894373698d119d3fbd15d0d8e81a96f81949713f7f79950bc3947b4a937c2f9e934f6db77f2d7b997abdc3123949ed2bc55c5c88d56782a12c7fabaf64
+MGHOUT:1,205,22020096,5073510012
+MGH DEBUG: Input data length: 22020096
+MGHFREQ:1,206,22020096,3700000000,5340850706,5066961194
+workload output: 0x8b3eb3b5865fdfdea924171b71f69917a61f6b87d5caf205caa493aad4ad281528ef566ce93b5767c707dc7237ce5271304278ec119e9f7c4d4769eb2e457739
+MGHOUT:1,206,22020096,5073277482
+MGH DEBUG: Input data length: 22020096
+MGHFREQ:1,207,22020096,3700000000,5341391475,5067474250
+workload output: 0xba3aa7b4accafac764b2f73f6c403a4165c6982b5354fe5cc329035ca3dc554f6d7c053f764bdb6fdd357c89a0489877d39c06e14d43576751b0978c49df9bf5
+MGHOUT:1,207,22020096,5073791372
+MGH DEBUG: Input data length: 22020096
+MGHFREQ:1,208,22020096,3700000000,5340866009,5066975710
+workload output: 0x91e9f12d2de0483d08de5bf57607b8f9b6488f3a183a2d7d3e15ee53882b12e0ebc66f1baa22c33a3c54205b0f4f07642991a1e8bbcd108051c461d23ff8a72f
+MGHOUT:1,208,22020096,5073292320
+MGH DEBUG: Input data length: 22020096
+MGHFREQ:1,209,22020096,3700000000,5340553030,5066678792
+workload output: 0x653bcf536d1ddb99be757b288c8d0a63a4907643cb088e245a9343f29f16d276ccc1f14468d222d54a63e04eb3fddb40038e2243ddc8e72cb18af83e64c0d122
+MGHOUT:1,209,22020096,5072994670
+MMGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  5: Disabling spin loop throttle
+H: Sent disable throttle request
+MGH DEBUG: Input data length: 23068672
+MGHFREQ:0,210,23068672,3700000000,5604428848,5317022526
+workload output: 0xbf0d7ccd00a711b2d8391bedf366e1c5330c1c73975f56ab62ca4bf218a919968a5ac87409eb932ab87f2c2b6a7824ab59643c1d1dc7db1378b280c7113ab552
+MGHOUT:0,210,23068672,5323650540
+MGH DEBUG: Input data length: 23068672
+MGHFREQ:0,211,23068672,3700000000,5604039772,5316653562
+workload output: 0xb0421ad01058a40595cc6de1693b8d7b87f42c12f212e8c5c698cb6ebad0caf78fe11e89fe22d575b63add81b1c2364b9eda991ff5c8d3cf5771c4566cd35cc0
+MGHOUT:0,211,23068672,5323280910
+MGH DEBUG: Input data length: 23068672
+MGHFREQ:0,212,23068672,3700000000,5600051470,5312869785
+workload output: 0x70eb9df5e066c3f289470806c5182697979a85e59ada7b1c1d1ec9187497bbd9aa73a6f78fb6e64c5fc56c923db310de187f2eb2a586d0a870a638def436042e
+MGHOUT:0,212,23068672,5319491462
+MGH DEBUG: Input data length: 23068672
+MGHFREQ:0,213,23068672,3700000000,5604165055,5316772415
+workload output: 0x191b70edaa4cccb6e4a17183b5cf395739366cb70766794965c3da5469fa1c03cc2516e6867a930249ca134f3a2226a709b179c7d24ddb6dace28df5ee4f92f4
+MGHOUT:0,213,23068672,5323399464
+MGH DEBUG: Input data length: 23068672
+MGHFREQ:0,214,23068672,3700000000,5604453736,5317046306
+workload output: 0x0fea20102db1867cfa9e4d52b13bd84bec70f93815096cc432aa7093f81bf241f337deccf7ca94dca9ff3c7b82569e0c844896c0f63d1c2e086315ae20dd0d04
+MGHOUT:0,214,23068672,5323674020
+MMGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+GMGH HYPER: CPU  4: Enabling spin loop throttle
+H: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 23068672
+MGHFREQ:1,215,23068672,3700000000,5595449012,5308503196
+workload output: 0x2847bb8fd44dc0553cc09ae8257b759e6241f6f0a33f86978caf46253c9d2cf66347783e91766c15b135ce8b7b7c0a0da73940d1818fcacc31155b4195956b66
+MGHOUT:1,215,23068672,5315120642
+MGH DEBUG: Input data length: 23068672
+MGHFREQ:1,216,23068672,3700000000,5595059388,5308133540
+workload output: 0xcac59d8bbfad0361c2abe2b79fcf909650c372fdd0d4604d1b3e5eb9ba2987de2682522c0b64b4b2f68b96214b1cf3bb76ef7663d3c9671f1ad12189ffd8e05c
+MGHOUT:1,216,23068672,5314750242
+MGH DEBUG: Input data length: 23068672
+MGHFREQ:1,217,23068672,3700000000,5595172816,5308241151
+workload output: 0x6161d48782ca2d621cdc1e1d5555ef4e5f133c3e53b992d10a81eca561d38f44965716e7a62040d730c1b5cbb4e0fd21158aff5451178cc00446f548eb8b9255
+MGHOUT:1,217,23068672,5314858316
+MGH DEBUG: Input data length: 23068672
+MGHFREQ:1,218,23068672,3700000000,5595405938,5308462336
+workload output: 0xe7f2f1afbbb854476f982472459962ad78dcee11c0e2921e3aaff70c05389a15a4f86c76806fc1af3cecfeb1358155128591d89d01e3c0bb70d17f1373b79ce4
+MGHOUT:1,218,23068672,5315079902
+MGH DEBUG: Input data length: 23068672
+MGHFREQ:1,219,23068672,3700000000,5594765237,5307854460
+workload output: 0xbf760a787c76de56c7f650bd0d954527b5ecdf01e067619f58c0875ef8386e5db1571cdbd407ad89f0e14c68995aaf2523ae9840d70bdd52f5b55cc141fea42e
+MGHOUT:1,219,23068672,5314471482
+MMGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  4: Disabling spin loop throttle
+H: Sent disable throttle request
+MGH DEBUG: Input data length: 24117248
+MGHFREQ:0,220,24117248,3700000000,5859091135,5558625377
+workload output: 0x09e6ff6d8c13b09d4b30ec2711b0b67a91670efb6dee14bc9d37d860232c5e342174fbe3cd018ea7450a514334ad46c7c5711db2e4f8aa7e1ab99fd5ebe8b60c
+MGHOUT:0,220,24117248,5565554670
+MGH DEBUG: Input data length: 24117248
+MGHFREQ:0,221,24117248,3700000000,5859064261,5558599703
+workload output: 0x384e861e5fd30bedd1ca566b1af822596917dd84630bfaa52376639dd9df726ae9af77d8510fd0f6cb9ec1c9f11450dfbb98c10b2862f5eda3c2c73fac761dc1
+MGHOUT:0,221,24117248,5565528602
+MGH DEBUG: Input data length: 24117248
+MGHFREQ:0,222,24117248,3700000000,5856627424,5556288037
+workload output: 0x267172b2517d7785a26d05f364500bbc61db49cf354851f5f87f4ff46bb14748957a26563187075df402d44c5e118d72ff0c2a45e9b5f69ca56bf5684ed0fcbe
+MGHOUT:0,222,24117248,5563213522
+MGH DEBUG: Input data length: 24117248
+MGHFREQ:0,223,24117248,3700000000,5859546814,5559057712
+workload output: 0x50c9974a4a39c486e340275c2e059f0a32435adcc6efe4bba5dc4f2bba7efa4bc61cc56084bb01c6ccf042c75e0adbb7811f98aaddfa54f949c33f7ffff6bb8b
+MGHOUT:0,223,24117248,5565987300
+MGH DEBUG: Input data length: 24117248
+MGHFREQ:0,224,24117248,3700000000,5858133801,5557717001
+workload output: 0xe31736a54d3b5468014ea929580075237ea7684c957af8166911af9639d209eabe14f2f7a7230f5fae67211dc395ec8d387709a7c8b15392e3692307f4fd08c0
+MGHOUT:0,224,24117248,5564644210
+MMGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+GMGH HYPER: CPU  1: Enabling spin loop throttle
+H: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 24117248
+MGHFREQ:1,225,24117248,3700000000,5849662288,5549679888
+workload output: 0x70fdd81bb938a05ac13cd8cd3426497b7112d7e1631692f010a8be4648ed95d8537d9a052a2757e2c59e3faa28b689b4ea33a374e86e40a2e61f48d681453e1b
+MGHOUT:1,225,24117248,5556597974
+MGH DEBUG: Input data length: 24117248
+MGHFREQ:1,226,24117248,3700000000,5849335606,5549369961
+workload output: 0xe1f16eb5c06aa966102e976ecdff576db4310c153ac04a469c2911bb1c14f784ab2102a0268eb7ee3eb3791bfc316df57849385e928746b0cdb638bdbe4e179d
+MGHOUT:1,226,24117248,5556287970
+MGH DEBUG: Input data length: 24117248
+MGHFREQ:1,227,24117248,3700000000,5849676049,5549692936
+workload output: 0x5ce203b44cbdcb7899a7049f9de71e80f9835fab73725800dbd3892dbe42edc69f63796b9e1ecf0a381744fc78d599dd22236ddecb57b5adfca27305d60fdd22
+MGHOUT:1,227,24117248,5556609990
+MGH DEBUG: Input data length: 24117248
+MGHFREQ:1,228,24117248,3700000000,5849527107,5549551651
+workload output: 0xe6575561bf6f5c61602e5b8049a8923a9b6e7dbc31c471042c3b6a2fdc5cde23d463e845a48f4656423b45661967fb905b99f37fd05294e56cf0b7ce5efee402
+MGHOUT:1,228,24117248,5556469896
+MGH DEBUG: Input data length: 24117248
+MGHFREQ:1,229,24117248,3700000000,5849759819,5549772440
+workload output: 0xcd8ed552599b8280419bf4f2f533d36ecb6d53c6c5923e5f4dedafb26e3b6cb0f037d7db8ff1d4287ecc31aaff9bb9032840f306536c38b430016c7707471a56
+MGHOUT:1,229,24117248,5556690594
+MMGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  0: Disabling spin loop throttle
+H: Sent disable throttle request
+MGH DEBUG: Input data length: 25165824
+MGHFREQ:0,230,25165824,3700000000,6113300958,5799798638
+workload output: 0xfc44baabb9a9dd945c298533e2356822c4c07c5070ce51789ec12f0f57718d249f50003fd91e9ad121853a7e029e50fab1c4f598335a31f65aad6dd0d3e8e0ef
+MGHOUT:0,230,25165824,5807028370
+MGH DEBUG: Input data length: 25165824
+MGHFREQ:0,231,25165824,3700000000,6112917346,5799434832
+workload output: 0xa89897d7f9f18af330594027c38f0f875ab41b038f00d2388e39866e9bbf681333a9f02e1628230922342cbc690d41816ada2fc8b7573ae7ca90c19c0f3290e1
+MGHOUT:0,231,25165824,5806664326
+MGH DEBUG: Input data length: 25165824
+MGHFREQ:0,232,25165824,3700000000,6113719608,5800195800
+workload output: 0x4c875cb60d10688efb15150891b429a9e0557d621aafec2d2aef3e203a8d33d2d7c71fb3c48eb8c154b8bac75d6081045bf31143f1ed80872658ef45295ea4d8
+MGHOUT:0,232,25165824,5807426368
+MGH DEBUG: Input data length: 25165824
+MGHFREQ:0,233,25165824,3700000000,6113558046,5800042511
+workload output: 0x915fb5152256999341fe802e1e277fa60f95950c130a8d8c88b2ef5c5d980a4e3639334ffcc7db7e54ac85890aeec88c74d06f0d4ba6f98567d9ec3091a97e5e
+MGHOUT:0,233,25165824,5807272780
+MGH DEBUG: Input data length: 25165824
+MGHFREQ:0,234,25165824,3700000000,6111041528,5797655628
+workload output: 0x64ec58423406c1ddd8875f4be6deaf63d7bd9a59595dd3f86c318833394be6b8e543d4a3b109787a11b30514fd2b107d7d0a900047ad6ab98561b1cb274f3458
+MGHOUT:0,234,25165824,5804881708
+MGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MMGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  1: Enabling spin loop throttle
+GH: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 25165824
+MGHFREQ:1,235,25165824,3700000000,6103540739,5790538930
+workload output: 0x45864d875d1015273987d98e17a57ac57bff64d12037f7d68adab93c4344902bb3b75b8fa197af724c1706a772f42ff857d8f813697a597bffb10bc73f460a01
+MGHOUT:1,235,25165824,5797757726
+MGH DEBUG: Input data length: 25165824
+MGHFREQ:1,236,25165824,3700000000,6103662940,5790654853
+workload output: 0x687cedd0300a9e68431848ec7ce6a76b5a444cfa226488332436fbb91132ec60b6e5bbda107b09cbf1e68bfd7731b30ebc2387ac454a011b647411dbeedf92eb
+MGHOUT:1,236,25165824,5797873710
+MGH DEBUG: Input data length: 25165824
+MGHFREQ:1,237,25165824,3700000000,6103853193,5790835365
+workload output: 0x53a1a628913a8090aa9f932ef19bb5201f0f67456a893b98299214164a223741371d856c1fee2c76d011b5a5b6ebe8c9704c5cf5a68f466ce76c9998952245a2
+MGHOUT:1,237,25165824,5798054498
+MGH DEBUG: Input data length: 25165824
+MGHFREQ:1,238,25165824,3700000000,6103784396,5790770094
+workload output: 0x27520c12990846d896e7decd8657d1ef74ed9530a0f3a8ee1acb00f5df162f4461367aa4000169300b0c865712a406617d0b101c078c0f434582a6a2eb832e80
+MGHOUT:1,238,25165824,5797988850
+MGH DEBUG: Input data length: 25165824
+MGHFREQ:1,239,25165824,3700000000,6104177866,5791143377
+workload output: 0x5fdbc8f51c4ab815df3db413c156e5ef05f532e499b11a4e0fb4731a806ac939d63b15ee9f5ad8208665f506121bc46cf7aca2ede8c4947c795abaf2f84d83de
+MGHOUT:1,239,25165824,5798362640
+MMGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  0: Disabling spin loop throttle
+H: Sent disable throttle request
+MGH DEBUG: Input data length: 26214400
+MGHFREQ:0,240,26214400,3700000000,6367685658,6041137967
+workload output: 0xa534998fb9930929dcdeb7da69d75831a2787e3aa2e7d7a5d959204fcb049ab7930b909de2e8cedc89b477774a10cd6706d65e5c87f312953745409a0f7af12f
+MGHOUT:0,240,26214400,6048668628
+MGH DEBUG: Input data length: 26214400
+MGHFREQ:0,241,26214400,3700000000,6368082783,6041514859
+workload output: 0x6f654f07fe5f09222cd39cc96b2a4ae591638d41f7a6fcd0de5e9366c7d16dec928147e8ee573b55c54e4e1edae6519f5439512b06349b7b07392d9f2ecf1905
+MGHOUT:0,241,26214400,6049046222
+MGH DEBUG: Input data length: 26214400
+MGHFREQ:0,242,26214400,3700000000,6367884951,6041327023
+workload output: 0x58b01e43e38ebef48493663ae687642afc0678e200f3d884e1c2fd86540b3802096751c81f20c37147449bf5d24c0aec2ac0e21c985aaab96a7fdd02c97be595
+MGHOUT:0,242,26214400,6048858364
+MGH DEBUG: Input data length: 26214400
+MGHFREQ:0,243,26214400,3700000000,6367667744,6041121122
+workload output: 0x52f5936536b4c6b9b13b19bce75a660d1f6071c104f702637dbf7f38b725b17404832ed9042b1b070e1cef67edcd463cc9645b2cd5cfffdf1c6cdab7dcb94c8e
+MGHOUT:0,243,26214400,6048651918
+MGH DEBUG: Input data length: 26214400
+MGHFREQ:0,244,26214400,3700000000,6367999976,6041436169
+workload output: 0x20200ccc89e1737da5f1a2517efe33c1df02166cc14a9300d4d92e063bf03fe46240f3abc29a6490de84bedc6017244f4e46ec72644464240aecce278a0d5fdf
+MGHOUT:0,244,26214400,6048967326
+MGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+MMGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  5: Enabling spin loop throttle
+GH: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 26214400
+MGHFREQ:1,245,26214400,3700000000,6357965191,6031915975
+workload output: 0xb552d0df34b9297fcba91c8fb750ccd09c0e03555b552ea8bab36d56c79aa17849e22a504e23d67cff7027d12f446af836bf06dcfcfa6612f47f8771ce467058
+MGHOUT:1,245,26214400,6039435196
+MGH DEBUG: Input data length: 26214400
+MGHFREQ:1,246,26214400,3700000000,6358566895,6032486820
+workload output: 0x9e57f0479821b71be54b64c60985575a36f5eec2a779d0d666a34e8e7ceadc92961e90032ae943638e27c126eb091153b2e2dea3ec1a7ce376379b3b93ca0a2d
+MGHOUT:1,246,26214400,6040006504
+MGH DEBUG: Input data length: 26214400
+MGHFREQ:1,247,26214400,3700000000,6357766640,6031727598
+workload output: 0x560eaf5b92febf3d975c3e154ce657659ea263ff7d88c118235d4888340fe3bc90604286af2390cc0385599c73db1e84d65bb5529f04c100813df49c4e93b5b4
+MGHOUT:1,247,26214400,6039246826
+MGH DEBUG: Input data length: 26214400
+MGHFREQ:1,248,26214400,3700000000,6357974901,6031925181
+workload output: 0xdedccc375a3e4357edbb31bb9d9946ac02daf3761cfc011720ae97004b9227cbd68c198f6849ef7c48f28504d43ada8cd8d802a37848582e331309908df66bdb
+MGHOUT:1,248,26214400,6039444872
+MGH DEBUG: Input data length: 26214400
+MGHFREQ:1,249,26214400,3700000000,6358103669,6032047332
+workload output: 0x7c9eb05ab3dfb6df7e5eb44c537a2f6aef59789641bedb894c780ee10874b99c39eb88ee32b7a9a092ad27335ea70012c72866f621f2f0418dc26b4b7b56bb7a
+MGHOUT:1,249,26214400,6039566916
+MMGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  4: Disabling spin loop throttle
+H: Sent disable throttle request
+MGH DEBUG: Input data length: 27262976
+MGHFREQ:0,250,27262976,3700000000,6622156467,6282559146
+workload output: 0x7a86fb072f6dc27ccc0b055cbf3cbd4b8f0f683ec3c25af87cf0a6b69f2a1bfe5081ddba6f9e6f73aa655e544860e5bfaf9a06f753740d0f428a488139a0b033
+MGHOUT:0,250,27262976,6290390990
+MGH DEBUG: Input data length: 27262976
+MGHFREQ:0,251,27262976,3700000000,6621972835,6282385173
+workload output: 0x6585fba77635344afb54897841a08ee539e38c7e29c40fce44b3b6607d43bfe81567cda5543150395a56d97e9f1dd218b74b1e1f38802e9244a3f93a83965aca
+MGHOUT:0,251,27262976,6290215650
+MGH DEBUG: Input data length: 27262976
+MGHFREQ:0,252,27262976,3700000000,6621740611,6282164478
+workload output: 0x756b43486afd299b6b204484689e30cd67e83fb4dd73d3e8cefd98af7ec259decb60b6812800bf9e24578c24e529e9900e8eceaef7d5a7950806256f45b6ee75
+MGHOUT:0,252,27262976,6289995974
+MGH DEBUG: Input data length: 27262976
+MGHFREQ:0,253,27262976,3700000000,6621326881,6281771906
+workload output: 0x210941ab84e01f589b50424c7b238a6f373bec6dd43293ef5386fa68c5e3ed1d4fd01c4b3743594825de0f43a84c38753f8ded90fbd9fe28173c8a09f410995d
+MGHOUT:0,253,27262976,6289602332
+MGH DEBUG: Input data length: 27262976
+MGHFREQ:0,254,27262976,3700000000,6622191638,6282592546
+workload output: 0xd76f43f8a0c62f34f5687f6ab5eb9248cd5c4631aba4dae92e31b60013469e8c2e63e7767e6d250c7b7ce55b7736bb24694b1236189b9fff6ebc310b90fbb116
+MGHOUT:0,254,27262976,6290423902
+MGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+MMGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  5: Enabling spin loop throttle
+GH: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 27262976
+MGHFREQ:1,255,27262976,3700000000,6612852729,6273732375
+workload output: 0xbafad14a3a04b1d4f7300d0cc2292eaf41d6a59740036ec1899ef3b8ab91e2728ad68a7a9693050836c2b81ecfba9c0b4d49e57e01ec6b6df1d2350034766c86
+MGHOUT:1,255,27262976,6281553122
+MGH DEBUG: Input data length: 27262976
+MGHFREQ:1,256,27262976,3700000000,6612831495,6273712201
+workload output: 0xbd61dbb8dd121fa2538b70e1dd293d0d993f23cc7c4c5030e5e4fa2244a0f6470e4f7d42bd1c5f126017178d74287e762f2e43c2cb724f53b36060d0ec5cc97b
+MGHOUT:1,256,27262976,6281533394
+MGH DEBUG: Input data length: 27262976
+MGHFREQ:1,257,27262976,3700000000,6612706408,6273593554
+workload output: 0x7d7eaee2c2aca6905d813fe9fd26a9d874698ebef928169bb54a9a5cc3856f46eb08ebc6efa7008e9f34a96fdff23d141210c4ee351f90ac136d0023122520d1
+MGHOUT:1,257,27262976,6281414086
+MGH DEBUG: Input data length: 27262976
+MGHFREQ:1,258,27262976,3700000000,6612606981,6273499239
+workload output: 0xc3fbf27c8d37778b444cc37c386a6b6939f1b43293bda80cfd5a88c739df4d1b2dd2310995f9349da7e22d7bdd061bc7c0876c341a9dd133a3f79afa92d06188
+MGHOUT:1,258,27262976,6281319684
+MGH DEBUG: Input data length: 27262976
+MGHFREQ:1,259,27262976,3700000000,6612728134,6273614159
+workload output: 0xeed56d6ee87a4ffcdf9e7acf3f883b3d0270fc284bd1666eac4abe7709c9b3d10226e3c5af6ac9fec5243624243a56e5a7de08f324aef8e6bb82ba632a093d55
+MGHOUT:1,259,27262976,6281434904
+MMGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  0: Disabling spin loop throttle
+H: Sent disable throttle request
+MGH DEBUG: Input data length: 28311552
+MGHFREQ:0,260,28311552,3700000000,6876262594,6523634214
+workload output: 0xc6a7726fe73da2700bfcaba09bc204537b307f53c830a4d8b6290d1937a74d0fe1caa35afaa1ce92af4e8802cf722ad5c0fc2d1c3a0f460627ca6c0f9bed8763
+MGHOUT:0,260,28311552,6531766084
+MGH DEBUG: Input data length: 28311552
+MGHFREQ:0,261,28311552,3700000000,6876699070,6524048109
+workload output: 0x19cf9dfb9ea232d4ac3ab84da9c7d478c48051a7a9019b4021615354b296267bba3b03e403a1bbe0f05040a444e2ed3522bbf62c08c01111e92d1bf590496616
+MGHOUT:0,261,28311552,6532181016
+MGH DEBUG: Input data length: 28311552
+MGHFREQ:0,262,28311552,3700000000,6876011126,6523395444
+workload output: 0x411a6dab85a4f040f88de226a7afa9c5e63fef504e82ba211f692e90d81af33a5b67bd1b0ca61df44b84b7ce7ceb37dba7b8c5716e5d56b0a2dffd243acbf4ea
+MGHOUT:0,262,28311552,6531527328
+MGH DEBUG: Input data length: 28311552
+MGHFREQ:0,263,28311552,3700000000,6877040249,6524371791
+workload output: 0xaec3eadbd633710f4aa01247c50c007ed176622d4f8fb65c2b0815ba9092077a72c2985b2be983990ddeed7a1eb9c1d3eca8b37143f9bb974ce5edad0cb8e1ea
+MGHOUT:0,263,28311552,6532505154
+MGH DEBUG: Input data length: 28311552
+MGHFREQ:0,264,28311552,3700000000,6876110448,6523489681
+workload output: 0x728e539c12e8b40c1a8e6ec1f71e9789747f34fc942517890dae9bbcc4fdf632181163117dfc517bd53609f6559d5cd58738df3dfe7dc73c69e6268bd4621905
+MGHOUT:0,264,28311552,6531622340
+MMGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+GMGH HYPER: CPU  0: Enabling spin loop throttle
+H: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 28311552
+MGHFREQ:1,265,28311552,3700000000,6866812276,6514668328
+workload output: 0x39c382faa805871767d11f3308f1d3e3d6b47705d207b4aad2435e48150be4e9c1f1a34cd87c3f34325d11c6aeed5a24bb0b187a86e7e0cc02a775fcbb8e44fe
+MGHOUT:1,265,28311552,6522789972
+MGH DEBUG: Input data length: 28311552
+MGHFREQ:1,266,28311552,3700000000,6867376204,6515203370
+workload output: 0x6a33c740a5011d29fa79ef2e5826721eeacf6d188879d8f75b1be8c4c70040b8cd98e019b05ea749397ff49d240f10ea2db31eb71cf47429fcb16773cbdc94f8
+MGHOUT:1,266,28311552,6523325288
+MGH DEBUG: Input data length: 28311552
+MGHFREQ:1,267,28311552,3700000000,6867156512,6514994922
+workload output: 0x2e413eaf88aaad50349bc2d3570c198ec9a89bfcc5fd2ca7fd7e6155fb94b67c7c6979320a9d6ef34813e102411211fa26528a7e6ba5684b4d0af1db8f6666a5
+MGHOUT:1,267,28311552,6523116742
+MGH DEBUG: Input data length: 28311552
+MGHFREQ:1,268,28311552,3700000000,6866665088,6514528704
+workload output: 0xffcf5cdfbce989ecc30e7cad731f04188ba8b43e3e21a601eb50c893dde5777ea228696181d659cf73034da54d31b103555ecbb5f9dd28d841e2cab9843e7f9c
+MGHOUT:1,268,28311552,6522650036
+MGH DEBUG: Input data length: 28311552
+MGHFREQ:1,269,28311552,3700000000,6866441847,6514316913
+workload output: 0x9c40d238917970643228a7e1239aa66b654a18739c4a941820b378fc4188fda4c59110a24b662fddede61e335aa4867acb8e184da3a322ee4f7b5e38b2e732c3
+MGHOUT:1,269,28311552,6522437822
+MMGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  1: Disabling spin loop throttle
+H: Sent disable throttle request
+MGH DEBUG: Input data length: 29360128
+MGHFREQ:0,270,29360128,3700000000,7131461589,6765745885
+workload output: 0xe51c0e605ef7281c8185b8c43c5dcd60020bb73a5dd44bab13afe8fe31d88a8bb2479e9d56f9fab30924812c8cb461b85767b6441cc489308682a70fab2554a5
+MGHOUT:0,270,29360128,6774180042
+MGH DEBUG: Input data length: 29360128
+MGHFREQ:0,271,29360128,3700000000,7130738389,6765059766
+workload output: 0xef408a1adcdcdf9c4989c6e2c5806588a9493d6b69f669b4227af148ebee88dec9731064ef92723183bec088a0bf43a15aa41e3340d0740f0a6232178efaf84e
+MGHOUT:0,271,29360128,6773493430
+MGH DEBUG: Input data length: 29360128
+MGHFREQ:0,272,29360128,3700000000,7135388202,6769471438
+workload output: 0x37e6fde0436424ff89173070ed94d25c53ba6fd4c3b96e1962b3963dc45280dccb8ae90d419102d2e7fa7f90de0dd839fe0fca439fab51d3f1ed0f11765b6e95
+MGHOUT:0,272,29360128,6777909050
+MGH DEBUG: Input data length: 29360128
+MGHFREQ:0,273,29360128,3700000000,7131132861,6765434191
+workload output: 0x7a240d73f7346ed6ab4428b01c5f869727e265dbb152c37b116968e12f5fd9da9f37d751dffc713eef8c6a9344baff84a67510c1b6a14af7007fac06cf0ba4cc
+MGHOUT:0,273,29360128,6773868170
+MGH DEBUG: Input data length: 29360128
+MGHFREQ:0,274,29360128,3700000000,7131933833,6766194074
+workload output: 0x7b35fb41512b964e60625e5ea770af28c8cd7bd2fd8dcd0ea49de57cfc894982d0c15adc9e377b86a5a06c052d3671fed87bb7be0986271f44934bd70e51563d
+MGHOUT:0,274,29360128,6774628502
+MGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+MMGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  3: Enabling spin loop throttle
+GH: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 29360128
+MGHFREQ:1,275,29360128,3700000000,7121096004,6755911871
+workload output: 0xb9d20af4c90dccb8c7c9dc2a4ca74713742a180c467416d3bb8bab11e54062890137126551db7735df0efb86cc80cd1843ce3f9e007e1415de6cdfe556850a82
+MGHOUT:1,275,29360128,6764333802
+MGH DEBUG: Input data length: 29360128
+MGHFREQ:1,276,29360128,3700000000,7120970511,6755792825
+workload output: 0x7e8c52e7ec593beb95be12b93adbcebf2fef73d4835aa9cc3d1bd995d2f9c2aaac191640e52d2436b77293ee22e1f31e617e2ca23b292712cfbb1daae68a3946
+MGHOUT:1,276,29360128,6764214640
+MGH DEBUG: Input data length: 29360128
+MGHFREQ:1,277,29360128,3700000000,7121338873,6756142286
+workload output: 0xa25a0304b3b9601523f3673b1e9cc1ad0ab55b3c85ad90328751a1acf347f626d4f3547b886e9031a0562a5cf7ff9091274c28756a2f9b2f4da9ce15d1658600
+MGHOUT:1,277,29360128,6764564672
+MGH DEBUG: Input data length: 29360128
+MGHFREQ:1,278,29360128,3700000000,7121237837,6756046455
+workload output: 0x009aa333eb2b7efd068fe7b3623598fd2bedbe38d568354e3b687c5294c92f5a6cc988330511764349d6a660dabcadcb2c7f8d02a5eb670676f94f606dd1a779
+MGHOUT:1,278,29360128,6764468638
+MGH DEBUG: Input data length: 29360128
+MGHFREQ:1,279,29360128,3700000000,7121518983,6756313144
+workload output: 0xe577b155a94313a5be3c8ccd3497bd8e4a9fdfafba7b46955bc4c2cf216234a4189d578878d651c9ace8c1e0f350be261a80bcf9932dae9f2c585ddbd341312d
+MGHOUT:1,279,29360128,6764736020
+MMGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  3: Disabling spin loop throttle
+H: Sent disable throttle request
+MGH DEBUG: Input data length: 30408704
+MGHFREQ:0,280,30408704,3700000000,7388570258,7009669678
+workload output: 0x950bcfe76ff99e42c0a89933e1ee90936c73552e2b784fbb790f4f325d53f1a3984b77274507fb6dc2c52fefb28885dfda967b3371e89a259e313ce98d4e1d1b
+MGHOUT:0,280,30408704,7018407828
+MGH DEBUG: Input data length: 30408704
+MGHFREQ:0,281,30408704,3700000000,7385330937,7006596464
+workload output: 0x67f0944eaa14a0e850cf899c29ca9cdff6bfa43de43278d30bead3d5f4b14e0a3f8c2c7ef84ba5e361bac2d44bfe783ba417ef859b501997205762af7c460820
+MGHOUT:0,281,30408704,7015330862
+MGH DEBUG: Input data length: 30408704
+MGHFREQ:0,282,30408704,3700000000,7385621461,7006871980
+workload output: 0x48dce4d3e8e2fd45bcdb605f6ebe0200b36d58fef3f8cb5a2c57b2a612b40247b99ad79e4486705b4dc21007581a18a10ea21490876db497e756adb073d12f09
+MGHOUT:0,282,30408704,7015606452
+MGH DEBUG: Input data length: 30408704
+MGHFREQ:0,283,30408704,3700000000,7386815513,7008004977
+workload output: 0x633991bab60379ff91c0e800dcdc43d01b95d8052f2461872cffd1f7d70b4cc44f9883c6410f09de2a4f91d6bbff1f41aefd7dc517900a29f4a67dcebbbb1dd8
+MGHOUT:0,283,30408704,7016740780
+MGH DEBUG: Input data length: 30408704
+MGHFREQ:0,284,30408704,3700000000,7385244765,7006514717
+workload output: 0xa8fe42a59b92063ebb2af81eae13615905d7541a43fa226ff677ff424f420c743ed49b816b19ee52b9becab68b1fadc67fba87e18a85587c745d5ad2ea5b29fc
+MGHOUT:0,284,30408704,7015248728
+MGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MMGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  5: Enabling spin loop throttle
+GH: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 30408704
+MGHFREQ:1,285,30408704,3700000000,7375962858,6997708632
+workload output: 0xa5274455d927fe72f3d09f0e2aa0f668f9553f1974f8f8e0958c3c348a34687938c2e9e54d902c82f6e7c603ae5533d579454a64bf63ab8046f4468effd43c49
+MGHOUT:1,285,30408704,7006432488
+MGH DEBUG: Input data length: 30408704
+MGHFREQ:1,286,30408704,3700000000,7376067314,6997807713
+workload output: 0x56cf74b9bef361ac50384e4dcef112edf6b51de6d83e5316cd14f22d289d1142e34c98087be421443279b6d8b1cb33b6747edeea6808ed8b14f82056276e7a13
+MGHOUT:1,286,30408704,7006531576
+MGH DEBUG: Input data length: 30408704
+MGHFREQ:1,287,30408704,3700000000,7375935733,6997682892
+workload output: 0xcd0a97f9cb02d859b95d98788c3ebf7d8fc43819eb744fe2464b72aa86a4aaf63d4e7e86d19d9f093061a5c875e5d2658f093ec1df1b3c902f41b7f1bdfb0757
+MGHOUT:1,287,30408704,7006406714
+MGH DEBUG: Input data length: 30408704
+MGHFREQ:1,288,30408704,3700000000,7375949679,6997696112
+workload output: 0xff88a7fdb153f47a9cef56a74ab4188b519231d2b64b8b26b33fc660459950aa651ce086e4094b3f3d6189d27d06c2f50fa075098e30495a723c633868c80baa
+MGHOUT:1,288,30408704,7006419862
+MGH DEBUG: Input data length: 30408704
+MGHFREQ:1,289,30408704,3700000000,7375512828,6997281704
+workload output: 0xf9e6650c90d217dca4b47350ec70c12d1c712f322cc3f85a2279c0a930a5dadd029aec6c9949808590e6e0d7bcf911add69cc13febf104cbb795a013175bffaf
+MGHOUT:1,289,30408704,7006004580
+MMGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  3: Disabling spin loop throttle
+H: Sent disable throttle request
+MGH DEBUG: Input data length: 31457280
+MGHFREQ:0,290,31457280,3700000000,7639275137,7247517738
+workload output: 0xc5a94565d1831fe1f768b0ef8cb6d827dc7378182594d0b918d6edbf070070379ac8bfb924754a9e0fca14706958731f4be3bb05a27438df785931b25fa58c6c
+MGHOUT:0,290,31457280,7256552240
+MGH DEBUG: Input data length: 31457280
+MGHFREQ:0,291,31457280,3700000000,7642187293,7250281092
+workload output: 0xf8f312eb3c079655b9ae1d84cf07ca54a1c0f669819b8080ab3af57d94bfb6fb184c9e76c623d1f692975316cc774d6fa1f3df6e8416ef09c6001a664a428f09
+MGHOUT:0,291,31457280,7259318748
+MGH DEBUG: Input data length: 31457280
+MGHFREQ:0,292,31457280,3700000000,7640143128,7248341343
+workload output: 0x7bb7621fabed92b89a7e4153d4ea2c7166624bfc40409412a9f85ab2fc6fb24a220d32fe0f05453605cdce5f68d2b9d0660823ace6e22536dc72d488f973b50d
+MGHOUT:0,292,31457280,7257377330
+MGH DEBUG: Input data length: 31457280
+MGHFREQ:0,293,31457280,3700000000,7639312899,7247553684
+workload output: 0xf6a2d936cf788d611a1fe78b69da6c7304667248392937a2deb47b072c979a4ce7ab891997667964620d4402d6e103d99a4b224d543e87439044d0ef38d8a710
+MGHOUT:0,293,31457280,7256588402
+MGH DEBUG: Input data length: 31457280
+MGHFREQ:0,294,31457280,3700000000,7641842213,7249953870
+workload output: 0x5bb88ee50a5fb9ecd2ad1afd0405b079d0c44ebef49cb02399c385362c39fdd0dbc75356d9f43d9c15c9c24f3c1384991916e42c548cad61a6e1f3dbefb59cba
+MGHOUT:0,294,31457280,7258990632
+MGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MMGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  1: Enabling spin loop throttle
+GH: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 31457280
+MGHFREQ:1,295,31457280,3700000000,7630357686,7239057569
+workload output: 0xac30751b125a36ef30352cbad744709fd3980cafbdba1ab475f5666ba52519e768f4ea6a087c220fea7fe9db51e8586c28c8cc9fecd30141bc847fad8641e82f
+MGHOUT:1,295,31457280,7248082340
+MGH DEBUG: Input data length: 31457280
+MGHFREQ:1,296,31457280,3700000000,7629767159,7238497335
+workload output: 0x9eaa1b9dbeb61d1157d6f46c000aea21f9a89d57b29b68380ddaae69236e4c664d4df4fcdc723081f1e89a5242a7157e5940d995e726c2a8be97e4c8b0c9e45d
+MGHOUT:1,296,31457280,7247521460
+MGH DEBUG: Input data length: 31457280
+MGHFREQ:1,297,31457280,3700000000,7629986215,7238705154
+workload output: 0xe45c2064b7cc82001cdc52cd356029411e948cc51664c15a50a33f4baf2f29b0f9591bc601fab6392d7eeaedb194906ddb3bb978e74f3237c010817d154ebd5a
+MGHOUT:1,297,31457280,7247729072
+MGH DEBUG: Input data length: 31457280
+MGHFREQ:1,298,31457280,3700000000,7629664329,7238399785
+workload output: 0x4b917248d0cf21738dd734852bb9477b7e40948aca88d1ade7d31a623a768687dfc2359deda8e2f920a7078e672c95b99328e33806b1f07b5fb8cee14a20ed33
+MGHOUT:1,298,31457280,7247423452
+MGH DEBUG: Input data length: 31457280
+MGHFREQ:1,299,31457280,3700000000,7629998091,7238716417
+workload output: 0x79b6f71045497eed2793d23858426d2cf7822039a1fc74d26b9cf392d72e7c2a326b69861466fa54f7b76f2c0eb0d2d74ce65608c549bc8cf40d7c9be3bb2b71
+MGHOUT:1,299,31457280,7247740812
+MMGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  5: Disabling spin loop throttle
+H: Sent disable throttle request
+MGH DEBUG: Input data length: 32505856
+MGHFREQ:0,300,32505856,3700000000,7897459311,7492462106
+workload output: 0xc0281956feaffc61130b82e5eba1904a1e0ce82242246d20c1f0a08b4d59dc93aace8772b39d3d480095a0b4eaca4590c44c7f4ee0b448c2a89445c4897e3342
+MGHOUT:0,300,32505856,7501801634
+MGH DEBUG: Input data length: 32505856
+MGHFREQ:0,301,32505856,3700000000,7893926129,7489109864
+workload output: 0xf3e65b05e49a789c23b866654384d197c918723afbb63ea9d4e66d545c860f5cc672d0221f4717257f510bfc0f27790c3c88da6798605fba058628643738d8c3
+MGHOUT:0,301,32505856,7498445572
+MGH DEBUG: Input data length: 32505856
+MGHFREQ:0,302,32505856,3700000000,7894015612,7489194731
+workload output: 0xfcd50002bc3d1eacefba73654eb1bc1129bfcde9a6ca9bf1a97f0ce656e27fbcdbb3d6fa265a701e385bc35defd9169cf6d582a552846b8d3177d8f29e6cd1ff
+MGHOUT:0,302,32505856,7498530918
+MGH DEBUG: Input data length: 32505856
+MGHFREQ:0,303,32505856,3700000000,7897889922,7492870438
+workload output: 0x5f0811128752931052e8953cb73498b567e6ac53fcd8108c336f28b25f2afc46f4a49babc361eea66e630f2e843964bf4653bbd2fb82137f5944ba9d3ae1b4c0
+MGHOUT:0,303,32505856,7502210048
+MGH DEBUG: Input data length: 32505856
+MGHFREQ:0,304,32505856,3700000000,7893837657,7489025770
+workload output: 0xec458be532008447218a127343ba47f12a8ca12d14090704058b9e736300dea374a50a290325ee15b8a224723e1d0a811f80220b16a5cf61f90d457e8aeb1cd6
+MGHOUT:0,304,32505856,7498362032
+MGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+MMGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  3: Enabling spin loop throttle
+GH: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 32505856
+MGHFREQ:1,305,32505856,3700000000,7884465744,7480134449
+workload output: 0x5b3a6651eb9dbb3ca345cabcf8331d2f9d25280763f6546f9cc310676897ff633b015419921297f7597e616150f5bccf5fd8d82c89d3a8e816074774d8dba418
+MGHOUT:1,305,32505856,7489459798
+MGH DEBUG: Input data length: 32505856
+MGHFREQ:1,306,32505856,3700000000,7884314841,7479991266
+workload output: 0x644bc9de19e43da14d4672e36f273c2547b6b6f8cd7e4c4b321c9f22a2c0d6a395fe5e699f2d8d1fa34f879c6ee30c711dcb3547c2f0da77e5999bef8d22cc54
+MGHOUT:1,306,32505856,7489316076
+MGH DEBUG: Input data length: 32505856
+MGHFREQ:1,307,32505856,3700000000,7884255172,7479934673
+workload output: 0x73adcec82ed97ccaeaf0219c3f3e727017d3e08386de75f1cc1fb2789b62486cc3bbb0a45a6ce698c81a0236d2c08f9690255d649fe8c7519a8dfa72b8af1b95
+MGHOUT:1,307,32505856,7489259628
+MGH DEBUG: Input data length: 32505856
+MGHFREQ:1,308,32505856,3700000000,7883619393,7479331479
+workload output: 0xfc199815ad1e257627af756a7d2665a66f8d4d4f2916ad3733039d27289adece64f27e10c1b3586841e441a64e2dbc6e1b858c55a1d3f08194e334196eed1219
+MGHOUT:1,308,32505856,7488655540
+MGH DEBUG: Input data length: 32505856
+MGHFREQ:1,309,32505856,3700000000,7884222451,7479903651
+workload output: 0x2661c48ca75e424afb86d4eeee7b4bb60328263b3e662dd933755c7bf2dd46403a6c95f1046286eaf6d92e805cfb7587b0528a55fb93eb516f089dfcf446f739
+MGHOUT:1,309,32505856,7489228388
+MMGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  5: Disabling spin loop throttle
+H: Sent disable throttle request
+MGH DEBUG: Input data length: 33554432
+MGHFREQ:0,310,33554432,3700000000,8149690117,7731757567
+workload output: 0x6d0477489a12c961d45f82c87abc3f3427c11dedb86f3122909f7a0cdf3352421381305834cfa64261079d604937bcbe69041a20b5449e3d9bc0a3fbee1dd54e
+MGHOUT:0,310,33554432,7741396178
+MGH DEBUG: Input data length: 33554432
+MGHFREQ:0,311,33554432,3700000000,8148361603,7730497459
+workload output: 0x47346067cc2be7422a4dc9a6bfe41cc5b6b6eb314c523c3451cd9f20cb5bb8b4dd9a98e7bda88dff978d1fb197cbb39561b82c521271d88f3e79977ee0de81a6
+MGHOUT:0,311,33554432,7740134582
+MGH DEBUG: Input data length: 33554432
+MGHFREQ:0,312,33554432,3700000000,8154665912,7736478375
+workload output: 0x3f367c1cdef11fbe29b8e67c90dba90bc1598889499f0d1b0bc8bfb6be1bafadf87209db372e799c69cdae2d0de9ec981188decb63f9e14ce01e86277c58a43b
+MGHOUT:0,312,33554432,7746121848
+MGH DEBUG: Input data length: 33554432
+MGHFREQ:0,313,33554432,3700000000,8148737608,7730853897
+workload output: 0xb6ade973d7ce2ee30c7eced759781e19649efcc4dadca5fe542ab23766dc9e5171d0d9707c641dc8ac1a773ed95ffcb8298e45cd5e01e1423326a09a697c96b0
+MGHOUT:0,313,33554432,7740491712
+MGH DEBUG: Input data length: 33554432
+MGHFREQ:0,314,33554432,3700000000,8148959225,7731064160
+workload output: 0xd087ef7c848c5021099ce67a5ae8ef8938083ee95d867cc43ef21bd39ab8be7e89f6f4bf7a0e8a887390cd404dfc20129fc28b03909f41f86185641c2654c0bf
+MGHOUT:0,314,33554432,7740701986
+MGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+MMGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  0: Enabling spin loop throttle
+GH: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 33554432
+MGHFREQ:1,315,33554432,3700000000,8138498428,7721139830
+workload output: 0xee2805ea48079435392301b9c23cc4407756c98a0a06ddce7d200027bc5b969c705b6bf1861879353aca4e5bfc21080ddf7c9935cc42c3d4b579a40b3ad72e17
+MGHOUT:1,315,33554432,7730765374
+MGH DEBUG: Input data length: 33554432
+MGHFREQ:1,316,33554432,3700000000,8138500769,7721142016
+workload output: 0x74e08d009f4aa23f95fc2c561d3fb2918ae698ea30a7b4858c6f5233d55e279313e131372bb2a1fd521f3dd5030f167b22acc5f63b59bcdb1ca2db99533df348
+MGHOUT:1,316,33554432,7730767348
+MGH DEBUG: Input data length: 33554432
+MGHFREQ:1,317,33554432,3700000000,8138914722,7721534757
+workload output: 0xadefbfd6bfdbd04f11b55aa55b9a1f290d3dd2207b470134b8d6aef600de34a3b4c8d43361e1326d43fdf29e802063a8976ffce6a3a55037dae5a655408897df
+MGHOUT:1,317,33554432,7731160756
+MGH DEBUG: Input data length: 33554432
+MGHFREQ:1,318,33554432,3700000000,8138391417,7721038305
+workload output: 0x57a56c507aad8d589d521e4ac7d0fa94577c86a7daff6bbfc24703d8fa17d61079ce905d955701ce31fe2618c21cd384aa755bd931e2eafda019d2334333574e
+MGHOUT:1,318,33554432,7730663742
+MGH DEBUG: Input data length: 33554432
+MGHFREQ:1,319,33554432,3700000000,8138741051,7721370000
+workload output: 0x6f522bcee674d1fa9b395d2e981599c836d5e429993c0f3578eec23080dc5e1a2bfda530fbabe8417bee87c7b3d01f8cf29b58f0bdd28c3d7d1a1e8348ac420e
+MGHOUT:1,319,33554432,7730995858
+MMGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  1: Disabling spin loop throttle
+H: Sent disable throttle request
+MGH DEBUG: Input data length: 34603008
+MGHFREQ:0,320,34603008,3700000000,8403868396,7972901256
+workload output: 0xb211c7401d940cf6b9b9c0b078209c15571527e5b4e3fba2e6189bc5ce881ede84e77aea809d3602dc41366ec549d03d53e29b8384ca7958d5c1f6a6581c63a3
+MGHOUT:0,320,34603008,7982840416
+MGH DEBUG: Input data length: 34603008
+MGHFREQ:0,321,34603008,3700000000,8402630324,7971726492
+workload output: 0x022beabcd354c233595c7716f480db6d7830ec736dab4df6ead74c2c6446d1d71acfcd25a5a6c4857506008e6e57495936ae3e07e41fa89b43ca7a48619c0cda
+MGHOUT:0,321,34603008,7981664496
+MGH DEBUG: Input data length: 34603008
+MGHFREQ:0,322,34603008,3700000000,8402885088,7971968157
+workload output: 0xde86c2bb278912a9ea5eebfe08217c7d15948aa0a291bb042f2164ca90ecd00a59728d76ca93d43a419aa65c4bd651821d351ab9a38ca8c9ecf3498c709ea5ca
+MGHOUT:0,322,34603008,7981905584
+MGH DEBUG: Input data length: 34603008
+MGHFREQ:0,323,34603008,3700000000,8409384819,7978134623
+workload output: 0xfbbf44a045af46fe90d789fd57f081deee56a5720d8b3faa9c0e4843eb5d7eb60a02e8cd5c5067a99d30dfd4483e9e7088f3b95d0e5fe2915b9c12215404a23c
+MGHOUT:0,323,34603008,7988079944
+MGH DEBUG: Input data length: 34603008
+MGHFREQ:0,324,34603008,3700000000,8402847875,7971932870
+workload output: 0x807601395333d0662d1126d8b063f58d5af9f7368cd772a2f47d762f20323621d51d43115c4e9b080c666747e1360e8d12ade9dff243e27c7a700fab6763e8c0
+MGHOUT:0,324,34603008,7981871362
+MMGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+GMGH HYPER: CPU  3: Enabling spin loop throttle
+H: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 34603008
+MGHFREQ:1,325,34603008,3700000000,8393013023,7962602398
+workload output: 0xd67837c8b02f68f77550441001ec715891821a6dfd4cbae66b3e4a0174560a6b9631439dc8f1526fbe36f600a8353e29aa2d2639a9621ad929a7de7dbba7ee60
+MGHOUT:1,325,34603008,7972528908
+MGH DEBUG: Input data length: 34603008
+MGHFREQ:1,326,34603008,3700000000,8392505329,7962120721
+workload output: 0x327edb5a6f28094c4082e911bb53a355307db898aea8995b07af3431252fe809e493baafa4429ee68e42ba465d0ec8085c5234aeeca232bbe31f71b8520a80d1
+MGHOUT:1,326,34603008,7972046766
+MGH DEBUG: Input data length: 34603008
+MGHFREQ:1,327,34603008,3700000000,8392659366,7962266879
+workload output: 0xa4354534cc1555d3d72c103caeeae7259ef5551ea79c46e400de51ff5fa591aef88ccaac0f7dd9caf04444e6818f4cffb057027c0974cfc25314071ffa62b2ae
+MGHOUT:1,327,34603008,7972193386
+MGH DEBUG: Input data length: 34603008
+MGHFREQ:1,328,34603008,3700000000,8393327864,7962901055
+workload output: 0x6bb49859e01efe5906161ffa03aa07da71a685e5f0dc6e76557c713651b711edd74690e59024375e3b96e5cbc1e7433c05d423562f06e173f98d9a2d1b5d67f6
+MGHOUT:1,328,34603008,7972828046
+MGH DEBUG: Input data length: 34603008
+MGHFREQ:1,329,34603008,3700000000,8392782294,7962383472
+workload output: 0xefda64a31ebb45077018c1e37f134926e8aa1dbdb76a7b0b6d15bfe12a672a36cb010e0dd589e715d0bfe040c39272abff0ca02be3a55577f90aca146f1e73f7
+MGHOUT:1,329,34603008,7972310154
+MMGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  0: Disabling spin loop throttle
+H: Sent disable throttle request
+MGH DEBUG: Input data length: 35651584
+MGHFREQ:0,330,35651584,3700000000,8664140966,8219826663
+workload output: 0xcd3db1c44379c2d51aa31a4ac0725da9cff6eb74c1be675f02caa03818fce5afefc01d12b595e244ebc58c6addd00a4e6343c3a055fbb80868db7266c1aea682
+MGHOUT:0,330,35651584,8230073316
+MGH DEBUG: Input data length: 35651584
+MGHFREQ:0,331,35651584,3700000000,8657600037,8213620827
+workload output: 0x6110406922794f22ff7599583e35b631174aa540d532251ad90367e9c90984862cf6594e771f196382b573a27a92191e4ec803f108d3a0e2e1be8b99e1c79442
+MGHOUT:0,331,35651584,8223860748
+MGH DEBUG: Input data length: 35651584
+MGHFREQ:0,332,35651584,3700000000,8656862808,8212921421
+workload output: 0x9faaadab0c858423a07c8ac7788bb72ffe67da6cbecae302016442e1d73f2feb26c48481fb6acf745b7afdefd9813cffde56683a7409908459351aa5019c3b28
+MGHOUT:0,332,35651584,8223159958
+MGH DEBUG: Input data length: 35651584
+MGHFREQ:0,333,35651584,3700000000,8657148807,8213192754
+workload output: 0xcf13827a1b0558c434991b91a40d4ab1d9bf0db751639b51a3872d0d6d33b1498bde047d3e79ab30032d7df124cba41324b9cc41513fcb8642684626f317d5df
+MGHOUT:0,333,35651584,8223431750
+MGH DEBUG: Input data length: 35651584
+MGHFREQ:0,334,35651584,3700000000,8663503283,8219221389
+workload output: 0x80237cc7bb7e7b2ca45ff884a629ab3f75587ff17e3c97c4b9102c1b39324a9006e63a7a7ae35bee9d8d7020d6c82faf055ff6c3caad6dba4adb3f6ca393e583
+MGHOUT:0,334,35651584,8229467774
+MGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MMGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  1: Enabling spin loop throttle
+GH: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 35651584
+MGHFREQ:1,335,35651584,3700000000,8647319842,8203867811
+workload output: 0x4cd3bfab0cf9f3956ee616a220e9be89c121e19a3fceb1cb4c8cb90661e7ebb8335c4b8f0c273410de5cecd7aa55d84712efcd67f97cd5a68f473bcba56471fb
+MGHOUT:1,335,35651584,8214095264
+MGH DEBUG: Input data length: 35651584
+MGHFREQ:1,336,35651584,3700000000,8646732394,8203310510
+workload output: 0xeb90f9815003221f2c5937b8811aee5ef80e55a15c60c310f5b2dda88f8593a6e4fc750e0fa890982d4b3a62c6daac7daa086e4a6333a09af1d06390a3e450e2
+MGHOUT:1,336,35651584,8213537236
+MGH DEBUG: Input data length: 35651584
+MGHFREQ:1,337,35651584,3700000000,8647300838,8203849810
+workload output: 0x16784829865e4961f04b3be467b6531f07835e673ea3e06ce6fb4f7bccf0e9fede1e3bc1c7d868e30eef64a2c7811b9c767192cfab520ba54716b43508279a1e
+MGHOUT:1,337,35651584,8214077424
+MGH DEBUG: Input data length: 35651584
+MGHFREQ:1,338,35651584,3700000000,8647009145,8203573071
+workload output: 0x8dbad2a51c3895277f45409d746a78fd5c3528465d0d5f75d86ff0d3be0a4297e565161c0ed91c3ef7df87048e5b501a169287e599efac1a40cb66281ce21d62
+MGHOUT:1,338,35651584,8213800352
+MGH DEBUG: Input data length: 35651584
+MGHFREQ:1,339,35651584,3700000000,8647419976,8203962815
+workload output: 0xde20e8c53efd2eb2febec551c39780cc322c2bd3f0801cfb08b9b595eaafd42e9ec8604c01e4c61ff739bb4f417c721c68a10f39932e9ad8cc0d28af576830ed
+MGHOUT:1,339,35651584,8214190652
+MMGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  1: Disabling spin loop throttle
+H: Sent disable throttle request
+MGH DEBUG: Input data length: 36700160
+MGHFREQ:0,340,36700160,3700000000,8911549862,8454547599
+workload output: 0x8aa389128d167fe0f87b5665b9534456c08de496c2ab504c361b7b637e3bfb6649bb329860e105087b39236d6facfadb52e1f9f64ce2f5b49a09d8edc0adbaec
+MGHOUT:0,340,36700160,8465087684
+MGH DEBUG: Input data length: 36700160
+MGHFREQ:0,341,36700160,3700000000,8912709997,8455648377
+workload output: 0x47f40b8935a9364e5cc7e13fa5f598986123017347fa0a2780d553fc636d41f0709e1868ecd57e4319b432190f3492fb9c0b3b54cb27abc2dfbe59fcf8b1d375
+MGHOUT:0,341,36700160,8466189412
+MGH DEBUG: Input data length: 36700160
+MGHFREQ:0,342,36700160,3700000000,8919671957,8462253309
+workload output: 0x4ee0bb1573f7acf6734103b25171e1f21d397ff39cf97b870004c2f659861bdbe6ce1cdff1b8f178b39e7593ee1d36473cdc5ba8ea7aadadb6532ce22b753140
+MGHOUT:0,342,36700160,8472802056
+MGH DEBUG: Input data length: 36700160
+MGHFREQ:0,343,36700160,3700000000,8918743031,8461371893
+workload output: 0xbaca689f66b9e6e5e3e2bae27556e12209d0342d285962969cbb0ace3c9f799b11fcc7e4a673f8ee7abe927f5b5cc064d4b88df2f7aad3b6ce9cb93879d81387
+MGHOUT:0,343,36700160,8471919062
+MGH DEBUG: Input data length: 36700160
+MGHFREQ:0,344,36700160,3700000000,8918144768,8460804540
+workload output: 0x04c5f6aaa58280a4aeabff180d02598e4724872a5ae45c7b67eed3e40cd25d7685b51cc73687e109cb20fe7bb37d288eaf03852d7c6bbfbd4db4d6102ef36865
+MGHOUT:0,344,36700160,8471351772
+MGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MMGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  1: Enabling spin loop throttle
+GH: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 36700160
+MGHFREQ:1,345,36700160,3700000000,8901200783,8444729218
+workload output: 0x404d2e2af1d62f8d0677e0625fb504653addf100c0690fa8016da1cdbd62f0fe1741c654ceb7ab28b0878481fc5eeec4f3260b8cb0b12ef32b136bf11d4cf925
+MGHOUT:1,345,36700160,8455256970
+MGH DEBUG: Input data length: 36700160
+MGHFREQ:1,346,36700160,3700000000,8901568988,8445078565
+workload output: 0x4177b05e2d4d13e1e030b6811202caa0885dc15c528ed50ea8243d067c4e281b9c6b15813b5f8914c66950372c15c70211e4becbab595fac568f976218875529
+MGHOUT:1,346,36700160,8455606754
+MGH DEBUG: Input data length: 36700160
+MGHFREQ:1,347,36700160,3700000000,8901242762,8444769045
+workload output: 0x02a54e66af2050300d1de6e40f0f9607ecba18b6a813ca91d0146864470117bd0ec2c1c215cba9a5c63dd2ef7a527bc7ce095695e76148f61ff5212881544908
+MGHOUT:1,347,36700160,8455296810
+MGH DEBUG: Input data length: 36700160
+MGHFREQ:1,348,36700160,3700000000,8901188714,8444717783
+workload output: 0xc2ad882784af7cebf6ca3dbbb347a53a35de081c749fdf48900c28b83e9c10bfca67bf5da55f9ac7f2efcdda1650313693fac787a25e02ca5ffe9811863dd0aa
+MGHOUT:1,348,36700160,8455245808
+MGH DEBUG: Input data length: 36700160
+MGHFREQ:1,349,36700160,3700000000,8901302371,8444825596
+workload output: 0xcecd1e2ee9bd8d71c2b1fe7f830a4eadb063d0c7358fac5de0f2818c7aecde68f9f7d8ccefc2c7becdeaa64bcf97a2ce5f31a225cd29c6569219c0ae900b7355
+MGHOUT:1,349,36700160,8455353468
+MMGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  0: Disabling spin loop throttle
+H: Sent disable throttle request
+MGH DEBUG: Input data length: 37748736
+MGHFREQ:0,350,37748736,3700000000,9171786490,8701438752
+workload output: 0x7fea3180281f7a395b66d6898bdbbd61319efc3ed6439a83cf476b45ba6375eb7cc06be25fd567d058b1929dc929602bd40b088c87ac6a0b90999aa0c47732d9
+MGHOUT:0,350,37748736,8712286068
+MGH DEBUG: Input data length: 37748736
+MGHFREQ:0,351,37748736,3700000000,9173803553,8703352374
+workload output: 0x31f5bc754e46ff0cbb121b8dd4eef37fb3dd5054a70d5c6541aac78d1a6834c3ed0da9e0d235b4a73bf57bc1e8c38335462376c27607e8e9157d749ff79f0759
+MGHOUT:0,351,37748736,8714202648
+MGH DEBUG: Input data length: 37748736
+MGHFREQ:0,352,37748736,3700000000,9172020018,8701660317
+workload output: 0xfa9192fad6665fae1f77303bd30274fe3cd1a884a1611902a9741c62d304f1f7ee7c143e6929060ddc7b71c562742315759ab13124d4b5fdf72d7a7d7242d40d
+MGHOUT:0,352,37748736,8712507934
+MGH DEBUG: Input data length: 37748736
+MGHFREQ:0,353,37748736,3700000000,9169016051,8698810761
+workload output: 0xefb82b0b4a7cfec25a2dcce422e30c17c2c962a85d572955b4d71ec75246c2a4d0e21466f1b7d265abca808cb6b38c15ae2e773f6d7afb6cdbc9cf0bd88abb3e
+MGHOUT:0,353,37748736,8709654094
+MGH DEBUG: Input data length: 37748736
+MGHFREQ:0,354,37748736,3700000000,9166326405,8696258652
+workload output: 0x49d06795e16856088f43bb9176f77fae6a2a5f819ac9e3c60c88b28f9568b5d7c4970ddbf1f6bea0930c67f3b6e03005446390f73fc02e05424e0fee68edddf3
+MGHOUT:0,354,37748736,8707100016
+MGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+MMGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  0: Enabling spin loop throttle
+GH: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 37748736
+MGHFREQ:1,355,37748736,3700000000,9156178373,8686631047
+workload output: 0xdd2fa483bc6f8c90e4f4020c4b4480f375858187eefd9ea5357a6ddeb210ba996e1d47c3aa543d7cacd3a2ba869c46dd11886044a6e6c468e91e8727f29ab558
+MGHOUT:1,355,37748736,8697460322
+MGH DEBUG: Input data length: 37748736
+MGHFREQ:1,356,37748736,3700000000,9155602885,8686085069
+workload output: 0xce3ef1462a49f2e52239d4915a0b5148f351d19dd4f292f9f2ebda1ec25628784b1cfe1d5a536ac44d1fc45a326005f2d6d6a6d55f85981a7f8858c6429e3a6f
+MGHOUT:1,356,37748736,8696914094
+MGH DEBUG: Input data length: 37748736
+MGHFREQ:1,357,37748736,3700000000,9155874005,8686342287
+workload output: 0x8ff0bd665695213f43fab5fb1367290c7f165930df24f4f121b037db0a41af631ed1071540d7629d9c75a1bedf53451b3298ad6c1a454c601c667d58bd4ecfd3
+MGHOUT:1,357,37748736,8697171286
+MGH DEBUG: Input data length: 37748736
+MGHFREQ:1,358,37748736,3700000000,9156834272,8687253293
+workload output: 0x62448cd6853a577ec036ef3189a6bcc31d78e9444e74c0325c084303eb5fdf51b2ec801a0c7123030f6ed1c67a933bf0d02f1c6a582c4bf4b611ce892c50e1e9
+MGHOUT:1,358,37748736,8698083444
+MGH DEBUG: Input data length: 37748736
+MGHFREQ:1,359,37748736,3700000000,9155997408,8686459361
+workload output: 0x66a5ed2e239905005d2214b6e45977d6ececd8d33bca71732415aec54ebfdb00ccb63074301bfc8ebb70cbee551ad732e27e249cf10fa6923b862d1440891bbb
+MGHOUT:1,359,37748736,8697288810
+MMGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  1: Disabling spin loop throttle
+H: Sent disable throttle request
+MGH DEBUG: Input data length: 38797312
+MGHFREQ:0,360,38797312,3700000000,9427342323,8943889329
+workload output: 0x8a8fd73e31833cba511c5defa8dbbf53005023d61ec7974e7b010f8e5c41e2aac52fb0ca2bb4f20dc7c3588d6b2e8a6b5d81246efcbc9f2138b06abcd8737922
+MGHOUT:0,360,38797312,8955039080
+MGH DEBUG: Input data length: 38797312
+MGHFREQ:0,361,38797312,3700000000,9425878975,8942501412
+workload output: 0x315e5f96eb4bb2cfe6e50b4f993307a68bc5427f264f057264012c4ecd36b5afe3b1bf54108367b82d61f0d9a8a10647c99fd14ba6989c0ddf54134d41eb36b9
+MGHOUT:0,361,38797312,8953648766
+MGH DEBUG: Input data length: 38797312
+MGHFREQ:0,362,38797312,3700000000,9422546709,8939339652
+workload output: 0x7f29162978930a648efd430b60ed0d377f7945f5ed93305ed6663ae26aef972636a2212be3a381489ec7b42b21521e5d3b752e099dd606293771c96930eaa371
+MGHOUT:0,362,38797312,8950483900
+MGH DEBUG: Input data length: 38797312
+MGHFREQ:0,363,38797312,3700000000,9420439176,8937340027
+workload output: 0x406c173e12f88cb3cb8937ae65a0e34b9080ac25bbd28f678922207eba4f01edcd9c2f96401536a57411ee960394a395e69344f8be73b99f9a0b6b20eb24b1a5
+MGHOUT:0,363,38797312,8948482014
+MGH DEBUG: Input data length: 38797312
+MGHFREQ:0,364,38797312,3700000000,9420421255,8937323049
+workload output: 0xd7b36ef31ff1fe55a2043b2d51e243080c748187638e7f4580b830e36a50bf94540fd1f395a4664bd38aa7d63e380e53464297db13893ea77797536a9ea61b45
+MGHOUT:0,364,38797312,8948464608
+MGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+MMGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  3: Enabling spin loop throttle
+GH: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 38797312
+MGHFREQ:1,365,38797312,3700000000,9410813677,8928208143
+workload output: 0x2a7c3443ec7bca2a3389f168d15cba67dd5fff2f63e6c55fbee2db8021c32d896f7a2e9a44a075e5c596750a940537dcb987046ed0996cdffc62a3d10e3c1af3
+MGHOUT:1,365,38797312,8939339010
+MGH DEBUG: Input data length: 38797312
+MGHFREQ:1,366,38797312,3700000000,9410125468,8927555212
+workload output: 0x9cfc9c627795010792c7109a4b531769cca0a2d751e684763334c292bbec0cb80c0752129af0c4f5a9aae5614b0c68a074f86464cf9d0be41e41d0d741bdc309
+MGHOUT:1,366,38797312,8938684902
+MGH DEBUG: Input data length: 38797312
+MGHFREQ:1,367,38797312,3700000000,9410368537,8927785811
+workload output: 0x7919a7ab87dac575d3d80293fed40733b7dd805169e599d870c2f1b9241706aee2831516a78032486ea70fe33e2f627c92275400b409f3e2fd78d5a939b48404
+MGHOUT:1,367,38797312,8938915886
+MGH DEBUG: Input data length: 38797312
+MGHFREQ:1,368,38797312,3700000000,9409905710,8927346713
+workload output: 0x7d76fa058661922b101acbb73ad84256b1029fbc38cd75a2c7102420009ef297523c3ec9382db7d6ed8da21538feaf9fc9b617f38688b23d46283689d42688f3
+MGHOUT:1,368,38797312,8938476556
+MGH DEBUG: Input data length: 38797312
+MGHFREQ:1,369,38797312,3700000000,9410080330,8927512401
+workload output: 0x316fdc72e39f6cbf7f05ee49e386cf5f5c85f6ac96d60c358f78be179d4e009d796296adf3a09c9967be5704e31289b9cfd26d73cccaa3b9dd7f78679f4f3fcd
+MGHOUT:1,369,38797312,8938642392
+MMGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  1: Disabling spin loop throttle
+H: Sent disable throttle request
+MGH DEBUG: Input data length: 39845888
+MGHFREQ:0,370,39845888,3700000000,9683132289,9186561857
+workload output: 0xe721c7cdbaa2c83224acd8d9ca8579f3a15df1a9ef6557583aa81807c10fd5442df0e5d2b8bc18b84694fd4934af7dc6b2cd1798bd3393e963dcf0c2df085958
+MGHOUT:0,370,39845888,9198014182
+MGH DEBUG: Input data length: 39845888
+MGHFREQ:0,371,39845888,3700000000,9677866835,9181566419
+workload output: 0x9ac8ba6b29dec767e7e3d5941d763c72e84fb885cfedddc730e1ec86357dda73cab4febd1c52a595a4a1801e35713be8f9264608a2ede5c7c58292005025023f
+MGHOUT:0,371,39845888,9193012342
+MGH DEBUG: Input data length: 39845888
+MGHFREQ:0,372,39845888,3700000000,9677983300,9181677011
+workload output: 0x87e8206080b80e5b3e0888073c57979881a721d801c22f250db36a21d5a349f0f4f85c9c8fc1db3362ee112594fe7d621ae7c1975247031283a62122e3fbe95c
+MGHOUT:0,372,39845888,9193122732
+MGH DEBUG: Input data length: 39845888
+MGHFREQ:0,373,39845888,3700000000,9674400771,9178277953
+workload output: 0x10162ff3e6cc6d8e82363175b1e22f278a431c9eaf40afd81177623c00a489a30afef7eddfd77f29313559d27dcfe315e69a1ba4657c64bdafd123c6cfc767b5
+MGHOUT:0,373,39845888,9189720562
+MGH DEBUG: Input data length: 39845888
+MGHFREQ:0,374,39845888,3700000000,9675145029,9178984015
+workload output: 0x4e963ecd9e01103de101bab8a223c6943652cbe802308e096057b8bc5dcb61795971c6d53b4af5cd0a20381883f828a971bad89424a040692b3e848ce990e103
+MGHOUT:0,374,39845888,9190427380
+MMGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+GMGH HYPER: CPU  1: Enabling spin loop throttle
+H: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 39845888
+MGHFREQ:1,375,39845888,3700000000,9664223497,9168622587
+workload output: 0x669621b980bb4baa189a2805bff2f26b874b4b2a8255fc1b311cbb0ffe2ce5a1daa270dbd3c39e48748abfcd6a812cc95291a7ce02fd71e5f0189e45b314b50b
+MGHOUT:1,375,39845888,9180053218
+MGH DEBUG: Input data length: 39845888
+MGHFREQ:1,376,39845888,3700000000,9664699797,9169074458
+workload output: 0xab863b12731cabb22a9c1f33b1ecffc820160bd2c94ea6c7319652e7b70b58f2c7febaec4e7fd6483dce0a29e014c2c7c7beadcc740e9050adc35d7547828a85
+MGHOUT:1,376,39845888,9180505306
+MGH DEBUG: Input data length: 39845888
+MGHFREQ:1,377,39845888,3700000000,9664488374,9168873882
+workload output: 0x857cfc6ebc9545fb2852939afc5f68f959bcc56c14f0bf3d1b4a9229e08aa2fddf9a7ff27f9ff8c56b00dfd54d8196925c61cf7f6cd29dc7c7bb5f0a718d271d
+MGHOUT:1,377,39845888,9180304854
+MGH DEBUG: Input data length: 39845888
+MGHFREQ:1,378,39845888,3700000000,9664836738,9169204350
+workload output: 0x200d53107278842a7b971b8bd63212c44bdc9a85c633169b5f1944e3290e14f4a3c466b94b6e7eba839063867a1def920c5646dc78b86b94893cf53567cceac4
+MGHOUT:1,378,39845888,9180635704
+MGH DEBUG: Input data length: 39845888
+MGHFREQ:1,379,39845888,3700000000,9664560224,9168942034
+workload output: 0xf5afb80ae247f532f3c36cb8f131200ecb7364ce2505d2d6db49b22d495af4931ea6a156282f2a7db65195fa52624a7907b0cb326267b8200de788eabfb6caf9
+MGHOUT:1,379,39845888,9180372978
+MMGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  3: Disabling spin loop throttle
+H: Sent disable throttle request
+MGH DEBUG: Input data length: 40894464
+MGHFREQ:0,380,40894464,3700000000,9938233389,9428580823
+workload output: 0x4f957218debd66affdd4fadab00ff7474df78afa8fce924e0de7cf6f0679a0f1b7ec98f2c0bc3fd4e5c6f0f699def93a730abf728d6bd58b99e2db5db0cd25a4
+MGHOUT:0,380,40894464,9440334728
+MGH DEBUG: Input data length: 40894464
+MGHFREQ:0,381,40894464,3700000000,9936745653,9427169423
+workload output: 0x715c02e77c55019c011b52a5529e43438631889efa05c02f934c9d5f9ceb312735c1f66cf070e0972fb556e0b840f936f838f6ee7a87ff2b2342e1288a2665dc
+MGHOUT:0,381,40894464,9438922034
+MGH DEBUG: Input data length: 40894464
+MGHFREQ:0,382,40894464,3700000000,9937014521,9427424554
+workload output: 0x902daec7a503516ecd8609ffd5b43c9a7be13de1824b03b695207287abfc506c79594851339aafd6d72256dab31ece6efef9b018b857220c331f38fe766ec2ec
+MGHOUT:0,382,40894464,9439177118
+MGH DEBUG: Input data length: 40894464
+MGHFREQ:0,383,40894464,3700000000,9937107062,9427512106
+workload output: 0x78938c8384111c2e1fc04812c10c761a11f3c86b1163e892b8ed40c67db06fab8312354398cca079cbcfe4a523634881ed6f6f2d34615a8a45b0e210e336bf18
+MGHOUT:0,383,40894464,9439265228
+MGH DEBUG: Input data length: 40894464
+MGHFREQ:0,384,40894464,3700000000,9936578663,9427010966
+workload output: 0xb5f3a370d9ffde017e1cf3250bab46eec0556f26372a5dc927460e5d22d95d512c98b004781c91d86f6996674ae229c4f7cb78c6bef07c26eb7cb1d3bad94820
+MGHOUT:0,384,40894464,9438763160
+MGH HYPER: CPU  3: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  4: Enable throttling request (spin) from cell bazooka-inmate
+MMGH HYPER: CPU  0: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  5: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  1: Enable throttling request (spin) from cell bazooka-inmate
+MGH HYPER: CPU  3: Enabling spin loop throttle
+GH: Sent enable throttle request (spin)
+MGH DEBUG: Input data length: 40894464
+MGHFREQ:1,385,40894464,3700000000,9918899223,9410237999
+workload output: 0xa965dcd260c3d1e04f52cc6d218d148020133a875cc7a6cb5065d960aec8dccb19af4db4f24969416833815d7eb32698cb29cd124199f9a9e766a4d831d1b66a
+MGHOUT:1,385,40894464,9421969576
+MGH DEBUG: Input data length: 40894464
+MGHFREQ:1,386,40894464,3700000000,9918493341,9409852955
+workload output: 0x31f547a335536419af678a78b614dc08f6e6f2ff965e8f84082680d93399ec87820eed5d934671ae696c2e9e79105935dd01267ded40e3ac6cb011458e8b796c
+MGHOUT:1,386,40894464,9421584386
+MGH DEBUG: Input data length: 40894464
+MGHFREQ:1,387,40894464,3700000000,9919024091,9410356481
+workload output: 0xc0233ab7a7e24db74dde16c1febc6ed210a8fdf0b6e275cebe716abb2e4129d5f92dbf30127c55f29fbbb64682547162d54beb1636cb9ca09694ca35d929bfd0
+MGHOUT:1,387,40894464,9422088484
+MGH DEBUG: Input data length: 40894464
+MGHFREQ:1,388,40894464,3700000000,9918885789,9410225259
+workload output: 0x784665949763898aac0253a9aaca37802f91174dd6ee1e8445ab8138ce3d63c37b402de0f92a2575be9a80312cdc9b7cc5e8eed76a52c0acd575f175cd761fba
+MGHOUT:1,388,40894464,9421956970
+MGH DEBUG: Input data length: 40894464
+MGHFREQ:1,389,40894464,3700000000,9918659680,9410010756
+workload output: 0xaeba464f52bd3592a1625b432556dd1c26e2e544556d61d9e5c290457049254695c000da4fd0337223d0d5dc59853c8c4f664e6c23a716286bcc7c9e91cbdc92
+MGHOUT:1,389,40894464,9421742358
+MMGH HYPER: CPU  0: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  3: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  4: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  5: Disable throttling request from cell bazooka-inmate
+MGH HYPER: CPU  1: Disable throttling request from cell bazooka-inmate
+GMGH HYPER: CPU  0: Disabling spin loop throttle
+H: Sent disable throttle request
+*******************************************************
+Ending experiments at 2020-02-15_05-46-34
+*******************************************************
+MGH: Allowing inmate to be shut down
+Closing cell "bazooka-inmate"
+Page pool usage after cell destruction: mem 320/973, remap 65543/131072
+CPU 2 received SIPI, vector 97
+Shutting down hypervisor
+ Releasing CPU 4
+ Releasing CPU 5
+ Releasing CPU 0
+ Releasing CPU 2
+ Releasing CPU 1
+ Releasing CPU 3

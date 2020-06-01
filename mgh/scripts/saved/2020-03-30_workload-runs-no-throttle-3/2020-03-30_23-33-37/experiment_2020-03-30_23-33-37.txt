@@ -1,0 +1,238 @@
+=======================================================
+Starting script at 2020-03-30_23-33-37
+=======================================================
+Disabling Turbo Boost
+1
+No inmate was running
+opening /dev/jailhouse: No such file or directory
+jailhouse: no process found
+rmmod: ERROR: Module jailhouse is not currently loaded
+rmmod: ERROR: Module uio_ivshmem is not currently loaded
+At main.c:160:
+- SSL error:02001002:system library:fopen:No such file or directory: ../crypto/bio/bss_file.c:72
+- SSL error:2006D080:BIO routines:BIO_new_file:no such file: ../crypto/bio/bss_file.c:79
+sign-file: certs/signing_key.pem: No such file or directory
+Warning: modules_install: missing 'System.map' file. Skipping depmod.
+uio_ivshmem            16384  0
+uio                    20480  1 uio_ivshmem
+jailhouse              32768  0
+tailf_pid: 31257
+#####################
+# Common Parameters #
+#####################
+TIMESTAMP: 2020-03-30_23-33-37
+Jailhouse Git commit: b984f7764424daa30388e9e7c02cf709896d106c
+JAILHOUSE_OUTPUT_BASENAME: jailhouse_2020-03-30_23-33-37.txt
+JAILHOUSE_OUTPUT_FILE: /home/hintron/code/jailhouse/mgh/scripts/output/2020-03-30_23-33-37/jailhouse_2020-03-30_23-33-37.txt
+RUN_MODE: RM_INMATE
+RUN_MODE_RAW: 0
+DISABLE_TURBO_BOOST: 1
+DEBUG_MODE: true
+INMATE_DEBUG: 0
+INPUT_FILE: <local-input-random>
+ITERATIONS: 10
+WORKLOAD_MODE: WM_SHA3
+WORKLOAD_MODE_RAW: 0
+INTERFERENCE_WORKLOAD: none
+#########################
+# Linux-only Parameters #
+#########################
+RUN_WITH_VTUNE: 0
+VTUNE_OUTPUT_BASENAME: vtune_output_2020-03-30_23-33-37.txt
+VTUNE_OUTPUT_FILE: /home/hintron/code/jailhouse/mgh/scripts/output/2020-03-30_23-33-37/vtune_output_2020-03-30_23-33-37.txt
+LINUX_OUTPUT_BASENAME: linux_output_2020-03-30_23-33-37.txt
+LINUX_OUTPUT_FILE: /home/hintron/code/jailhouse/mgh/scripts/output/2020-03-30_23-33-37/linux_output_2020-03-30_23-33-37.txt
+VTUNE_MODE: VTUNE_MODE_MA
+VTUNE_MODE_RAW: 0
+##########################
+# Inmate-only Parameters #
+##########################
+THROTTLE_ITERATIONS: 5
+THROTTLE_MODE: TMODE_DISABLED
+THROTTLE_MODE_RAW: 3
+THROTTLE_MECHANISM: Unspecified
+THROTTLE_MECHANISM_RAW: 
+LOCAL_INPUT_MODE: RANDOM
+PREEMPTION_TIMEOUT: 
+SPIN_LOOP_ITERATIONS: 
+##################
+# End Parameters #
+##################
+################################################################################
+# Starting Experiment
+################################################################################
+sudo /home/hintron/code/jailhouse/tools/jailhouse enable /home/hintron/code/jailhouse/configs/x86/bazooka-root.cell
+Setting sync byte in shmem to 0
+sudo /home/hintron/code/jailhouse/tools/jailhouse cell create /home/hintron/code/jailhouse/configs/x86/bazooka-inmate.cell
+sudo /home/hintron/code/jailhouse/tools/jailhouse cell load bazooka-inmate /home/hintron/code/jailhouse/inmates/demos/x86/mgh-demo.bin -s "debug=true tmode=3 wm=0 throttleiter=5 li=1" -a 0x1000
+sudo /home/hintron/code/jailhouse/tools/jailhouse cell start bazooka-inmate
+*********************************************************
+Input Local RANDOM
+Time=2020-03-30_23-33-55
+*********************************************************
+Iteration 0 (0):
+Inmate is not yet ready...
+Inmate is ready!
+Input length: 0
+Input:
+b''
+Signaling inmate...
+Inmate is finished (polled 23 times at 0.100s/poll)
+Inmate duration (python): 2 s 302507 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 81afbfba59fdda382f1bf10bfc19f581084f4a6474a8a888a909b2acc7390461e27d776235ee33eb00741d815da5e8afb1b9c96be5895c887524b883a5cbf096
+Inmate vmexits delta: 176065 = (183679 - 7614)
+Error: workload output != expected!
+    workload_output_value  : 81afbfba59fdda382f1bf10bfc19f581084f4a6474a8a888a909b2acc7390461e27d776235ee33eb00741d815da5e8afb1b9c96be5895c887524b883a5cbf096
+    expected_output_value: 997191f109051d745aae2f50f9e1d511a6ef61c9b33b741cb802abfed573b1ddbb8634b50170f36a1421318829f8c63f7dd373ecdb7c9ed6ed60bc32c9aa8bfd
+---------------------------------------------------------
+Iteration 1 (1):
+Inmate is ready!
+Input length: 0
+Input:
+b''
+Signaling inmate...
+Inmate is finished (polled 20 times at 0.100s/poll)
+Inmate duration (python): 2 s 2229 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 30a60dbf0fc346d6c11c1d5ed55a2367e94df283beb4ff34ef8ef76a935305835026c8a3ce6b84aa8ce005e7eae87ccf67dd8619e9a53fd2280100e9574b7d98
+Inmate vmexits delta: 37628 = (226717 - 189089)
+Error: workload output != expected!
+    workload_output_value  : 30a60dbf0fc346d6c11c1d5ed55a2367e94df283beb4ff34ef8ef76a935305835026c8a3ce6b84aa8ce005e7eae87ccf67dd8619e9a53fd2280100e9574b7d98
+    expected_output_value: 8974955eed85f515cf08e3589858c90b4c23429c5d15f1525856310a20944bddbd632be25742169f31bd570094cffcf3c38f8e2714bb9dd2368d5a8e120b6173
+---------------------------------------------------------
+Iteration 2 (2):
+Inmate is ready!
+Input length: 0
+Input:
+b''
+Signaling inmate...
+Inmate is finished (polled 20 times at 0.100s/poll)
+Inmate duration (python): 2 s 2178 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 24e6d796f5100cd7f74fba91302723e1e383322770eecb34ab01927a410358cedfe97e49d3c7949f61f41fecbf2f7802c197c09aae53d7342101dc82b8708ffb
+Inmate vmexits delta: 37580 = (269689 - 232109)
+Error: workload output != expected!
+    workload_output_value  : 24e6d796f5100cd7f74fba91302723e1e383322770eecb34ab01927a410358cedfe97e49d3c7949f61f41fecbf2f7802c197c09aae53d7342101dc82b8708ffb
+    expected_output_value: 987712bb9c4950bf69cdf96784695be0d0b385e44c6b325544901f00fa9ef206492fdc4d3736cd468e914663dbfa8676954ab808ec1309d3bd46bd34a7340d30
+---------------------------------------------------------
+Iteration 3 (3):
+Inmate is ready!
+Input length: 0
+Input:
+b''
+Signaling inmate...
+Inmate is finished (polled 20 times at 0.100s/poll)
+Inmate duration (python): 2 s 2164 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: f82552472dc1671f3b914866223350466b3264c07a3a5b130a0d8c10a7ddf872674f36123ed85acc8d81d8cf9cded2749f894310e6bf92139c7be08a2ab58d0e
+Inmate vmexits delta: 37578 = (312673 - 275095)
+Error: workload output != expected!
+    workload_output_value  : f82552472dc1671f3b914866223350466b3264c07a3a5b130a0d8c10a7ddf872674f36123ed85acc8d81d8cf9cded2749f894310e6bf92139c7be08a2ab58d0e
+    expected_output_value: 0c7cde8ade20ffe08b77de2ec5cbc8181edadad3ec588c60a501b625c597cd61efb744f77216f23061d9b9c379e16c4e4dd760b1ee643afcccba6e1eae8d544f
+---------------------------------------------------------
+Iteration 4 (4):
+Inmate is ready!
+Input length: 0
+Input:
+b''
+Signaling inmate...
+Inmate is finished (polled 20 times at 0.100s/poll)
+Inmate duration (python): 2 s 2219 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 89760b3f11b9e9dc3ffe9dc676c23e6598c66486953bce5947c2ea861ac7c4668db63b506b56e52c27cbfbde735e6d88dff6581a798aa1b8bba7be70ad6ed886
+Inmate vmexits delta: 37585 = (355656 - 318071)
+Error: workload output != expected!
+    workload_output_value  : 89760b3f11b9e9dc3ffe9dc676c23e6598c66486953bce5947c2ea861ac7c4668db63b506b56e52c27cbfbde735e6d88dff6581a798aa1b8bba7be70ad6ed886
+    expected_output_value: b3261b86537b6b2049b365ff92f59951e2dd536d1063acd2757ff772d356fac4429173cc7e27fc1f4621976723de03245769c16e3b0c11fe867311adc7be7244
+---------------------------------------------------------
+Iteration 5 (5):
+Inmate is ready!
+Input length: 0
+Input:
+b''
+Signaling inmate...
+Inmate is finished (polled 20 times at 0.100s/poll)
+Inmate duration (python): 2 s 2114 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 1f7c18cc313d278ab8ffd5638349488982b11acba5c2f23a4dd841e4fbe693e2f4db537672fc513ddc59f0b1e7c3b181dc1e94b0a0b9b20eb83aec73fd7854fc
+Inmate vmexits delta: 37611 = (398722 - 361111)
+Error: workload output != expected!
+    workload_output_value  : 1f7c18cc313d278ab8ffd5638349488982b11acba5c2f23a4dd841e4fbe693e2f4db537672fc513ddc59f0b1e7c3b181dc1e94b0a0b9b20eb83aec73fd7854fc
+    expected_output_value: d0551d3c751bea5747ead74588a8184813c26c9d55cd70f212b7db09883d238b0031a470886c43dd4de146082009c3782fbccef8f2c9040258df4a5e4883070a
+---------------------------------------------------------
+Iteration 6 (6):
+Inmate is ready!
+Input length: 0
+Input:
+b''
+Signaling inmate...
+Inmate is finished (polled 20 times at 0.100s/poll)
+Inmate duration (python): 2 s 2126 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 9036f3cc8938a040c80fa514822bb5750f86813294f8639dcc7b0c926344c28ad8b16ede36d99400a78c965dfdc4fd69ad4c75102de4805fdad94c653a2a0ee9
+Inmate vmexits delta: 37592 = (441706 - 404114)
+Error: workload output != expected!
+    workload_output_value  : 9036f3cc8938a040c80fa514822bb5750f86813294f8639dcc7b0c926344c28ad8b16ede36d99400a78c965dfdc4fd69ad4c75102de4805fdad94c653a2a0ee9
+    expected_output_value: 14df367ae468350b81dae9b3af4886545b7ad362644cd481f043ce8228b818404cadef1d3985b0dc13b2b1485f778590058f07097c0dcbd73ceed6c46dba01c5
+---------------------------------------------------------
+Iteration 7 (7):
+Inmate is ready!
+Input length: 0
+Input:
+b''
+Signaling inmate...
+Inmate is finished (polled 20 times at 0.100s/poll)
+Inmate duration (python): 2 s 2184 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 542541c736988364ce80381b8754de6d48c3baee61c8a39cf63e5417cc39ca6f3e32ed85b3df3235e09a24c16be52137a1b696e69aa6523875f453cbe84afe71
+Inmate vmexits delta: 37584 = (484685 - 447101)
+Error: workload output != expected!
+    workload_output_value  : 542541c736988364ce80381b8754de6d48c3baee61c8a39cf63e5417cc39ca6f3e32ed85b3df3235e09a24c16be52137a1b696e69aa6523875f453cbe84afe71
+    expected_output_value: d1156ddfc88fe231ff90b7673de9b1dd9fe776cf71dc8fc19e5d99b5fc3144f6f04b26cdbb91936464edc995f1c28e3ac02dd2e40b55862f798d395388fb08e5
+---------------------------------------------------------
+Iteration 8 (8):
+Inmate is ready!
+Input length: 0
+Input:
+b''
+Signaling inmate...
+Inmate is finished (polled 20 times at 0.100s/poll)
+Inmate duration (python): 2 s 2193 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 81ba653bf80090db57dd535763d0139960f2ee696b7df0f823797359a15b76810a57406fabe967541c78f57ddd82f1213af7082f90c5bf1abcf95514ed83ae27
+Inmate vmexits delta: 37582 = (527778 - 490196)
+Error: workload output != expected!
+    workload_output_value  : 81ba653bf80090db57dd535763d0139960f2ee696b7df0f823797359a15b76810a57406fabe967541c78f57ddd82f1213af7082f90c5bf1abcf95514ed83ae27
+    expected_output_value: 70623d84ceeee08f74754ba9642aed153078ac223756222b0f26a341e3914020480c916af0f237fbe3d3480cab0ce19718d2b41cb7973d43359af22665bed097
+---------------------------------------------------------
+Iteration 9 (9):
+Inmate is ready!
+Input length: 0
+Input:
+b''
+Signaling inmate...
+Inmate is finished (polled 20 times at 0.100s/poll)
+Inmate duration (python): 2 s 2174 us
+Inmate output length: 64
+Assuming output is hex data
+Inmate output: 2733df1e3558efa61058fc95349381b0aa6d6431dd86f3ae0ff0d498559e67b04d475ec5980d4f750afef6873cf7edfd7e99cdf7a513c5017b529ae66caf40ed
+Inmate vmexits delta: 37581 = (570864 - 533283)
+Error: workload output != expected!
+    workload_output_value  : 2733df1e3558efa61058fc95349381b0aa6d6431dd86f3ae0ff0d498559e67b04d475ec5980d4f750afef6873cf7edfd7e99cdf7a513c5017b529ae66caf40ed
+    expected_output_value: 504c37cd17b9411b4ef4ad2456d5ba45fcf23b064d9b8ce5d9853878231edea1423a25c31b2b7ce643d223c5391f20ee23f85298dbb8bf24d5b3b8e382aa4e24
+*********************************************************
+Enabling Turbo Boost
+0
+sudo kill 31257
+sudo /home/hintron/code/jailhouse/tools/jailhouse cell destroy bazooka-inmate
+Ending experiments at 2020-03-30_23-34-23
