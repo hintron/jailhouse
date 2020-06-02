@@ -67,7 +67,8 @@ if [ "$LOCAL_INPUT_MODE" == "" ]; then
         LOCAL_INPUT_MODE=$LI_UNIFORM
         ;;
     *)
-        echo "ERROR: Unknown local input mode '$LOCAL_INPUT_MODE'"
+        echo "ERROR: Unknown local input mode '$LOCAL_INPUT_MODE'. Assuming LI_NONE"
+        LOCAL_INPUT_MODE=$LI_NONE
         ;;
     esac
 fi
