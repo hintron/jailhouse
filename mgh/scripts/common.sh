@@ -1009,6 +1009,15 @@ function post_process_data_jailhouse {
     local throttled_freq="$output_dir/_freq_throttled_${time}.csv"
     local throttled_freq_avg="$output_dir/freq_avg_throttled_${time}.txt"
 
+    # Worst Case Execution Time (WCET) views
+    # We already have an intermediate _cycles_* view we can take advantage of
+    local unthrottled_wcet="$output_dir/wcet_unthrottled_${time}.txt"
+    local throttled_wcet="$output_dir/wcet_throttled_${time}.txt"
+    local unthrottled_bcet="$output_dir/bcet_unthrottled_${time}.txt"
+    local throttled_bcet="$output_dir/bcet_throttled_${time}.txt"
+    local unthrottled_jitter="$output_dir/jitter_unthrottled_${time}.txt"
+    local throttled_jitter="$output_dir/jitter_throttled_${time}.txt"
+
     # Clear these 8 files first, since we append instead of truncate
     if [ -f $input_sizes_b_data ]; then
         rm $input_sizes_b_data
@@ -1084,6 +1093,8 @@ function process_cycle_data_unthrottled {
     # aggregate_column_csv "$input_size" 2 3 $unthrottled_cycles "$input_size|" >> $unthrottled_cycles_flat
     aggregate_column_csv "$input_size" 2 3 $unthrottled_cycles "=AVERAGE(" ")\/$tsc_freq" >> $unthrottled_avg_dur_s
     aggregate_column_csv "$input_size" 2 3 $unthrottled_cycles "=AVERAGE(" ")*1000\/$tsc_freq" >> $unthrottled_avg_dur_ms
+    aggregate_column_csv "$input_size" 2 3 $unthrottled_cycles "=MAX(" ")*1000\/$tsc_freq" >> $unthrottled_wcet
+    aggregate_column_csv "$input_size" 2 3 $unthrottled_cycles "=MIN(" ")*1000\/$tsc_freq" >> $unthrottled_bcet
     aggregate_avg_freq $unthrottled_freq "$input_size" >> $unthrottled_freq_avg
 }
 
@@ -1091,6 +1102,8 @@ function process_cycle_data_throttled {
     # aggregate_column_csv "$input_size" 2 3 $throttled_cycles "$input_size|" >> $throttled_cycles_flat
     aggregate_column_csv "$input_size" 2 3 $throttled_cycles "=AVERAGE(" ")\/$tsc_freq" >> $throttled_avg_dur_s
     aggregate_column_csv "$input_size" 2 3 $throttled_cycles "=AVERAGE(" ")*1000\/$tsc_freq" >> $throttled_avg_dur_ms
+    aggregate_column_csv "$input_size" 2 3 $throttled_cycles "=MAX(" ")*1000\/$tsc_freq" >> $throttled_wcet
+    aggregate_column_csv "$input_size" 2 3 $throttled_cycles "=MIN(" ")*1000\/$tsc_freq" >> $throttled_bcet
     aggregate_avg_freq $throttled_freq "$input_size" >> $throttled_freq_avg
 }
 
