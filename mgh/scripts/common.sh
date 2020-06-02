@@ -1011,12 +1011,21 @@ function post_process_data_jailhouse {
 
     # Worst Case Execution Time (WCET) views
     # We already have an intermediate _cycles_* view we can take advantage of
-    local unthrottled_wcet="$output_dir/wcet_unthrottled_${time}.txt"
-    local throttled_wcet="$output_dir/wcet_throttled_${time}.txt"
-    local unthrottled_bcet="$output_dir/bcet_unthrottled_${time}.txt"
-    local throttled_bcet="$output_dir/bcet_throttled_${time}.txt"
-    local unthrottled_jitter="$output_dir/jitter_unthrottled_${time}.txt"
-    local throttled_jitter="$output_dir/jitter_throttled_${time}.txt"
+    local unthrottled_wcet="$output_dir/_wcet_unthrottled_${time}.txt"
+    local throttled_wcet="$output_dir/_wcet_throttled_${time}.txt"
+
+    local unthrottled_bcet="$output_dir/_bcet_unthrottled_${time}.txt"
+    local throttled_bcet="$output_dir/_bcet_throttled_${time}.txt"
+
+    # WCET diff: WCET unthrottled - WCET throttled
+    local wcet_diff="$output_dir/wcet_diff_${time}.txt"
+
+    # JITTER: WCET - BCET
+    local unthrottled_jitter="$output_dir/_jitter_unthrottled_${time}.txt"
+    local throttled_jitter="$output_dir/_jitter_throttled_${time}.txt"
+
+    # JITTER diff:
+    local jitter_diff="$output_dir/jitter_diff_${time}.txt"
 
     # Clear these 8 files first, since we append instead of truncate
     if [ -f $input_sizes_b_data ]; then
@@ -1042,6 +1051,18 @@ function post_process_data_jailhouse {
     fi
     if [ -f $throttled_freq_avg ]; then
         rm $throttled_freq_avg
+    fi
+    if [ -f $unthrottled_wcet ]; then
+        rm $unthrottled_wcet
+    fi
+    if [ -f $throttled_wcet ]; then
+        rm $throttled_wcet
+    fi
+    if [ -f $unthrottled_bcet ]; then
+        rm $unthrottled_bcet
+    fi
+    if [ -f $throttled_bcet ]; then
+        rm $throttled_bcet
     fi
 
     if [ "$INPUT_FILE" == "" ]; then
@@ -1083,6 +1104,16 @@ function post_process_data_jailhouse {
             fi
             process_cycle_data_throttled
         fi
+
+        # Difference between wcet unthrottled and wcet throttled (wcet_u - wcet_t)
+        paste -d" " $unthrottled_wcet $throttled_wcet | sed "s/=/=\(/" | sed "s/ =MAX/\) - (MAX/" | sed "s/$/\)/" > $wcet_diff
+
+        # Jitter/range = max - min or bcet - wcet
+        paste -d" " $unthrottled_wcet $unthrottled_bcet | sed "s/=/=\(/" | sed "s/ =MIN/\) - (MIN/" | sed "s/$/\)/" > $unthrottled_jitter
+        paste -d" " $throttled_wcet $throttled_bcet | sed "s/=/=\(/" | sed "s/ =MIN/\) - (MIN/" | sed "s/$/\)/" > $throttled_jitter
+
+        # Jitter diff: unthrottled jitter - throttled jitter
+        paste -d" " $unthrottled_jitter $throttled_jitter | sed "s/=/=\(/" | sed "s/ =/\) - \(/" | sed "s/$/\)/" > $jitter_diff
     fi
 }
 
